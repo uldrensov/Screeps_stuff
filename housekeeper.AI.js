@@ -1,11 +1,12 @@
 //HOUSEKEEPER: harvest energy and feed the controller exclusively
+//todo: currently hardcoded the controller (keep for now)
 
 module.exports = {
     run: function(unit){
-        //array containing the room's energy sources
+        //array of the room's energy sources
         var sources = unit.room.find(FIND_SOURCES);
         
-        //room's controller (hardcode via ID if needed)
+        //temporary hardcode
         var ctrller = Game.getObjectById('5bbcae989099fc012e639474');
 
 
@@ -23,7 +24,7 @@ module.exports = {
 
         //behaviour execution...
         //feed the room's controller
-        if(unit.memory.homebound){
+        if (unit.memory.homebound){
             if (unit.upgradeController(ctrller) == ERR_NOT_IN_RANGE){
                 unit.moveTo(ctrller, {visualizePathStyle: {stroke: '#ff0000'}});
             }
@@ -31,6 +32,7 @@ module.exports = {
         
         //or find and harvest from a source
         else{
+            //console.log(unit.harvest(sources));
             if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE){
                 unit.moveTo(sources[0], {visualizePathStyle: {stroke: '#ff0000'}});
             }

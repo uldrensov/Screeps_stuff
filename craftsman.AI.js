@@ -1,9 +1,11 @@
-//CRAFTSMAN: build on designated construction hotspots
+//CRAFTSMAN: harvest energy and build on designated construction hotspots
+//todo: currently harvesting from a hardcoded source (keep for now)
 
 module.exports = {
     run: function(unit){
-        //arrays containing the room's energy sources and construction hotspots
-        var sources = unit.room.find(FIND_SOURCES);
+        //arrays of the room's energy sources and construction hotspots
+        //var sources = unit.room.find(FIND_SOURCES);
+        var sources = Game.getObjectById('5bbcae989099fc012e639476');
         var hotspots = unit.room.find(FIND_CONSTRUCTION_SITES);
         
         
@@ -21,7 +23,7 @@ module.exports = {
         
         //behaviour execution...
         //feed a hotspot
-        if(unit.memory.homebound){
+        if (unit.memory.homebound){
             if (hotspots.length){
                 if (unit.build(hotspots[0]) == ERR_NOT_IN_RANGE){
                     unit.moveTo(hotspots[0], {visualizePathStyle: {stroke: '#00ff00'}});
@@ -31,8 +33,8 @@ module.exports = {
         
         //or find and harvest from a source
         else{
-            if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE){
-                unit.moveTo(sources[0], {visualizePathStyle: {stroke: '#00ff00'}});
+            if (unit.harvest(sources) == ERR_NOT_IN_RANGE){
+                unit.moveTo(sources, {visualizePathStyle: {stroke: '#00ff00'}});
             }
         }
     }
