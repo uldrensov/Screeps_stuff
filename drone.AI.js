@@ -1,23 +1,20 @@
-//DRONE: harvest energy and feed any structures which require it
-//todo: currently harvesting from a hardcoded source (keep for now)
+//DRONE: harvest energy and feed spawning structures
+//black trail
 
 module.exports = {
-    run: function(unit){
-        //array of the room's energy sources
-        //var sources = unit.room.find(FIND_SOURCES);
-        var sources = Game.getObjectById('5bbcae989099fc012e639475');
+    run: function(unit,nexus){
+        //energy source(s)
+        var sources = unit.room.find(FIND_SOURCES);
         
-        //array of the room's energy-deficient structures (of types we want)
-        var feedTargets = unit.room.find(FIND_STRUCTURES, {
+        //energy-deficient extensions
+        var pylons = nexus.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
-                return (structure.structureType == STRUCTURE_SPAWN ||
-                structure.structureType == STRUCTURE_EXTENSION ||
-                structure.structureType == STRUCTURE_TOWER) &&
+                return structure.structureType == STRUCTURE_EXTENSION &&
                 structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         });
         
-        
+
         //two-states...
         //if full energy while outbound, come back
         if (!unit.memory.homebound && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
@@ -31,19 +28,26 @@ module.exports = {
         
         
         //behaviour execution...
-        //find and feed a suitable structure
+        //find and feed the nearest suitable structure
         if (unit.memory.homebound){
-            if (feedTargets.length){
-                if (unit.transfer(feedTargets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(feedTargets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+            //prioritise extensions
+            if (pylons.length){
+                var nearest_pylon = unit.pos.findClosestByPath(pylons);
+                if (unit.transfer(nearest_pylon, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(nearest_pylon, {visualizePathStyle: {stroke: '#ffffff'}});
+                }
+            }
+            else{
+                if (unit.transfer(nexus, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(nexus, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
         }
         
-        //or find and harvest from a source
+        //or harvest
         else{
-            if (unit.harvest(sources) == ERR_NOT_IN_RANGE){
-                unit.moveTo(sources, {visualizePathStyle: {stroke: '#ffffff'}});
+            if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE){
+                unit.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffffff'}});
             }
         }
     }

@@ -1,33 +1,23 @@
-//PROBE: harvest energy and repair decaying structures
+//PROBE: harvest energy, feed towers, and maintain lightly decaying structures
+//blue trail
 
 module.exports = {
-    run: function(unit){
-        //array of the room's energy sources
-        var sources = unit.room.find(FIND_SOURCES);
+    run: function(unit,nexus){
+        //energy source(s)
+        var sources = Game.getObjectById('5bbcae989099fc012e639476');
         
-        //arrays of the room's structures below a certain HP thresholds...
-        //under 25%
-        var repairTargets25 = unit.room.find(FIND_STRUCTURES, {
+        //energy-deficient towers
+        var towers = nexus.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
-                return (structure.hits < structure.hitsMax * .25);
+                return (structure.structureType == STRUCTURE_TOWER) &&
+                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         });
-        //under 50%
-        var repairTargets50 = unit.room.find(FIND_STRUCTURES, {
+        
+        //lightly decaying structures
+        var repairTargets = nexus.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
-                return (structure.hits < structure.hitsMax * .5);
-            }
-        });
-        //under 75%
-        var repairTargets75 = unit.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return (structure.hits < structure.hitsMax * .75);
-            }
-        });
-        //under 100%
-        var repairTargets100 = unit.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return (structure.hits < structure.hitsMax);
+                return (structure.hits >= structure.hitsMax * .75);
             }
         });
         
@@ -45,42 +35,25 @@ module.exports = {
         
         
         //behaviour execution...
-        //find and repair a suitable structure (ordered by priority)
+        //find and maintain a tower or structure
         if (unit.memory.homebound){
-            //below 25% (peril) 
-            if (repairTargets25.length){
-                unit.say('PERIL');
-                if (unit.repair(repairTargets25[0]) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(repairTargets25[0], {visualizePathStyle: {stroke: '#0000ff'}});
+            //prioritise towers
+            if (towers.length){
+                if (unit.transfer(towers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(towers[0], {visualizePathStyle: {stroke: '#0000ff'}});
                 }
             }
-            //below 50% (danger)
-            else if (repairTargets50.length){
-                unit.say('DANGER');
-                if (unit.repair(repairTargets50[0]) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(repairTargets50[0], {visualizePathStyle: {stroke: '#0000ff'}});
-                }
-            }
-            //below 75% (warning)
-            else if (repairTargets75.length){
-                unit.say('WARNING');
-                if (unit.repair(repairTargets75[0]) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(repairTargets75[0], {visualizePathStyle: {stroke: '#0000ff'}});
-                }
-            }
-            //below 100% (OK)
-            else if (repairTargets100.length){
-                unit.say('OK');
-                if (unit.repair(repairTargets100[0]) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(repairTargets100[0], {visualizePathStyle: {stroke: '#0000ff'}});
+            else if (repairTargets.length){
+                if (unit.repair(repairTargets[0]) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(repairTargets[0], {visualizePathStyle: {stroke: '#0000ff'}});
                 }
             }
         }
         
-        //or find and harvest from a source
+        //or harvest
         else{
-            if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE){
-                unit.moveTo(sources[0], {visualizePathStyle: {stroke: '#0000ff'}});
+            if (unit.harvest(sources) == ERR_NOT_IN_RANGE){
+                unit.moveTo(sources, {visualizePathStyle: {stroke: '#0000ff'}});
             }
         }
     }
