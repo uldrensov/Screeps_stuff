@@ -1,10 +1,19 @@
-//PROBE: harvest energy, feed towers, and maintain lightly decaying structures
+//PROBE: withdraw energy, feed towers, and maintain lightly decaying structures
 //blue trail
 
 module.exports = {
     run: function(unit,nexus){
-        //energy source(s)
-        var sources = Game.getObjectById('5bbcae989099fc012e639476');
+        
+        //energy source(s) [only used early game]
+        var sources = nexus.room.find(FIND_SOURCES);
+        
+        //non-empty energy containers
+        var canisters = nexus.room.find(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return (structure.structureType == STRUCTURE_CONTAINER) &&
+                structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+            }
+        });
         
         //energy-deficient towers
         var towers = nexus.room.find(FIND_STRUCTURES, {
@@ -17,7 +26,8 @@ module.exports = {
         //lightly decaying structures
         var repairTargets = nexus.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
-                return (structure.hits >= structure.hitsMax * .75);
+                return (structure.hits < structure.hitsMax &&
+                structure.hits > structure.hitsMax * .75);
             }
         });
         
@@ -28,7 +38,7 @@ module.exports = {
             unit.memory.homebound = true;
         }
         
-        //if empty energy while inbound, go harvest
+        //if empty energy while inbound, go withdraw
         if (unit.memory.homebound && unit.store[RESOURCE_ENERGY] == 0){
             unit.memory.homebound = false;
         }
@@ -50,10 +60,19 @@ module.exports = {
             }
         }
         
-        //or harvest
+        //or withdraw from the fullest canister
         else{
-            if (unit.harvest(sources) == ERR_NOT_IN_RANGE){
-                unit.moveTo(sources, {visualizePathStyle: {stroke: '#0000ff'}});
+            if (canisters.length){
+                var fullest_canister = canisters[0];
+                if (canisters.length == 2 &&
+                canisters[1].store.getUsedCapacity(RESOURCE_ENERGY) >
+                canisters[0].store.getUsedCapacity(RESOURCE_ENERGY)){
+                    fullest_canister = canisters[1];
+                }
+                
+                if (unit.withdraw(fullest_canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(fullest_canister, {visualizePathStyle: {stroke: '#0000ff'}});
+                }
             }
         }
     }

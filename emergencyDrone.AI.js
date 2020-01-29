@@ -1,19 +1,11 @@
-//DRONE: pickup/withdraw energy and feed spawning structures
+//EMERGENCY DRONE: harvest energy and feed spawning structures
 //white trail
 
 module.exports = {
     run: function(unit,nexus){
         
-        //non-empty energy containers
-        var canisters = nexus.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return (structure.structureType == STRUCTURE_CONTAINER) &&
-                structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
-            }
-        });
-        
-        //energy on the floor
-        var scrap = unit.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
+        //energy source(s)
+        var sources = nexus.room.find(FIND_SOURCES);
         
         //energy-deficient extensions
         var pylons = nexus.room.find(FIND_STRUCTURES, {
@@ -30,7 +22,7 @@ module.exports = {
             unit.memory.homebound = true;
         }
         
-        //if empty energy while inbound, go withdraw
+        //if empty energy while inbound, go harvest
         if (unit.memory.homebound && unit.store[RESOURCE_ENERGY] == 0){
             unit.memory.homebound = false;
         }
@@ -53,24 +45,10 @@ module.exports = {
             }
         }
         
-        //or pickup stray energy / withdraw from the fullest canister
+        //or harvest
         else{
-            if (scrap){
-                if (unit.pickup(scrap) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(scrap, {visualizePathStyle: {stroke: '#ff0000'}});
-                }
-            }
-            else if (canisters.length){
-                var fullest_canister = canisters[0];
-                if (canisters.length == 2 &&
-                canisters[1].store.getUsedCapacity(RESOURCE_ENERGY) >
-                canisters[0].store.getUsedCapacity(RESOURCE_ENERGY)){
-                    fullest_canister = canisters[1];
-                }
-                
-                if (unit.withdraw(fullest_canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(fullest_canister, {visualizePathStyle: {stroke: '#ffffff'}});
-                }
+            if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE){
+                unit.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffffff'}});
             }
         }
     }

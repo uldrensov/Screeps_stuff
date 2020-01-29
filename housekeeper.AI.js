@@ -1,10 +1,19 @@
-//HOUSEKEEPER: harvest energy and feed the controller
+//HOUSEKEEPER: withdraw energy and feed the controller
 //red trail
 
 module.exports = {
     run: function(unit,nexus){
-        //energy source(s)
-        var sources = unit.room.find(FIND_SOURCES);
+        
+        //energy source(s) [only used early game]
+        var sources = nexus.room.find(FIND_SOURCES);
+        
+        //non-empty energy containers
+        var canisters = nexus.room.find(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return (structure.structureType == STRUCTURE_CONTAINER) &&
+                structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+            }
+        });
         
         //controller
         var obelisk = nexus.room.controller;
@@ -16,7 +25,7 @@ module.exports = {
             unit.memory.homebound = true;
         }
         
-        //if empty energy while inbound, go harvest
+        //if empty energy while inbound, go withdraw
         if (unit.memory.homebound && unit.store[RESOURCE_ENERGY] == 0){
             unit.memory.homebound = false;
         }
@@ -30,11 +39,19 @@ module.exports = {
             }
         }
         
-        //or harvest
+        //or withdraw from the fullest canister
         else{
-            //console.log(unit.harvest(sources));
-            if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE){
-                unit.moveTo(sources[0], {visualizePathStyle: {stroke: '#ff0000'}});
+            if (canisters.length){
+                var fullest_canister = canisters[0];
+                if (canisters.length == 2 &&
+                canisters[1].store.getUsedCapacity(RESOURCE_ENERGY) >
+                canisters[0].store.getUsedCapacity(RESOURCE_ENERGY)){
+                    fullest_canister = canisters[1];
+                }
+                
+                if (unit.withdraw(fullest_canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(fullest_canister, {visualizePathStyle: {stroke: '#ff0000'}});
+                }
             }
         }
     }

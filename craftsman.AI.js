@@ -1,10 +1,19 @@
-//CRAFTSMAN: harvest energy and build on designated construction hotspots
+//CRAFTSMAN: withdraw energy and build on designated construction hotspots
 //green trail
 
 module.exports = {
     run: function(unit,nexus){
-        //energy source(s)
-        var sources = Game.getObjectById('5bbcae989099fc012e639476');
+        
+        //energy source(s) [only used early game]
+        var sources = nexus.room.find(FIND_SOURCES);
+        
+        //non-empty energy containers
+        var canisters = nexus.room.find(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return (structure.structureType == STRUCTURE_CONTAINER) &&
+                structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+            }
+        });
         
         //construction hotspots
         var hotspots = nexus.room.find(FIND_CONSTRUCTION_SITES);
@@ -16,7 +25,7 @@ module.exports = {
             unit.memory.homebound = true;
         }
         
-        //if empty energy while inbound, go harvest
+        //if empty energy while inbound, go withdraw
         if (unit.memory.homebound && unit.store[RESOURCE_ENERGY] == 0){
             unit.memory.homebound = false;
         }
@@ -33,10 +42,19 @@ module.exports = {
             }
         }
         
-        //or harvest
+        //or withdraw from the fullest canister
         else{
-            if (unit.harvest(sources) == ERR_NOT_IN_RANGE){
-                unit.moveTo(sources, {visualizePathStyle: {stroke: '#00ff00'}});
+            if (canisters.length){
+                var fullest_canister = canisters[0];
+                if (canisters.length == 2 &&
+                canisters[1].store.getUsedCapacity(RESOURCE_ENERGY) >
+                canisters[0].store.getUsedCapacity(RESOURCE_ENERGY)){
+                    fullest_canister = canisters[1];
+                }
+                
+                if (unit.withdraw(fullest_canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(fullest_canister, {visualizePathStyle: {stroke: '#00ff00'}});
+                }
             }
         }
     }

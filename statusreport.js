@@ -5,30 +5,31 @@
 module.exports = {
     run: function(room_num){
         
-        try{
-            if (room_num == 1){
-                var nexus = Game.spawns['Spawn1'];
-            }
-            else{
-                return 'INVALID ROOM NUMBER';
-            }
+        //validate input argument
+        if (room_num == 1){
+            var nexus = Game.spawns['Spawn1'];
         }
-        catch{
-            return 'INVALID ARGUMENT';
+        else{
+            return 'INVALID ROOM NUMBER';
         }
         
         
+        //census...
         //count unit population by role
+        var emergencyDrone_gang = _.filter(Game.creeps, creep => creep.memory.role == 'emergencyDrone');
+        var A_assimilator = _.filter(Game.creeps, creep => creep.memory.role == 'assimilator1');
+            var A_status = A_assimilator.length? 'ONLINE':'OFFLINE';
+        var B_assimilator = _.filter(Game.creeps, creep => creep.memory.role == 'assimilator2');
+            var B_status = B_assimilator.length? 'ONLINE':'OFFLINE';
         var drone_gang = _.filter(Game.creeps, creep => creep.memory.role == 'drone');
         var housekeeper_gang = _.filter(Game.creeps, creep => creep.memory.role == 'housekeeper');
-        var craftsman_gang = _.filter(Game.creeps, creep => creep.memory.role == 'craftsman');
         var probe_gang = _.filter(Game.creeps, creep => creep.memory.role == 'probe');
-        var energy_count = nexus.room.energyAvailable;
+        var craftsman_gang = _.filter(Game.creeps, creep => creep.memory.role == 'craftsman');
         
         //determine underpopulation deadlock status
-        var drone_status = 'Drones:' + drone_gang.length;
-        if (drone_gang.length == 0){
-            drone_status = drone_status + ' (EMERGENCY)';
+        var emergencyDrone_status = 'Emergency drones: ' + emergencyDrone_gang.length;
+        if (emergencyDrone_gang.length > 0){
+            emergencyDrone_status = drone_status + ' (ATTENTION)';
         }
         
         //determine time until next unit death
@@ -42,23 +43,27 @@ module.exports = {
         }
         
         
-        //count structures below a certain HP thresholds...
-        //under 25%
+        //room state...
+        //determine spawn energy capacity
+        var energy_count = nexus.room.energyAvailable;
+        
+        //count structures below a certain HP thresholds
         var structs_25 = nexus.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
-                return (structure.hits < structure.hitsMax * .25);
+                return (structure.hits < structure.hitsMax * .25
+                && structure.structureType != STRUCTURE_WALL);
             }
         });
-        //under 50%
         var structs_50 = nexus.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
-                return (structure.hits < structure.hitsMax * .5);
+                return (structure.hits < structure.hitsMax * .5
+                && structure.structureType != STRUCTURE_WALL);
             }
         });
-        //under 75%
         var structs_75 = nexus.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
-                return (structure.hits < structure.hitsMax * .75);
+                return (structure.hits < structure.hitsMax * .75
+                && structure.structureType != STRUCTURE_WALL);
             }
         });
         
@@ -81,9 +86,12 @@ module.exports = {
         
         //unit census
         console.log('(--Census--)');
-        console.log(drone_status);
+        console.log(emergencyDrone_status);
+        console.log('A. Assimilator: ' + A_status);
+        console.log('B. Assimilator: ' + B_status);
+        console.log('Drones: ' + drone_gang.length);
         console.log('Housekeepers: ' + housekeeper_gang.length);
-        console.log('Probes:' + probe_gang.length);
+        console.log('Probes: ' + probe_gang.length);
         console.log('Craftsmen: ' + craftsman_gang.length);
         console.log('NEXT DEATH: ' + shindeiru + '; ' + mortis + ' ticks');
         console.log(' ');
