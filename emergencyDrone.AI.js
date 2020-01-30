@@ -1,5 +1,6 @@
-//EMERGENCY DRONE: harvest energy and feed spawning structures
+//EMERGENCY DRONE: withdraw/harvest energy and feed spawning structures
 //white trail
+//TODO: add pickup/withdrawal ability (avoid small pickups?)
 
 module.exports = {
     run: function(unit,nexus){
@@ -45,9 +46,14 @@ module.exports = {
             }
         }
         
-        //or harvest
+        //or withdraw/harvest
         else{
-            if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE){
+            if (nexus.room.storage != undefined){
+                if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
+                }
+            }
+            else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE){
                 unit.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffffff'}});
             }
         }

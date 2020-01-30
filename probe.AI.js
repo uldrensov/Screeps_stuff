@@ -2,7 +2,7 @@
 //blue trail
 
 module.exports = {
-    run: function(unit,nexus){
+    run: function(unit,nexus,threshold){
         
         //energy source(s) [only used early game]
         var sources = nexus.room.find(FIND_SOURCES);
@@ -10,7 +10,7 @@ module.exports = {
         //non-empty energy containers
         var canisters = nexus.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
-                return (structure.structureType == STRUCTURE_CONTAINER) &&
+                return structure.structureType == STRUCTURE_CONTAINER &&
                 structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
             }
         });
@@ -26,8 +26,12 @@ module.exports = {
         //lightly decaying structures
         var repairTargets = nexus.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
-                return (structure.hits < structure.hitsMax &&
-                structure.hits > structure.hitsMax * .75);
+                return ((structure.hits < structure.hitsMax
+                && structure.hits > structure.hitsMax * .75
+                && structure.structureType != STRUCTURE_WALL) ||
+                (structure.hits < structure.hitsMax
+                && structure.hits > threshold * .75
+                && structure.structureType == STRUCTURE_WALL));
             }
         });
         
@@ -60,9 +64,14 @@ module.exports = {
             }
         }
         
-        //or withdraw from the fullest canister
+        //or withdraw from the vault / fullest canister
         else{
-            if (canisters.length){
+            if (nexus.room.storage != undefined){
+                if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#0000ff'}});
+                }
+            }
+            else if (canisters.length){
                 var fullest_canister = canisters[0];
                 if (canisters.length == 2 &&
                 canisters[1].store.getUsedCapacity(RESOURCE_ENERGY) >

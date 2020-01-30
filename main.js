@@ -1,7 +1,7 @@
 //unit AI's
 var emergencyDrone = require('emergencyDrone.AI');
-var housekeeper = require('housekeeper.AI');
-var craftsman = require('craftsman.AI');
+var supplicant = require('housekeeper.AI');
+var architect = require('craftsman.AI');
 var probe = require('probe.AI');
 var assimilator = require('assimilator.AI');
 var drone = require('drone.AI');
@@ -22,8 +22,14 @@ var tower_n1_1 = Game.getObjectById('5e2f4a33e8af4a1c6459ccd8');
 
 //reconfigurable numbers
 var time_offset = 100000;
-var drone_price = 700;
-var wall_threshold = 50000;
+var drone_price = 750;
+
+//memory init
+if (!Memory.supplicant_MAX){Memory.supplicant_MAX = 4;}
+if (!Memory.architect_MAX){Memory.architect_MAX = 0;}
+if (!Memory.probe_MAX){Memory.probe_MAX = 3;}
+if (!Memory.drone_MAX){Memory.drone_MAX = 2;}
+if (!Memory.wall_threshold){Memory.wall_threshold = 50000;}
 
 
 module.exports.loop = function(){
@@ -52,8 +58,9 @@ module.exports.loop = function(){
     nexus1.room.energyAvailable < drone_price){
         //300 cost
         if (nexus1.spawnCreep([WORK,CARRY,CARRY,MOVE,MOVE],
-        'emergencyDrone' + Game.time % time_offset, {memory: {role: 'drone'}}) == 0){
-            console.log('---emergencyDrone' + Game.time % time_offset + ' spawning.---');
+        'EmergencyDrone-' + Game.time % time_offset, {memory: {role: 'emergencyDrone'}}) == 0){
+            console.log('<<<EmergencyDrone-' + Game.time % time_offset + ' spawning.>>>');
+            Game.notify('SCREEPS: Emergency drone deployed',0);
         }
     }
     
@@ -62,54 +69,54 @@ module.exports.loop = function(){
     if (A_assimilator.length < 1){
         //550 cost
         if (Game.spawns['Spawn1'].spawnCreep([WORK,WORK,WORK,WORK,WORK,MOVE],
-        'alphaAssimilator' + Game.time % time_offset, {memory: {role: 'assimilator1'}}) == 0){
-            console.log('alphaAssimilator' + Game.time % time_offset + ' spawning.');
+        'AssimilatorALPHA-' + Game.time % time_offset, {memory: {role: 'assimilator1'}}) == 0){
+            console.log('AssimilatorALPHA-' + Game.time % time_offset + ' spawning.');
         }
     }
     if (B_assimilator.length < 1){
         //550 cost
         if (Game.spawns['Spawn1'].spawnCreep([WORK,WORK,WORK,WORK,WORK,MOVE],
-        'betaAssimilator' + Game.time % time_offset, {memory: {role: 'assimilator2'}}) == 0){
-            console.log('betaAssimilator' + Game.time % time_offset + ' spawning.');
+        'AssimilatorBETA-' + Game.time % time_offset, {memory: {role: 'assimilator2'}}) == 0){
+            console.log('AssimilatorBETA-' + Game.time % time_offset + ' spawning.');
         }
     }
     //without drones, nothing else may spawn
-    if (drone_gang.length < 2){
-        //700 cost
-        if (Game.spawns['Spawn1'].spawnCreep([CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
+    if (drone_gang.length < Memory.drone_MAX){
+        //750 cost
+        if (Game.spawns['Spawn1'].spawnCreep([CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
         MOVE,MOVE,MOVE,MOVE,MOVE],
-        'Drone' + Game.time % time_offset, {memory: {role: 'drone'}}) == 0){
-            console.log('Drone' + Game.time % time_offset + ' spawning.');
+        'Drone-' + Game.time % time_offset, {memory: {role: 'drone'}}) == 0){
+            console.log('Drone-' + Game.time % time_offset + ' spawning.');
         }
     }
     //without housekeepers, the room will level down
-    else if (housekeeper_gang.length < 5){
+    else if (housekeeper_gang.length < Memory.supplicant_MAX){
         //1100 cost
         if (Game.spawns['Spawn1'].spawnCreep([WORK,WORK,WORK,WORK,WORK,
         CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
         MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-        'Housekeeper' + Game.time % time_offset, {memory: {role: 'housekeeper'}}) == 0){
-            console.log('Housekeeper' + Game.time % time_offset + ' spawning.');
+        'Supplicant-' + Game.time % time_offset, {memory: {role: 'housekeeper'}}) == 0){
+            console.log('Supplicant-' + Game.time % time_offset + ' spawning.');
         }
     }
     //without probes, towers and structures are not maintained
-    else if (probe_gang.length < 3){
-        //1000 cost
-        if (Game.spawns['Spawn1'].spawnCreep([WORK,WORK,WORK,WORK,WORK,
-        CARRY,CARRY,CARRY,CARRY,CARRY,
-        MOVE,MOVE,MOVE,MOVE,MOVE],
-        'Probe' + Game.time % time_offset, {memory: {role: 'probe'}}) == 0){
-            console.log('Probe' + Game.time % time_offset + ' spawning.');
-        }
-    }
-    //without craftsmen, nothing new can be built
-    else if (craftsman_gang.length < 0){
+    else if (probe_gang.length < Memory.probe_MAX){
         //1100 cost
         if (Game.spawns['Spawn1'].spawnCreep([WORK,WORK,WORK,WORK,WORK,
         CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
         MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-        'Craftsman' + Game.time % time_offset, {memory: {role: 'craftsman'}}) == 0){
-            console.log('Craftsman' + Game.time % time_offset + ' spawning.');
+        'Probe-' + Game.time % time_offset, {memory: {role: 'probe'}}) == 0){
+            console.log('Probe-' + Game.time % time_offset + ' spawning.');
+        }
+    }
+    //without craftsmen, nothing new can be built
+    else if (craftsman_gang.length < Memory.architect_MAX){
+        //1300 cost
+        if (Game.spawns['Spawn1'].spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,
+        CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+        'Architect-' + Game.time % time_offset, {memory: {role: 'craftsman'}}) == 0){
+            console.log('Architect-' + Game.time % time_offset + ' spawning.');
         }
     }
     
@@ -131,13 +138,13 @@ module.exports.loop = function(){
             drone.run(unit,nexus1);
         }
         else if (unit.memory.role == 'housekeeper'){
-            housekeeper.run(unit,nexus1);
+            supplicant.run(unit,nexus1);
         }
         else if (unit.memory.role == 'probe'){
-            probe.run(unit,nexus1);
+            probe.run(unit,nexus1,Memory.wall_threshold);
         }
         else if (unit.memory.role == 'craftsman'){
-            craftsman.run(unit,nexus1);
+            architect.run(unit,nexus1);
         }
         else if (unit.memory.role == 'specialist'){
             specialist.run(unit,nexus1);
@@ -146,6 +153,6 @@ module.exports.loop = function(){
     
     
     //assign AI's to each tower
-    shieldbattery.run(tower_n1_1,wall_threshold);
+    shieldbattery.run(tower_n1_1,Memory.wall_threshold);
     //khaydarin.run(tower_n1_1);
 }

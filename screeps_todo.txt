@@ -1,18 +1,22 @@
-TODO:
-	shield battery should target structures below some % and fixate on them until well past that %
-	wall max hp is considered at the const val; get probes/status report to see them
-	lowest structure % to output in status report
-	pick up after tombstones
-	better container search algo?
-	better pickup algo?
-	remote mining
-	emergency reassignment during deadlock?
-	lack of assimilator deadlock?
-	email notifications?
-	smart assimilator spawning?
-	main code and status report should work for other rooms
+TODO today:
+	[DEFENCE] reintroduce the sentry role
+	[BUG] drone wont bank to vault until something spawns; memory got edited somehow to allow an uauthorised spawn
+	[OPTIMISATION] drones pickup other minerals from npc tombs
+
+TODO backlog:
+	[DEADLOCK] emergency reassignment during deadlock?
+	[DEADLOCK] 'lack of assimilator' deadlock?
+	[DEFENCE] shield battery should heal the lowest in general; no more 25-50-75 tiers (think about optimal repairing methodology)
+	[BUG] scrap pickup filter (no <10)
+	[OPTIMISATION] better container/vault search algo?
+	[OPTIMISATION] remote mining
+	[QOL] more status report info (pickups, containers)
+	[MAINTAINENCE] smart assimilator spawning?
+	[MAINTAINENCE] the great renaming
+	[MAINTAINENCE] main code and status report should work for other rooms
 
 Look up:
+	minerals (what for?)
 	how big to make units
 	1M storage unit
 	link (RCL 5)

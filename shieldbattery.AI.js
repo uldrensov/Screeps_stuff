@@ -33,7 +33,7 @@ module.exports = {
         //find and repair a suitable structure (ordered by priority)
         
         
-        //temp
+        //temp: shieldbattery may attack before checking for heals
         var enemy = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if (enemy){
             tower.attack(enemy);

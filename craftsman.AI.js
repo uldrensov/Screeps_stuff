@@ -1,4 +1,4 @@
-//CRAFTSMAN: withdraw energy and build on designated construction hotspots
+//ARCHITECT: withdraw energy and build on designated construction hotspots
 //green trail
 
 module.exports = {
@@ -10,7 +10,7 @@ module.exports = {
         //non-empty energy containers
         var canisters = nexus.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
-                return (structure.structureType == STRUCTURE_CONTAINER) &&
+                return structure.structureType == STRUCTURE_CONTAINER &&
                 structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
             }
         });
@@ -38,6 +38,13 @@ module.exports = {
                 var nearest_hotspot = unit.pos.findClosestByPath(hotspots);
                 if (unit.build(nearest_hotspot) == ERR_NOT_IN_RANGE){
                     unit.moveTo(nearest_hotspot, {visualizePathStyle: {stroke: '#00ff00'}});
+                }
+            }
+            //if excess energy, dump it in storage
+            else if (nexus.room.storage != undefined){
+                //console.log(unit.transfer(nexus.room.storage, RESOURCE_ENERGY));
+                if (unit.transfer(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#00ff00'}});
                 }
             }
         }
