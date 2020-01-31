@@ -6,6 +6,7 @@ module.exports = {
         var enemy = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if (enemy){
             tower.attack(enemy);
+            Game.notify('SCREEPS: TOWER HAS ENGAGED THE ENEMY',30);
         }
     }
 };

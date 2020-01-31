@@ -13,9 +13,10 @@ module.exports = {
             return 'INVALID ROOM NUMBER';
         }
         
-        if (Memory.wall_threshold == undefined || Memory.drone_MAX == undefined ||
-        Memory.supplicant_MAX == undefined || Memory.probe_MAX == undefined ||
-        Memory.architect_MAX == undefined){
+        if (Memory.wall_threshold == undefined || Memory.rampart_threshold == undefined ||
+        Memory.drone_MAX == undefined || Memory.supplicant_MAX == undefined ||
+        Memory.probe_MAX == undefined || Memory.architect_MAX == undefined ||
+        Memory.energiser_MAX == undefined){
             return 'ERROR: main.js failed to initialise memory';
         }
         
@@ -26,6 +27,7 @@ module.exports = {
         var A_assimilator = _.filter(Game.creeps, creep => creep.memory.role == 'assimilator1');
         var B_assimilator = _.filter(Game.creeps, creep => creep.memory.role == 'assimilator2');
         var drone_gang = _.filter(Game.creeps, creep => creep.memory.role == 'drone');
+        var energiser_gang = _.filter(Game.creeps, creep => creep.memory.role == 'energiser');
         var housekeeper_gang = _.filter(Game.creeps, creep => creep.memory.role == 'housekeeper');
         var probe_gang = _.filter(Game.creeps, creep => creep.memory.role == 'probe');
         var craftsman_gang = _.filter(Game.creeps, creep => creep.memory.role == 'craftsman');
@@ -129,6 +131,7 @@ module.exports = {
         console.log('Assimilator A: ' + A_assimilator.length + '/1');
         console.log('Assimilator B: ' + B_assimilator.length + '/1');
         console.log('Drones: ' + drone_gang.length + '/' + Memory.drone_MAX);
+        console.log('Energisers: ' + energiser_gang.length + '/' + Memory.energiser_MAX);
         console.log('Supplicants: ' + housekeeper_gang.length + '/' + Memory.supplicant_MAX);
         console.log('Probes: ' + probe_gang.length + '/' + Memory.probe_MAX);
         console.log('Architects: ' + craftsman_gang.length + '/' + Memory.architect_MAX);

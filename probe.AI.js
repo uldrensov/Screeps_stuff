@@ -1,4 +1,4 @@
-//PROBE: withdraw energy, feed towers, and maintain lightly decaying structures
+//PROBE: withdraw energy and maintain lightly decaying structures
 //blue trail
 
 module.exports = {
@@ -7,33 +7,42 @@ module.exports = {
         //energy source(s) [only used early game]
         var sources = nexus.room.find(FIND_SOURCES);
         
-        //non-empty energy containers
-        var canisters = nexus.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return structure.structureType == STRUCTURE_CONTAINER &&
-                structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
-            }
-        });
-        
-        //energy-deficient towers
-        var towers = nexus.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return (structure.structureType == STRUCTURE_TOWER) &&
-                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-            }
-        });
-        
+        /*
         //lightly decaying structures
         var repairTargets = nexus.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return ((structure.hits < structure.hitsMax
-                && structure.hits > structure.hitsMax * .75
+                && structure.hits < structure.hitsMax * .75
                 && structure.structureType != STRUCTURE_WALL) ||
                 (structure.hits < structure.hitsMax
-                && structure.hits > threshold * .75
+                && structure.hits < threshold * .75
                 && structure.structureType == STRUCTURE_WALL));
             }
         });
+        */
+        
+        var repairTargets = nexus.room.find(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return ((structure.hits < structure.hitsMax
+                && structure.hits > structure.hitsMax * .75
+                && structure.structureType != STRUCTURE_WALL));
+            }
+        });
+        
+        //
+        var weakest_struct;
+        //var weakstruct_perc;
+        if (repairTargets.length){
+            weakest_struct = repairTargets[0];
+            for (var i=1; i<repairTargets.length; i++){
+                if (repairTargets[i].hits / repairTargets[i].hitsMax
+                < weakest_struct.hits / weakest_struct.hitsMax){
+                    weakest_struct = repairTargets[i];
+                }
+            }
+            //weakstruct_perc = (weakest_struct.hits / weakest_struct.hitsMax) * 100;
+            //weakstruct_perc = weakstruct_perc.toFixed(3);
+        }
         
         
         //two-states...
@@ -49,17 +58,11 @@ module.exports = {
         
         
         //behaviour execution...
-        //find and maintain a tower or structure
+        //find and maintain a structure
         if (unit.memory.homebound){
-            //prioritise towers
-            if (towers.length){
-                if (unit.transfer(towers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(towers[0], {visualizePathStyle: {stroke: '#0000ff'}});
-                }
-            }
-            else if (repairTargets.length){
-                if (unit.repair(repairTargets[0]) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(repairTargets[0], {visualizePathStyle: {stroke: '#0000ff'}});
+            if (weakest_struct != undefined){
+                if (unit.repair(weakest_struct) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(weakest_struct, {visualizePathStyle: {stroke: '#0000ff'}});
                 }
             }
         }

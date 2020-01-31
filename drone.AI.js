@@ -46,6 +46,9 @@ module.exports = {
         //behaviour execution...
         //find and feed the nearest suitable structure
         if (unit.memory.homebound){
+            
+            //deposit non energy minerals
+            
             //prioritise extensions
             if (pylons.length){
                 var nearest_pylon = unit.pos.findClosestByPath(pylons);
@@ -60,7 +63,7 @@ module.exports = {
             }
             //if excess energy, dump it in storage
             else if (nexus.room.storage != undefined){
-                //console.log(unit.transfer(nexus.room.storage, RESOURCE_ENERGY));
+                console.log('wrong');
                 if (unit.transfer(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
                     unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
@@ -77,7 +80,6 @@ module.exports = {
                         richest_tomb.store.getUsedCapacity(RESOURCE_ENERGY)){
                             richest_tomb = tombs[i];
                         }
-                        
                     }
                 }
                 
@@ -85,23 +87,35 @@ module.exports = {
                     unit.moveTo(richest_tomb, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
+            //prioritise non-energy pickups
+            /*
             else if (scraps.length){
-                var biggest_scrap = scraps[0];
-                if (scraps.length > 1){
-                    for (var i=1; i<scraps.length; i++){
-                        if (scraps[i].energy > biggest_scrap.energy){
-                            biggest_scrap = scraps[i];
+                var chosen_scrap = scraps[0];
+                var treasure_found = false;
+                
+                //find the most endangered non-energy pickup
+                for (var i=0; i<scraps.length; i++){
+                    if (scraps[i].resource != RESOURCE_ENERGY &&
+                    scraps[i].amount < chosen_scrap.amount){
+                        chosen_scrap = scraps[i];
+                        treasure_found = true;
+                    }
+                }
+                
+                //if no valuable pickups, re-run the search w/ energy-finding criteria
+                if (!treasure_found){
+                    for (var i=0; i<scraps.length; i++){
+                        if (scraps[i].energy > chosen_scrap.energy){
+                            chosen_scrap = scraps[i];
                         }
                     }
                 }
                 
-                //avoid "crumbs" left by assimilators
-                if (biggest_scrap.energy > 10){
-                    if (unit.pickup(biggest_scrap) == ERR_NOT_IN_RANGE){
-                        unit.moveTo(biggest_scrap, {visualizePathStyle: {stroke: '#ff0000'}});
-                    }
+                if (unit.pickup(chosen_scrap) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(chosen_scrap, {visualizePathStyle: {stroke: '#ff0000'}});
                 }
             }
+            */
             else if (canisters.length){
                 var fullest_canister = canisters[0];
                 if (canisters.length == 2 &&

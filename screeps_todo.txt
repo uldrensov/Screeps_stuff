@@ -1,24 +1,25 @@
 TODO today:
-	[DEFENCE] reintroduce the sentry role
-	[BUG] drone wont bank to vault until something spawns; memory got edited somehow to allow an uauthorised spawn
-	[OPTIMISATION] drones pickup other minerals from npc tombs
+	emer drone didnt spawn
+	rework supplicants? (other roles too?)
+	probe code messy
+	[DEFENCE] shield battery should heal the lowest in general; no more 25-50-75 tiers (think about optimal repairing methodology)
+	[OPTIMISATION] drones pickup other minerals from npc tombs (and deposit)
 
 TODO backlog:
 	[DEADLOCK] emergency reassignment during deadlock?
 	[DEADLOCK] 'lack of assimilator' deadlock?
-	[DEFENCE] shield battery should heal the lowest in general; no more 25-50-75 tiers (think about optimal repairing methodology)
-	[BUG] scrap pickup filter (no <10)
+	[OPTIMISATION] scrap pickup filter (no <10)
 	[OPTIMISATION] better container/vault search algo?
 	[OPTIMISATION] remote mining
 	[QOL] more status report info (pickups, containers)
-	[MAINTAINENCE] smart assimilator spawning?
+	[OPTIMISATION] smart assimilator spawning?
+	[MAINTAINENCE] retire khaydarin monolith AI
 	[MAINTAINENCE] the great renaming
 	[MAINTAINENCE] main code and status report should work for other rooms
 
 Look up:
 	minerals (what for?)
 	how big to make units
-	1M storage unit
 	link (RCL 5)
 	reinforcing road
 	flagging a neutral controller

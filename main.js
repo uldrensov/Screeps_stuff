@@ -5,6 +5,7 @@ var architect = require('craftsman.AI');
 var probe = require('probe.AI');
 var assimilator = require('assimilator.AI');
 var drone = require('drone.AI');
+var energiser = require('energiser.AI');
 var zealot = require('zealot.AI');
 var specialist = require('specialist.AI');
 
@@ -25,11 +26,13 @@ var time_offset = 100000;
 var drone_price = 750;
 
 //memory init
-if (!Memory.supplicant_MAX){Memory.supplicant_MAX = 4;}
-if (!Memory.architect_MAX){Memory.architect_MAX = 0;}
-if (!Memory.probe_MAX){Memory.probe_MAX = 3;}
-if (!Memory.drone_MAX){Memory.drone_MAX = 2;}
-if (!Memory.wall_threshold){Memory.wall_threshold = 50000;}
+if (Memory.supplicant_MAX == undefined){Memory.supplicant_MAX = 3;}
+if (Memory.architect_MAX == undefined){Memory.architect_MAX = 1;}
+if (Memory.probe_MAX == undefined){Memory.probe_MAX = 2;}
+if (Memory.drone_MAX == undefined){Memory.drone_MAX = 2;}
+if (Memory.energiser_MAX == undefined){Memory.energiser_MAX = 1;}
+if (Memory.wall_threshold == undefined){Memory.wall_threshold = 50000;}
+if (Memory.rampart_threshold == undefined){Memory.rampart_threshold = 50000;}
 
 
 module.exports.loop = function(){
@@ -52,6 +55,7 @@ module.exports.loop = function(){
     var A_assimilator = _.filter(Game.creeps, creep => creep.memory.role == 'assimilator1');
     var B_assimilator = _.filter(Game.creeps, creep => creep.memory.role == 'assimilator2');
     var drone_gang = _.filter(Game.creeps, creep => creep.memory.role == 'drone');
+    var energiser_gang = _.filter(Game.creeps, creep => creep.memory.role == 'energiser');
     
     //emergency drone: if there are no other drones, and costs are too high to spawn normal drones
     if (drone_gang.length == 0 && emergencyDrone_gang.length == 0 &&
@@ -73,7 +77,7 @@ module.exports.loop = function(){
             console.log('AssimilatorALPHA-' + Game.time % time_offset + ' spawning.');
         }
     }
-    if (B_assimilator.length < 1){
+    else if (B_assimilator.length < 1){
         //550 cost
         if (Game.spawns['Spawn1'].spawnCreep([WORK,WORK,WORK,WORK,WORK,MOVE],
         'AssimilatorBETA-' + Game.time % time_offset, {memory: {role: 'assimilator2'}}) == 0){
@@ -81,7 +85,7 @@ module.exports.loop = function(){
         }
     }
     //without drones, nothing else may spawn
-    if (drone_gang.length < Memory.drone_MAX){
+    else if (drone_gang.length < Memory.drone_MAX){
         //750 cost
         if (Game.spawns['Spawn1'].spawnCreep([CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
         MOVE,MOVE,MOVE,MOVE,MOVE],
@@ -89,7 +93,16 @@ module.exports.loop = function(){
             console.log('Drone-' + Game.time % time_offset + ' spawning.');
         }
     }
-    //without housekeepers, the room will level down
+    //without energisers, the room is defenceless
+    else if (energiser_gang.length < Memory.energiser_MAX){
+        //750 cost
+        if (Game.spawns['Spawn1'].spawnCreep([CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE],
+        'Energiser-' + Game.time % time_offset, {memory: {role: 'energiser'}}) == 0){
+            console.log('Energiser-' + Game.time % time_offset + ' spawning.');
+        }
+    }
+    //without supplicants, the room will level down
     else if (housekeeper_gang.length < Memory.supplicant_MAX){
         //1100 cost
         if (Game.spawns['Spawn1'].spawnCreep([WORK,WORK,WORK,WORK,WORK,
@@ -99,7 +112,7 @@ module.exports.loop = function(){
             console.log('Supplicant-' + Game.time % time_offset + ' spawning.');
         }
     }
-    //without probes, towers and structures are not maintained
+    //without probes, structures are not maintained
     else if (probe_gang.length < Memory.probe_MAX){
         //1100 cost
         if (Game.spawns['Spawn1'].spawnCreep([WORK,WORK,WORK,WORK,WORK,
@@ -109,7 +122,7 @@ module.exports.loop = function(){
             console.log('Probe-' + Game.time % time_offset + ' spawning.');
         }
     }
-    //without craftsmen, nothing new can be built
+    //without architects, nothing new can be built
     else if (craftsman_gang.length < Memory.architect_MAX){
         //1300 cost
         if (Game.spawns['Spawn1'].spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,
@@ -137,6 +150,9 @@ module.exports.loop = function(){
         else if (unit.memory.role == 'drone'){
             drone.run(unit,nexus1);
         }
+        else if (unit.memory.role == 'energiser'){
+            energiser.run(unit,nexus1);
+        }
         else if (unit.memory.role == 'housekeeper'){
             supplicant.run(unit,nexus1);
         }
@@ -153,6 +169,6 @@ module.exports.loop = function(){
     
     
     //assign AI's to each tower
-    shieldbattery.run(tower_n1_1,Memory.wall_threshold);
+    shieldbattery.run(tower_n1_1,Memory.wall_threshold,Memory.rampart_threshold);
     //khaydarin.run(tower_n1_1);
 }
