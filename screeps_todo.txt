@@ -1,30 +1,26 @@
 TODO today:
+	drones actin funny w the eastern link
+	drones need to consider the storage as a source if assim slow (<200 canist
 	emer drone didnt spawn
-	rework supplicants? (other roles too?)
 	probe code messy
 	[DEFENCE] shield battery should heal the lowest in general; no more 25-50-75 tiers (think about optimal repairing methodology)
-	[OPTIMISATION] drones pickup other minerals from npc tombs (and deposit)
+		if drops below certain mark, fixate until a certain mark or another thing goes critical; whichever one happens last
 
 TODO backlog:
 	[DEADLOCK] emergency reassignment during deadlock?
-	[DEADLOCK] 'lack of assimilator' deadlock?
+	[DEADLOCK] 'lack of assimilator' deadlock? (if no assim & no money, emer convert)
 	[OPTIMISATION] scrap pickup filter (no <10)
-	[OPTIMISATION] better container/vault search algo?
 	[OPTIMISATION] remote mining
-	[QOL] more status report info (pickups, containers)
-	[OPTIMISATION] smart assimilator spawning?
-	[MAINTAINENCE] retire khaydarin monolith AI
-	[MAINTAINENCE] the great renaming
+	[QOL] more status report info (pickups?)
 	[MAINTAINENCE] main code and status report should work for other rooms
 
 Look up:
 	minerals (what for?)
-	how big to make units
-	link (RCL 5)
-	reinforcing road
 	flagging a neutral controller
 
 JS help:
 	lodash
 	filter method (lambda notation)
 	run: function()
+	prototypes
+	utils

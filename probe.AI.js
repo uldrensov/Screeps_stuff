@@ -1,4 +1,4 @@
-//PROBE: withdraw energy and maintain lightly decaying structures
+//PROBE: withdraws energy and repairs lightly damaged structures
 //blue trail
 
 module.exports = {
@@ -23,9 +23,8 @@ module.exports = {
         
         var repairTargets = nexus.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
-                return ((structure.hits < structure.hitsMax
-                && structure.hits > structure.hitsMax * .75
-                && structure.structureType != STRUCTURE_WALL));
+                return (structure.hits < structure.hitsMax
+                && structure.hits > structure.hitsMax * .5);
             }
         });
         
@@ -58,7 +57,7 @@ module.exports = {
         
         
         //behaviour execution...
-        //find and maintain a structure
+        //find and repair a structure
         if (unit.memory.homebound){
             if (weakest_struct != undefined){
                 if (unit.repair(weakest_struct) == ERR_NOT_IN_RANGE){

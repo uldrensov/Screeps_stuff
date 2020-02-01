@@ -1,12 +1,12 @@
 //ASSIMILATOR: dedicated max-efficiency mining unit
-//black trail
+//white trail
 
 module.exports = {
     run: function(unit,src,canister){
         
         //continually mine from a designated source while standing on a container
         if (!unit.pos.isEqualTo(canister.pos)){
-            unit.moveTo(canister, {visualizePathStyle: {stroke: '#000000'}});
+            unit.moveTo(canister, {visualizePathStyle: {stroke: '#ffffff'}});
         }
         else{
             unit.harvest(src);

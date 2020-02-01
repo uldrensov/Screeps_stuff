@@ -1,4 +1,4 @@
-//EMERGENCY DRONE: withdraw/harvest energy and feed spawning structures
+//EMERGENCY DRONE: withdraw/harvests energy and feeds spawning structures
 //white trail
 //TODO: add pickup/withdrawal ability (avoid small pickups?)
 

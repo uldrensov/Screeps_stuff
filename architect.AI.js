@@ -1,8 +1,11 @@
-//ENERGISER: withdraws energy and resupplies towers
-//blue trail
+//ARCHITECT: withdraws energy and builds on designated construction hotspots
+//green trail
 
 module.exports = {
-    run: function(unit,nexus){
+    run: function(unit,nexus,reserve){
+        
+        //energy source(s) [only used early game]
+        var sources = nexus.room.find(FIND_SOURCES);
         
         //non-empty energy containers
         var canisters = nexus.room.find(FIND_STRUCTURES, {
@@ -12,13 +15,8 @@ module.exports = {
             }
         });
         
-        //energy-deficient towers
-        var towers = nexus.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return (structure.structureType == STRUCTURE_TOWER) &&
-                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-            }
-        });
+        //construction hotspots
+        var hotspots = nexus.room.find(FIND_CONSTRUCTION_SITES);
         
         
         //two-states...
@@ -34,27 +32,21 @@ module.exports = {
         
         
         //behaviour execution...
-        //find and resupply a tower
+        //feed the nearest hotspot
         if (unit.memory.homebound){
-            if (towers.length){
-                //target the most depleted tower
-                var lowest_tower = towers[0];
-                for (var i=0; i<towers.length; i++){
-                    if (towers[i].store[RESOURCE_ENERGY] < lowest_tower.store[RESOURCE_ENERGY]){
-                        lowest_tower = towers[i];
-                    }
-                }
-                if (unit.transfer(lowest_tower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(lowest_tower, {visualizePathStyle: {stroke: '#0000ff'}});
+            if (hotspots.length){
+                var nearest_hotspot = unit.pos.findClosestByPath(hotspots);
+                if (unit.build(nearest_hotspot) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(nearest_hotspot, {visualizePathStyle: {stroke: '#00ff00'}});
                 }
             }
         }
         
-        //or withdraw from the vault / fullest canister
+        //or withdraw from the vault (if energy can be spared) / fullest canister
         else{
-            if (nexus.room.storage != undefined){
+            if (nexus.room.storage != undefined && nexus.room.storage.store.energy > reserve){
                 if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#0000ff'}});
+                    unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#00ff00'}});
                 }
             }
             else if (canisters.length){
@@ -66,7 +58,7 @@ module.exports = {
                 }
                 
                 if (unit.withdraw(fullest_canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(fullest_canister, {visualizePathStyle: {stroke: '#0000ff'}});
+                    unit.moveTo(fullest_canister, {visualizePathStyle: {stroke: '#00ff00'}});
                 }
             }
         }

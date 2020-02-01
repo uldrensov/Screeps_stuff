@@ -24,13 +24,15 @@ module.exports = {
         //census...
         //count unit population by role
         var emergencyDrone_gang = _.filter(Game.creeps, creep => creep.memory.role == 'emergencyDrone');
-        var A_assimilator = _.filter(Game.creeps, creep => creep.memory.role == 'assimilator1');
-        var B_assimilator = _.filter(Game.creeps, creep => creep.memory.role == 'assimilator2');
+        var assimilator_lone = _.filter(Game.creeps, creep => creep.memory.role == 'assimilator');
+        //var assimilator_lone2 = _.filter(Game.creeps, creep => creep.memory.role == 'assimilator2');
         var drone_gang = _.filter(Game.creeps, creep => creep.memory.role == 'drone');
         var energiser_gang = _.filter(Game.creeps, creep => creep.memory.role == 'energiser');
-        var housekeeper_gang = _.filter(Game.creeps, creep => creep.memory.role == 'housekeeper');
+        //var sacrificer_gang = _.filter(Game.creeps, creep => creep.memory.role == 'sacrificer');
+        var acolyte_lone = _.filter(Game.creeps, creep => creep.memory.role == 'acolyte');
+        var supplicant_gang = _.filter(Game.creeps, creep => creep.memory.role == 'supplicant');
         var probe_gang = _.filter(Game.creeps, creep => creep.memory.role == 'probe');
-        var craftsman_gang = _.filter(Game.creeps, creep => creep.memory.role == 'craftsman');
+        var architect_gang = _.filter(Game.creeps, creep => creep.memory.role == 'architect');
         
         //determine underpopulation deadlock status
         var emergencyDrone_status = 'Emergency drones: ' + emergencyDrone_gang.length;
@@ -70,7 +72,8 @@ module.exports = {
         var worn_structs = nexus.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return (structure.hits < structure.hitsMax
-                && structure.structureType != STRUCTURE_WALL);
+                && structure.structureType != STRUCTURE_WALL
+                && structure.structureType != STRUCTURE_RAMPART);
             }
         });
         
@@ -128,13 +131,15 @@ module.exports = {
         //unit census
         console.log('<<<--Census-->>>');
         console.log(emergencyDrone_status);
-        console.log('Assimilator A: ' + A_assimilator.length + '/1');
-        console.log('Assimilator B: ' + B_assimilator.length + '/1');
+        console.log('Assimilator: ' + assimilator_lone.length + '/1');
+        //console.log('Assimilator 2: ' + assimilator_lone2.length + '/1');
         console.log('Drones: ' + drone_gang.length + '/' + Memory.drone_MAX);
         console.log('Energisers: ' + energiser_gang.length + '/' + Memory.energiser_MAX);
-        console.log('Supplicants: ' + housekeeper_gang.length + '/' + Memory.supplicant_MAX);
+        //console.log('Sacrificers: ' + sacrificer_gang.length + '/' + Memory.sacrificer_MAX);
+        console.log('Acolyte: ' + acolyte_lone.length + '/1');
+        console.log('Supplicants: ' + supplicant_gang.length + '/' + Memory.supplicant_MAX);
         console.log('Probes: ' + probe_gang.length + '/' + Memory.probe_MAX);
-        console.log('Architects: ' + craftsman_gang.length + '/' + Memory.architect_MAX);
+        console.log('Architects: ' + architect_gang.length + '/' + Memory.architect_MAX);
         console.log('NEXT DEATH: ' + shindeiru + '; ' + mortis + ' ticks');
         console.log(' ');
         
