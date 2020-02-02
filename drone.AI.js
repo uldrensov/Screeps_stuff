@@ -2,18 +2,23 @@
 //white trail
 
 module.exports = {
-    run: function(unit,nexus){
+    run: function(unit,nexus,pickup_min,ignore_lim){
         
-        //non-empty energy containers
+        //energy containers of reasonable capacity
         var canisters = nexus.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return structure.structureType == STRUCTURE_CONTAINER &&
-                structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+                structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
             }
         });
         
-        //energy on the floor
-        var scraps = nexus.room.find(FIND_DROPPED_RESOURCES);
+        //all minerals pickups, and sufficiently plentiful energy pickups
+        var scraps = nexus.room.find(FIND_DROPPED_RESOURCES, {
+            filter: (resource) => {
+                return (resource.amount > pickup_min && resource.resourceType == RESOURCE_ENERGY) ||
+                resource.resourceType != RESOURCE_ENERGY;
+            }
+        });
         
         //non-empty tombstones
         var tombs = nexus.room.find(FIND_TOMBSTONES, {
@@ -32,8 +37,8 @@ module.exports = {
         
         
         //two-states...
-        //if full energy while outbound, come back
-        if (!unit.memory.homebound && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
+        //if full pockets while outbound, come back
+        if (!unit.memory.homebound && unit.store.getFreeCapacity() == 0){
             unit.memory.homebound = true;
         }
         
@@ -73,12 +78,14 @@ module.exports = {
                     }
                 }
                 else if (nexus.store.getFreeCapacity(RESOURCE_ENERGY) != 0){
+                    //console.log('corret');
                     if (unit.transfer(nexus, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
                         unit.moveTo(nexus, {visualizePathStyle: {stroke: '#ffffff'}});
                     }
                 }
                 //if excess energy, dump it in storage
                 else if (nexus.room.storage != undefined){
+                    //console.log('NO NIGGA');
                     if (unit.transfer(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
                         unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
                     }
@@ -147,6 +154,7 @@ module.exports = {
                 }
                 
                 if (unit.pickup(chosen_scrap) == ERR_NOT_IN_RANGE){
+                    //console.log(unit.moveTo(chosen_scrap, {visualizePathStyle: {stroke: '#ffffff'}}));
                     unit.moveTo(chosen_scrap, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
@@ -160,6 +168,11 @@ module.exports = {
                 
                 if (unit.withdraw(fullest_canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
                     unit.moveTo(fullest_canister, {visualizePathStyle: {stroke: '#ffffff'}});
+                }
+            }
+            else if (nexus.room.storage != undefined){
+                if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
         }

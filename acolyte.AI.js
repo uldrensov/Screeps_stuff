@@ -27,11 +27,20 @@ module.exports = {
             if (unit.transfer(warp_branch, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
                 unit.moveTo(warp_branch, {visualizePathStyle: {stroke: '#ff0000'}});
             }
+            //if the link is full, overflow-mine into the container
+            else if (unit.transfer(warp_branch, RESOURCE_ENERGY) == ERR_FULL){
+                unit.harvest(src);
+            }
         }
         
         //or harvest
-        else if (unit.harvest(src) == ERR_NOT_IN_RANGE){
-            unit.moveTo(canister, {visualizePathStyle: {stroke: '#ff0000'}});
+        else{
+            if (!unit.pos.isEqualTo(canister.pos)){
+                unit.moveTo(canister, {visualizePathStyle: {stroke: '#ff0000'}});
+            }
+            else {
+                unit.harvest(src);
+            }
         }
     }
 };

@@ -1,47 +1,24 @@
-//PROBE: withdraws energy and repairs lightly damaged structures
+//PROBE: withdraws energy and repairs damaged structures
 //blue trail
 
 module.exports = {
-    run: function(unit,nexus,threshold){
+    run: function(unit,nexus,thresholdT,thresholdR,override_threshold){
         
         //energy source(s) [only used early game]
         var sources = nexus.room.find(FIND_SOURCES);
         
-        /*
-        //lightly decaying structures
+        //structures not at full HP / threshold
         var repairTargets = nexus.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return ((structure.hits < structure.hitsMax
-                && structure.hits < structure.hitsMax * .75
-                && structure.structureType != STRUCTURE_WALL) ||
-                (structure.hits < structure.hitsMax
-                && structure.hits < threshold * .75
-                && structure.structureType == STRUCTURE_WALL));
+                && structure.structureType != STRUCTURE_WALL
+                && structure.structureType != STRUCTURE_RAMPART) ||
+                (structure.hits < thresholdT
+                && structure.structureType == STRUCTURE_WALL) ||
+                (structure.hits < thresholdR
+                && structure.structureType == STRUCTURE_RAMPART));
             }
         });
-        */
-        
-        var repairTargets = nexus.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return (structure.hits < structure.hitsMax
-                && structure.hits > structure.hitsMax * .5);
-            }
-        });
-        
-        //
-        var weakest_struct;
-        //var weakstruct_perc;
-        if (repairTargets.length){
-            weakest_struct = repairTargets[0];
-            for (var i=1; i<repairTargets.length; i++){
-                if (repairTargets[i].hits / repairTargets[i].hitsMax
-                < weakest_struct.hits / weakest_struct.hitsMax){
-                    weakest_struct = repairTargets[i];
-                }
-            }
-            //weakstruct_perc = (weakest_struct.hits / weakest_struct.hitsMax) * 100;
-            //weakstruct_perc = weakstruct_perc.toFixed(3);
-        }
         
         
         //two-states...
@@ -57,12 +34,72 @@ module.exports = {
         
         
         //behaviour execution...
-        //find and repair a structure
-        if (unit.memory.homebound){
-            if (weakest_struct != undefined){
-                if (unit.repair(weakest_struct) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(weakest_struct, {visualizePathStyle: {stroke: '#0000ff'}});
+        //find a structure to fixate upon, and repair it until a greater emergency arises
+        if (unit.memory.homebound && repairTargets.length){
+            //find the weakest structure in terms of %
+            var weakest = repairTargets[0];
+            
+            //get the base case's proper maximum / threshold value before calculating %
+            var HPmax_base;
+            var base_perc;
+            switch (weakest.structureType){
+                case STRUCTURE_WALL:
+                    HPmax_base = thresholdT;
+                    break;
+                case STRUCTURE_RAMPART:
+                    HPmax_base = thresholdR;
+                    break;
+                default:
+                    HPmax_base = weakest.hitsMax;
+            }
+            base_perc = weakest.hits / HPmax_base;
+            
+            //repeat for each remaining candidate
+            var HPmax_compare;
+            var compare_perc;
+            for (let i=0; i<repairTargets.length; i++){
+                switch (repairTargets[i].structureType){
+                    case STRUCTURE_WALL:
+                        HPmax_compare = thresholdT;
+                        break;
+                    case STRUCTURE_RAMPART:
+                        HPmax_compare = thresholdR;
+                        break;
+                    default:
+                        HPmax_compare = repairTargets[i].hitsMax;
                 }
+                compare_perc = repairTargets[i].hits / HPmax_compare;
+                
+                //compare and update
+                if (compare_perc < base_perc){
+                    weakest = repairTargets[i];
+                    HPmax_base = HPmax_compare;
+                    base_perc = compare_perc;
+                }
+            }
+            
+            //if there is no current target, "fixate" on the weakest one
+            if (unit.memory.fixation == undefined){
+                unit.memory.fixation = weakest.id;
+                unit.memory.fixation_max = HPmax_base;
+            }
+            //otherwise, determine if the previous fixation is worth overriding for the new weakest structure
+            else if ((Game.getObjectById(unit.memory.fixation).hits / unit.memory.fixation_max)
+            - base_perc > override_threshold){
+                unit.memory.fixation = weakest.id;
+                unit.memory.fixation_max = HPmax_base;
+            }
+            
+            //finally, attempt to repair the fixated target until its max / threshold
+            var final_target = Game.getObjectById(unit.memory.fixation);
+            if (final_target.hits < unit.memory.fixation_max){
+                if (unit.repair(final_target) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(final_target, {visualizePathStyle: {stroke: '#0000ff'}});
+                }
+            }
+            //release the fixation if it reaches max
+            else{
+                delete unit.memory.fixation;
             }
         }
         

@@ -8,6 +8,7 @@ var drone = require('drone.AI');
 var energiser = require('energiser.AI');
 var acolyte = require('acolyte.AI');
 var supplicant = require('supplicant.AI');
+var fanatic = require('fanatic.AI');
 var zealot = require('zealot.AI');
 var specialist = require('specialist.AI');
 
@@ -29,8 +30,11 @@ var WP_branch_tile = Game.getObjectById('5e354b518c0dfc0f7b8dc1d0');
 
 //reconfigurable numbers
 var time_offset = 100000;
+var fixation_override_threshold = .2; //probes will break fixation upon spotting a % gap this wide
 var drone_price = 1050;
-var reserve_minimum = 20000;
+var drone_pickup_min = 200;
+var drone_ignore_lim = 210; //drones will ignore containers containing less than this
+var reserve_minimum = 50000;
 
 //memory init
 //if (Memory.sacrificer_MAX == undefined){Memory.sacrificer_MAX = 3;}
@@ -39,6 +43,7 @@ if (Memory.probe_MAX == undefined){Memory.probe_MAX = 3;}
 if (Memory.drone_MAX == undefined){Memory.drone_MAX = 2;}
 if (Memory.energiser_MAX == undefined){Memory.energiser_MAX = 1;}
 if (Memory.supplicant_MAX == undefined){Memory.supplicant_MAX = 1;}
+if (Memory.fanatic_MAX == undefined){Memory.fanatic_MAX = 1;}
 if (Memory.wall_threshold == undefined){Memory.wall_threshold = 50000;}
 if (Memory.rampart_threshold == undefined){Memory.rampart_threshold = 50000;}
 
@@ -66,6 +71,7 @@ module.exports.loop = function(){
     var energiser_gang = _.filter(Game.creeps, creep => creep.memory.role == 'energiser');
     var acolyte_lone = _.filter(Game.creeps, creep => creep.memory.role == 'acolyte');
     var supplicant_gang = _.filter(Game.creeps, creep => creep.memory.role == 'supplicant');
+    var fanatic_gang = _.filter(Game.creeps, creep => creep.memory.role == 'fanatic');
     
     //emergency drone: if there are no other drones, and costs are too high to spawn normal drones
     if (drone_gang.length == 0 && emergencyDrone_gang.length == 0 &&
@@ -169,6 +175,17 @@ module.exports.loop = function(){
         }
     }
     
+    //fanatic: use this wisely
+    else if (fanatic_gang.length < Memory.fanatic_MAX){
+        //1800 cost
+        if (Game.spawns['Spawn1'].spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,
+        CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
+        MOVE,MOVE,MOVE,MOVE,MOVE],
+        'Fanatic-' + Game.time % time_offset, {memory: {role: 'fanatic'}}) == 0){
+            console.log('Fanatic-' + Game.time % time_offset + ' spawning.');
+        }
+    }
+    
     
     //assign AI's to each unit type...
     //main room
@@ -186,7 +203,7 @@ module.exports.loop = function(){
         }
         */
         else if (unit.memory.role == 'drone'){
-            drone.run(unit, nexus1);
+            drone.run(unit, nexus1, drone_pickup_min, drone_ignore_lim);
         }
         else if (unit.memory.role == 'energiser'){
             energiser.run(unit, nexus1);
@@ -198,10 +215,14 @@ module.exports.loop = function(){
             supplicant.run(unit, nexus1, warpprism_main, warpprism_branch, WP_main_tile);
         }
         else if (unit.memory.role == 'probe'){
-            probe.run(unit, nexus1, Memory.wall_threshold);
+            probe.run(unit, nexus1, Memory.wall_threshold, Memory.rampart_threshold,
+            fixation_override_threshold);
         }
         else if (unit.memory.role == 'architect'){
             architect.run(unit, nexus1, reserve_minimum);
+        }
+        else if (unit.memory.role == 'fanatic'){
+            fanatic.run(unit, nexus1, reserve_minimum);
         }
         else if (unit.memory.role == 'specialist'){
             specialist.run(unit, nexus1);

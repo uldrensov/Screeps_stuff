@@ -1,15 +1,15 @@
 TODO today:
-	drones actin funny w the eastern link
-	drones need to consider the storage as a source if assim slow (<200 canist
-	emer drone didnt spawn
-	probe code messy
-	[DEFENCE] shield battery should heal the lowest in general; no more 25-50-75 tiers (think about optimal repairing methodology)
+	[BUG] drones can freeze while looking for scrap
+	[DEFENCE] tower should heal the lowest in general; no more 25-50-75 tiers (think about optimal repairing methodology)
 		if drops below certain mark, fixate until a certain mark or another thing goes critical; whichever one happens last
+	[FEATURE] let towers heal
+	[BUG] drones vaulting when there are still unit quotas to fill (does this still happen?)
+	[BUG] drones acting funny w the eastern link (does this still happen?)
+	[BUG] emergency drone didnt spawn last time
 
 TODO backlog:
 	[DEADLOCK] emergency reassignment during deadlock?
-	[DEADLOCK] 'lack of assimilator' deadlock? (if no assim & no money, emer convert)
-	[OPTIMISATION] scrap pickup filter (no <10)
+	[DEADLOCK] 'lack of assimilator' deadlock? (if no assim & no money, emergency convert)
 	[OPTIMISATION] remote mining
 	[QOL] more status report info (pickups?)
 	[MAINTAINENCE] main code and status report should work for other rooms

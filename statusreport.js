@@ -14,9 +14,9 @@ module.exports = {
         }
         
         if (Memory.wall_threshold == undefined || Memory.rampart_threshold == undefined ||
-        Memory.drone_MAX == undefined || Memory.supplicant_MAX == undefined ||
-        Memory.probe_MAX == undefined || Memory.architect_MAX == undefined ||
-        Memory.energiser_MAX == undefined){
+        Memory.architect_MAX == undefined || Memory.probe_MAX == undefined ||
+        Memory.drone_MAX == undefined || Memory.energiser_MAX == undefined ||
+        Memory.supplicant_MAX == undefined || Memory.fanatic_MAX == undefined){
             return 'ERROR: main.js failed to initialise memory';
         }
         
@@ -33,6 +33,7 @@ module.exports = {
         var supplicant_gang = _.filter(Game.creeps, creep => creep.memory.role == 'supplicant');
         var probe_gang = _.filter(Game.creeps, creep => creep.memory.role == 'probe');
         var architect_gang = _.filter(Game.creeps, creep => creep.memory.role == 'architect');
+        var fanatic_gang = _.filter(Game.creeps, creep => creep.memory.role == 'fanatic');
         
         //determine underpopulation deadlock status
         var emergencyDrone_status = 'Emergency drones: ' + emergencyDrone_gang.length;
@@ -140,6 +141,7 @@ module.exports = {
         console.log('Supplicants: ' + supplicant_gang.length + '/' + Memory.supplicant_MAX);
         console.log('Probes: ' + probe_gang.length + '/' + Memory.probe_MAX);
         console.log('Architects: ' + architect_gang.length + '/' + Memory.architect_MAX);
+        console.log('Fanatics: ' + fanatic_gang.length + '/' + Memory.fanatic_MAX);
         console.log('NEXT DEATH: ' + shindeiru + '; ' + mortis + ' ticks');
         console.log(' ');
         
