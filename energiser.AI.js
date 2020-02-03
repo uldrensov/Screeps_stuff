@@ -6,7 +6,7 @@ module.exports = {
         
         //non-empty energy containers
         var canisters = nexus.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
+            filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER &&
                 structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
             }
@@ -14,7 +14,7 @@ module.exports = {
         
         //energy-deficient towers
         var towers = nexus.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
+            filter: structure => {
                 return (structure.structureType == STRUCTURE_TOWER) &&
                 structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
@@ -39,7 +39,7 @@ module.exports = {
             if (towers.length){
                 //target the most depleted tower
                 var lowest_tower = towers[0];
-                for (var i=0; i<towers.length; i++){
+                for (let i=0; i<towers.length; i++){
                     if (towers[i].store[RESOURCE_ENERGY] < lowest_tower.store[RESOURCE_ENERGY]){
                         lowest_tower = towers[i];
                     }

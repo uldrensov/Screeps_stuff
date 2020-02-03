@@ -2,11 +2,11 @@
 //red trail
 
 module.exports = {
-    run: function(unit,src,warp_main_ID,warp_branch_ID,canister){
+    run: function(unit,src_id,warp_main_id,warp_branch_id,canister){
         
-        //bug avoidance (pass ID, not object itself)
-        var warp_main = Game.getObjectById(warp_main_ID);
-        var warp_branch = Game.getObjectById(warp_branch_ID);
+        var src = Game.getObjectById(src_id);
+        var warp_main = Game.getObjectById(warp_main_id);
+        var warp_branch = Game.getObjectById(warp_branch_id);
         
         
         //two-states...

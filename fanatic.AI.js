@@ -3,7 +3,6 @@
 
 module.exports = {
     run: function(unit,nexus,reserve){
-        
         //two-states...
         //if full pockets while outbound, come back
         if (!unit.memory.homebound && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0){

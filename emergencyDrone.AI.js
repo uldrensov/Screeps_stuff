@@ -3,14 +3,17 @@
 //TODO: add pickup/withdrawal ability (avoid small pickups?)
 
 module.exports = {
-    run: function(unit,nexus){
+    run: function(unit,nexus_id){
+        
+        var nexus = Game.getObjectById(nexus_id);
+        
         
         //energy source(s)
         var sources = nexus.room.find(FIND_SOURCES);
         
         //energy-deficient extensions
         var pylons = nexus.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
+            filter: structure => {
                 return structure.structureType == STRUCTURE_EXTENSION &&
                 structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }

@@ -9,7 +9,7 @@ module.exports = {
         
         //structures not at full HP / threshold
         var repairTargets = nexus.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
+            filter: structure => {
                 return ((structure.hits < structure.hitsMax
                 && structure.structureType != STRUCTURE_WALL
                 && structure.structureType != STRUCTURE_RAMPART) ||
