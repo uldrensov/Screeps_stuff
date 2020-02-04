@@ -1,4 +1,4 @@
-//SUPPLICANT: dedicated high-efficiency controller upgrader
+//SUPPLICANT: dedicated semi-stationary controller upgrader
 //red trail
 
 module.exports = {

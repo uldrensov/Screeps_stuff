@@ -16,7 +16,7 @@ module.exports = {
         
         
         //behaviour execution...
-        //upgrade the controller
+        //feed the controller
         if (unit.memory.homebound){
             if (unit.upgradeController(nexus.room.controller) == ERR_NOT_IN_RANGE){
                 unit.moveTo(nexus.room.controller, {visualizePathStyle: {stroke: '#ff0000'}});
