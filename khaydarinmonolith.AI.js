@@ -1,4 +1,4 @@
-//KHAYDARIN MONOLITH: <tower> attacks foes relentlessly and repairs structures within reason
+//KHAYDARIN MONOLITH: <tower> globally attacks foes, heals allies, and repairs endangered structures
 
 module.exports = {
     run: function(tower_id,thresholdT,thresholdR,reserve_ratio){

@@ -1,8 +1,7 @@
 TODO today:
-	[MAINTAINENCE] main code should work for other rooms
 	renew units?
+	emergency drone comment at top
 	[BUG] drones can freeze while looking for scrap
-	[BUG] nexus and other args should be passed by id, not object
 	[DEFENCE] tower should reuse probe's fixation mechanic
 
 TODO backlog:

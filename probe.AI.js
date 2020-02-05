@@ -2,10 +2,18 @@
 //blue trail
 
 module.exports = {
-    run: function(unit,nexus,thresholdT,thresholdR,override_threshold){
+    run: function(unit,nexus,thresholdT,thresholdR,override_threshold,ignore_lim){
         
-        //energy source(s) [only used early game]
+        //energy source(s)
         var sources = nexus.room.find(FIND_SOURCES);
+        
+        //containers of reasonable capacity
+        var canisters = nexus.room.find(FIND_STRUCTURES, {
+            filter: structure => {
+                return structure.structureType == STRUCTURE_CONTAINER &&
+                structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
+            }
+        });
         
         //structures not at full HP / threshold
         var repairTargets = nexus.room.find(FIND_STRUCTURES, {

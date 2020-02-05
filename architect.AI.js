@@ -4,10 +4,10 @@
 module.exports = {
     run: function(unit,nexus,reserve){
         
-        //energy source(s) [only used early game]
+        //energy source(s)
         var sources = nexus.room.find(FIND_SOURCES);
         
-        //non-empty energy containers
+        //non-empty containers
         var canisters = nexus.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER &&

@@ -4,7 +4,7 @@
 module.exports = {
     run: function(unit,nexus){
         
-        //non-empty energy containers
+        //non-empty containers
         var canisters = nexus.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER &&

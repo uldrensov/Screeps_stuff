@@ -1,4 +1,4 @@
-//ASSIMILATOR: dedicated max-efficiency mining unit
+//ASSIMILATOR: dedicated stationary max-efficiency mining unit
 //white trail
 
 module.exports = {

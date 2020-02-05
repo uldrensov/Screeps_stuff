@@ -7,7 +7,7 @@ module.exports = {
         var nexus = Game.getObjectById(nexus_id);
         
         
-        //energy containers of reasonable capacity
+        //containers of reasonable capacity
         var canisters = nexus.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER &&
@@ -15,7 +15,7 @@ module.exports = {
             }
         });
         
-        //all minerals pickups, and sufficiently plentiful energy pickups
+        //all mineral pickups, and sufficiently plentiful energy pickups
         var scraps = nexus.room.find(FIND_DROPPED_RESOURCES, {
             filter: resource => {
                 return (resource.amount > pickup_min && resource.resourceType == RESOURCE_ENERGY) ||
@@ -131,7 +131,7 @@ module.exports = {
                     unit.moveTo(richest_tomb, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
-            //prioritise mineral pickups
+            //prioritise mineral pickups next
             else if (scraps.length){
                 var chosen_scrap = scraps[0];
                 var treasure_found_s = false;
@@ -159,6 +159,7 @@ module.exports = {
                     unit.moveTo(chosen_scrap, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
+            //check containers before resorting to the vault
             else if (canisters.length){
                 //determine the fullest container in play
                 var fullest_canister = canisters[0];

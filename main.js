@@ -1,4 +1,4 @@
-//unit AI's
+//AI's
 var emergencyDrone = require('emergencyDrone.AI');
 var sacrificer = require('sacrificer.AI');
 var architect = require('architect.AI');
@@ -12,10 +12,11 @@ var fanatic = require('fanatic.AI');
 var recalibrator = require('recalibrator.AI');
 var specialist = require('specialist.AI');
 var saviour = require('saviour.AI');
+var hallucination = require('hallucination.AI');
+var hightemplar = require('hightemplar.AI');
 var zealot = require('zealot.AI');
-
-//tower AI
 var khaydarinmonolith = require('khaydarinmonolith.AI');
+
 
 //reconfigurable structure IDs
 var nexus_id = ['5e2d15a9e152154167131760', '5e3909b408abb42e9b310a46'];
@@ -24,60 +25,77 @@ var source1_id = ['5bbcae989099fc012e639476', '5bbcae989099fc012e639479'];
 var source2_id = ['5bbcae989099fc012e639475'];
 var canister1_id = ['5e30677977034e78c09bdc43', '5e393db88c0dfcfcb18f05d2'];
 //var canister2_id = [];
-var tower_n1_1_id = '5e2f4a33e8af4a1c6459ccd8';
-var tower_n1_2_id = '5e346820d632bc24398489ab';
+var towers_nex1_id = ['5e2f4a33e8af4a1c6459ccd8', '5e346820d632bc24398489ab'];
+var towers_nex2_id = ['5e3a68c9aa99575a56cba5da'];
 var warpprism_main_id = '5e34d2403561285c52aba5b2';
 var warpprism_branch_id = '5e34d803221670187690e4d7';
 var WP_main_tile = Game.getObjectById('5e2e78bdda1c845d8cb2df9c');
 var WP_branch_tile = Game.getObjectById('5e354b518c0dfc0f7b8dc1d0');
 
-//reconfigurable role-based body part configurations
-var edrone_body = [WORK,WORK,WORK,WORK,WORK,MOVE];
-var assim_body = [[WORK,WORK,WORK,WORK,WORK,MOVE],
-                [WORK,WORK, MOVE]];
-                //cost: 550, 250
+//reconfigurable role-based body types
+var edrone_body = [WORK, CARRY,CARRY, MOVE,MOVE];
+var assim_body = [[WORK,WORK,WORK,WORK,WORK, MOVE],
+                [WORK,WORK,WORK,WORK,WORK, MOVE]];
+                //cost: 550, 550
 var drone_body = [[CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
                 MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                [CARRY,CARRY,CARRY,CARRY, MOVE,MOVE]];
-                //cost: 1450, 300
-var energ_body = [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE];
+                [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE]];
+                //cost: 1450, 750
+var energ_body = [[CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
+                [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE]];
+                //cost: 750, 450
+var sacrif_body = [WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE];
                 //cost: 750
-var sacrif_body = [WORK, CARRY,CARRY, MOVE,MOVE];
-                //cost: 300
 var acoly_body = [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY, MOVE,MOVE,MOVE,MOVE];
                 //cost: 900
 var suppl_body = [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY, MOVE,MOVE,MOVE,MOVE,MOVE];
                 //cost: 1800
 var probe_body = [[WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                [WORK, CARRY,CARRY, MOVE,MOVE]];
-                //cost: 1400, 300
+                [WORK,WORK,WORK, CARRY,CARRY,CARRY, MOVE,MOVE,MOVE]];
+                //cost: 1400, 600
 var archit_body = [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
                 MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                [WORK, CARRY,CARRY, MOVE,MOVE]];
-                //cost: 1800, 300
+                [WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE]];
+                //cost: 1800, 750
 var fanat_body = [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
                 MOVE,MOVE,MOVE,MOVE,MOVE];
                 //cost: 1800
+var speci_body = [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
+                MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE];
+                //cost: 1800
+var halluc_body = [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,
+                TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,
+                MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE];
+                //cost: 1800
+var ht_body = [HEAL,HEAL,HEAL,HEAL,HEAL,HEAL, MOVE,MOVE,MOVE];
+                //cost: 1800
+var zealot_body = [ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE];
+                //cost: 1680
 
 //reconfigurable numbers
 var time_offset = 100000;
 var fixation_override_threshold = .25; //probes will break fixation upon spotting a % gap this wide
-var drone_price = [1450,300];
+var drone_price = [1450,750];
 var drone_pickup_min = 200;
-var drone_ignore_lim = 210; //drones will ignore containers containing less than this
+var canister_ignore_lim = 210; //drones will ignore containers containing less than this
 var tower_reserve_ratio = .5;
-var vault_reserve_min = 30000;
+var vault_reserve_min = 20000;
+
 
 //memory init
-if (Memory.sacrificer_MAX == undefined){Memory.sacrificer_MAX = [0,1];}
+if (Memory.sacrificer_MAX == undefined){Memory.sacrificer_MAX = [0,3];}
 if (Memory.architect_MAX == undefined){Memory.architect_MAX = [0,1];}
-if (Memory.probe_MAX == undefined){Memory.probe_MAX = [3,1];}
-if (Memory.drone_MAX == undefined){Memory.drone_MAX = [2,1];}
-if (Memory.energiser_MAX == undefined){Memory.energiser_MAX = [1,0];}
+if (Memory.probe_MAX == undefined){Memory.probe_MAX = [3,2];}
+if (Memory.drone_MAX == undefined){Memory.drone_MAX = [2,2];}
+if (Memory.energiser_MAX == undefined){Memory.energiser_MAX = [1,1];}
 if (Memory.acolyte_MAX == undefined){Memory.acolyte_MAX = [1,0];}
 if (Memory.supplicant_MAX == undefined){Memory.supplicant_MAX = [1,0];}
 if (Memory.fanatic_MAX == undefined){Memory.fanatic_MAX = [0,0];}
-if (Memory.specialist_MAX == undefined){Memory.specialist_MAX = 3;}
+if (Memory.specialist_MAX == undefined){Memory.specialist_MAX = 2;}
+if (Memory.saviour_MAX == undefined){Memory.saviour_MAX = 1;}
+if (Memory.hallucination_MAX == undefined){Memory.hallucination_MAX = 0;}
+if (Memory.hightemplar_MAX == undefined){Memory.hightemplar_MAX = 0;}
+if (Memory.zealot_MAX == undefined){Memory.zealot_MAX = 0;}
 if (Memory.wall_threshold == undefined){Memory.wall_threshold = 50000;}
 if (Memory.rampart_threshold == undefined){Memory.rampart_threshold = 100000;}
 
@@ -99,11 +117,11 @@ module.exports.loop = function(){
     //for storing population count in each room
     var emergencyDrone_gang = []; var sacrificer_gang = []; var architect_gang = []; var probe_gang = [];
     var assimilator_lone = []; var assimilator_lone2 = []; var drone_gang = []; var energiser_gang = [];
-    var acolyte_lone = []; var supplicant_gang = []; var fanatic_gang = [];
+    var acolyte_lone = []; var supplicant_gang = []; var fanatic_gang = []; var specialist_gang;
+    var saviour_gang; var hallucination_gang; var hightemplar_gang; var zealot_gang;
     
     
     //execute the auto-spawn and unit AI assignment routines for each room
-    var k=0;
     for (let k=0; k<nexi.length; k++){
         
         //count unit population by role
@@ -119,19 +137,23 @@ module.exports.loop = function(){
         supplicant_gang[k] = _.filter(Game.creeps, creep => creep.memory.role == 'supplicant' && creep.room == nexi[k].room);
         fanatic_gang[k] = _.filter(Game.creeps, creep => creep.memory.role == 'fanatic' && creep.room == nexi[k].room);
         specialist_gang = _.filter(Game.creeps, creep => creep.memory.role == 'specialist');
-    
-    
+        saviour_gang = _.filter(Game.creeps, creep => creep.memory.role == 'saviour');
+        hallucination_gang = _.filter(Game.creeps, creep => creep.memory.role == 'hallucination');
+        hightemplar_gang = _.filter(Game.creeps, creep => creep.memory.role == 'hightemplar');
+        zealot_gang = _.filter(Game.creeps, creep => creep.memory.role == 'zealot');
+        
+        
+        //priorities and amounts...
         //emergency drone: if there are no other drones, and costs are too high to spawn normal drones
-        if (drone_gang[k].length == 0 && emergencyDrone_gang.length == 0 &&
+        if (drone_gang[k].length == 0 && emergencyDrone_gang[k].length == 0 &&
         nexi[k].room.energyAvailable < drone_price[k]){
             if (nexi[k].spawnCreep(edrone_body,
             'EmergencyDrone-' + Game.time % time_offset, {memory: {role: 'emergencyDrone'}}) == 0){
-                console.log('Room #' + k + ': <<<EmergencyDrone-' + Game.time % time_offset + ' spawning.>>>');
+                console.log('Room #' + k + ': >>>EmergencyDrone-' + Game.time % time_offset + ' spawning.<<<');
                 Game.notify('Emergency drone deployed',0);
             }
         }
-    
-        //priorities and amounts...
+        
         //without assimilators, there is no usable energy
         if (assimilator_lone[k].length < 1){
             if (nexi[k].spawnCreep(assim_body[k],
@@ -156,7 +178,7 @@ module.exports.loop = function(){
         }
         //without energisers, the room is defenceless
         else if (energiser_gang[k].length < Memory.energiser_MAX[k]){
-            if (nexi[k].spawnCreep(energ_body,
+            if (nexi[k].spawnCreep(energ_body[k],
             'Energiser-' + Game.time % time_offset, {memory: {role: 'energiser'}}) == 0){
                 console.log('Room #' + k + ': Energiser-' + Game.time % time_offset + ' spawning.');
             }
@@ -207,16 +229,42 @@ module.exports.loop = function(){
     
         //specialist: only used in setting up new rooms
         else if (specialist_gang.length < Memory.specialist_MAX){
-            //1800 cost
-            if (nexi[0].spawnCreep([WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,
-            CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
-            MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+            if (nexi[0].spawnCreep(speci_body,
             'Specialist-' + Game.time % time_offset, {memory: {role: 'specialist'}}) == 0){
                 console.log('Specialist-' + Game.time % time_offset + ' spawning.');
             }
         }
-    
-    
+        //saviour: only used in setting up new rooms
+        else if (saviour_gang.length < Memory.saviour_MAX){
+            if (nexi[0].spawnCreep(speci_body,
+            'Saviour-' + Game.time % time_offset, {memory: {role: 'saviour'}}) == 0){
+                console.log('Saviour-' + Game.time % time_offset + ' spawning.');
+            }
+        }
+        
+        //hallucination: only used during coordinated military efforts
+        else if (hallucination_gang.length < Memory.hallucination_MAX){
+            if (nexi[0].spawnCreep(halluc_body,
+            'Hallucination-' + Game.time % time_offset, {memory: {role: 'hallucination'}}) == 0){
+                console.log('Hallucination-' + Game.time % time_offset + ' spawning.');
+            }
+        }
+        //high templar: only used during coordinated military efforts
+        else if (hightemplar_gang.length < Memory.hightemplar_MAX){
+            if (nexi[0].spawnCreep(ht_body,
+            'Hightemplar-' + Game.time % time_offset, {memory: {role: 'hightemplar'}}) == 0){
+                console.log('Hightemplar-' + Game.time % time_offset + ' spawning.');
+            }
+        }
+        //zealot: only used during coordinated military efforts
+        else if (zealot_gang.length < Memory.zealot_MAX){
+            if (nexi[0].spawnCreep(zealot_body,
+            'Zealot-' + Game.time % time_offset, {memory: {role: 'zealot'}}) == 0){
+                console.log('Zealot-' + Game.time % time_offset + ' spawning.');
+            }
+        }
+        
+        
         //assign AI's to each unit type
         for (var name in Game.creeps){
             var unit = Game.creeps[name];
@@ -236,13 +284,13 @@ module.exports.loop = function(){
                         break;
                     */
                     case 'drone':
-                        drone.run(unit, nexus_id[k], drone_pickup_min, drone_ignore_lim);
+                        drone.run(unit, nexus_id[k], drone_pickup_min, canister_ignore_lim);
                         break;
                     case 'energiser':
                         energiser.run(unit, nexi[k]);
                         break;
                     case 'sacrificer':
-                        sacrificer.run(unit, controller_id[k]);
+                        sacrificer.run(unit, controller_id[k], canister_ignore_lim);
                         break;
                     case 'acolyte':
                         acolyte.run(unit, source2_id[0], warpprism_main_id, warpprism_branch_id, WP_branch_tile);
@@ -252,7 +300,7 @@ module.exports.loop = function(){
                         break;
                     case 'probe':
                         probe.run(unit, nexi[k], Memory.wall_threshold, Memory.rampart_threshold,
-                        fixation_override_threshold);
+                        fixation_override_threshold, canister_ignore_lim);
                         break;
                     case 'architect':
                         architect.run(unit, nexi[k], vault_reserve_min);
@@ -274,12 +322,22 @@ module.exports.loop = function(){
                 case 'saviour':
                     saviour.run(unit, nexus_id[0], controller_id[1], vault_reserve_min);
                     break;
+                case 'hallucination':
+                    //hallucination.run(unit, Game.flags[''], Game.flags['']);
+                    break;
+                case 'hightemplar':
+                    //hightemplar.run(unit, Game.flags['']);
+                    break;
+                case 'zealot':
+                    //zealot.run(unit, Game.flags[''], Game.flags['']);
+                    break;
             }
         }
     }
     
     
     //assign AI's to each tower
-    khaydarinmonolith.run(tower_n1_1_id, Memory.wall_threshold, Memory.rampart_threshold, tower_reserve_ratio);
-    khaydarinmonolith.run(tower_n1_2_id, Memory.wall_threshold, Memory.rampart_threshold, tower_reserve_ratio);
+    khaydarinmonolith.run(towers_nex1_id[0], Memory.wall_threshold, Memory.rampart_threshold, tower_reserve_ratio);
+    khaydarinmonolith.run(towers_nex1_id[1], Memory.wall_threshold, Memory.rampart_threshold, tower_reserve_ratio);
+    khaydarinmonolith.run(towers_nex2_id[0], Memory.wall_threshold, Memory.rampart_threshold, tower_reserve_ratio);
 }

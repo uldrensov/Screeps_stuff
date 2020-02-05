@@ -1,4 +1,4 @@
-//SAVIOUR: cross-room controller upgrader
+//SAVIOUR: cross-room fast-track controller upgrader
 //red trail
 
 module.exports = {
