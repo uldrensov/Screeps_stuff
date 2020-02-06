@@ -24,7 +24,6 @@ module.exports = {
         if (!unit.memory.homebound && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
             unit.memory.homebound = true;
         }
-        
         //if empty energy while inbound, go withdraw
         if (unit.memory.homebound && unit.store[RESOURCE_ENERGY] == 0){
             unit.memory.homebound = false;
@@ -41,8 +40,7 @@ module.exports = {
                 }
             }
         }
-        
-        //or withdraw from the vault (if energy can be spared) / fullest canister
+        //withdraw from the vault (if energy can be spared) / fullest canister
         else{
             if (nexus.room.storage != undefined && nexus.room.storage.store.energy > reserve){
                 if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){

@@ -51,6 +51,7 @@ module.exports = {
             creep.room == nexi[room_num].room);
         var probe_gang = _.filter(Game.creeps, creep => creep.memory.role == 'probe' &&
             creep.room == nexi[room_num].room);
+        var orbitalAssimilator_gang = _.filter(Game.creeps, creep => creep.memory.role == 'orbitalAssimilator');
         var architect_gang = _.filter(Game.creeps, creep => creep.memory.role == 'architect' &&
             creep.room == nexi[room_num].room);
         var fanatic_gang = _.filter(Game.creeps, creep => creep.memory.role == 'fanatic' &&
@@ -156,18 +157,19 @@ module.exports = {
         //unit census
         console.log('<<<--Census-->>>');
         console.log(emergencyDrone_status);
-        console.log('Assimilator: ' + assimilator_lone.length + '/1');
+        console.log('Assimilators: ' + assimilator_lone.length + '/1');
         //console.log('Assimilator 2: ' + assimilator_lone2.length + '/1');
         console.log('Drones: ' + drone_gang.length + '/' + Memory.drone_MAX[room_num]);
         console.log('Energisers: ' + energiser_gang.length + '/' + Memory.energiser_MAX[room_num]);
         console.log('Sacrificers: ' + sacrificer_gang.length + '/' + Memory.sacrificer_MAX[room_num]);
-        console.log('Acolyte: ' + acolyte_lone.length + '/' + Memory.acolyte_MAX[room_num]);
+        console.log('Acolytes: ' + acolyte_lone.length + '/' + Memory.acolyte_MAX[room_num]);
         console.log('Supplicants: ' + supplicant_gang.length + '/' + Memory.supplicant_MAX[room_num]);
         console.log('Probes: ' + probe_gang.length + '/' + Memory.probe_MAX[room_num]);
+        console.log('Orbital assimilators : ' + orbitalAssimilator_gang.length + ' (MAXCOUNT TODO)');
         console.log('Architects: ' + architect_gang.length + '/' + Memory.architect_MAX[room_num]);
         console.log('Fanatics: ' + fanatic_gang.length + '/' + Memory.fanatic_MAX[room_num]);
         console.log('Specialists: ' + specialist_gang.length + '/' + Memory.specialist_MAX);
-        console.log('Saviour: ' + saviour_gang.length + '/' + Memory.saviour_MAX);
+        console.log('Saviours: ' + saviour_gang.length + '/' + Memory.saviour_MAX);
         console.log('NEXT DEATH: ' + shindeiru + '; ' + mortis + ' ticks');
         console.log(' ');
         

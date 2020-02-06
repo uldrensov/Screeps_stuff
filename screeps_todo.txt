@@ -1,17 +1,17 @@
 TODO today:
+	allow multiple orb assims w/o using room loop
+	remove if/else spaces, write accurate role descs (comment/format overhaul)
 	renew units?
 	emergency drone comment at top
 	[BUG] drones can freeze while looking for scrap
 	[DEFENCE] tower should reuse probe's fixation mechanic
 
 TODO backlog:
-	[OPTIMISATION] remote mining
 	[QOL] more status report info (pickups?)
 	[DEADLOCK] emergency reassignment during deadlock?
 	[DEADLOCK] 'lack of assimilator' deadlock? (if no assim & no money, emergency convert)
 	
 Look up:
-	minerals (what for?)
 	flagging a neutral controller
 
 JS help:

@@ -10,7 +10,6 @@ module.exports = {
         if (!unit.memory.retreating && unit.hits < unit.hitsMax * .2){
             unit.memory.retreating = true;
         }
-        
         //once restored to full, return to battle
         if (unit.memory.retreating && unit.hits == unit.hitsMax){
             unit.memory.retreating = false;

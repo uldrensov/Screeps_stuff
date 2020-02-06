@@ -14,7 +14,6 @@ module.exports = {
                 structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
             }
         });
-        
         //all mineral pickups, and sufficiently plentiful energy pickups
         var scraps = nexus.room.find(FIND_DROPPED_RESOURCES, {
             filter: resource => {
@@ -22,7 +21,6 @@ module.exports = {
                 resource.resourceType != RESOURCE_ENERGY;
             }
         });
-        
         //non-empty tombstones
         var tombs = nexus.room.find(FIND_TOMBSTONES, {
             filter: RoomObject => {
@@ -44,7 +42,6 @@ module.exports = {
         if (!unit.memory.homebound && unit.store.getFreeCapacity() == 0){
             unit.memory.homebound = true;
         }
-        
         //if empty energy while inbound, go withdraw
         if (unit.memory.homebound && unit.store[RESOURCE_ENERGY] == 0){
             unit.memory.homebound = false;
@@ -71,7 +68,6 @@ module.exports = {
                     unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
-            
             else{
                 //prioritise extensions
                 if (pylons.length){
@@ -93,8 +89,7 @@ module.exports = {
                 }
             }
         }
-        
-        //or pickup/withdraw
+        //pickup/withdraw
         else{
             //prioritise tombstones
             if (tombs.length){
@@ -126,7 +121,6 @@ module.exports = {
                         }
                     }
                 }
-
                 if (unit.withdraw(richest_tomb, treasure_to_withdraw) == ERR_NOT_IN_RANGE){
                     unit.moveTo(richest_tomb, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
@@ -144,7 +138,6 @@ module.exports = {
                         treasure_found_s = true;
                     }
                 }
-                
                 //if no minerals found, re-run the search with respect to energy
                 if (!treasure_found_s){
                     for (let i=0; i<scraps.length; i++){

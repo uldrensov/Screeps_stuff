@@ -25,7 +25,6 @@ module.exports = {
         if (!unit.memory.homebound && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
             unit.memory.homebound = true;
         }
-        
         //if empty energy while inbound, go harvest
         if (unit.memory.homebound && unit.store[RESOURCE_ENERGY] == 0){
             unit.memory.homebound = false;
@@ -49,7 +48,7 @@ module.exports = {
             }
         }
         
-        //or withdraw/harvest
+        //withdraw/harvest
         else{
             if (nexus.room.storage != undefined){
                 if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){

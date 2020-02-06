@@ -1,9 +1,19 @@
 //KHAYDARIN MONOLITH: <tower> globally attacks foes, heals allies, and repairs endangered structures
 
 module.exports = {
-    run: function(tower_id,thresholdT,thresholdR,reserve_ratio){
+    run: function(tower_id,thresholdT,thresholdR,reserve_ratio,nexi_id){
         
         var tower = Game.getObjectById(tower_id);
+        
+        
+        //find room # of tower (for email notification)
+        var homeroom;
+        for (let i=0; i<nexi_id.length; i++){
+            if (tower.room == Game.getObjectById(nexi_id[i]).room){
+                homeroom = i;
+                break;
+            }
+        }
         
         
         //damaged units
@@ -37,7 +47,7 @@ module.exports = {
         var enemy = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if (enemy){
             tower.attack(enemy);
-            Game.notify(enemy.owner.username + ' DETECTED...ATTEMPTING TO PURGE',30);
+            Game.notify(enemy.owner.username + ' DETECTED IN ROOM #' + homeroom,30);
         }
         //perform other tasks only if energy can be spared
         else if (tower.store[RESOURCE_ENERGY] > tower.store.getCapacity(RESOURCE_ENERGY) * reserve_ratio){

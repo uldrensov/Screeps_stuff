@@ -17,7 +17,6 @@ module.exports = {
         if (!unit.memory.venturing && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
             unit.memory.venturing = true;
         }
-        
         //if empty energy after building, come withdraw
         if (unit.memory.venturing && unit.store[RESOURCE_ENERGY] == 0){
             unit.memory.venturing = false;
@@ -37,7 +36,7 @@ module.exports = {
             }
         }
         
-        //or return and withdraw from the vault (if energy can be spared)
+        //return and withdraw from the vault (if energy can be spared)
         else if (home.storage.store.energy > reserve){
             if (unit.room != home){
                 unit.moveTo(home.controller, {visualizePathStyle: {stroke: '#00ff00'}});

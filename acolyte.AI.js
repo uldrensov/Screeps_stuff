@@ -1,4 +1,4 @@
-//ACOLYTE: harvests energy and resupplies a nearby link
+//ACOLYTE: harvests energy (atop a collecting container) and resupplies a nearby link
 //red trail
 
 module.exports = {
@@ -14,7 +14,6 @@ module.exports = {
         if (!unit.memory.homebound && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
             unit.memory.homebound = true;
         }
-        
         //if empty energy while inbound, go withdraw
         if (unit.memory.homebound && unit.store[RESOURCE_ENERGY] == 0){
             unit.memory.homebound = false;
@@ -32,8 +31,7 @@ module.exports = {
                 unit.harvest(src);
             }
         }
-        
-        //or harvest
+        //harvest from the collecting container's position
         else{
             if (!unit.pos.isEqualTo(canister.pos)){
                 unit.moveTo(canister, {visualizePathStyle: {stroke: '#ff0000'}});
