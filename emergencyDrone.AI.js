@@ -50,7 +50,7 @@ module.exports = {
         
         //withdraw/harvest
         else{
-            if (nexus.room.storage != undefined){
+            if (nexus.room.storage != undefined && nexus.room.storage.store.energy > 0){
                 if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
                     unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
                 }

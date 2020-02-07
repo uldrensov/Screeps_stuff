@@ -38,18 +38,20 @@ var WP_branch_tile = Game.getObjectById('5e354b518c0dfc0f7b8dc1d0');
 
 //reconfigurable role-based body types
 var edrone_body = [WORK, CARRY,CARRY, MOVE,MOVE];
+                //cost: 300
 var assim_body = [[WORK,WORK,WORK,WORK,WORK, MOVE],
                 [WORK,WORK,WORK,WORK,WORK, MOVE]];
                 //cost: 550, 550
 var drone_body = [[CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
                 MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE]];
-                //cost: 1600, 750
+                [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
+                MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]];
+                //cost: 1600, 1300
 var energ_body = [[CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
                 [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE]];
                 //cost: 750, 450
-var sacrif_body = [WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE];
-                //cost: 750
+var sacrif_body = [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE];
+                //cost: 1200
 var acoly_body = [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY, MOVE,MOVE,MOVE,MOVE];
                 //cost: 900
 var suppl_body = [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,
@@ -57,16 +59,16 @@ var suppl_body = [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WO
                 //cost: 2300
 var probe_body = [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
                 MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                [WORK,WORK,WORK, CARRY,CARRY,CARRY, MOVE,MOVE,MOVE]];
-                //cost: 1900, 600
+                [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]];
+                //cost: 1900, 1200
 var oassim_body = [[],
-                [WORK,WORK,WORK, CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]];
-                //cost: -, 750
+                [WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]];
+                //cost: -, 1250
 var archit_body = [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,
                 CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
                 MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                [WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE]];
-                //cost: 2300, 750
+                [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]];
+                //cost: 2300, 1200
 var fanat_body = [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,
                 CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE];
                 //cost: 2300
@@ -86,7 +88,7 @@ var zealot_body = [ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK, MOVE,MOVE,MOVE,MOV
 //reconfigurable numbers
 var time_offset = 100000;
 var fixation_override_threshold = .25; //probes will break fixation upon spotting an absolute % gap this wide
-var drone_price = [1600,750];
+var drone_price = [1600,1300];
 var drone_pickup_min = 200;
 var canister_ignore_lim = 210; //drones will ignore containers containing less than this
 var tower_reserve_ratio = .5;
@@ -226,7 +228,7 @@ module.exports.loop = function(){
         }
         
         //orbital assimilators: spawned if remote mining is viable
-        else if (orbitalAssimilator_gang.length < Memory.orbitalAssimilator_MAX[1]){
+        else if (orbitalAssimilator_gang.length < Memory.orbitalAssimilator_MAX[k]){
             if (nexi[1].spawnCreep(oassim_body[1],
             'OrbitalAssimilator-' + Game.time % time_offset, {memory: {role: 'orbitalAssimilator'}}) == 0){
                 console.log('Room #' + k + ': OrbitalAssimilator-' + Game.time % time_offset + ' spawning.');

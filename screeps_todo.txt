@@ -1,4 +1,6 @@
 TODO today:
+	extractor
+	drones should go home if they have pocket energy and there are no assims/energy on the map
 	allow multiple orb assims w/o using room loop
 	remove if/else spaces, write accurate role descs (comment/format overhaul)
 	renew units?
