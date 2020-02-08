@@ -1,4 +1,4 @@
-//AI's
+//AI script objects
 var emergencyDrone = require('emergencyDrone.AI');
 var sacrificer = require('sacrificer.AI');
 var architect = require('architect.AI');
@@ -10,6 +10,7 @@ var orbitalAssimilator = require('orbitalAssimilator.AI');
 var acolyte = require('acolyte.AI');
 var supplicant = require('supplicant.AI');
 var fanatic = require('fanatic.AI');
+var ancientAssimilator = require('ancientAssimilator.AI');
 var recalibrator = require('recalibrator.AI');
 var specialist = require('specialist.AI');
 var saviour = require('saviour.AI');
@@ -26,6 +27,7 @@ var source1_id = ['5bbcae989099fc012e639476', '5bbcae989099fc012e639479'];
 var source2_id = ['5bbcae989099fc012e639475'];
 var canister1_id = ['5e30677977034e78c09bdc43', '5e393db88c0dfcfcb18f05d2'];
 //var canister2_id = [];
+var mineralcanister_id = ['5e3ca0a32f38f39b095da816'];
 var remotesource_id = ['NULL', '5bbcae989099fc012e63947b'];
 var remoteflag = ['NULL', Game.flags['Vespene']];
 var remotedrop_id = ['5e323d61aa9957193cc8ec6c', '5e393db88c0dfcfcb18f05d2']; //dropoff storages for remote mining
@@ -63,7 +65,9 @@ var probe_body = [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY
                 //cost: 1900, 1200
 var oassim_body = [[],
                 [WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]];
-                //cost: -, 1250
+                //cost: TBD, 1250
+var anassim_body = [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, MOVE,MOVE,MOVE,MOVE];
+                //cost: 
 var archit_body = [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,
                 CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
                 MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
@@ -105,6 +109,7 @@ if (Memory.orbitalAssimilator_MAX == undefined){Memory.orbitalAssimilator_MAX = 
 if (Memory.acolyte_MAX == undefined){Memory.acolyte_MAX = [1,0];}
 if (Memory.supplicant_MAX == undefined){Memory.supplicant_MAX = [1,0];}
 if (Memory.fanatic_MAX == undefined){Memory.fanatic_MAX = [0,0];}
+if (Memory.ancientAssimilator_MAX == undefined){Memory.ancientAssimilator_MAX = [1,0];}
 if (Memory.specialist_MAX == undefined){Memory.specialist_MAX = 2;}
 if (Memory.saviour_MAX == undefined){Memory.saviour_MAX = 1;}
 if (Memory.hallucination_MAX == undefined){Memory.hallucination_MAX = 0;}
@@ -132,7 +137,8 @@ module.exports.loop = function(){
     var emergencyDrone_gang = []; var sacrificer_gang = []; var architect_gang = []; var probe_gang = [];
     var assimilator_lone = []; var assimilator_lone2 = []; var drone_gang = []; var energiser_gang = [];
     var orbitalAssimilator_gang = []; var acolyte_lone = []; var supplicant_gang = []; var fanatic_gang = [];
-    var specialist_gang; var saviour_gang; var hallucination_gang; var hightemplar_gang; var zealot_gang;
+    var ancientAssimilator_gang = []; var specialist_gang; var saviour_gang; var hallucination_gang;
+    var hightemplar_gang; var zealot_gang;
     
     
     //execute the auto-spawn and unit AI assignment routines for each room
@@ -151,6 +157,8 @@ module.exports.loop = function(){
         acolyte_lone[k] = _.filter(Game.creeps, creep => creep.memory.role == 'acolyte' && creep.room == nexi[k].room);
         supplicant_gang[k] = _.filter(Game.creeps, creep => creep.memory.role == 'supplicant' && creep.room == nexi[k].room);
         fanatic_gang[k] = _.filter(Game.creeps, creep => creep.memory.role == 'fanatic' && creep.room == nexi[k].room);
+        ancientAssimilator_gang[k] = _.filter(Game.creeps, creep => creep.memory.role == 'ancientAssimilator'
+            && creep.room == nexi[k].room);
         specialist_gang = _.filter(Game.creeps, creep => creep.memory.role == 'specialist');
         saviour_gang = _.filter(Game.creeps, creep => creep.memory.role == 'saviour');
         hallucination_gang = _.filter(Game.creeps, creep => creep.memory.role == 'hallucination');
@@ -232,6 +240,13 @@ module.exports.loop = function(){
             if (nexi[1].spawnCreep(oassim_body[1],
             'OrbitalAssimilator-' + Game.time % time_offset, {memory: {role: 'orbitalAssimilator'}}) == 0){
                 console.log('Room #' + k + ': OrbitalAssimilator-' + Game.time % time_offset + ' spawning.');
+            }
+        }
+        //ancient assimilators: spawned if an extractor is present
+        else if (ancientAssimilator_gang[k].length < Memory.ancientAssimilator_MAX[k]){
+            if (nexi[k].spawnCreep(anassim_body,
+            'AncientAssimilator-' + Game.time % time_offset, {memory: {role: 'ancientAssimilator'}}) == 0){
+                console.log('Room #' + k + ': AncientAssimilator-' + Game.time % time_offset + ' spawning.');
             }
         }
         //architects: spawned if there are construction projects to finish
@@ -321,6 +336,9 @@ module.exports.loop = function(){
                         probe.run(unit, nexi[k], Memory.wall_threshold, Memory.rampart_threshold,
                         fixation_override_threshold, canister_ignore_lim, vault_reserve_min);
                         break;
+                    case 'ancientAssimilator':
+                        ancientAssimilator.run(unit, mineralcanister_id[k]);
+                        break;
                     case 'architect':
                         architect.run(unit, nexi[k], vault_reserve_min);
                         break;
@@ -338,7 +356,14 @@ module.exports.loop = function(){
         var unit = Game.creeps[name];
         switch (unit.memory.role){
             case 'orbitalAssimilator':
-                orbitalAssimilator.run(unit, remotesource_id[1], remoteflag[1], remotedrop_id[1]);
+                //determine homeroom
+                for (let i=0; i<nexi.length; i++){
+                    //console.log(unit.memory.home);
+                    if (unit.memory.home == nexi[i].room){
+                        orbitalAssimilator.run(unit, remotesource_id[i], remoteflag[i], remotedrop_id[i]);
+                        break;
+                    }
+                }
                 break;
             case 'recalibrator':
                 //recalibrator.run(unit, nexus_id[0], '5bbcae989099fc012e639478',  Game.flags['exit']);

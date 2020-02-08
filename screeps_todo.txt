@@ -1,11 +1,10 @@
 TODO today:
-	extractor
 	drones should go home if they have pocket energy and there are no assims/energy on the map
 	allow multiple orb assims w/o using room loop
 	remove if/else spaces, write accurate role descs (comment/format overhaul)
 	renew units?
 	emergency drone comment at top
-	[BUG] drones can freeze while looking for scrap
+	[BUG] drones can freeze while looking for scrap (also they get stuck if scrap is in inaccessible place)
 	[DEFENCE] tower should reuse probe's fixation mechanic
 
 TODO backlog:
@@ -15,6 +14,7 @@ TODO backlog:
 	
 Look up:
 	flagging a neutral controller
+	signs (clans?)
 
 JS help:
 	lodash

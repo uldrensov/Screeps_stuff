@@ -17,7 +17,7 @@ module.exports = {
         //all mineral pickups, and sufficiently plentiful energy pickups
         var scraps = nexus.room.find(FIND_DROPPED_RESOURCES, {
             filter: resource => {
-                return (resource.amount > pickup_min && resource.resourceType == RESOURCE_ENERGY) ||
+                return (resource.amount > ignore_lim && resource.resourceType == RESOURCE_ENERGY) ||
                 resource.resourceType != RESOURCE_ENERGY;
             }
         });
@@ -126,6 +126,7 @@ module.exports = {
                 }
             }
             //prioritise mineral pickups next
+            ///*
             else if (scraps.length){
                 var chosen_scrap = scraps[0];
                 var treasure_found_s = false;
@@ -148,10 +149,10 @@ module.exports = {
                 }
                 
                 if (unit.pickup(chosen_scrap) == ERR_NOT_IN_RANGE){
-                    //console.log(unit.moveTo(chosen_scrap, {visualizePathStyle: {stroke: '#ffffff'}}));
                     unit.moveTo(chosen_scrap, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
+            //*/
             //check containers before resorting to the vault
             else if (canisters.length){
                 //determine the fullest container in play

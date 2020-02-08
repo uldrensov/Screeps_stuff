@@ -8,6 +8,12 @@ module.exports = {
         var dropoff = Game.getObjectById(dropoff_id);
         
         
+        //remember its original room
+        if (unit.memory.home == undefined){
+            unit.memory.home = unit.room;
+        }
+        
+        
         //two-states...
         //if full pockets while outbound, come back
         if (!unit.memory.homebound && unit.store.getFreeCapacity() == 0){

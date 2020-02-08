@@ -24,7 +24,8 @@ module.exports = {
         Memory.architect_MAX == undefined || Memory.probe_MAX == undefined ||
         Memory.drone_MAX == undefined || Memory.energiser_MAX == undefined ||
         Memory.supplicant_MAX == undefined || Memory.fanatic_MAX == undefined ||
-        Memory.specialist_MAX == undefined || Memory.saviour_MAX == undefined){
+        Memory.ancientAssimilator_MAX == undefined || Memory.specialist_MAX == undefined ||
+        Memory.saviour_MAX == undefined){
             return 'ERROR: main.js failed to initialise memory';
         }
         
@@ -52,6 +53,8 @@ module.exports = {
         var probe_gang = _.filter(Game.creeps, creep => creep.memory.role == 'probe' &&
             creep.room == nexi[room_num].room);
         var orbitalAssimilator_gang = _.filter(Game.creeps, creep => creep.memory.role == 'orbitalAssimilator');
+        var ancientAssimilator_gang = _.filter(Game.creeps, creep => creep.memory.role == 'ancientAssimilator' &&
+            creep.room == nexi[room_num].room);
         var architect_gang = _.filter(Game.creeps, creep => creep.memory.role == 'architect' &&
             creep.room == nexi[room_num].room);
         var fanatic_gang = _.filter(Game.creeps, creep => creep.memory.role == 'fanatic' &&
@@ -166,6 +169,7 @@ module.exports = {
         console.log('Supplicants: ' + supplicant_gang.length + '/' + Memory.supplicant_MAX[room_num]);
         console.log('Probes: ' + probe_gang.length + '/' + Memory.probe_MAX[room_num]);
         console.log('Orbital assimilators : ' + orbitalAssimilator_gang.length + ' (MAXCOUNT TODO)');
+        console.log('Ancient assimilators : ' + ancientAssimilator_gang.length + '/' + Memory.ancientAssimilator_MAX[room_num]);
         console.log('Architects: ' + architect_gang.length + '/' + Memory.architect_MAX[room_num]);
         console.log('Fanatics: ' + fanatic_gang.length + '/' + Memory.fanatic_MAX[room_num]);
         console.log('Specialists: ' + specialist_gang.length + '/' + Memory.specialist_MAX);

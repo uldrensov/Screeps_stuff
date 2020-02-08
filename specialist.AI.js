@@ -37,7 +37,7 @@ module.exports = {
         }
         
         //return and withdraw from the vault (if energy can be spared)
-        else if (home.storage.store.energy){
+        else if (home.storage.store.energy > reserve){
             if (unit.room != home){
                 unit.moveTo(home.controller, {visualizePathStyle: {stroke: '#00ff00'}});
             }

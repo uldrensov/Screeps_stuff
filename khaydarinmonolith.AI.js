@@ -53,7 +53,7 @@ module.exports = {
         else if (tower.store[RESOURCE_ENERGY] > tower.store.getCapacity(RESOURCE_ENERGY) * reserve_ratio){
             //heal units second
             if (injured_units.length){
-                tower.repair(injured_units[0]);
+                tower.heal(injured_units[0]);
             }
             //repair structures last
             else{
@@ -61,7 +61,7 @@ module.exports = {
                     tower.repair(repairRamparts[0]);
                 }
                 else if (repairTargets.length){
-                    tower.repair(repairTargets[0]);
+                    //tower.repair(repairTargets[0]);
                 }
             }
         }
