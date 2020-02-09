@@ -25,11 +25,11 @@ var nexus_id = ['5e2d15a9e152154167131760', '5e3909b408abb42e9b310a46'];
 var controller_id = ['5bbcae989099fc012e639474', '5bbcae989099fc012e639478'];
 var source1_id = ['5bbcae989099fc012e639476', '5bbcae989099fc012e639479'];
 var source2_id = ['5bbcae989099fc012e639475'];
-var canister1_id = ['5e30677977034e78c09bdc43', '5e393db88c0dfcfcb18f05d2'];
-//var canister2_id = [];
+var canister1_id = ['5e30677977034e78c09bdc43', '5e393db88c0dfcfcb18f05d2']; //corresponds to source1
+//var canister2_id = []; //corresponds to source2
 var mineralcanister_id = ['5e3ca0a32f38f39b095da816'];
-var remotesource_id = ['NULL', '5bbcae989099fc012e63947b'];
-var remoteflag = ['NULL', Game.flags['Vespene']];
+var remotesource_id = ['5bbcaea69099fc012e639603', '5bbcae989099fc012e63947b'];
+var remoteflag = [Game.flags['Terrazine'], Game.flags['Vespene']]; //point of operation for remote mining
 var remotedrop_id = ['5e323d61aa9957193cc8ec6c', '5e393db88c0dfcfcb18f05d2']; //dropoff storages for remote mining
 var towers_nex1_id = ['5e2f4a33e8af4a1c6459ccd8', '5e346820d632bc24398489ab'];
 var towers_nex2_id = ['5e3a68c9aa99575a56cba5da'];
@@ -63,9 +63,10 @@ var probe_body = [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY
                 MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                 [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]];
                 //cost: 1900, 1200
-var oassim_body = [[],
-                [WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]];
-                //cost: TBD, 1250
+var oassim_body = [[WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
+                MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+                [WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]];
+                //cost: 2250, 1300
 var anassim_body = [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, MOVE,MOVE,MOVE,MOVE];
                 //cost: 
 var archit_body = [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,
@@ -95,8 +96,8 @@ var fixation_override_threshold = .25; //probes will break fixation upon spottin
 var drone_price = [1600,1300];
 var drone_pickup_min = 200;
 var canister_ignore_lim = 210; //drones will ignore containers containing less than this
-var tower_reserve_ratio = .5;
-var vault_reserve_min = 20000; //(e)drones and energisers have permission to bypass this
+var tower_reserve_ratio = .5; //towers will reserve this percentage of their energy for attacking
+var vault_reserve_min = 20000; //all units except (e)drones and energisers will avoid vaults containing less than this
 
 
 //memory init
@@ -117,6 +118,7 @@ if (Memory.hightemplar_MAX == undefined){Memory.hightemplar_MAX = 0;}
 if (Memory.zealot_MAX == undefined){Memory.zealot_MAX = 0;}
 if (Memory.wall_threshold == undefined){Memory.wall_threshold = 50000;}
 if (Memory.rampart_threshold == undefined){Memory.rampart_threshold = 100000;}
+if (Memory.construction_mode == undefined){Memory.construction_mode = false;}
 
 
 module.exports.loop = function(){
@@ -153,7 +155,8 @@ module.exports.loop = function(){
         //assimilator_lone2[k] = _.filter(Game.creeps, creep => creep.memory.role == 'assimilator2' && creep.room == nexi[k].room);
         drone_gang[k] = _.filter(Game.creeps, creep => creep.memory.role == 'drone' && creep.room == nexi[k].room);
         energiser_gang[k] = _.filter(Game.creeps, creep => creep.memory.role == 'energiser' && creep.room == nexi[k].room);
-        orbitalAssimilator_gang = _.filter(Game.creeps, creep => creep.memory.role == 'orbitalAssimilator');
+        orbitalAssimilator_gang[k] = _.filter(Game.creeps, creep => creep.memory.role == 'orbitalAssimilator'
+            && creep.memory.home == nexi[k].room.name);
         acolyte_lone[k] = _.filter(Game.creeps, creep => creep.memory.role == 'acolyte' && creep.room == nexi[k].room);
         supplicant_gang[k] = _.filter(Game.creeps, creep => creep.memory.role == 'supplicant' && creep.room == nexi[k].room);
         fanatic_gang[k] = _.filter(Game.creeps, creep => creep.memory.role == 'fanatic' && creep.room == nexi[k].room);
@@ -187,8 +190,8 @@ module.exports.loop = function(){
         /*
         else if (assimilator_lone2[k].length < 1){
             if (nexi[k].spawnCreep(assim_body[k],
-            'AssimilatorBETA-' + Game.time % time_offset, {memory: {role: 'assimilator2'}}) == 0){
-                console.log('Room #' + k + ': AssimilatorBETA-' + Game.time % time_offset + ' spawning.');
+            'AssimilatorII-' + Game.time % time_offset, {memory: {role: 'assimilator2'}}) == 0){
+                console.log('Room #' + k + ': AssimilatorII-' + Game.time % time_offset + ' spawning.');
             }
         }
         */
@@ -236,9 +239,9 @@ module.exports.loop = function(){
         }
         
         //orbital assimilators: spawned if remote mining is viable
-        else if (orbitalAssimilator_gang.length < Memory.orbitalAssimilator_MAX[k]){
-            if (nexi[1].spawnCreep(oassim_body[1],
-            'OrbitalAssimilator-' + Game.time % time_offset, {memory: {role: 'orbitalAssimilator'}}) == 0){
+        else if (orbitalAssimilator_gang[k].length < Memory.orbitalAssimilator_MAX[k]){
+            if (nexi[k].spawnCreep(oassim_body[k],
+            'OrbitalAssimilator-' + Game.time % time_offset, {memory: {role: 'orbitalAssimilator', home: nexi[k].room.name}}) == 0){
                 console.log('Room #' + k + ': OrbitalAssimilator-' + Game.time % time_offset + ' spawning.');
             }
         }
@@ -303,7 +306,7 @@ module.exports.loop = function(){
         }
         
         
-        //assign AI's to room-locked units (in each room)
+        //assign AI's to room-locked units
         for (var name in Game.creeps){
             var unit = Game.creeps[name];
             if (unit.room == nexi[k].room){
@@ -356,10 +359,10 @@ module.exports.loop = function(){
         var unit = Game.creeps[name];
         switch (unit.memory.role){
             case 'orbitalAssimilator':
-                //determine homeroom
+                //determine homeroom to call AI script using appropriate args
                 for (let i=0; i<nexi.length; i++){
                     //console.log(unit.memory.home);
-                    if (unit.memory.home == nexi[i].room){
+                    if (unit.memory.home == nexi[i].room.name){
                         orbitalAssimilator.run(unit, remotesource_id[i], remoteflag[i], remotedrop_id[i]);
                         break;
                     }
@@ -387,7 +390,7 @@ module.exports.loop = function(){
     }
     
     //assign AI's to towers
-    khaydarinmonolith.run(towers_nex1_id[0], Memory.wall_threshold, Memory.rampart_threshold, tower_reserve_ratio, nexus_id);
-    khaydarinmonolith.run(towers_nex1_id[1], Memory.wall_threshold, Memory.rampart_threshold, tower_reserve_ratio, nexus_id);
-    khaydarinmonolith.run(towers_nex2_id[0], Memory.wall_threshold, Memory.rampart_threshold, tower_reserve_ratio, nexus_id);
+    khaydarinmonolith.run(towers_nex1_id[0], Memory.wall_threshold, Memory.rampart_threshold, tower_reserve_ratio, Memory.construction_mode, nexus_id);
+    khaydarinmonolith.run(towers_nex1_id[1], Memory.wall_threshold, Memory.rampart_threshold, tower_reserve_ratio, Memory.construction_mode, nexus_id);
+    khaydarinmonolith.run(towers_nex2_id[0], Memory.wall_threshold, Memory.rampart_threshold, tower_reserve_ratio, Memory.construction_mode, nexus_id);
 }

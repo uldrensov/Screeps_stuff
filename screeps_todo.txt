@@ -1,10 +1,13 @@
 TODO today:
-	drones should go home if they have pocket energy and there are no assims/energy on the map
-	allow multiple orb assims w/o using room loop
+	drones should see tombs w/ empty energy but w/ minerals
+	orbassim pickup in the remote room
+	drones spawn when one leaves room
+	git init (put this file inside)
+	drones should go home if they have pocket energy and there are no assims/energy on the map (support pickups for edrones too)
 	remove if/else spaces, write accurate role descs (comment/format overhaul)
 	renew units?
 	emergency drone comment at top
-	[BUG] drones can freeze while looking for scrap (also they get stuck if scrap is in inaccessible place)
+	[BUG] drones can freeze while looking for scrap
 	[DEFENCE] tower should reuse probe's fixation mechanic
 
 TODO backlog:

@@ -31,7 +31,7 @@ module.exports = {
                 unit.harvest(src);
             }
         }
-        //harvest from the collecting container's position
+        //harvest from the overflow container's position
         else{
             if (!unit.pos.isEqualTo(canister.pos)){
                 unit.moveTo(canister, {visualizePathStyle: {stroke: '#ff0000'}});

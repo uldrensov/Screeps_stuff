@@ -1,7 +1,7 @@
 //KHAYDARIN MONOLITH: <tower> globally attacks foes, heals allies, and repairs endangered structures
 
 module.exports = {
-    run: function(tower_id,thresholdT,thresholdR,reserve_ratio,nexi_id){
+    run: function(tower_id,thresholdT,thresholdR,reserve_ratio,disable,nexi_id){
         
         var tower = Game.getObjectById(tower_id);
         
@@ -47,10 +47,12 @@ module.exports = {
         var enemy = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if (enemy){
             tower.attack(enemy);
-            Game.notify(enemy.owner.username + ' DETECTED IN ROOM #' + homeroom,30);
+            if (enemy.owner.username != 'Invader'){
+                Game.notify(enemy.owner.username + ' DETECTED IN ROOM #' + homeroom,30);
+            }
         }
-        //perform other tasks only if energy can be spared
-        else if (tower.store[RESOURCE_ENERGY] > tower.store.getCapacity(RESOURCE_ENERGY) * reserve_ratio){
+        //perform other tasks only if energy can be spared, and construction mode is disabled
+        else if (!disable && tower.store[RESOURCE_ENERGY] > tower.store.getCapacity(RESOURCE_ENERGY) * reserve_ratio){
             //heal units second
             if (injured_units.length){
                 tower.heal(injured_units[0]);

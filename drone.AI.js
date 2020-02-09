@@ -14,6 +14,7 @@ module.exports = {
                 structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
             }
         });
+        
         //all mineral pickups, and sufficiently plentiful energy pickups
         var scraps = nexus.room.find(FIND_DROPPED_RESOURCES, {
             filter: resource => {
@@ -21,6 +22,7 @@ module.exports = {
                 resource.resourceType != RESOURCE_ENERGY;
             }
         });
+        
         //non-empty tombstones
         var tombs = nexus.room.find(FIND_TOMBSTONES, {
             filter: RoomObject => {
@@ -49,7 +51,7 @@ module.exports = {
         
         
         //behaviour execution...
-        //find and resupply the nearest suitable structure
+        //deposit: vault(minerals), extensions, nexus, vault(energy)
         if (unit.memory.homebound){
             //prioritise depositing minerals into the vault
             var treasure_held = false;
@@ -89,9 +91,8 @@ module.exports = {
                 }
             }
         }
-        //pickup/withdraw
+        //fetch energy: tombstones, pickups, containers, vault
         else{
-            //prioritise tombstones
             if (tombs.length){
                 var richest_tomb = tombs[0];
                 var treasure_found_t = false;
@@ -125,7 +126,6 @@ module.exports = {
                     unit.moveTo(richest_tomb, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
-            //prioritise mineral pickups next
             ///*
             else if (scraps.length){
                 var chosen_scrap = scraps[0];
@@ -153,7 +153,6 @@ module.exports = {
                 }
             }
             //*/
-            //check containers before resorting to the vault
             else if (canisters.length){
                 //determine the fullest container in play
                 var fullest_canister = canisters[0];

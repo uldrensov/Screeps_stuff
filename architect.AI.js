@@ -31,7 +31,7 @@ module.exports = {
         
         
         //behaviour execution...
-        //feed the nearest hotspot
+        //build at the nearest hotspot
         if (unit.memory.homebound){
             if (hotspots.length){
                 var nearest_hotspot = unit.pos.findClosestByPath(hotspots);
@@ -40,7 +40,7 @@ module.exports = {
                 }
             }
         }
-        //withdraw from the vault (if energy can be spared) / fullest canister
+        //fetch energy: vault, canister
         else{
             if (nexus.room.storage != undefined && nexus.room.storage.store.energy > reserve){
                 if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
