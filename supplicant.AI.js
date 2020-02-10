@@ -2,10 +2,11 @@
 //red trail
 
 module.exports = {
-    run: function(unit,nexus,warp_main_id,warp_branch_id,road){
+    run: function(unit,nexus,warp_main_id,warp_branch_id,road_id){
 
         var warp_main = Game.getObjectById(warp_main_id);
         var warp_branch = Game.getObjectById(warp_branch_id);
+        var road = Game.getObjectById(road_id);
 
 
         //continually feed the controller while standing near and drawing from a link

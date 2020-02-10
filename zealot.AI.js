@@ -1,4 +1,4 @@
-//ZEALOT: cross-room mobile all-out melee unit that pairs with a tank (hallucination)
+//ZEALOT: cross-room mobile melee unit that pairs with a tank (hallucination)
 //cyan trail
 
 module.exports = {

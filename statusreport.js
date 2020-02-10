@@ -23,6 +23,7 @@ module.exports = {
         if (Memory.wall_threshold == undefined || Memory.rampart_threshold == undefined ||
         Memory.architect_MAX == undefined || Memory.probe_MAX == undefined ||
         Memory.drone_MAX == undefined || Memory.energiser_MAX == undefined ||
+        Memory.recalibrator_MAX == undefined || Memory.orbitalAssimilator_MAX == undefined ||
         Memory.supplicant_MAX == undefined || Memory.fanatic_MAX == undefined ||
         Memory.ancientAssimilator_MAX == undefined || Memory.specialist_MAX == undefined ||
         Memory.saviour_MAX == undefined){
@@ -52,7 +53,10 @@ module.exports = {
             creep.room == nexi[room_num].room);
         var probe_gang = _.filter(Game.creeps, creep => creep.memory.role == 'probe' &&
             creep.room == nexi[room_num].room);
-        var orbitalAssimilator_gang = _.filter(Game.creeps, creep => creep.memory.role == 'orbitalAssimilator');
+        var recalibrator_gang = _.filter(Game.creeps, creep => creep.memory.role == 'recalibrator' &&
+            creep.memory.home == nexi[room_num].room.name);
+        var orbitalAssimilator_gang = _.filter(Game.creeps, creep => creep.memory.role == 'orbitalAssimilator' &&
+            creep.memory.home == nexi[room_num].room.name);
         var ancientAssimilator_gang = _.filter(Game.creeps, creep => creep.memory.role == 'ancientAssimilator' &&
             creep.room == nexi[room_num].room);
         var architect_gang = _.filter(Game.creeps, creep => creep.memory.role == 'architect' &&
@@ -164,28 +168,43 @@ module.exports = {
         //console.log('Assimilator 2: ' + assimilator_lone2.length + '/1');
         console.log('Drones: ' + drone_gang.length + '/' + Memory.drone_MAX[room_num]);
         console.log('Energisers: ' + energiser_gang.length + '/' + Memory.energiser_MAX[room_num]);
-        console.log('Sacrificers: ' + sacrificer_gang.length + '/' + Memory.sacrificer_MAX[room_num]);
-        console.log('Acolytes: ' + acolyte_lone.length + '/' + Memory.acolyte_MAX[room_num]);
-        console.log('Supplicants: ' + supplicant_gang.length + '/' + Memory.supplicant_MAX[room_num]);
+        if (Memory.sacrificer_MAX[room_num] > 0){
+            console.log('Sacrificers: ' + sacrificer_gang.length + '/' + Memory.sacrificer_MAX[room_num]);
+        }
+        if (Memory.acolyte_MAX[room_num] > 0){
+            console.log('Acolytes: ' + acolyte_lone.length + '/' + Memory.acolyte_MAX[room_num]);
+        }
+        if (Memory.supplicant_MAX[room_num] > 0){
+            console.log('Supplicants: ' + supplicant_gang.length + '/' + Memory.supplicant_MAX[room_num]);
+        }
         console.log('Probes: ' + probe_gang.length + '/' + Memory.probe_MAX[room_num]);
-        console.log('Orbital assimilators : ' + orbitalAssimilator_gang.length + ' (MAXCOUNT TODO)');
+        console.log('Recalibrators : ' + recalibrator_gang.length + '/' + Memory.recalibrator_MAX[room_num]);
+        console.log('Orbital assimilators : ' + orbitalAssimilator_gang.length + '/' + Memory.orbitalAssimilator_MAX[room_num]);
         console.log('Ancient assimilators : ' + ancientAssimilator_gang.length + '/' + Memory.ancientAssimilator_MAX[room_num]);
-        console.log('Architects: ' + architect_gang.length + '/' + Memory.architect_MAX[room_num]);
-        console.log('Fanatics: ' + fanatic_gang.length + '/' + Memory.fanatic_MAX[room_num]);
-        console.log('Specialists: ' + specialist_gang.length + '/' + Memory.specialist_MAX);
-        console.log('Saviours: ' + saviour_gang.length + '/' + Memory.saviour_MAX);
+        if (Memory.architect_MAX[room_num] > 0){
+            console.log('Architects: ' + architect_gang.length + '/' + Memory.architect_MAX[room_num]);
+        }
+        if (Memory.fanatic_MAX[room_num] > 0){
+            console.log('Fanatics: ' + fanatic_gang.length + '/' + Memory.fanatic_MAX[room_num]);
+        }
+        if (Memory.specialist_MAX > 0){
+            console.log('Specialists: ' + specialist_gang.length + '/' + Memory.specialist_MAX);
+        }
+        if (Memory.saviour_MAX > 0){
+            console.log('Saviours: ' + saviour_gang.length + '/' + Memory.saviour_MAX);
+        }
         console.log('NEXT DEATH: ' + shindeiru + '; ' + mortis + ' ticks');
         console.log(' ');
         
         //state of the room
         console.log('<<<--Room status-->>>');
-        console.log('Spawning energy: ' + ext_energy + ' reserve, '
+        console.log('Spawning energy: ' + ext_energy + ' extended, '
         + nexi[room_num].store.getUsedCapacity(RESOURCE_ENERGY) + ' main');
         if (nexi[room_num].room.storage != undefined){
             console.log('Vault energy: ' + nexi[room_num].room.storage.store.getUsedCapacity(RESOURCE_ENERGY));
         }
         if (canisters.length){
-            console.log('Canister energy: ' + can_energy);
+            console.log('Total canister energy: ' + can_energy);
         }
         console.log('Weakest structure: ' + weakstruct_perc + '% -> ' + weakest_struct);
         console.log('Weakest wall: ' + weakwall_perc + '% -> ' + weakest_wall);

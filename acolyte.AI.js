@@ -2,11 +2,12 @@
 //red trail
 
 module.exports = {
-    run: function(unit,src_id,warp_main_id,warp_branch_id,canister){
+    run: function(unit,src_id,warp_main_id,warp_branch_id,canister_id){
         
         var src = Game.getObjectById(src_id);
         var warp_main = Game.getObjectById(warp_main_id);
         var warp_branch = Game.getObjectById(warp_branch_id);
+        var canister = Game.getObjectById(canister_id);
         
         
         //two-states...
@@ -31,7 +32,7 @@ module.exports = {
                 unit.harvest(src);
             }
         }
-        //harvest from the overflow container's position
+        //harvest the source while standing on the overflow container's position
         else{
             if (!unit.pos.isEqualTo(canister.pos)){
                 unit.moveTo(canister, {visualizePathStyle: {stroke: '#ff0000'}});

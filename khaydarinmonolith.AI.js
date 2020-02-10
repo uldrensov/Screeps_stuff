@@ -63,7 +63,7 @@ module.exports = {
                     tower.repair(repairRamparts[0]);
                 }
                 else if (repairTargets.length){
-                    //tower.repair(repairTargets[0]);
+                    tower.repair(repairTargets[0]);
                 }
             }
         }

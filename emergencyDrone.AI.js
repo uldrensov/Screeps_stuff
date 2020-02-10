@@ -13,6 +13,14 @@ module.exports = {
         //energy source(s)
         var sources = nexus.room.find(FIND_SOURCES);
         
+        //containers of reasonable capacity
+        var canisters = nexus.room.find(FIND_STRUCTURES, {
+            filter: structure => {
+                return structure.structureType == STRUCTURE_CONTAINER &&
+                structure.store.getUsedCapacity(RESOURCE_ENERGY) > lowbound;
+            }
+        });
+        
         //sufficiently plentiful energy pickups
         var scraps = nexus.room.find(FIND_DROPPED_RESOURCES, {
             filter: resource => {
@@ -111,6 +119,21 @@ module.exports = {
                 }
             }
             //TODO: pickups
+            ///*
+            else if (scraps.length){
+                //
+                var chosen_scrap = scraps[0];
+                for (let i=0; i<scraps.length; i++){
+                    if (scraps[i].energy > chosen_scrap.energy){
+                        chosen_scrap = scraps[i];
+                    }
+                }
+                
+                if (unit.pickup(chosen_scrap) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(chosen_scrap, {visualizePathStyle: {stroke: '#ffffff'}});
+                }
+            }
+            //*/
             else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE){
                 unit.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffffff'}});
             }

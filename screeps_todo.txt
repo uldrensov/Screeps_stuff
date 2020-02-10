@@ -1,23 +1,25 @@
-TODO today:
-	drones should see tombs w/ empty energy but w/ minerals
-	orbassim pickup in the remote room
-	drones spawn when one leaves room
-	git init (put this file inside)
-	drones should go home if they have pocket energy and there are no assims/energy on the map (support pickups for edrones too)
-	remove if/else spaces, write accurate role descs (comment/format overhaul)
-	renew units?
-	emergency drone comment at top
-	[BUG] drones can freeze while looking for scrap
+TODO urgent:
+	[ECON] ancient drones
+	[SOFTLOCK] fix (e)drone pickup
+	[ECON] drones should see tombs w/ empty energy but w/ nonempty minerals
+	[SOFTLOCK] before calling a softlock, drones should deposit pocket energy if there are no more assims/energy on the map
+	[ECON] orbassim can pickup in the remote room
+	[ECON] remote miners should run from invaders
+	[BUG] dont let new things spawn when one briefly leaves room
+	[DEFENCE] raise walls to 250k hp
 	[DEFENCE] tower should reuse probe's fixation mechanic
 
 TODO backlog:
+	[ECON] multiple orbassim per reserved src
+	[MAINTAINENCE] git init (put this file inside)
 	[QOL] more status report info (pickups?)
-	[DEADLOCK] emergency reassignment during deadlock?
-	[DEADLOCK] 'lack of assimilator' deadlock? (if no assim & no money, emergency convert)
+	[MAINTAINENCE] remove if/else spaces, write accurate role descs (comment/format overhaul)
+	[SOFTLOCK] 'lack of assimilator' softlock? (if no assim & no money, emergency convert)
 	
 Look up:
-	flagging a neutral controller
+	renewing units
 	signs (clans?)
+	flagging a neutral controller
 
 JS help:
 	lodash

@@ -1,17 +1,35 @@
-//RECALIBRATOR: claims or reserves a foreign controller
+//RECALIBRATOR: reserves or claims a foreign controller
 //violet trail
 
 module.exports = {
-    run: function(unit,nexus_id,ctrl_id,waypoint){
+    run: function(unit,ctrl_id,standby_flag,annex){
         
-        //move to a pre-placed flag outside the homeroom
-        if (unit.room != waypoint.room){
-            unit.moveTo(waypoint.room, {visualizePathStyle: {stroke: '#ff00ff'}});
+        if (unit.memory.in_place == undefined){
+            unit.memory.in_place = false;
         }
         
-        //claim the controller in the adjacent room
-        else if (unit.claimController(Game.getObjectById(ctrl_id)) == ERR_NOT_IN_RANGE){
-            unit.moveTo(Game.getObjectById(ctrl_id), {visualizePathStyle: {stroke: '#ff00ff'}});
+        
+        //trek to the standby point once
+        if (!unit.memory.in_place){
+            unit.moveTo(standby_flag, {visualizePathStyle: {stroke: '#ff00ff'}});
+        }
+        if (unit.pos.isEqualTo(standby_flag.pos)){
+            unit.memory.in_place = true;
+        }
+        
+        
+        //reserve/claim the controller
+        if (unit.memory.in_place){
+            if (annex){
+                if (unit.claimController(Game.getObjectById(ctrl_id)) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(Game.getObjectById(ctrl_id), {visualizePathStyle: {stroke: '#ff00ff'}});
+                }
+            }
+            else{
+                if (unit.reserveController(Game.getObjectById(ctrl_id)) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(Game.getObjectById(ctrl_id), {visualizePathStyle: {stroke: '#ff00ff'}});
+                }
+            }
         }
     }
 };
