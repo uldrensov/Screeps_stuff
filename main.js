@@ -11,6 +11,7 @@ var orbitalAssimilator = require('orbitalAssimilator.AI');
 var acolyte = require('acolyte.AI');
 var supplicant = require('supplicant.AI');
 var fanatic = require('fanatic.AI');
+var ancientDrone = require('ancientDrone.AI');
 var ancientAssimilator = require('ancientAssimilator.AI');
 var specialist = require('specialist.AI');
 var saviour = require('saviour.AI');
@@ -82,11 +83,13 @@ var recal_body = [CLAIM, MOVE];
                 //cost: 650
 var oassim_body = [[WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
                 MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                [WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
-                MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]];
-                //cost: 2250, 1750
-var anassim_body = [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, MOVE,MOVE,MOVE,MOVE];
-                //cost: TBD
+                [WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, CARRY,
+                MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]];
+                //cost: 2250, 1800
+var androne_body = [CARRY,CARRY,CARRY,CARRY, MOVE, MOVE];
+                //cost: 300
+var anassim_body = [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE];
+                //cost: 1500
 var archit_body = [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,
                 CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
                 MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
@@ -124,7 +127,8 @@ if (Memory.orbitalAssimilator_MAX == undefined){Memory.orbitalAssimilator_MAX = 
 if (Memory.acolyte_MAX == undefined){Memory.acolyte_MAX = [1,0];}
 if (Memory.supplicant_MAX == undefined){Memory.supplicant_MAX = [1,0];}
 if (Memory.fanatic_MAX == undefined){Memory.fanatic_MAX = [0,0];}
-if (Memory.ancientAssimilator_MAX == undefined){Memory.ancientAssimilator_MAX = [1,0];}
+if (Memory.ancientDrone_MAX == undefined){Memory.ancientDrone_MAX = [0,0];}
+if (Memory.ancientAssimilator_MAX == undefined){Memory.ancientAssimilator_MAX = [0,0];}
 if (Memory.specialist_MAX == undefined){Memory.specialist_MAX = 2;}
 if (Memory.saviour_MAX == undefined){Memory.saviour_MAX = 1;}
 if (Memory.darktemplar_MAX == undefined){Memory.darktemplar_MAX = 0;}
@@ -154,8 +158,8 @@ module.exports.loop = function(){
     var emergencyDrone_gang = []; var sacrificer_gang = []; var architect_gang = []; var probe_gang = [];
     var assimilator_lone = []; var assimilator_lone2 = []; var drone_gang = []; var energiser_gang = [];
     var recalibrator_gang = []; var orbitalAssimilator_gang = []; var acolyte_lone = []; var supplicant_gang = [];
-    var fanatic_gang = []; var ancientAssimilator_gang = []; var specialist_gang; var saviour_gang;
-    var darktemplar_gang; var hallucination_gang; var hightemplar_gang; var zealot_gang;
+    var fanatic_gang = []; var ancientDrone_gang = []; var ancientAssimilator_gang = [];
+    var specialist_gang; var saviour_gang; var darktemplar_gang; var hallucination_gang; var hightemplar_gang; var zealot_gang;
     
     
     //execute the auto-spawn and unit AI assignment routines for each room
@@ -175,6 +179,7 @@ module.exports.loop = function(){
         acolyte_lone[k] = _.filter(Game.creeps, creep => creep.memory.role == 'acolyte' && creep.room == nexi[k].room);
         supplicant_gang[k] = _.filter(Game.creeps, creep => creep.memory.role == 'supplicant' && creep.room == nexi[k].room);
         fanatic_gang[k] = _.filter(Game.creeps, creep => creep.memory.role == 'fanatic' && creep.room == nexi[k].room);
+        ancientDrone_gang[k] = _.filter(Game.creeps, creep => creep.memory.role == 'ancientDrone' && creep.room == nexi[k].room);
         ancientAssimilator_gang[k] = _.filter(Game.creeps, creep => creep.memory.role == 'ancientAssimilator' && creep.room == nexi[k].room);
         specialist_gang = _.filter(Game.creeps, creep => creep.memory.role == 'specialist');
         saviour_gang = _.filter(Game.creeps, creep => creep.memory.role == 'saviour');
@@ -265,6 +270,13 @@ module.exports.loop = function(){
             if (nexi[k].spawnCreep(oassim_body[k],
             'OrbitalAssimilator-' + Game.time % time_offset, {memory: {role: 'orbitalAssimilator', home: nexi[k].room.name}}) == 0){
                 console.log('Room #' + k + ': OrbitalAssimilator-' + Game.time % time_offset + ' spawning.');
+            }
+        }
+        //ancient drones: if an extractor has been built
+        else if (ancientDrone_gang[k].length < Memory.ancientDrone_MAX[k]){
+            if (nexi[k].spawnCreep(androne_body,
+            'AncientDrone-' + Game.time % time_offset, {memory: {role: 'ancientDrone'}}) == 0){
+                console.log('Room #' + k + ': AncientDrone-' + Game.time % time_offset + ' spawning.');
             }
         }
         //ancient assimilators: if an extractor has been built
@@ -366,6 +378,9 @@ module.exports.loop = function(){
                     case 'probe':
                         probe.run(unit, nexi[k], Memory.wall_threshold, Memory.rampart_threshold,
                         fixation_override_threshold, canister_ignore_lim, vault_reserve_min);
+                        break;
+                    case 'ancientDrone':
+                        ancientDrone.run(unit, nexus_id[k], mineralcanister_id[k]);
                         break;
                     case 'ancientAssimilator':
                         ancientAssimilator.run(unit, mineralcanister_id[k]);

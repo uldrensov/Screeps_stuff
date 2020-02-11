@@ -180,7 +180,9 @@ module.exports = {
         console.log('Probes: ' + probe_gang.length + '/' + Memory.probe_MAX[room_num]);
         console.log('Recalibrators : ' + recalibrator_gang.length + '/' + Memory.recalibrator_MAX[room_num]);
         console.log('Orbital assimilators : ' + orbitalAssimilator_gang.length + '/' + Memory.orbitalAssimilator_MAX[room_num]);
-        console.log('Ancient assimilators : ' + ancientAssimilator_gang.length + '/' + Memory.ancientAssimilator_MAX[room_num]);
+        if (Memory.ancientAssimilator_MAX[room_num] > 0){
+            console.log('Ancient assimilators : ' + ancientAssimilator_gang.length + '/' + Memory.ancientAssimilator_MAX[room_num]);
+        }
         if (Memory.architect_MAX[room_num] > 0){
             console.log('Architects: ' + architect_gang.length + '/' + Memory.architect_MAX[room_num]);
         }
