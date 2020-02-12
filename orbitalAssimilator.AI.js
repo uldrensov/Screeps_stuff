@@ -25,20 +25,20 @@ module.exports = {
         
         
         //behaviour execution...
-        //deposit: container (if chosen), vault
+        //deposit: container/link (if chosen), vault
         if (unit.memory.homebound){
             
             //navigate to homeroom
             if (unit.room.name != unit.memory.home){
-                unit.moveTo(dropoff, {visualizePathStyle: {stroke: '#ffffff'}});
+                unit.moveTo(dropoff, {visualizePathStyle: {stroke: '#ffff00'}});
             }
-            //deposit in vault if a container is designated but full
+            //deposit in vault if a container/link is designated but full
             else{
-                if (dropoff.store.getFreeCapacity() == 0 && unit.room.storage != undefined){
-                    unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
+                if (dropoff.store.getFreeCapacity(RESOURCE_ENERGY) == 0 && unit.room.storage != undefined){
+                    unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#ffff00'}});
                 }
                 else if (unit.transfer(dropoff, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(dropoff, {visualizePathStyle: {stroke: '#ffffff'}});
+                    unit.moveTo(dropoff, {visualizePathStyle: {stroke: '#ffff00'}});
                 }
             }
         }
@@ -47,7 +47,7 @@ module.exports = {
             //rally at flag first
             if (!unit.memory.in_place){
                 if (!unit.pos.isEqualTo(remote_flag.pos)){
-                    unit.moveTo(remote_flag, {visualizePathStyle: {stroke: '#ffffff'}});
+                    unit.moveTo(remote_flag, {visualizePathStyle: {stroke: '#ffff00'}});
                 }
                 else{
                     unit.memory.in_place = true;
@@ -69,16 +69,16 @@ module.exports = {
                 
                 if (scraps.length){
                     if (unit.pickup(scraps[0]) == ERR_NOT_IN_RANGE){
-                        unit.moveTo(scraps[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                        unit.moveTo(scraps[0], {visualizePathStyle: {stroke: '#ffff00'}});
                     }
                 }
                 else if (tombs.length){
                     if (unit.withdraw(tombs[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
-                        unit.moveTo(tombs[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                        unit.moveTo(tombs[0], {visualizePathStyle: {stroke: '#ffff00'}});
                     }
                 }
                 else if (unit.harvest(src) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(src, {visualizePathStyle: {stroke: '#ffffff'}});
+                    unit.moveTo(src, {visualizePathStyle: {stroke: '#ffff00'}});
                 }
             }
         }

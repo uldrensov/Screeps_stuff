@@ -1,5 +1,5 @@
 //RECALIBRATOR: reserves or claims a foreign controller
-//violet trail
+//yellow trail
 
 module.exports = {
     run: function(unit,ctrl_id,standby_flag,annex){
@@ -11,7 +11,7 @@ module.exports = {
         
         //trek to the standby point once
         if (!unit.memory.in_place){
-            unit.moveTo(standby_flag, {visualizePathStyle: {stroke: '#ff00ff'}});
+            unit.moveTo(standby_flag, {visualizePathStyle: {stroke: '#ffff00'}});
         }
         if (unit.pos.isEqualTo(standby_flag.pos)){
             unit.memory.in_place = true;
@@ -22,12 +22,12 @@ module.exports = {
         if (unit.memory.in_place){
             if (annex){
                 if (unit.claimController(Game.getObjectById(ctrl_id)) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(Game.getObjectById(ctrl_id), {visualizePathStyle: {stroke: '#ff00ff'}});
+                    unit.moveTo(Game.getObjectById(ctrl_id), {visualizePathStyle: {stroke: '#ffff00'}});
                 }
             }
             else{
                 if (unit.reserveController(Game.getObjectById(ctrl_id)) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(Game.getObjectById(ctrl_id), {visualizePathStyle: {stroke: '#ff00ff'}});
+                    unit.moveTo(Game.getObjectById(ctrl_id), {visualizePathStyle: {stroke: '#ffff00'}});
                 }
             }
         }

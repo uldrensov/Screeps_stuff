@@ -1,5 +1,5 @@
 //HALLUCINATION: cross-room nonaggressive tank unit
-//black trail
+//cyan trail
 //TODO: this model is a prototype
 
 module.exports = {
@@ -19,11 +19,11 @@ module.exports = {
         //behaviour execution...
         //retreat from the foreign room to receive healing
         if (unit.memory.retreating){
-            unit.moveTo(healpoint, {visualizePathStyle: {stroke: '#000000'}});
+            unit.moveTo(healpoint, {visualizePathStyle: {stroke: '#00ffff'}});
         }
         //return to the foreign room until sufficiently injured again
         else{
-            unit.moveTo(waypoint, {visualizePathStyle: {stroke: '#000000'}});
+            unit.moveTo(waypoint, {visualizePathStyle: {stroke: '#00ffff'}});
         }
     }
 };

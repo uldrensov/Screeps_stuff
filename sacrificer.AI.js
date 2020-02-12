@@ -1,5 +1,5 @@
 //sacrificer: basic controller upgrader that withdraws from containers, or harvests from sources
-//red trail
+//violet trail
 
 module.exports = {
     run: function(unit,ctrl_id,ignore_lim){
@@ -34,7 +34,7 @@ module.exports = {
         //feed the room's controller
         if (unit.memory.homebound){
             if (unit.upgradeController(obelisk) == ERR_NOT_IN_RANGE){
-                unit.moveTo(obelisk, {visualizePathStyle: {stroke: '#ff0000'}});
+                unit.moveTo(obelisk, {visualizePathStyle: {stroke: '#ff00ff'}});
             }
         }
         
@@ -63,12 +63,12 @@ module.exports = {
                 //finally, withdraw from the fixated target
                 var canister_target = Game.getObjectById(unit.memory.fixation);
                 if (unit.withdraw(canister_target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(canister_target, {visualizePathStyle: {stroke: '#ffffff'}});
+                    unit.moveTo(canister_target, {visualizePathStyle: {stroke: '#ff00ff'}});
                 }
             }
             //harvest as a last resort
             else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE){
-                unit.moveTo(sources[0], {visualizePathStyle: {stroke: '#ff0000'}});
+                unit.moveTo(sources[0], {visualizePathStyle: {stroke: '#ff00ff'}});
             }
         }
     }

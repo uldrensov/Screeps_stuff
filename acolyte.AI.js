@@ -1,12 +1,12 @@
 //ACOLYTE: harvests energy (atop a collecting container) and resupplies a nearby link
-//red trail
+//black trail
 
 module.exports = {
-    run: function(unit,src_id,warp_main_id,warp_branch_id,canister_id){
+    run: function(unit,src_id,warpRX_id,warpTX_id,canister_id){
         
         var src = Game.getObjectById(src_id);
-        var warp_main = Game.getObjectById(warp_main_id);
-        var warp_branch = Game.getObjectById(warp_branch_id);
+        var warpRX = Game.getObjectById(warpRX_id);
+        var warpTX = Game.getObjectById(warpTX_id);
         var canister = Game.getObjectById(canister_id);
         
         
@@ -22,20 +22,27 @@ module.exports = {
         
         
         //behaviour execution...
-        //resupply the link
+        //force-transmit if the link somehow reaches max capacity
+        warpRX = Game.getObjectById(warpRX_id);
+        if (warpTX.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
+            warpTX.transferEnergy(warpRX, warpTX.store[RESOURCE_ENERGY]);
+        }
+        
+        //deposit: link
         if (unit.memory.homebound){
-            if (unit.transfer(warp_branch, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
-                unit.moveTo(warp_branch, {visualizePathStyle: {stroke: '#ff0000'}});
-            }
-            //if the link is full, overflow-mine into the container
-            else if (unit.transfer(warp_branch, RESOURCE_ENERGY) == ERR_FULL){
+            //transmit any existing contents first
+            warpTX.transferEnergy(warpRX, warpTX.store[RESOURCE_ENERGY]);
+            
+            //attempt to deposit new payload; if RX is full, overflow-mine into the container
+            if (unit.transfer(warpTX, RESOURCE_ENERGY) == ERR_FULL){
                 unit.harvest(src);
             }
         }
-        //harvest the source while standing on the overflow container's position
+        //fetch energy: source
         else{
+            //stand on the overflow container
             if (!unit.pos.isEqualTo(canister.pos)){
-                unit.moveTo(canister, {visualizePathStyle: {stroke: '#ff0000'}});
+                unit.moveTo(canister, {visualizePathStyle: {stroke: '#000000'}});
             }
             else {
                 unit.harvest(src);

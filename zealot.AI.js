@@ -1,5 +1,5 @@
 //ZEALOT: cross-room mobile melee unit that pairs with a tank (hallucination)
-//cyan trail
+//red trail
 
 module.exports = {
     run: function(unit,standby_flag,target_flag){
@@ -11,7 +11,7 @@ module.exports = {
         
         //trek to the standby point once
         if (!unit.memory.in_place){
-            unit.moveTo(standby_flag, {visualizePathStyle: {stroke: '#00ffff'}});
+            unit.moveTo(standby_flag, {visualizePathStyle: {stroke: '#ff0000'}});
         }
         if (unit.pos.isEqualTo(standby_flag.pos)){
             unit.memory.in_place = true;
@@ -34,7 +34,7 @@ module.exports = {
             else if (Game.getObjectById(unit.memory.tank_id).room == target_flag.room){
                 //follow
                 if (unit.room != target_flag.room){
-                    unit.moveTo(target_flag, {visualizePathStyle: {stroke: '#00ffff'}});
+                    unit.moveTo(target_flag, {visualizePathStyle: {stroke: '#ff0000'}});
                 }
                 //once followed, attack a target
                 else{
@@ -44,7 +44,7 @@ module.exports = {
                         }
                     });
                     if (unit.attack(att[0]) == ERR_NOT_IN_RANGE){
-                        unit.moveTo(att[0], {visualizePathStyle: {stroke: '#00ffff'}});
+                        unit.moveTo(att[0], {visualizePathStyle: {stroke: '#ff0000'}});
                     }
                 }
             }

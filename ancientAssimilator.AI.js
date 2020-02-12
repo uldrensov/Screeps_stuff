@@ -1,5 +1,5 @@
 //ANCIENT ASSIMILATOR: mineral-mining variant of ASSIMILATOR
-//white trail
+//black trail
 
 module.exports = {
     run: function(unit,canister_id){
@@ -13,7 +13,7 @@ module.exports = {
         
         //continually mine from a designated source while standing on a container
         if (!unit.pos.isEqualTo(canister.pos)){
-            unit.moveTo(canister, {visualizePathStyle: {stroke: '#ffffff'}});
+            unit.moveTo(canister, {visualizePathStyle: {stroke: '#000000'}});
         }
         else{
             unit.harvest(mineral_src[0]);

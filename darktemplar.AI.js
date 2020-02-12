@@ -1,5 +1,5 @@
 //ZEALOT: cross-room all-out melee unit designed to punish defenseless rooms
-//cyan trail
+//red trail
 
 module.exports = {
     run: function(unit,standby_flag){
@@ -11,7 +11,7 @@ module.exports = {
         
         //trek to the standby point once
         if (!unit.memory.in_place){
-            unit.moveTo(standby_flag, {visualizePathStyle: {stroke: '#00ffff'}});
+            unit.moveTo(standby_flag, {visualizePathStyle: {stroke: '#ff0000'}});
         }
         if (unit.pos.isEqualTo(standby_flag.pos)){
             unit.memory.in_place = true;
@@ -37,17 +37,17 @@ module.exports = {
             //select and attack target
             if (hatcheries.length){
                 if (unit.attack(hatcheries[0]) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(hatcheries[0], {visualizePathStyle: {stroke: '#00ffff'}});
+                    unit.moveTo(hatcheries[0], {visualizePathStyle: {stroke: '#ff0000'}});
                 }
             }
             else if (overlords.length){
                 if (unit.attack(overlords[0]) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(overlords[0], {visualizePathStyle: {stroke: '#00ffff'}});
+                    unit.moveTo(overlords[0], {visualizePathStyle: {stroke: '#ff0000'}});
                 }
             }
             else if (enemy){
                 if (unit.attack(enemy) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(enemy, {visualizePathStyle: {stroke: '#00ffff'}});
+                    unit.moveTo(enemy, {visualizePathStyle: {stroke: '#ff0000'}});
                 }
             }
             else{

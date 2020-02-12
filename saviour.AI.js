@@ -1,5 +1,5 @@
 //SAVIOUR: cross-room fast-track controller upgrader
-//red trail
+//violet trail
 
 module.exports = {
     run: function(unit,SRCnexus_id,DESTctrl_id,reserve){
@@ -24,21 +24,21 @@ module.exports = {
         if (unit.memory.venturing){
             //leave the home room
             if (unit.room != away){
-                unit.moveTo(away.controller, {visualizePathStyle: {stroke: '#ff0000'}});
+                unit.moveTo(away.controller, {visualizePathStyle: {stroke: '#ff00ff'}});
             }
             //feed
             else if (unit.upgradeController(away.controller)){
-                unit.moveTo(away.controller, {visualizePathStyle: {stroke: '#ff0000'}});
+                unit.moveTo(away.controller, {visualizePathStyle: {stroke: '#ff00ff'}});
             }
         }
         
         //return and withdraw from the vault (if energy can be spared)
         else if (home.storage.store.energy > reserve){
             if (unit.room != home){
-                unit.moveTo(home.controller, {visualizePathStyle: {stroke: '#ff0000'}});
+                unit.moveTo(home.controller, {visualizePathStyle: {stroke: '#ff00ff'}});
             }
             else if (unit.withdraw(home.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
-                unit.moveTo(home.storage, {visualizePathStyle: {stroke: '#ff0000'}});
+                unit.moveTo(home.storage, {visualizePathStyle: {stroke: '#ff00ff'}});
             }
         }
     }

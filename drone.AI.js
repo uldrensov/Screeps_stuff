@@ -26,7 +26,7 @@ module.exports = {
         //non-empty tombstones
         var tombs = nexus.room.find(FIND_TOMBSTONES, {
             filter: RoomObject => {
-                return RoomObject.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+                return RoomObject.store.getUsedCapacity() > 0;
             }
         });
         

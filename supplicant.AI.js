@@ -1,27 +1,34 @@
 //SUPPLICANT: dedicated semi-stationary controller upgrader
-//red trail
+//violet trail
 
 module.exports = {
-    run: function(unit,nexus,warp_main_id,warp_branch_id,road_id){
-
-        var warp_main = Game.getObjectById(warp_main_id);
-        var warp_branch = Game.getObjectById(warp_branch_id);
-        var road = Game.getObjectById(road_id);
-
-
-        //continually feed the controller while standing near and drawing from a link
-        if (!unit.pos.isEqualTo(road.pos)){
-            unit.moveTo(road, {visualizePathStyle: {stroke: '#ff0000'}});
+    run: function(unit,nexus,reserve){
+        
+        //two-states...
+        //if full pockets while outbound, come back
+        if (!unit.memory.homebound && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
+            unit.memory.homebound = true;
         }
-        else{
-            //request a warp if there is no more usable energy
-            if (unit.store[RESOURCE_ENERGY] == 0 && warp_main.store[RESOURCE_ENERGY] == 0){
-                warp_branch.transferEnergy(warp_main, warp_branch.store[RESOURCE_ENERGY]);
+        //if empty energy while inbound, go withdraw
+        if (unit.memory.homebound && unit.store[RESOURCE_ENERGY] == 0){
+            unit.memory.homebound = false;
+        }
+        
+        
+        //behaviour execution...
+        //expend: controller
+        if (unit.memory.homebound){
+            if (unit.upgradeController(nexus.room.controller) == ERR_NOT_IN_RANGE){
+                unit.moveTo(nexus.room.controller, {visualizePathStyle: {stroke: '#ff00ff'}});
             }
-            
-            //withdraw and upgrade in one move
-            unit.withdraw(warp_main, RESOURCE_ENERGY);
-            unit.upgradeController(nexus.room.controller);
         }
+        
+        //fetch energy: vault
+        else if (nexus.room.storage.store.energy > reserve){
+            if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ff00ff'}});
+            }
+        }
+        
     }
 };
