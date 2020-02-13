@@ -22,17 +22,13 @@ module.exports = {
         
         
         //behaviour execution...
-        //force-transmit if the link somehow reaches max capacity
-        warpRX = Game.getObjectById(warpRX_id);
+        //transmit only when the link reaches max capacity
         if (warpTX.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
             warpTX.transferEnergy(warpRX, warpTX.store[RESOURCE_ENERGY]);
         }
         
         //deposit: link
         if (unit.memory.homebound){
-            //transmit any existing contents first
-            warpTX.transferEnergy(warpRX, warpTX.store[RESOURCE_ENERGY]);
-            
             //attempt to deposit new payload; if RX is full, overflow-mine into the container
             if (unit.transfer(warpTX, RESOURCE_ENERGY) == ERR_FULL){
                 unit.harvest(src);

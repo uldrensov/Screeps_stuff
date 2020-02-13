@@ -24,8 +24,9 @@ module.exports = {
         Memory.sacrificer_MAX == undefined || Memory.architect_MAX == undefined || Memory.probe_MAX == undefined ||
         Memory.assimilator_MAX == undefined || Memory.drone_MAX == undefined || Memory.energiser_MAX == undefined ||
         Memory.recalibrator_MAX == undefined || Memory.orbitalAssimilator_MAX == undefined || Memory.acolyte_MAX == undefined ||
-        Memory.adherent_MAX == undefined || Memory.supplicant_MAX == undefined || Memory.ancientDrone_MAX == undefined ||
-        Memory.ancientAssimilator_MAX == undefined || Memory.specialist_MAX == undefined || Memory.saviour_MAX == undefined){
+        Memory.acolyte2_MAX == undefined || Memory.adherent_MAX == undefined || Memory.supplicant_MAX == undefined ||
+        Memory.ancientDrone_MAX == undefined || Memory.ancientAssimilator_MAX == undefined || Memory.specialist_MAX == undefined ||
+        Memory.saviour_MAX == undefined){
             return 'ERROR: main.js failed to initialise memory';
         }
         
@@ -47,6 +48,8 @@ module.exports = {
         var sacrificer_gang = _.filter(Game.creeps, creep => creep.memory.role == 'sacrificer' &&
             creep.room == nexi[room_num].room);
         var acolyte_gang = _.filter(Game.creeps, creep => creep.memory.role == 'acolyte' &&
+            creep.room == nexi[room_num].room);
+        var acolyte2_gang = _.filter(Game.creeps, creep => creep.memory.role == 'acolyte2' &&
             creep.room == nexi[room_num].room);
         var adherent_gang = _.filter(Game.creeps, creep => creep.memory.role == 'adherent' &&
             creep.room == nexi[room_num].room);
@@ -165,7 +168,9 @@ module.exports = {
         //unit census
         console.log('<<<--Census-->>>');
         console.log(emergencyDrone_status);
-        console.log('Assimilators: ' + assimilator_gang.length + '/' + Memory.assimilator_MAX[room_num]);
+        if (Memory.assimilator_MAX[room_num] > 0){
+            console.log('Assimilator: ' + assimilator_gang.length + '/' + Memory.assimilator_MAX[room_num]);
+        }
         //console.log('Assimilators 2: ' + assimilator2_gang.length + '/' + Memory.assimilator2_MAX[room_num]);
         console.log('Drones: ' + drone_gang.length + '/' + Memory.drone_MAX[room_num]);
         console.log('Energisers: ' + energiser_gang.length + '/' + Memory.energiser_MAX[room_num]);
@@ -173,10 +178,13 @@ module.exports = {
             console.log('Sacrificers: ' + sacrificer_gang.length + '/' + Memory.sacrificer_MAX[room_num]);
         }
         if (Memory.acolyte_MAX[room_num] > 0){
-            console.log('Acolytes: ' + acolyte_gang.length + '/' + Memory.acolyte_MAX[room_num]);
+            console.log('Acolyte[I]: ' + acolyte_gang.length + '/' + Memory.acolyte_MAX[room_num]);
+        }
+        if (Memory.acolyte2_MAX[room_num] > 0){
+            console.log('Acolyte[II]: ' + acolyte2_gang.length + '/' + Memory.acolyte2_MAX[room_num]);
         }
         if (Memory.adherent_MAX[room_num] > 0){
-            console.log('Adherents: ' + adherent_gang.length + '/' + Memory.adherent_MAX[room_num]);
+            console.log('Adherent: ' + adherent_gang.length + '/' + Memory.adherent_MAX[room_num]);
         }
         if (Memory.supplicant_MAX[room_num] > 0){
             console.log('Supplicants: ' + supplicant_gang.length + '/' + Memory.supplicant_MAX[room_num]);
@@ -185,10 +193,10 @@ module.exports = {
         console.log('Recalibrators : ' + recalibrator_gang.length + '/' + Memory.recalibrator_MAX[room_num]);
         console.log('Orbital assimilators : ' + orbitalAssimilator_gang.length + '/' + Memory.orbitalAssimilator_MAX[room_num]);
         if (Memory.ancientDrone_MAX[room_num] > 0){
-            console.log('Ancient drones : ' + ancientDrone_gang.length + '/' + Memory.ancientDrone_MAX[room_num]);
+            console.log('Ancient drone : ' + ancientDrone_gang.length + '/' + Memory.ancientDrone_MAX[room_num]);
         }
         if (Memory.ancientAssimilator_MAX[room_num] > 0){
-            console.log('Ancient assimilators : ' + ancientAssimilator_gang.length + '/' + Memory.ancientAssimilator_MAX[room_num]);
+            console.log('Ancient assimilator : ' + ancientAssimilator_gang.length + '/' + Memory.ancientAssimilator_MAX[room_num]);
         }
         if (Memory.architect_MAX[room_num] > 0){
             console.log('Architects: ' + architect_gang.length + '/' + Memory.architect_MAX[room_num]);

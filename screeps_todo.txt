@@ -1,4 +1,5 @@
 TODO urgent:
+	email on drained vault
 	[DEFENCE] tower should reuse probe's fixation mechanic
 	[ECON] remote miner containers + drones
 	[BUG] dont let new things spawn when one briefly leaves room
@@ -10,12 +11,11 @@ TODO backlog:
 	[ECON] remote miners should run from invaders
 	[MAINTENANCE] git init (put this file inside), readme
 	[SOFTLOCK] before calling a softlock, drones should deposit pocket energy if there are no more assims/energy on the map
-	[QOL] more status report info (pickups?)
+	[QOL] more status report info (pickups, ctrller lvl)
 	[SOFTLOCK] 'lack of assimilator' softlock? (if no assim & no money, emergency convert)
 	
 Look up:
 	renewing units
-	signs (clans?)
 	remote miners having drones
 	flagging a neutral controller
 
