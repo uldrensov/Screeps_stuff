@@ -16,14 +16,14 @@ module.exports = {
         
         
         //behaviour execution...
-        //expend: controller
+        //unload: controller
         if (unit.memory.homebound){
             if (unit.upgradeController(nexus.room.controller) == ERR_NOT_IN_RANGE){
                 unit.moveTo(nexus.room.controller, {visualizePathStyle: {stroke: '#ff00ff'}});
             }
         }
         
-        //fetch energy: vault
+        //fetch: vault
         else if (nexus.room.storage.store.energy > reserve){
             if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
                 unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ff00ff'}});

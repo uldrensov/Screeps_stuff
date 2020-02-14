@@ -4,7 +4,7 @@
 module.exports = {
     run: function(unit,nexus){
         
-        //non-empty containers
+        //inputs: containers (non-empty)
         var canisters = nexus.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER &&
@@ -12,7 +12,7 @@ module.exports = {
             }
         });
         
-        //energy-deficient towers
+        //outputs: towers (non-full)
         var towers = nexus.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return (structure.structureType == STRUCTURE_TOWER) &&
@@ -33,10 +33,9 @@ module.exports = {
         
         
         //behaviour execution...
-        //find and resupply a tower
+        //unload: towers (most drained)
         if (unit.memory.homebound){
             if (towers.length){
-                //target the most depleted tower
                 var lowest_tower = towers[0];
                 for (let i=0; i<towers.length; i++){
                     if (towers[i].store[RESOURCE_ENERGY] < lowest_tower.store[RESOURCE_ENERGY]){
@@ -48,13 +47,14 @@ module.exports = {
                 }
             }
         }
-        //withdraw from the vault / fullest canister
         else{
+            //fetch: vault
             if (nexus.room.storage != undefined && nexus.room.storage.store.energy > 0){
                 if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
                     unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#0000ff'}});
                 }
             }
+            //fetch: containers (fullest)
             else if (canisters.length){
                 var fullest_canister = canisters[0];
                 if (canisters.length == 2 &&

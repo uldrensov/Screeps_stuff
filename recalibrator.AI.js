@@ -2,10 +2,13 @@
 //yellow trail
 
 module.exports = {
-    run: function(unit,ctrl_id,standby_flag,annex){
+    run: function(unit,ctrl_id,standby_flag){
         
         if (unit.memory.in_place == undefined){
             unit.memory.in_place = false;
+        }
+        if (unit.memory.annex == undefined){
+            unit.memory.annex = false;
         }
         
         
@@ -18,9 +21,9 @@ module.exports = {
         }
         
         
-        //reserve/claim the controller
+        //reserve/attack/claim the controller
         if (unit.memory.in_place){
-            if (annex){
+            if (unit.memory.annex){
                 if (unit.claimController(Game.getObjectById(ctrl_id)) == ERR_NOT_IN_RANGE){
                     unit.moveTo(Game.getObjectById(ctrl_id), {visualizePathStyle: {stroke: '#ffff00'}});
                 }

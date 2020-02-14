@@ -5,10 +5,13 @@ module.exports = {
     run: function(unit,nexus_id,canister_id){
         
         var nexus = Game.getObjectById(nexus_id);
+        
+        
+        //inputs: container
         var canister = Game.getObjectById(canister_id);
         
         
-        //init: determine type of mineral (index 1 to skip energy)
+        //init: determine type of mineral present
         if (unit.memory.mineral_type == undefined && canister.store.getUsedCapacity() != 0){
             for (let i=1; i<RESOURCES_ALL.length; i++){
                 if (canister.store.getUsedCapacity(RESOURCES_ALL[i]) != 0){
@@ -34,13 +37,13 @@ module.exports = {
             
             
             //behaviour execution...
-            //deposit: vault
+            //unload: vault
             if (unit.memory.homebound){
                 if (unit.transfer(nexus.room.storage, unit.memory.mineral_type) == ERR_NOT_IN_RANGE){
                     unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
-            //fetch minerals
+            //fetch: container
             else{
                 if (unit.withdraw(canister, unit.memory.mineral_type) == ERR_NOT_IN_RANGE){
                 unit.moveTo(canister, {visualizePathStyle: {stroke: '#ffffff'}});

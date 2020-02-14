@@ -9,16 +9,17 @@ module.exports = {
         var warpRX = Game.getObjectById(warpRX_id);
         
         
-        //move the the designated tile
+        //ensure correct position
         if (!unit.pos.isEqualTo(tile.pos)){
             unit.moveTo(tile, {visualizePathStyle: {stroke: '#ffffff'}});
         }
+        //remain there and work
         else{
-            //fetch energy: link
+            //fetch: link
             if (warpRX.store[RESOURCE_ENERGY] != 0){
                 unit.withdraw(warpRX, RESOURCE_ENERGY);
             }
-            //deposit: vault
+            //unload: vault
             if (unit.store[RESOURCE_ENERGY] != 0){
                 unit.transfer(nexus.room.storage, RESOURCE_ENERGY)
             }

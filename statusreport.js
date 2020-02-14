@@ -5,7 +5,7 @@
 module.exports = {
     run: function(room_num){
         
-        var nexi = [Game.spawns['Spawn1'], Game.spawns['Spawn2']];
+        var nexi = [Game.spawns['Spawn1'], Game.spawns['Spawn2'], Game.spawns['Spawn3']];
         
         
         //arg validation
@@ -13,6 +13,8 @@ module.exports = {
             case 0:
                 break;
             case 1:
+                break;
+            case 2:
                 break;
             default:
                 return 'INVALID ROOM NUMBER';

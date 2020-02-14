@@ -7,10 +7,8 @@ module.exports = {
         var obelisk = Game.getObjectById(ctrl_id);
         
         
-        //energy source(s)
+        //inputs: energy sources, containers (ample)
         var sources = obelisk.room.find(FIND_SOURCES);
-        
-        //containers of reasonable capacity
         var canisters = obelisk.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER &&
@@ -31,16 +29,14 @@ module.exports = {
         
         
         //behaviour execution...
-        //feed the room's controller
+        //unload: controller
         if (unit.memory.homebound){
             if (unit.upgradeController(obelisk) == ERR_NOT_IN_RANGE){
                 unit.moveTo(obelisk, {visualizePathStyle: {stroke: '#ff00ff'}});
             }
         }
-        
-        //owithdraw / harvest
         else{
-            //withdraw from container
+            //fetch: containers (fullest; fixation)
             if (canisters.length){
                 //determine the fullest container in play
                 var fullest_canister = canisters[0];
@@ -66,7 +62,7 @@ module.exports = {
                     unit.moveTo(canister_target, {visualizePathStyle: {stroke: '#ff00ff'}});
                 }
             }
-            //harvest as a last resort
+            //fetch: sources
             else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE){
                 unit.moveTo(sources[0], {visualizePathStyle: {stroke: '#ff00ff'}});
             }

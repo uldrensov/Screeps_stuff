@@ -26,13 +26,13 @@ module.exports = {
                     return structure.structureType == STRUCTURE_SPAWN;
                 }
             });
-            var overlords = unit.room.find(FIND_STRUCTURES, {
+            var organs = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
-                    return structure.structureType == STRUCTURE_EXTENSION;
+                    return structure.structureType == STRUCTURE_EXTENSION ||
+                    structure.structureType == STRUCTURE_INVADER_CORE;
                 }
             });
-            //var opponents = unit.room.find(FIND_CREEPS);
-            var enemy = unit.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+            var abomination = unit.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
             
             //select and attack target
             if (hatcheries.length){
@@ -40,14 +40,14 @@ module.exports = {
                     unit.moveTo(hatcheries[0], {visualizePathStyle: {stroke: '#ff0000'}});
                 }
             }
-            else if (overlords.length){
-                if (unit.attack(overlords[0]) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(overlords[0], {visualizePathStyle: {stroke: '#ff0000'}});
+            else if (organs.length){
+                if (unit.attack(organs[0]) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(organs[0], {visualizePathStyle: {stroke: '#ff0000'}});
                 }
             }
-            else if (enemy){
-                if (unit.attack(enemy) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(enemy, {visualizePathStyle: {stroke: '#ff0000'}});
+            else if (abomination){
+                if (unit.attack(abomination) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(abomination, {visualizePathStyle: {stroke: '#ff0000'}});
                 }
             }
             else{

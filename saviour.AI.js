@@ -20,23 +20,22 @@ module.exports = {
         
         
         //behaviour execution...
-        //travel and feed the foreign controller
         if (unit.memory.venturing){
             //leave the home room
             if (unit.room != away){
                 unit.moveTo(away.controller, {visualizePathStyle: {stroke: '#ff00ff'}});
             }
-            //feed
+            //unload: controller
             else if (unit.upgradeController(away.controller)){
                 unit.moveTo(away.controller, {visualizePathStyle: {stroke: '#ff00ff'}});
             }
         }
-        
-        //return and withdraw from the vault (if energy can be spared)
         else if (home.storage.store.energy > reserve){
+            //return to home room
             if (unit.room != home){
                 unit.moveTo(home.controller, {visualizePathStyle: {stroke: '#ff00ff'}});
             }
+            //fetch: vault (respect limit)
             else if (unit.withdraw(home.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
                 unit.moveTo(home.storage, {visualizePathStyle: {stroke: '#ff00ff'}});
             }

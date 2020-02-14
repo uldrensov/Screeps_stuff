@@ -1,4 +1,5 @@
 TODO urgent:
+	autohandle mineral miner spawns
 	email on drained vault
 	[DEFENCE] tower should reuse probe's fixation mechanic
 	[ECON] remote miner containers + drones

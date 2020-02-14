@@ -25,15 +25,15 @@ var khaydarinmonolith = require('khaydarinmonolith.AI');
 //reconfigurable numbers
 var time_offset = 100000;
 var fixation_override_threshold = .25; //probes will break fixation upon spotting an absolute % gap this wide
-var drone_price = [1500,1500];
+var drone_price = [1500,1500,300];
 var drone_pickup_min = 200;
 var canister_ignore_lim = 210; //drones will ignore containers containing less than this
 var tower_reserve_ratio = .5; //towers will reserve this percentage of their energy for attacking
 var vault_reserve_min = 20000; //all units except (e)drones and energisers will avoid vaults containing less than this
 
 //reconfigurable structure IDs
-var nexus_id = ['5e2d15a9e152154167131760', '5e3909b408abb42e9b310a46'];
-var controller_id = ['5bbcae989099fc012e639474', '5bbcae989099fc012e639478'];
+var nexus_id = ['5e2d15a9e152154167131760', '5e3909b408abb42e9b310a46', '5e466c796fffaf84254b19ed'];
+var controller_id = ['5bbcae989099fc012e639474', '5bbcae989099fc012e639478', '5bbcae989099fc012e63947f'];
 var source1_id = ['5bbcae989099fc012e639476', '5bbcae989099fc012e639479'];
 //var source2_id = ['5bbcae989099fc012e639475'];
 var canister1_id = ['5e30677977034e78c09bdc43', '5e393db88c0dfcfcb18f05d2']; //corresponds to source1
@@ -44,7 +44,7 @@ var reserve_ctrl_id = ['5bbcaea69099fc012e639602', '5bbcae989099fc012e63947c'];
 var remotesource_id = ['5bbcaea69099fc012e639603', '5bbcae989099fc012e63947b'];
 var remoteflag = [Game.flags['Terrazine'], Game.flags['Vespene']]; //point of operation for remote mining
 var remotedrop_id = ['5e323d61aa9957193cc8ec6c', '5e3ff330d9c0d0411296ffb0']; //dropoff storages for remote mining
-var tower_id = [['5e2f4a33e8af4a1c6459ccd8', '5e346820d632bc24398489ab'], ['5e3a68c9aa99575a56cba5da', '5e401cc59c6dc7073200b5b7']];
+var tower_id = [['5e2f4a33e8af4a1c6459ccd8', '5e346820d632bc24398489ab'], ['5e3a68c9aa99575a56cba5da', '5e401cc59c6dc7073200b5b7'],[]];
 var warpRX_id = ['5e34d2403561285c52aba5b2', '5e437aa1ac1ec4151e946cb9']; //receiver link (adherent)
 var warpTX_id = [['5e437e083561285674b0989c','5e34d803221670187690e4d7'], ['5e3ff330d9c0d0411296ffb0']]; //transmitter link (acolyte)
 var acoly_tile_id = [['5e30677977034e78c09bdc43','5e354b518c0dfc0f7b8dc1d0'], ['5e393db88c0dfcfcb18f05d2']];
@@ -55,35 +55,39 @@ var holy_source = [['5bbcae989099fc012e639476','5bbcae989099fc012e639475'], ['5b
 var edrone_body = [WORK, CARRY,CARRY, MOVE,MOVE];
                 //cost: 300
 var assim_body = [[WORK,WORK,WORK,WORK,WORK, MOVE,MOVE,MOVE],
-                [WORK,WORK,WORK,WORK,WORK, MOVE,MOVE,MOVE]];
-                //cost: 650, 650
+                [WORK,WORK,WORK,WORK,WORK, MOVE,MOVE,MOVE],
+                [WORK,WORK,WORK,WORK,WORK, MOVE]];
+                //cost: 650, 650, 550
 var drone_body = [[CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
                 MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                 [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
-                MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]];
-                //cost: 1500, 1500
+                MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+                [CARRY,CARRY,CARRY,CARRY,MOVE,MOVE]];
+                //cost: 1500, 1500, 300
 var energ_body = [[CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
                 [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE]];
                 //cost: 750, 750
 var sacrif_body = [[],
-                [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]];
-                //cost: NULL, 1200
+                [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+                [WORK, CARRY,CARRY, MOVE,MOVE]];
+                //cost: NULL, 1200, 300
 var acoly_body = [[WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE],
                 [WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE]];
                 //cost: 850, 1050
 var adher_body = [CARRY,CARRY,CARRY,CARRY, MOVE];
                 //cost: 250
-var suppl_body = [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,
+var suppl_body = [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,
                 CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
                 MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY, MOVE]];
-                //cost: 2250, 1150
+                [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY, MOVE]];
+                //cost: 2050, 750
 var probe_body = [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
                 MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]];
-                //cost: 2050, 1600
-var recal_body = [CLAIM, MOVE];
-                //cost: 650
+                [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+                [WORK,WORK, CARRY,CARRY, MOVE,MOVE]];
+                //cost: 2050, 1600, 400
+var recal_body = [[CLAIM, MOVE], [CLAIM,MOVE]];
+                //cost: 650, 650
 var oassim_body = [[WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
                 MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                 [WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, CARRY,
@@ -117,20 +121,20 @@ var zealot_body = [ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK, MOVE,MOVE,MOVE,MOV
                 
                 
 //memory init
-if (Memory.sacrificer_MAX == undefined){Memory.sacrificer_MAX = [1,0];}
-if (Memory.architect_MAX == undefined){Memory.architect_MAX = [1,0];}
-if (Memory.probe_MAX == undefined){Memory.probe_MAX = [2,0];}
-if (Memory.assimilator_MAX == undefined){Memory.assimilator_MAX = [0,0];}
-if (Memory.drone_MAX == undefined){Memory.drone_MAX = [2,0];}
-if (Memory.energiser_MAX == undefined){Memory.energiser_MAX = [0,0];}
-if (Memory.recalibrator_MAX == undefined){Memory.recalibrator_MAX = [0,0];}
-if (Memory.orbitalAssimilator_MAX == undefined){Memory.orbitalAssimilator_MAX = [0,0];}
-if (Memory.acolyte_MAX == undefined){Memory.acolyte_MAX = [0,0];}
-    if (Memory.acolyte2_MAX == undefined){Memory.acolyte2_MAX = [0,0];}
-if (Memory.adherent_MAX == undefined){Memory.adherent_MAX = [0,0];}
-if (Memory.supplicant_MAX == undefined){Memory.supplicant_MAX = [0,0];}
-if (Memory.ancientDrone_MAX == undefined){Memory.ancientDrone_MAX = [0,0];}
-if (Memory.ancientAssimilator_MAX == undefined){Memory.ancientAssimilator_MAX = [0,0];}
+if (Memory.sacrificer_MAX == undefined){Memory.sacrificer_MAX = [1,0,0];}
+if (Memory.architect_MAX == undefined){Memory.architect_MAX = [1,0,0];}
+if (Memory.probe_MAX == undefined){Memory.probe_MAX = [2,0,0];}
+if (Memory.assimilator_MAX == undefined){Memory.assimilator_MAX = [0,0,0];}
+if (Memory.drone_MAX == undefined){Memory.drone_MAX = [2,0,0];}
+if (Memory.energiser_MAX == undefined){Memory.energiser_MAX = [0,0,0];}
+if (Memory.recalibrator_MAX == undefined){Memory.recalibrator_MAX = [0,0,0];}
+if (Memory.orbitalAssimilator_MAX == undefined){Memory.orbitalAssimilator_MAX = [0,0,0];}
+if (Memory.acolyte_MAX == undefined){Memory.acolyte_MAX = [0,0,0];}
+    if (Memory.acolyte2_MAX == undefined){Memory.acolyte2_MAX = [0,0,0];}
+if (Memory.adherent_MAX == undefined){Memory.adherent_MAX = [0,0,0];}
+if (Memory.supplicant_MAX == undefined){Memory.supplicant_MAX = [0,0,0];}
+if (Memory.ancientDrone_MAX == undefined){Memory.ancientDrone_MAX = [0,0,0];}
+if (Memory.ancientAssimilator_MAX == undefined){Memory.ancientAssimilator_MAX = [0,0,0];}
 if (Memory.specialist_MAX == undefined){Memory.specialist_MAX = 0;}
 if (Memory.saviour_MAX == undefined){Memory.saviour_MAX = 0;}
 if (Memory.darktemplar_MAX == undefined){Memory.darktemplar_MAX = 0;}
@@ -144,7 +148,7 @@ if (Memory.construction_mode == undefined){Memory.construction_mode = false;}
 
 module.exports.loop = function(){
     
-    var nexi = [Game.getObjectById(nexus_id[0]), Game.getObjectById(nexus_id[1])];
+    var nexi = [Game.getObjectById(nexus_id[0]), Game.getObjectById(nexus_id[1]), Game.getObjectById(nexus_id[2])];
     
     
     //garbage collect the names of expired units
@@ -277,7 +281,7 @@ module.exports.loop = function(){
         //situational units...
         //recalibrators: if remote mining is viable
         else if (recalibrator_gang[k].length < Memory.recalibrator_MAX[k]){
-            if (nexi[k].spawnCreep(recal_body,
+            if (nexi[k].spawnCreep(recal_body[k],
             'Recalibrator-' + Game.time % time_offset, {memory: {role: 'recalibrator', home: nexi[k].room.name}}) == 0){
                 console.log('Room #' + k + ': Recalibrator-' + Game.time % time_offset + ' spawning.');
             }
@@ -426,7 +430,7 @@ module.exports.loop = function(){
                 //determine homeroom to call AI script using appropriate args
                 for (let i=0; i<nexi.length; i++){
                     if (unit.memory.home == nexi[i].room.name){
-                        recalibrator.run(unit, reserve_ctrl_id[i], reserveflag[i], false);
+                        recalibrator.run(unit, reserve_ctrl_id[i], reserveflag[i]);
                         break;
                     }
                 }
@@ -441,13 +445,13 @@ module.exports.loop = function(){
                 }
                 break;
             case 'specialist':
-                specialist.run(unit, nexus_id[0], controller_id[1], vault_reserve_min);
+                specialist.run(unit, controller_id[2]);
                 break;
             case 'saviour':
-                saviour.run(unit, nexus_id[0], controller_id[1], vault_reserve_min);
+                saviour.run(unit, nexus_id[0], controller_id[2], vault_reserve_min);
                 break;
             case 'darktemplar':
-                darktemplar.run(unit, Game.flags['Zerg']);
+                darktemplar.run(unit, Game.flags['Vespene']);
                 break;
             case 'hallucination':
                 //hallucination.run(unit, Game.flags[''], Game.flags['']);

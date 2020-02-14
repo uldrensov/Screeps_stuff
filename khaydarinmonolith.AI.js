@@ -16,15 +16,13 @@ module.exports = {
         }
         
         
-        //damaged units
+        //outputs: enemies, injured allies, damaged structures
+        var enemy = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         var injured_units = tower.room.find(FIND_MY_CREEPS, {
             filter: creep => {
                 return creep.hits < creep.hitsMax;
             }
         });
-        
-        
-        //structures below a certain HP thresholds
         var repairTargets = tower.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return ((structure.hits < structure.hitsMax * .5
@@ -43,8 +41,7 @@ module.exports = {
         
 
         //priorities...
-        //attack enemies first
-        var enemy = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+        //unload: enemies
         if (enemy){
             tower.attack(enemy);
             if (enemy.owner.username != 'Invader'){
@@ -53,11 +50,11 @@ module.exports = {
         }
         //perform other tasks only if energy can be spared, and construction mode is disabled
         else if (!disable && tower.store[RESOURCE_ENERGY] > tower.store.getCapacity(RESOURCE_ENERGY) * reserve_ratio){
-            //heal units second
+            //unload: injured allies
             if (injured_units.length){
                 tower.heal(injured_units[0]);
             }
-            //repair structures last
+            //unload: damaged structures
             else{
                 if (repairRamparts.length){
                     tower.repair(repairRamparts[0]);

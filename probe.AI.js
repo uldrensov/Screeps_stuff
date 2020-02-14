@@ -4,10 +4,8 @@
 module.exports = {
     run: function(unit,nexus,thresholdT,thresholdR,override_threshold,ignore_lim,reserve){
         
-        //energy source(s)
+        //inputs: energy sources, containers (ample)
         var sources = nexus.room.find(FIND_SOURCES);
-        
-        //containers of reasonable capacity
         var canisters = nexus.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER &&
@@ -15,7 +13,7 @@ module.exports = {
             }
         });
         
-        //structures not at full HP / threshold
+        //outputs: structures (non-full/threshold)
         var repairTargets = nexus.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return ((structure.hits < structure.hitsMax
@@ -41,7 +39,7 @@ module.exports = {
         
         
         //behaviour execution...
-        //find a structure to fixate upon, and repair it until a greater emergency arises
+        //unload: structure (weakest %; fixation)
         if (unit.memory.homebound && repairTargets.length){
             //find the weakest structure in terms of %
             var weakest = repairTargets[0];
@@ -109,14 +107,14 @@ module.exports = {
                 delete unit.memory.fixation;
             }
         }
-        
-        //withdraw from the vault / fullest canister
         else{
+            //fetch: vault (respect limit)
             if (nexus.room.storage != undefined && nexus.room.storage.store.energy > reserve){
                 if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
                     unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#0000ff'}});
                 }
             }
+            //fetch: containers (fullest)
             else if (canisters.length){
                 var fullest_canister = canisters[0];
                 if (canisters.length == 2 &&

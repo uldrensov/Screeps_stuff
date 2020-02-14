@@ -4,10 +4,8 @@
 module.exports = {
     run: function(unit,nexus,reserve){
         
-        //energy source(s)
+        //inputs: energy sources, containers (non-empty)
         var sources = nexus.room.find(FIND_SOURCES);
-        
-        //non-empty containers
         var canisters = nexus.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER &&
@@ -15,7 +13,7 @@ module.exports = {
             }
         });
         
-        //construction hotspots
+        //outputs: construction hotspots
         var hotspots = nexus.room.find(FIND_CONSTRUCTION_SITES);
         
         
@@ -31,7 +29,7 @@ module.exports = {
         
         
         //behaviour execution...
-        //build at the nearest hotspot
+        //unload: construction hotspots (nearest)
         if (unit.memory.homebound){
             if (hotspots.length){
                 var nearest_hotspot = unit.pos.findClosestByPath(hotspots);
@@ -40,13 +38,14 @@ module.exports = {
                 }
             }
         }
-        //fetch energy: vault, canister
         else{
+            //fetch: vault (respect limit)
             if (nexus.room.storage != undefined && nexus.room.storage.store.energy > reserve){
                 if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
                     unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#00ff00'}});
                 }
             }
+            //fetch: containers (fullest)
             else if (canisters.length){
                 var fullest_canister = canisters[0];
                 if (canisters.length == 2 &&

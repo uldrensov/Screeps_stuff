@@ -7,30 +7,26 @@ module.exports = {
         var nexus = Game.getObjectById(nexus_id);
         
         
-        //containers of reasonable capacity
+        //inputs: containers (ample), pickups<energy> (ample), pickups<mineral>, tombstones (non-empty)
         var canisters = nexus.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER &&
                 structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
             }
         });
-        
-        //all mineral pickups, and sufficiently plentiful energy pickups
         var scraps = nexus.room.find(FIND_DROPPED_RESOURCES, {
             filter: resource => {
                 return (resource.amount > ignore_lim && resource.resourceType == RESOURCE_ENERGY) ||
                 resource.resourceType != RESOURCE_ENERGY;
             }
         });
-        
-        //non-empty tombstones
         var tombs = nexus.room.find(FIND_TOMBSTONES, {
             filter: RoomObject => {
                 return RoomObject.store.getUsedCapacity() > 0;
             }
         });
         
-        //energy-deficient extensions
+        //outputs: pylons (non-full)
         var pylons = nexus.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_EXTENSION &&
@@ -51,9 +47,8 @@ module.exports = {
         
         
         //behaviour execution...
-        //deposit: vault(minerals), extensions, nexus, vault(energy)
         if (unit.memory.homebound){
-            //prioritise depositing minerals into the vault
+        //unload: vault<minerals>
             var treasure_held = false;
             var treasure_to_deposit;
             
@@ -71,19 +66,20 @@ module.exports = {
                 }
             }
             else{
-                //prioritise extensions
+                //unload: pylons
                 if (pylons.length){
                     var nearest_pylon = unit.pos.findClosestByPath(pylons);
                     if (unit.transfer(nearest_pylon, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
                         unit.moveTo(nearest_pylon, {visualizePathStyle: {stroke: '#ffffff'}});
                     }
                 }
+                //unload: nexus
                 else if (nexus.store.getFreeCapacity(RESOURCE_ENERGY) != 0){
                     if (unit.transfer(nexus, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
                         unit.moveTo(nexus, {visualizePathStyle: {stroke: '#ffffff'}});
                     }
                 }
-                //if excess energy, dump it in storage
+                //unload: vault<energy>
                 else if (nexus.room.storage != undefined){
                     if (unit.transfer(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
                         unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
@@ -91,8 +87,8 @@ module.exports = {
                 }
             }
         }
-        //fetch energy: tombstones, pickups, containers, vault
         else{
+        //fetch: tombstones<minerals>, tombstones<energy> (fullest))
             if (tombs.length){
                 var richest_tomb = tombs[0];
                 var treasure_found_t = false;
@@ -127,6 +123,7 @@ module.exports = {
                 }
             }
             ///*
+            //fetch: pickups<minerals> (least TTL), pickups<energy> (fullest))
             else if (scraps.length){
                 var chosen_scrap = scraps[0];
                 var treasure_found_s = false;
@@ -153,6 +150,7 @@ module.exports = {
                 }
             }
             //*/
+            //fetch: containers (fullest; fixation)
             else if (canisters.length){
                 //determine the fullest container in play
                 var fullest_canister = canisters[0];
@@ -178,6 +176,7 @@ module.exports = {
                     unit.moveTo(canister_target, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
+            //fetch: vault
             else if (nexus.room.storage != undefined){
                 if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
                     unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
