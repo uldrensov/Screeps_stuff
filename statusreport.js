@@ -24,11 +24,11 @@ module.exports = {
         //memory validation
         if (Memory.wall_threshold == undefined || Memory.rampart_threshold == undefined ||
         Memory.sacrificer_MAX == undefined || Memory.architect_MAX == undefined || Memory.probe_MAX == undefined ||
-        Memory.assimilator_MAX == undefined || Memory.drone_MAX == undefined || Memory.energiser_MAX == undefined ||
-        Memory.recalibrator_MAX == undefined || Memory.orbitalAssimilator_MAX == undefined || Memory.acolyte_MAX == undefined ||
-        Memory.acolyte2_MAX == undefined || Memory.adherent_MAX == undefined || Memory.supplicant_MAX == undefined ||
-        Memory.ancientDrone_MAX == undefined || Memory.ancientAssimilator_MAX == undefined || Memory.specialist_MAX == undefined ||
-        Memory.saviour_MAX == undefined){
+        Memory.assimilator_MAX == undefined || Memory.assimilator2_MAX == undefined || Memory.drone_MAX == undefined ||
+        Memory.energiser_MAX == undefined || Memory.recalibrator_MAX == undefined || Memory.orbitalAssimilator_MAX == undefined ||
+        Memory.orbitalDrone == undefined || Memory.acolyte_MAX == undefined || Memory.acolyte2_MAX == undefined ||
+        Memory.adherent_MAX == undefined || Memory.supplicant_MAX == undefined || Memory.ancientDrone_MAX == undefined ||
+        Memory.ancientAssimilator_MAX == undefined || Memory.specialist_MAX == undefined || Memory.saviour_MAX == undefined){
             return 'ERROR: main.js failed to initialise memory';
         }
         
@@ -39,10 +39,8 @@ module.exports = {
             creep.room == nexi[room_num].room);
         var assimilator_gang = _.filter(Game.creeps, creep => creep.memory.role == 'assimilator' &&
             creep.room == nexi[room_num].room);
-        /*
         var assimilator2_gang = _.filter(Game.creeps, creep => creep.memory.role == 'assimilator2' &&
             creep.room == nexi[room_num].room);
-        */
         var drone_gang = _.filter(Game.creeps, creep => creep.memory.role == 'drone' &&
             creep.room == nexi[room_num].room);
         var energiser_gang = _.filter(Game.creeps, creep => creep.memory.role == 'energiser' &&
@@ -62,6 +60,8 @@ module.exports = {
         var recalibrator_gang = _.filter(Game.creeps, creep => creep.memory.role == 'recalibrator' &&
             creep.memory.home == nexi[room_num].room.name);
         var orbitalAssimilator_gang = _.filter(Game.creeps, creep => creep.memory.role == 'orbitalAssimilator' &&
+            creep.memory.home == nexi[room_num].room.name);
+        var orbitalDrone_gang = _.filter(Game.creeps, creep => creep.memory.role == 'orbitalDrone' &&
             creep.memory.home == nexi[room_num].room.name);
         var ancientDrone_gang = _.filter(Game.creeps, creep => creep.memory.role == 'ancientDrone' &&
             creep.room == nexi[room_num].room);
@@ -90,11 +90,11 @@ module.exports = {
         
         
         //room state...
-        //determine extension capacity
+        //determine total extension capacity
         var ext_energy = nexi[room_num].room.energyAvailable
         - nexi[room_num].store.getUsedCapacity(RESOURCE_ENERGY);
         
-        //determine total canister capacity
+        //determine total container capacity
         var canisters = nexi[room_num].room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return structure.structureType == STRUCTURE_CONTAINER;
@@ -115,7 +115,6 @@ module.exports = {
                 && structure.structureType != STRUCTURE_RAMPART);
             }
         });
-        
         //count worn walls
         var worn_walls = nexi[room_num].room.find(FIND_STRUCTURES, {
             filter: (structure) => {
@@ -142,7 +141,6 @@ module.exports = {
             weakest_struct = 'STRUCTURES ARE PRISTINE';
             weakstruct_perc = 1;
         }
-        
         //determine wall status
         var weakest_wall;
         var weakwall_perc;
@@ -171,9 +169,11 @@ module.exports = {
         console.log('<<<--Census-->>>');
         console.log(emergencyDrone_status);
         if (Memory.assimilator_MAX[room_num] > 0){
-            console.log('Assimilator: ' + assimilator_gang.length + '/' + Memory.assimilator_MAX[room_num]);
+            console.log('Assimilator[I]: ' + assimilator_gang.length + '/' + Memory.assimilator_MAX[room_num]);
         }
-        //console.log('Assimilators 2: ' + assimilator2_gang.length + '/' + Memory.assimilator2_MAX[room_num]);
+        if (Memory.assimilator2_MAX[room_num] > 0){
+            console.log('Assimilator[II]: ' + assimilator2_gang.length + '/' + Memory.assimilator2_MAX[room_num]);
+        }
         console.log('Drones: ' + drone_gang.length + '/' + Memory.drone_MAX[room_num]);
         console.log('Energisers: ' + energiser_gang.length + '/' + Memory.energiser_MAX[room_num]);
         if (Memory.sacrificer_MAX[room_num] > 0){
@@ -194,12 +194,9 @@ module.exports = {
         console.log('Probes: ' + probe_gang.length + '/' + Memory.probe_MAX[room_num]);
         console.log('Recalibrators : ' + recalibrator_gang.length + '/' + Memory.recalibrator_MAX[room_num]);
         console.log('Orbital assimilators : ' + orbitalAssimilator_gang.length + '/' + Memory.orbitalAssimilator_MAX[room_num]);
-        if (Memory.ancientDrone_MAX[room_num] > 0){
-            console.log('Ancient drone : ' + ancientDrone_gang.length + '/' + Memory.ancientDrone_MAX[room_num]);
-        }
-        if (Memory.ancientAssimilator_MAX[room_num] > 0){
-            console.log('Ancient assimilator : ' + ancientAssimilator_gang.length + '/' + Memory.ancientAssimilator_MAX[room_num]);
-        }
+        console.log('Orbital drones : ' + orbitalDrone_gang.length + '/' + Memory.orbitalDrone_MAX[room_num]);
+        console.log('Ancient drone : ' + ancientDrone_gang.length + '/' + Memory.ancientDrone_MAX[room_num]);
+        console.log('Ancient assimilator : ' + ancientAssimilator_gang.length + '/' + Memory.ancientAssimilator_MAX[room_num]);
         if (Memory.architect_MAX[room_num] > 0){
             console.log('Architects: ' + architect_gang.length + '/' + Memory.architect_MAX[room_num]);
         }

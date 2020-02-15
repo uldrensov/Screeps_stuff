@@ -1,4 +1,4 @@
-//DRONE: pickup/withdraws energy/minerals and resupplies spawning structures
+//DRONE: collects treasure and resupplies spawning structures
 //white trail
 
 module.exports = {
@@ -7,7 +7,7 @@ module.exports = {
         var nexus = Game.getObjectById(nexus_id);
         
         
-        //inputs: containers (ample), pickups<energy> (ample), pickups<mineral>, tombstones (non-empty)
+        //inputs: containers (ample), pickups<energy> (ample), pickups<mineral>, tombstones (non-empty), ruins (non-empty)
         var canisters = nexus.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER &&
@@ -21,6 +21,11 @@ module.exports = {
             }
         });
         var tombs = nexus.room.find(FIND_TOMBSTONES, {
+            filter: RoomObject => {
+                return RoomObject.store.getUsedCapacity() > 0;
+            }
+        });
+        var remains = nexus.room.find(FIND_RUINS, {
             filter: RoomObject => {
                 return RoomObject.store.getUsedCapacity() > 0;
             }
@@ -88,8 +93,13 @@ module.exports = {
             }
         }
         else{
-        //fetch: tombstones<minerals>, tombstones<energy> (fullest))
-            if (tombs.length){
+        //fetch: tombstones<minerals>, tombstones<energy> (fullest), ruins
+            if (remains.length){
+                if (unit.withdraw(remains[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(remains[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                }
+            }
+            else if (tombs.length){
                 var richest_tomb = tombs[0];
                 var treasure_found_t = false;
                 var treasure_to_withdraw = RESOURCE_ENERGY;

@@ -16,7 +16,7 @@ module.exports = {
         }
         
         
-        //outputs: enemies, injured allies, damaged structures
+        //outputs: enemies, allies (injured), structures (damaged)
         var enemy = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         var injured_units = tower.room.find(FIND_MY_CREEPS, {
             filter: creep => {
@@ -50,11 +50,11 @@ module.exports = {
         }
         //perform other tasks only if energy can be spared, and construction mode is disabled
         else if (!disable && tower.store[RESOURCE_ENERGY] > tower.store.getCapacity(RESOURCE_ENERGY) * reserve_ratio){
-            //unload: injured allies
+            //unload: allies
             if (injured_units.length){
                 tower.heal(injured_units[0]);
             }
-            //unload: damaged structures
+            //unload: structures
             else{
                 if (repairRamparts.length){
                     tower.repair(repairRamparts[0]);

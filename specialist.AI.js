@@ -1,4 +1,4 @@
-//SPECIALIST: cross-room fast-track construction unit
+//SPECIALIST: cross-room fast-track self-fuelling construction unit
 //green trail
 
 module.exports = {
@@ -41,8 +41,8 @@ module.exports = {
                 }
             }
             else{
-                if (unit.harvest(sources[1]) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(sources[1], {visualizePathStyle: {stroke: '#00ff00'}});
+                if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(sources[0], {visualizePathStyle: {stroke: '#00ff00'}});
                 }
             }
         }

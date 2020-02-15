@@ -21,18 +21,19 @@ module.exports = {
         //destroy everything in sight
         if (unit.memory.in_place){
             //acquire targets
-            var hatcheries = unit.room.find(FIND_STRUCTURES, {
+            var hatcheries = unit.room.find(FIND_HOSTILE_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_SPAWN;
                 }
             });
-            var organs = unit.room.find(FIND_STRUCTURES, {
+            var organs = unit.room.find(FIND_HOSTILE_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_EXTENSION ||
                     structure.structureType == STRUCTURE_INVADER_CORE;
                 }
             });
             var abomination = unit.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+            var larvae = unit.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
             
             //select and attack target
             if (hatcheries.length){
@@ -50,6 +51,11 @@ module.exports = {
                     unit.moveTo(abomination, {visualizePathStyle: {stroke: '#ff0000'}});
                 }
             }
+            /*
+            else if(larvae.length){
+                unit.moveTo(larvae[0], {visualizePathStyle: {stroke: '#ff0000'}});
+            }
+            */
             else{
                 unit.say('PURIFIED');
             }

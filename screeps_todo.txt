@@ -1,15 +1,15 @@
 TODO urgent:
-	autohandle mineral miner spawns
-	email on drained vault
+	dt went thru alot of changes (darkprelate?)
+	specialist has wonky code
+	autohandle mineral miner spawns (if mineral-amt & extractor-exist)
+	email on drained vault?
 	[DEFENCE] tower should reuse probe's fixation mechanic
-	[ECON] remote miner containers + drones
+	[ECON] remote miners should be able to call a warrior to fight invaders
 	[BUG] dont let new things spawn when one briefly leaves room
-	[BUG] extra debug line in acolyteAI
 	[SOFTLOCK] fix (e)drone pickup
 	
 TODO backlog:
 	[MAINTENANCE] remove if/else spaces, write accurate role descs (comment/format overhaul)
-	[ECON] remote miners should run from invaders
 	[MAINTENANCE] git init (put this file inside), readme
 	[SOFTLOCK] before calling a softlock, drones should deposit pocket energy if there are no more assims/energy on the map
 	[QOL] more status report info (pickups, ctrller lvl)
