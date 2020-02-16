@@ -1,5 +1,5 @@
-//ARCHITECT: withdraws energy and builds on designated construction hotspots
-//green trail
+//ARCHITECT: standard construction unit
+//green trail ("builder")
 
 module.exports = {
     run: function(unit,nexus,reserve){

@@ -1,5 +1,5 @@
 //SPECIALIST: cross-room fast-track self-fuelling construction unit
-//green trail
+//green trail ("builder")
 
 module.exports = {
     run: function(unit,DESTctrl_id){

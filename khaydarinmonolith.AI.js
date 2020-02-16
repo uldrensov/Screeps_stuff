@@ -1,7 +1,7 @@
 //KHAYDARIN MONOLITH: <tower> globally attacks foes, heals allies, and repairs endangered structures
 
 module.exports = {
-    run: function(tower_id,thresholdT,thresholdR,reserve_ratio,disable,nexi_id){
+    run: function(tower_id,reserve_ratio,nexi_id){
         
         var tower = Game.getObjectById(tower_id);
         
@@ -25,17 +25,13 @@ module.exports = {
         });
         var repairTargets = tower.room.find(FIND_STRUCTURES, {
             filter: structure => {
-                return ((structure.hits < structure.hitsMax * .5
-                && structure.structureType != STRUCTURE_WALL
-                && structure.structureType != STRUCTURE_RAMPART) ||
-                (structure.hits < thresholdT * .5
-                && structure.structureType == STRUCTURE_WALL));
+                return ((structure.hits < structure.hitsMax * .5 && structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART) ||
+                (structure.hits < Memory.wall_threshold * .5 && structure.structureType == STRUCTURE_WALL));
             }
         });
         var repairRamparts = tower.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
-                return ((structure.hits < thresholdR
-                && structure.structureType == STRUCTURE_RAMPART));
+                return ((structure.hits < Memory.rampart_threshold && structure.structureType == STRUCTURE_RAMPART));
             }
         });
         
@@ -49,7 +45,7 @@ module.exports = {
             }
         }
         //perform other tasks only if energy can be spared, and construction mode is disabled
-        else if (!disable && tower.store[RESOURCE_ENERGY] > tower.store.getCapacity(RESOURCE_ENERGY) * reserve_ratio){
+        else if (!Memory.construction_mode && tower.store[RESOURCE_ENERGY] > tower.store.getCapacity(RESOURCE_ENERGY) * reserve_ratio){
             //unload: allies
             if (injured_units.length){
                 tower.heal(injured_units[0]);

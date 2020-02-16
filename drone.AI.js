@@ -1,5 +1,5 @@
 //DRONE: collects treasure and resupplies spawning structures
-//white trail
+//white trail ("carrier")
 
 module.exports = {
     run: function(unit,nexus_id,pickup_min,ignore_lim){

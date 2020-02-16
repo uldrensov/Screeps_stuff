@@ -1,5 +1,5 @@
-//SUPPLICANT: dedicated semi-stationary controller upgrader
-//violet trail
+//SUPPLICANT: semi-stationary controller attendant
+//violet trail ("upgrader")
 
 module.exports = {
     run: function(unit,nexus,reserve){

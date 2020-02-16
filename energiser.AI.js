@@ -1,5 +1,5 @@
-//ENERGISER: withdraws energy and resupplies towers
-//blue trail
+//ENERGISER: standard tower attendant
+//blue trail ("maintainer")
 
 module.exports = {
     run: function(unit,nexus){

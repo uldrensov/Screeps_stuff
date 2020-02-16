@@ -1,5 +1,5 @@
-//sacrificer: basic controller upgrader that withdraws from containers, or harvests from sources
-//violet trail
+//sacrificer: standard controller attendant
+//violet trail ("upgrader")
 
 module.exports = {
     run: function(unit,ctrl_id,ignore_lim){
@@ -29,8 +29,8 @@ module.exports = {
         
         
         //behaviour execution...
-        //unload: controller
         if (unit.memory.homebound){
+            //unload: controller
             if (unit.upgradeController(obelisk) == ERR_NOT_IN_RANGE){
                 unit.moveTo(obelisk, {visualizePathStyle: {stroke: '#ff00ff'}});
             }

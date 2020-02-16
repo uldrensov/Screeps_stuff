@@ -1,5 +1,5 @@
-//ZEALOT: cross-room mobile melee unit that pairs with a tank (hallucination)
-//red trail
+//ZEALOT: cross-room mobile warrior that pairs with a HALLUCINATION
+//red trail ("fighter")
 
 module.exports = {
     run: function(unit,standby_flag,target_flag){

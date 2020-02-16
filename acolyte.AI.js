@@ -1,5 +1,5 @@
-//ACOLYTE: harvests energy (atop a collecting container) and resupplies a nearby link
-//black trail
+//ACOLYTE: source-to-link dedicated miner and TXer
+//black trail ("collector")
 
 module.exports = {
     run: function(unit,src_id,warpRX_id,warpTX_id,canister_id){

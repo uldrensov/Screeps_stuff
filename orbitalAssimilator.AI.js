@@ -1,5 +1,5 @@
-//ORBITAL ASSIMILATOR: semi-mobile high-efficiency mining unit
-//yellow trail
+//ORBITAL ASSIMILATOR: remote miner with light repair capabilities
+//yellow trail ("traveller")
 
 module.exports = {
     run: function(unit,src_id,remote_flag,canister_id,flee_point,home_index){
@@ -42,17 +42,33 @@ module.exports = {
                 }
             }
             else{
-                //watch for invaders
+                //watch for invaders/intruders
                 var enemy = unit.room.find(FIND_HOSTILE_CREEPS);
+                var threat = false;
                 if (enemy.length){
-                    Memory.evac_timer[home_index] = 1500;
-                    console.log('>>>EVACUATING SECTOR ' + home_index + '<<<');
+                    //assess threat level
+assess:             for (let i=0; i<enemy.length; i++){
+                        for (let j=0; j<enemy[i].body.length; j++){
+                            if (enemy[i].body[j]['type'] == ATTACK || enemy[i].body[j]['type'] == RANGED_ATTACK){
+                                Memory.evac_timer[home_index] = 1500;
+                                console.log('>>>EVACUATING SECTOR ' + home_index + '<<<');
+                                unit.memory.in_place = false;
+                                threat = true;
+                                break assess;
+                            }
+                        }
+                    }
                 }
                 //fetching and repairing
-                else{
+                if (!threat){
                     //unload: containers (2-state)
                     if (unit.memory.able && dmg_canister.hits < dmg_canister.hitsMax){
-                        unit.repair(dmg_canister);
+                        if (!unit.pos.isEqualTo(dmg_canister.pos)){
+                            unit.moveTo(dmg_canister, {visualizePathStyle: {stroke: '#ffff00'}});
+                        }
+                        else{
+                            unit.repair(dmg_canister);
+                        }
                     }
                     //fetch: sources
                     else if (unit.harvest(src) == ERR_NOT_IN_RANGE){

@@ -1,5 +1,5 @@
 //ORBITAL DRONE: relays energy from ORBITAL ASSIMILATOR to a container/link/vault
-//yellow trail
+//yellow trail ("traveller")
 
 module.exports = {
     run: function(unit,canister_id,remote_flag,dropoff_id,flee_point,home_index){
@@ -61,14 +61,25 @@ module.exports = {
                     }
                 }
                 else{
-                    //watch for invaders
+                    //watch for invaders/intruders
                     var enemy = unit.room.find(FIND_HOSTILE_CREEPS);
+                    var threat = false;
                     if (enemy.length){
-                        Memory.evac_timer[home_index] = 1500;
-                        console.log('>>>EVACUATING SECTOR ' + home_index + '<<<');
+                        //assess threat level
+assess:                 for (let i=0; i<enemy.length; i++){
+                            for (let j=0; j<enemy[i].body.length; j++){
+                                if (enemy[i].body[j]['type'] == ATTACK || enemy[i].body[j]['type'] == RANGED_ATTACK){
+                                    Memory.evac_timer[home_index] = 1500;
+                                    console.log('>>>EVACUATING SECTOR ' + home_index + '<<<');
+                                    unit.memory.in_place = false;
+                                    threat = true;
+                                    break assess;
+                                }
+                            }
+                        }
                     }
                     //fetch from inputs
-                    else{
+                    if (!threat){
                         //inputs: pickups, tombstones (non-empty)
                         var scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
                             filter: resource => {

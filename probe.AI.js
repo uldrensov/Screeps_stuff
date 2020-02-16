@@ -1,8 +1,8 @@
-//PROBE: withdraws energy and repairs damaged structures
-//blue trail
+//PROBE: standard repair unit
+//blue trail ("maintainer")
 
 module.exports = {
-    run: function(unit,nexus,thresholdT,thresholdR,override_threshold,ignore_lim,reserve){
+    run: function(unit,nexus,override_threshold,ignore_lim,reserve){
         
         //inputs: energy sources, containers (ample)
         var sources = nexus.room.find(FIND_SOURCES);
@@ -16,13 +16,9 @@ module.exports = {
         //outputs: structures (non-full/threshold)
         var repairTargets = nexus.room.find(FIND_STRUCTURES, {
             filter: structure => {
-                return ((structure.hits < structure.hitsMax
-                && structure.structureType != STRUCTURE_WALL
-                && structure.structureType != STRUCTURE_RAMPART) ||
-                (structure.hits < thresholdT
-                && structure.structureType == STRUCTURE_WALL) ||
-                (structure.hits < thresholdR
-                && structure.structureType == STRUCTURE_RAMPART));
+                return ((structure.hits < structure.hitsMax && structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART) ||
+                (structure.hits < Memory.wall_threshold && structure.structureType == STRUCTURE_WALL) ||
+                (structure.hits < Memory.rampart_threshold && structure.structureType == STRUCTURE_RAMPART));
             }
         });
         
@@ -49,10 +45,10 @@ module.exports = {
             var base_perc;
             switch (weakest.structureType){
                 case STRUCTURE_WALL:
-                    HPmax_base = thresholdT;
+                    HPmax_base = Memory.wall_threshold;
                     break;
                 case STRUCTURE_RAMPART:
-                    HPmax_base = thresholdR;
+                    HPmax_base = Memory.rampart_threshold;
                     break;
                 default:
                     HPmax_base = weakest.hitsMax;
@@ -65,10 +61,10 @@ module.exports = {
             for (let i=0; i<repairTargets.length; i++){
                 switch (repairTargets[i].structureType){
                     case STRUCTURE_WALL:
-                        HPmax_compare = thresholdT;
+                        HPmax_compare = Memory.wall_threshold;
                         break;
                     case STRUCTURE_RAMPART:
-                        HPmax_compare = thresholdR;
+                        HPmax_compare = Memory.rampart_threshold;;
                         break;
                     default:
                         HPmax_compare = repairTargets[i].hitsMax;

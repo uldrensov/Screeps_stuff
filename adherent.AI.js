@@ -1,5 +1,5 @@
 //ADHERENT: stands on one tile and relays energy from link to vault
-//white trail
+//white trail ("carrier")
 
 module.exports = {
     run: function(unit,nexus_id,tile_id,warpRX_id){

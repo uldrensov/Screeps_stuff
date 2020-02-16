@@ -1,5 +1,5 @@
-//EMERGENCY DRONE: withdraw/harvests energy and feeds spawning structures
-//white trail
+//EMERGENCY DRONE: cheap DRONE variant designed to replenish spawning energy as fast as possible
+//white trail ("carrier")
 
 module.exports = {
     run: function(unit,nexus_id){

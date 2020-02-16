@@ -1,5 +1,5 @@
 //ANCIENT DRONE: relays minerals from ANCIENT ASSIMILATOR to the vault
-//white trail
+//white trail ("carrier")
 
 module.exports = {
     run: function(unit,nexus_id,canister_id){

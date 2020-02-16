@@ -1,5 +1,5 @@
-//HALLUCINATION: cross-room nonaggressive tank unit
-//cyan trail
+//HALLUCINATION: standard cross-room tank
+//cyan trail ("support")
 //TODO: this model is a prototype
 
 module.exports = {

@@ -1,5 +1,5 @@
-//ZEALOT: cross-room all-out melee unit designed to punish defenseless rooms
-//red trail
+//DARK TEMPLAR: cross-room aggressive warrior designed to punish defenseless rooms
+//red trail ("fighter")
 
 module.exports = {
     run: function(unit,standby_flag){
@@ -51,11 +51,6 @@ module.exports = {
                     unit.moveTo(abomination, {visualizePathStyle: {stroke: '#ff0000'}});
                 }
             }
-            /*
-            else if(larvae.length){
-                unit.moveTo(larvae[0], {visualizePathStyle: {stroke: '#ff0000'}});
-            }
-            */
             else{
                 unit.say('PURIFIED');
             }

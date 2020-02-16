@@ -1,5 +1,5 @@
-//ASSIMILATOR: dedicated stationary max-efficiency mining unit
-//black trail
+//ASSIMILATOR: standard stationary miner
+//black trail ("collector")
 
 module.exports = {
     run: function(unit,src_id,canister_id){

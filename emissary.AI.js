@@ -1,5 +1,5 @@
 //EMISSARY: simple scout
-//cyan trail
+//cyan trail ("support")
 //TODO: this model is a prototype
 
 module.exports = {
@@ -27,7 +27,7 @@ module.exports = {
             }
             //return to flag when there are no more sites to trample
             else{
-                unit.memory.in_place = false;
+                //unit.memory.in_place = false;
             }
         }
     }

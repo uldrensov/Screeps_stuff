@@ -9,70 +9,45 @@ module.exports = {
         
         
         //arg validation
-        switch (room_num){
-            case 0:
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-            default:
-                return 'INVALID ROOM NUMBER';
-                break;
+        if (!(room_num >= 0 && room_num < nexi.length)){
+            return 'INVALID ROOM NUMBER';
         }
         
         //memory validation
-        if (Memory.wall_threshold == undefined || Memory.rampart_threshold == undefined ||
-        Memory.sacrificer_MAX == undefined || Memory.architect_MAX == undefined || Memory.probe_MAX == undefined ||
-        Memory.assimilator_MAX == undefined || Memory.assimilator2_MAX == undefined || Memory.drone_MAX == undefined ||
-        Memory.energiser_MAX == undefined || Memory.recalibrator_MAX == undefined || Memory.orbitalAssimilator_MAX == undefined ||
-        Memory.orbitalDrone == undefined || Memory.acolyte_MAX == undefined || Memory.acolyte2_MAX == undefined ||
-        Memory.adherent_MAX == undefined || Memory.supplicant_MAX == undefined || Memory.ancientDrone_MAX == undefined ||
-        Memory.ancientAssimilator_MAX == undefined || Memory.specialist_MAX == undefined || Memory.saviour_MAX == undefined){
+        if
+        (Memory.wall_threshold ==                   undefined || Memory.rampart_threshold ==                undefined || Memory.sacrificer_MAX[room_num] ==          undefined || Memory.architect_MAX[room_num] ==          undefined ||
+        Memory.probe_MAX[room_num] ==               undefined || Memory.assimilator_MAX[room_num] ==        undefined || Memory.assimilator2_MAX[room_num] ==        undefined || Memory.drone_MAX[room_num] ==              undefined ||
+        Memory.energiser_MAX[room_num] ==           undefined || Memory.recalibrator_MAX[room_num] ==       undefined || Memory.orbitalAssimilator_MAX[room_num] ==  undefined || Memory.orbitalDrone_MAX[room_num] ==       undefined ||
+        Memory.acolyte_MAX[room_num] ==             undefined || Memory.acolyte2_MAX[room_num] ==           undefined || Memory.adherent_MAX[room_num] ==            undefined || Memory.supplicant_MAX[room_num] ==         undefined ||
+        Memory.ancientDrone_MAX[room_num] ==        undefined || Memory.ancientAssimilator_MAX[room_num] == undefined || Memory.specialist_MAX ==                    undefined || Memory.saviour_MAX ==                      undefined)
+        {
             return 'ERROR: main.js failed to initialise memory';
         }
         
         
         //census...
         //count unit population by role
-        var emergencyDrone_gang = _.filter(Game.creeps, creep => creep.memory.role == 'emergencyDrone' &&
-            creep.room == nexi[room_num].room);
-        var assimilator_gang = _.filter(Game.creeps, creep => creep.memory.role == 'assimilator' &&
-            creep.room == nexi[room_num].room);
-        var assimilator2_gang = _.filter(Game.creeps, creep => creep.memory.role == 'assimilator2' &&
-            creep.room == nexi[room_num].room);
-        var drone_gang = _.filter(Game.creeps, creep => creep.memory.role == 'drone' &&
-            creep.room == nexi[room_num].room);
-        var energiser_gang = _.filter(Game.creeps, creep => creep.memory.role == 'energiser' &&
-            creep.room == nexi[room_num].room);
-        var sacrificer_gang = _.filter(Game.creeps, creep => creep.memory.role == 'sacrificer' &&
-            creep.room == nexi[room_num].room);
-        var acolyte_gang = _.filter(Game.creeps, creep => creep.memory.role == 'acolyte' &&
-            creep.room == nexi[room_num].room);
-        var acolyte2_gang = _.filter(Game.creeps, creep => creep.memory.role == 'acolyte2' &&
-            creep.room == nexi[room_num].room);
-        var adherent_gang = _.filter(Game.creeps, creep => creep.memory.role == 'adherent' &&
-            creep.room == nexi[room_num].room);
-        var supplicant_gang = _.filter(Game.creeps, creep => creep.memory.role == 'supplicant' &&
-            creep.room == nexi[room_num].room);
-        var probe_gang = _.filter(Game.creeps, creep => creep.memory.role == 'probe' &&
-            creep.room == nexi[room_num].room);
-        var recalibrator_gang = _.filter(Game.creeps, creep => creep.memory.role == 'recalibrator' &&
-            creep.memory.home == nexi[room_num].room.name);
-        var orbitalAssimilator_gang = _.filter(Game.creeps, creep => creep.memory.role == 'orbitalAssimilator' &&
-            creep.memory.home == nexi[room_num].room.name);
-        var orbitalDrone_gang = _.filter(Game.creeps, creep => creep.memory.role == 'orbitalDrone' &&
-            creep.memory.home == nexi[room_num].room.name);
-        var ancientDrone_gang = _.filter(Game.creeps, creep => creep.memory.role == 'ancientDrone' &&
-            creep.room == nexi[room_num].room);
-        var ancientAssimilator_gang = _.filter(Game.creeps, creep => creep.memory.role == 'ancientAssimilator' &&
-            creep.room == nexi[room_num].room);
-        var architect_gang = _.filter(Game.creeps, creep => creep.memory.role == 'architect' &&
-            creep.room == nexi[room_num].room);
-        var specialist_gang = _.filter(Game.creeps, creep => creep.memory.role == 'specialist');
-        var saviour_gang = _.filter(Game.creeps, creep => creep.memory.role == 'saviour');
+        var emergencyDrone_gang =       _.filter(Game.creeps, creep => creep.memory.role == 'emergencyDrone'        && creep.room == nexi[room_num].room);
+        var assimilator_gang =          _.filter(Game.creeps, creep => creep.memory.role == 'assimilator'           && creep.room == nexi[room_num].room);
+        var assimilator2_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'assimilator2'          && creep.room == nexi[room_num].room);
+        var drone_gang =                _.filter(Game.creeps, creep => creep.memory.role == 'drone'                 && creep.room == nexi[room_num].room);
+        var energiser_gang =            _.filter(Game.creeps, creep => creep.memory.role == 'energiser'             && creep.room == nexi[room_num].room);
+        var sacrificer_gang =           _.filter(Game.creeps, creep => creep.memory.role == 'sacrificer'            && creep.room == nexi[room_num].room);
+        var acolyte_gang =              _.filter(Game.creeps, creep => creep.memory.role == 'acolyte'               && creep.room == nexi[room_num].room);
+        var acolyte2_gang =             _.filter(Game.creeps, creep => creep.memory.role == 'acolyte2'              && creep.room == nexi[room_num].room);
+        var adherent_gang =             _.filter(Game.creeps, creep => creep.memory.role == 'adherent'              && creep.room == nexi[room_num].room);
+        var supplicant_gang =           _.filter(Game.creeps, creep => creep.memory.role == 'supplicant'            && creep.room == nexi[room_num].room);
+        var probe_gang =                _.filter(Game.creeps, creep => creep.memory.role == 'probe'                 && creep.room == nexi[room_num].room);
+        var recalibrator_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'recalibrator'          && creep.memory.home == nexi[room_num].room.name);
+        var orbitalAssimilator_gang =   _.filter(Game.creeps, creep => creep.memory.role == 'orbitalAssimilator'    && creep.memory.home == nexi[room_num].room.name);
+        var orbitalDrone_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'orbitalDrone'          && creep.memory.home == nexi[room_num].room.name);
+        var ancientDrone_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'ancientDrone'          && creep.room == nexi[room_num].room);
+        var ancientAssimilator_gang =   _.filter(Game.creeps, creep => creep.memory.role == 'ancientAssimilator'    && creep.room == nexi[room_num].room);
+        var architect_gang =            _.filter(Game.creeps, creep => creep.memory.role == 'architect'             && creep.room == nexi[room_num].room);
+        var specialist_gang =           _.filter(Game.creeps, creep => creep.memory.role == 'specialist');
+        var saviour_gang =              _.filter(Game.creeps, creep => creep.memory.role == 'saviour');
         
-        //determine underpopulation deadlock status
+        //special console output for emergency drones
         var emergencyDrone_status = 'Emergency drones: ' + emergencyDrone_gang.length;
         if (emergencyDrone_gang.length > 0){
             emergencyDrone_status = emergencyDrone_status + ' >>>ATTENTION<<<';
@@ -80,7 +55,7 @@ module.exports = {
         
         //determine time until next unit death
         var mortis = CREEP_LIFE_TIME;
-        var shindeiru = 'null';
+        var shindeiru = 'NULL';
         for (var name in Game.creeps){
             if (Game.creeps[name].ticksToLive < mortis && Game.creeps[name].room == nexi[room_num].room){
                 mortis = Game.creeps[name].ticksToLive;
@@ -90,11 +65,11 @@ module.exports = {
         
         
         //room state...
-        //determine total extension capacity
+        //determine total extension/container energy
         var ext_energy = nexi[room_num].room.energyAvailable
         - nexi[room_num].store.getUsedCapacity(RESOURCE_ENERGY);
         
-        //determine total container capacity
+        //determine total container energy
         var canisters = nexi[room_num].room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return structure.structureType == STRUCTURE_CONTAINER;
@@ -107,7 +82,11 @@ module.exports = {
             }
         }
         
-        //count worn structures
+        //determine controller levelup percentage
+        var control_perc = (nexi[room_num].room.controller.progress / nexi[room_num].room.controller.progressTotal) * 100;
+        control_perc = control_perc.toFixed(3);
+        
+        //count worn structures and walls
         var worn_structs = nexi[room_num].room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return (structure.hits < structure.hitsMax
@@ -115,7 +94,6 @@ module.exports = {
                 && structure.structureType != STRUCTURE_RAMPART);
             }
         });
-        //count worn walls
         var worn_walls = nexi[room_num].room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return (structure.hits < Memory.wall_threshold
@@ -141,6 +119,7 @@ module.exports = {
             weakest_struct = 'STRUCTURES ARE PRISTINE';
             weakstruct_perc = 1;
         }
+        
         //determine wall status
         var weakest_wall;
         var weakwall_perc;
@@ -211,6 +190,7 @@ module.exports = {
         
         //state of the room
         console.log('<<<--Room status-->>>');
+        console.log('Controller EXP: ' + control_perc + '% -> ' + nexi[room_num].room.controller.progress + '/' + nexi[room_num].room.controller.progressTotal);
         console.log('Spawning energy: ' + ext_energy + ' extended, '
         + nexi[room_num].store.getUsedCapacity(RESOURCE_ENERGY) + ' main');
         if (nexi[room_num].room.storage != undefined){

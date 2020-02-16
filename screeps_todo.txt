@@ -1,18 +1,18 @@
 TODO urgent:
+	tower email blacklist?
+	energy source vars could be merged
 	dt went thru alot of changes (darkprelate?)
 	specialist has wonky code
-	autohandle mineral miner spawns (if mineral-amt & extractor-exist)
-	email on drained vault?
 	[DEFENCE] tower should reuse probe's fixation mechanic
-	[ECON] remote miners should be able to call a warrior to fight invaders
+	[ECON] remote miners should be able to call a warrior to fight invaders (and set mem max to 0 for themselves)
 	[BUG] dont let new things spawn when one briefly leaves room
 	[SOFTLOCK] fix (e)drone pickup
 	
 TODO backlog:
-	[MAINTENANCE] remove if/else spaces, write accurate role descs (comment/format overhaul)
+	[MAINTENANCE] remove if/else spaces
 	[MAINTENANCE] git init (put this file inside), readme
 	[SOFTLOCK] before calling a softlock, drones should deposit pocket energy if there are no more assims/energy on the map
-	[QOL] more status report info (pickups, ctrller lvl)
+	[QOL] more status report info (pickups, wall/rampart distinction, invader alert)
 	[SOFTLOCK] 'lack of assimilator' softlock? (if no assim & no money, emergency convert)
 	
 Look up:

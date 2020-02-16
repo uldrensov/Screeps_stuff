@@ -1,5 +1,5 @@
 //ANCIENT ASSIMILATOR: mineral-mining variant of ASSIMILATOR
-//black trail
+//black trail ("collector")
 
 module.exports = {
     run: function(unit,canister_id){

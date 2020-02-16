@@ -1,5 +1,5 @@
-//HIGH TEMPLAR: cross-room healer unit
-//black trail
+//HIGH TEMPLAR: standard cross-room healer
+//cyan trail ("support")
 //TODO: this model is a prototype
 
 module.exports = {

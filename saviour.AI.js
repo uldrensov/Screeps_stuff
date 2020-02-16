@@ -1,5 +1,5 @@
-//SAVIOUR: cross-room fast-track controller upgrader
-//violet trail
+//SAVIOUR: cross-room fast-track controller attendant
+//violet trail ("upgrader")
 
 module.exports = {
     run: function(unit,SRCnexus_id,DESTctrl_id,reserve){
