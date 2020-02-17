@@ -2,15 +2,7 @@
 //yellow trail ("traveller")
 
 module.exports = {
-    run: function(unit,canister_id,remote_flag,dropoff_id,flee_point,home_index){
-        
-        if (unit.memory.in_place == undefined){
-            unit.memory.in_place = false;
-        }
-        if (unit.memory.evacuate == undefined){
-            unit.memory.evacuate = false;
-        }
-        
+    run: function(unit,canister_id,remote_flag,dropoff_id,ignore_lim,flee_point,home_index){
         
         //no enemies present
         if (Memory.evac_timer[home_index] == 0){
@@ -70,7 +62,9 @@ assess:                 for (let i=0; i<enemy.length; i++){
                             for (let j=0; j<enemy[i].body.length; j++){
                                 if (enemy[i].body[j]['type'] == ATTACK || enemy[i].body[j]['type'] == RANGED_ATTACK){
                                     Memory.evac_timer[home_index] = 1500;
+                                    console.log('------------------------------');
                                     console.log('>>>EVACUATING SECTOR ' + home_index + '<<<');
+                                    console.log('------------------------------');
                                     unit.memory.in_place = false;
                                     threat = true;
                                     break assess;
@@ -83,7 +77,7 @@ assess:                 for (let i=0; i<enemy.length; i++){
                         //inputs: pickups, tombstones (non-empty)
                         var scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
                             filter: resource => {
-                                return resource.resourceType == RESOURCE_ENERGY;
+                                return resource.resourceType == RESOURCE_ENERGY && resource.amount > ignore_lim;
                             }
                         });
                         var tombs = unit.room.find(FIND_TOMBSTONES, {

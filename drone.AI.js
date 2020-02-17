@@ -2,7 +2,7 @@
 //white trail ("carrier")
 
 module.exports = {
-    run: function(unit,nexus_id,pickup_min,ignore_lim){
+    run: function(unit,nexus_id,ignore_lim){
         
         var nexus = Game.getObjectById(nexus_id);
         
@@ -16,7 +16,7 @@ module.exports = {
         });
         var scraps = nexus.room.find(FIND_DROPPED_RESOURCES, {
             filter: resource => {
-                return (resource.amount > ignore_lim && resource.resourceType == RESOURCE_ENERGY) ||
+                return (resource.resourceType == RESOURCE_ENERGY && resource.amount > ignore_lim) ||
                 resource.resourceType != RESOURCE_ENERGY;
             }
         });
@@ -140,8 +140,7 @@ module.exports = {
                 
                 //find the most endangered mineral pickup
                 for (let i=0; i<scraps.length; i++){
-                    if (scraps[i].resource != RESOURCE_ENERGY &&
-                    scraps[i].amount < chosen_scrap.amount){
+                    if (scraps[i].resourceType != RESOURCE_ENERGY && scraps[i].amount < chosen_scrap.amount){
                         chosen_scrap = scraps[i];
                         treasure_found_s = true;
                     }

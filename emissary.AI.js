@@ -5,11 +5,6 @@
 module.exports = {
     run: function(unit,standby_1){
         
-        if (unit.memory.in_place == undefined){
-            unit.memory.in_place = false;
-        }
-        
-        
         //trek to the standby point once
         if (!unit.memory.in_place){
             unit.moveTo(standby_1, {visualizePathStyle: {stroke: '#00ffff'}});

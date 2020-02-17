@@ -9,6 +9,7 @@ var energiser =             require('energiser.AI');
 var recalibrator =          require('recalibrator.AI');
 var orbitalAssimilator =    require('orbitalAssimilator.AI');
 var orbitalDrone =          require('orbitalDrone.AI');
+var bloodhunter =           require('bloodhunter.AI');
 var acolyte =               require('acolyte.AI');
 var adherent =              require('adherent.AI');
 var supplicant =            require('supplicant.AI');
@@ -25,16 +26,15 @@ var khaydarinmonolith =     require('khaydarinmonolith.AI');
 
 
 //reconfigurable numbers
-var time_offset =                   100000;
-var fixation_override_threshold =   .25; //probes will break fixation upon spotting an absolute % gap this wide
-var drone_price =                   [1000,1000,600];
-var drone_pickup_min =              150;
-var canister_ignore_lim =           150; //drones will ignore containers containing less than this
-var tower_reserve_ratio =           .5; //towers will reserve this percentage of their energy for attacking
-var vault_reserve_min =             100000; //all units except (e)drones and energisers will avoid vaults containing less than this
+var time_offset =           100000;
+var fixation_override =     .25; //probes will break fixation upon spotting an absolute % gap this wide
+var drone_price =           [1000,1000,600];
+var en_ignore_lim =         150; //drones/sacrificers/probes will ignore containers/pickups containing less energy than this
+var tower_reserve_ratio =   .5; //towers will reserve this percentage of their energy for attacking
+var vault_reserve_min =     100000; //all units except (e)drones and energisers will avoid vaults containing less than this
 
 
-//reconfigurable structure IDs
+//reconfigurable object IDs
 var nexus_id =              ['5e2d15a9e152154167131760', '5e3909b408abb42e9b310a46', '5e466c796fffaf84254b19ed'];
 var controller_id =         ['5bbcae989099fc012e639474', '5bbcae989099fc012e639478', '5bbcae989099fc012e63947f'];
 
@@ -42,7 +42,7 @@ var source1_id =            ['5bbcae989099fc012e639476', '5bbcae989099fc012e6394
 var source2_id =            ['5bbcae989099fc012e639475', 'NULL', '5bbcae989099fc012e639480'];
 var canister1_id =          ['5e30677977034e78c09bdc43', '5e393db88c0dfcfcb18f05d2', '5e46d3baed5fa02c73c87173']; //corresponds to source1
 var canister2_id =          ['5e354b518c0dfc0f7b8dc1d0', 'NULL', '5e466fb08bfc04c165b13edb']; //corresponds to source2
-var mineralcanister_id =    ['5e3ca0a32f38f39b095da816'];
+var mineralcanister_id =    ['5e3ca0a32f38f39b095da816', '5e49e41a8542f3df09eda72c'];
 
 var reserveflag =           [Game.flags['Core1'], Game.flags['Core2'], Game.flags['Core3']]; //rally point for remote room reservation
 var remoteflag =            [Game.flags['Terrazine'], Game.flags['Vespene'], Game.flags['Jorium']]; //rally point for remote mining
@@ -50,13 +50,12 @@ var remotesource_id =       ['5bbcae809099fc012e6392ee', '5bbcae989099fc012e6394
 var remotecanister_id =     ['5e4761c7b1b0bd16bd38baf0', '5e47269c4fd64a6b9be545d4', '5e490bf22a3d564b0565c52d']; //drop-mining containers (o.assimilator)
 var remotedrop_id =         ['5e323d61aa9957193cc8ec6c', '5e3ff330d9c0d0411296ffb0', '5e48c7a10359276c64092767']; //destination receptacles (o.drone)
 
-var tower_id =              [['5e2f4a33e8af4a1c6459ccd8', '5e346820d632bc24398489ab'], ['5e3a68c9aa99575a56cba5da', '5e401cc59c6dc7073200b5b7'],
-                                ['5e473a110058163253b64554']];
+var tower_id =              [['5e2f4a33e8af4a1c6459ccd8', '5e346820d632bc24398489ab'], ['5e3a68c9aa99575a56cba5da', '5e401cc59c6dc7073200b5b7'], ['5e473a110058163253b64554', '5e4a55092f9d26c57d90c465']];
                 
-var warpRX_id =             ['5e34d2403561285c52aba5b2', '5e437aa1ac1ec4151e946cb9']; //receiver link (adherent)
+var warpRX_id =             ['5e34d2403561285c52aba5b2', '5e437aa1ac1ec4151e946cb9', '5e4a79f221466ebb4fcc858b']; //receiver link (adherent)
 var warpTX_id =             [['5e437e083561285674b0989c','5e34d803221670187690e4d7'], ['5e3ff330d9c0d0411296ffb0']]; //transmitter link (acolyte)
 var acoly_tile_id =         [['5e30677977034e78c09bdc43','5e354b518c0dfc0f7b8dc1d0'], ['5e393db88c0dfcfcb18f05d2']];
-var adher_tile_id =         ['5e2ec350d41b0bd406dfd71b','5e437ad0aa9957378eced59c'];
+var adher_tile_id =         ['5e2ec350d41b0bd406dfd71b', '5e437ad0aa9957378eced59c', '5e4a7ac80f2d8f5302547cc6'];
 var holy_source =           [['5bbcae989099fc012e639476','5bbcae989099fc012e639475'], ['5bbcae989099fc012e639479']]; //acolyte's chosen source
 
 
@@ -67,10 +66,10 @@ var assim_body =    [[WORK,WORK,WORK,WORK,WORK, MOVE,MOVE,MOVE],
                     [WORK,WORK,WORK,WORK,WORK, MOVE,MOVE,MOVE],
                     [WORK,WORK,WORK,WORK,WORK, MOVE]];
                     //cost: 650, 650, 550
-var drone_body =    [[CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
-                    [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
+var drone_body =    [[CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
+                    [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
                     [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE]];
-                    //cost: 1000, 1000, 600
+                    //cost: 750, 750, 600
 var energ_body =    [[CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
                     [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
                     [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE]];
@@ -85,32 +84,36 @@ var acoly_body =    [[WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MO
                     //cost: 850, 1050, NULL
 var adher_body =    [CARRY,CARRY,CARRY,CARRY, MOVE];
                     //cost: 250
-var suppl_body =    [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE],
+var suppl_body =    [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE],
                     [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY, MOVE],
-                    [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]];
-                    //cost: 2000, 950, 1200
+                    [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]];
+                    //cost: 1650, 950, 1550
 var probe_body =    [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                     [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                    [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE]];
-                    //cost: 2050, 1600, 1050
+                    [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]];
+                    //cost: 2050, 1600, 1300
 var recal_body =    [CLAIM, MOVE];
                     //cost: 650
 var oassim_body =   [[WORK,WORK,WORK,WORK,WORK, CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                     [WORK,WORK,WORK,WORK,WORK, CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                     [WORK,WORK,WORK,WORK,WORK, CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]];
                     //cost: 850, 850, 850
-var odrone_body =   [[CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                    [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                    [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]];
-                    //cost: 1800, 900, 1300
+var odrone_body =   [[CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE],
+                    [CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE],
+                    [CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE]];
+                    //cost: 1800, 900, 1800
+var bloodh_body =   [[ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, HEAL,MOVE],
+                    [ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, HEAL,MOVE],
+                    [ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, HEAL,MOVE]];
+                    //cost: 950, 950, 950
 var androne_body =  [CARRY,CARRY,CARRY,CARRY, MOVE, MOVE];
                     //cost: 300
 var anassim_body =  [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE];
                     //cost: 1500
 var archit_body =   [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                    [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                    [WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE]];
-                    //cost: 2300, 1800, 1000
+                    [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+                    [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]];
+                    //cost: 2300, 2050, 1200
 var speci_body =    [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE];
                     //cost: 2300
                 
@@ -143,6 +146,7 @@ if (Memory.energiser_MAX == undefined){Memory.energiser_MAX =                   
 if (Memory.recalibrator_MAX == undefined){Memory.recalibrator_MAX =             [0,0,0];}
 if (Memory.orbitalAssimilator_MAX == undefined){Memory.orbitalAssimilator_MAX = [0,0,0];}
 if (Memory.orbitalDrone_MAX == undefined){Memory.orbitalDrone_MAX =             [0,0,0];}
+if (Memory.bloodhunter_MAX == undefined){Memory.bloodhunter_MAX =               [0,0,0];}
 if (Memory.acolyte_MAX == undefined){Memory.acolyte_MAX =                       [0,0,0];}
     if (Memory.acolyte2_MAX == undefined){Memory.acolyte2_MAX =                 [0,0,0];}
 if (Memory.adherent_MAX == undefined){Memory.adherent_MAX =                     [0,0,0];}
@@ -175,10 +179,14 @@ module.exports.loop = function(){
         }
     }
     
-    //evacuation countdown for remote miners
+    //evacuation countdown and blood hunter summon for remote miners
     for (let i=0; i<Memory.evac_timer.length; i++){
         if (Memory.evac_timer[i] > 0){
             Memory.evac_timer[i]--;
+            Memory.bloodhunter_MAX[i] = 1;
+        }
+        else{
+            Memory.bloodhunter_MAX[i] = 0;
         }
     }
     
@@ -190,7 +198,9 @@ module.exports.loop = function(){
         }
         //disable further alerts from a room when it raises one
         else if (nexi[i].room.storage.store.energy < vault_reserve_min && Memory.vaultAlert_EN[i]){
+            console.log('------------------------------');
             console.log('Vault #' + i + ' has entered conservation mode.');
+            console.log('------------------------------');
             Game.notify('Vault #' + i + ' has entered conservation mode.',0);
             Memory.vaultAlert_EN[i] = false;
         }
@@ -198,11 +208,11 @@ module.exports.loop = function(){
     
     
     //for storing population count in each room
-    var emergencyDrone_gang = [];   var sacrificer_gang = [];   var architect_gang = [];    var probe_gang = [];                var assimilator_gang = [];  var assimilator2_gang = [];
-    var drone_gang = [];            var energiser_gang = [];    var recalibrator_gang = []; var orbitalAssimilator_gang = [];   var orbitalDrone_gang = []; var acolyte_gang = [];
-    var acolyte2_gang = [];         var adherent_gang = [];     var adherent2_gang = [];    var supplicant_gang = [];           var ancientDrone_gang = []; var ancientAssimilator_gang = [];
-    var specialist_gang;            var saviour_gang;           var emissary_gang = [];     var darktemplar_gang = [];          var hallucination_gang;     var hightemplar_gang;
-    var zealot_gang;
+    var emergencyDrone_gang = [];       var sacrificer_gang = [];   var architect_gang = [];    var probe_gang = [];                var assimilator_gang = [];  var assimilator2_gang = [];
+    var drone_gang = [];                var energiser_gang = [];    var recalibrator_gang = []; var orbitalAssimilator_gang = [];   var orbitalDrone_gang = []; var bloodhunter_gang = [];
+    var acolyte_gang = [];              var acolyte2_gang = [];     var adherent_gang = [];     var adherent2_gang = [];            var supplicant_gang = [];   var ancientDrone_gang = [];
+    var ancientAssimilator_gang = [];   var specialist_gang;        var saviour_gang;           var emissary_gang = [];             var darktemplar_gang = [];  var hallucination_gang;
+    var hightemplar_gang;               var zealot_gang;
     
     
     //execute the auto-spawn and unit AI assignment routines for each room
@@ -220,6 +230,7 @@ module.exports.loop = function(){
         recalibrator_gang[k] =          _.filter(Game.creeps, creep => creep.memory.role == 'recalibrator'          && creep.memory.home == nexi[k].room.name);
         orbitalAssimilator_gang[k] =    _.filter(Game.creeps, creep => creep.memory.role == 'orbitalAssimilator'    && creep.memory.home == nexi[k].room.name);
         orbitalDrone_gang[k] =          _.filter(Game.creeps, creep => creep.memory.role == 'orbitalDrone'          && creep.memory.home == nexi[k].room.name);
+        bloodhunter_gang[k] =           _.filter(Game.creeps, creep => creep.memory.role == 'bloodhunter'           && creep.memory.home == nexi[k].room.name);
         acolyte_gang[k] =               _.filter(Game.creeps, creep => creep.memory.role == 'acolyte'               && creep.room == nexi[k].room);
             acolyte2_gang[k] =          _.filter(Game.creeps, creep => creep.memory.role == 'acolyte2'              && creep.room == nexi[k].room);
         adherent_gang[k] =              _.filter(Game.creeps, creep => creep.memory.role == 'adherent'              && creep.room == nexi[k].room);
@@ -255,8 +266,7 @@ module.exports.loop = function(){
         //emergency drone: if there are no other drones, and costs are too high to spawn normal drones
         if (drone_gang[k].length == 0 && emergencyDrone_gang[k].length == 0 &&
         nexi[k].room.energyAvailable < drone_price[k]){
-            if (nexi[k].spawnCreep(edrone_body,
-            'EmergencyDrone-' + Game.time % time_offset, {memory: {role: 'emergencyDrone'}}) == 0){
+            if (nexi[k].spawnCreep(edrone_body, 'EmergencyDrone-' + Game.time % time_offset, {memory: {role: 'emergencyDrone'}}) == 0){
                 console.log('Room #' + k + ': >>>EmergencyDrone-' + Game.time % time_offset + ' spawning.<<<');
                 Game.notify('Emergency drone deployed',0);
             }
@@ -265,69 +275,59 @@ module.exports.loop = function(){
     //spawning core units...
         //without assimilators, there is no usable energy
         if (assimilator_gang[k].length < Memory.assimilator_MAX[k]){
-            if (nexi[k].spawnCreep(assim_body[k],
-            'Assimilator-' + Game.time % time_offset, {memory: {role: 'assimilator'}}) == 0){
+            if (nexi[k].spawnCreep(assim_body[k], 'Assimilator-' + Game.time % time_offset, {memory: {role: 'assimilator'}}) == 0){
                 console.log('Room #' + k + ': Assimilator-' + Game.time % time_offset + ' spawning.');
             }
         }
         else if (assimilator2_gang[k].length < Memory.assimilator2_MAX[k]){
-            if (nexi[k].spawnCreep(assim_body[k],
-            'Assimilator_II-' + Game.time % time_offset, {memory: {role: 'assimilator2'}}) == 0){
+            if (nexi[k].spawnCreep(assim_body[k], 'Assimilator_II-' + Game.time % time_offset, {memory: {role: 'assimilator2'}}) == 0){
                 console.log('Room #' + k + ': Assimilator_II-' + Game.time % time_offset + ' spawning.');
             }
         }
         //without drones, nothing else may spawn
         else if (drone_gang[k].length < Memory.drone_MAX[k]){
-            if (nexi[k].spawnCreep(drone_body[k],
-            'Drone-' + Game.time % time_offset, {memory: {role: 'drone'}}) == 0){
+            if (nexi[k].spawnCreep(drone_body[k], 'Drone-' + Game.time % time_offset, {memory: {role: 'drone'}}) == 0){
                 console.log('Room #' + k + ': Drone-' + Game.time % time_offset + ' spawning.');
             }
         }
         //without energisers, the room is defenceless
         else if (energiser_gang[k].length < Memory.energiser_MAX[k]){
-            if (nexi[k].spawnCreep(energ_body[k],
-            'Energiser-' + Game.time % time_offset, {memory: {role: 'energiser'}}) == 0){
+            if (nexi[k].spawnCreep(energ_body[k], 'Energiser-' + Game.time % time_offset, {memory: {role: 'energiser'}}) == 0){
                 console.log('Room #' + k + ': Energiser-' + Game.time % time_offset + ' spawning.');
             }
         }
         //without sacrificers, the room will level down
         else if (sacrificer_gang[k].length < Memory.sacrificer_MAX[k]){
-            if (nexi[k].spawnCreep(sacrif_body[k],
-            'Sacrificer-' + Game.time % time_offset, {memory: {role: 'sacrificer'}}) == 0){
+            if (nexi[k].spawnCreep(sacrif_body[k], 'Sacrificer-' + Game.time % time_offset, {memory: {role: 'sacrificer'}}) == 0){
                 console.log('Room #' + k + ': Sacrificer-' + Game.time % time_offset + ' spawning.');
             }
         }
         //without acolytes, links cannot transmit
         else if (acolyte_gang[k].length < Memory.acolyte_MAX[k]){
-            if (nexi[k].spawnCreep(acoly_body[k],
-            'Acolyte-' + Game.time % time_offset, {memory: {role: 'acolyte'}}) == 0){
+            if (nexi[k].spawnCreep(acoly_body[k], 'Acolyte-' + Game.time % time_offset, {memory: {role: 'acolyte'}}) == 0){
                 console.log('Room #' + k + ': Acolyte-' + Game.time % time_offset + ' spawning.');
             }
         }
         else if (acolyte2_gang[k].length < Memory.acolyte2_MAX[k]){
-            if (nexi[k].spawnCreep(acoly_body[k],
-            'Acolyte_II-' + Game.time % time_offset, {memory: {role: 'acolyte2'}}) == 0){
+            if (nexi[k].spawnCreep(acoly_body[k], 'Acolyte_II-' + Game.time % time_offset, {memory: {role: 'acolyte2'}}) == 0){
                 console.log('Room #' + k + ': Acolyte_II-' + Game.time % time_offset + ' spawning.');
             }
         }
         //without adherents, links cannot be unloaded
         else if (adherent_gang[k].length < Memory.adherent_MAX[k]){
-            if (nexi[k].spawnCreep(adher_body,
-            'Adherent-' + Game.time % time_offset, {memory: {role: 'adherent'}}) == 0){
+            if (nexi[k].spawnCreep(adher_body, 'Adherent-' + Game.time % time_offset, {memory: {role: 'adherent'}}) == 0){
                 console.log('Room #' + k + ': Adherent-' + Game.time % time_offset + ' spawning.');
             }
         }
         //without supplicants, the room will level down (replaces sacrificers)
         else if (supplicant_gang[k].length < Memory.supplicant_MAX[k]){
-            if (nexi[k].spawnCreep(suppl_body[k],
-            'Supplicant-' + Game.time % time_offset, {memory: {role: 'supplicant'}}) == 0){
+            if (nexi[k].spawnCreep(suppl_body[k], 'Supplicant-' + Game.time % time_offset, {memory: {role: 'supplicant'}}) == 0){
                 console.log('Room #' + k + ': Supplicant-' + Game.time % time_offset + ' spawning.');
             }
         }
         //without probes, structures are not maintained
         else if (probe_gang[k].length < Memory.probe_MAX[k]){
-            if (nexi[k].spawnCreep(probe_body[k],
-            'Probe-' + Game.time % time_offset, {memory: {role: 'probe'}}) == 0){
+            if (nexi[k].spawnCreep(probe_body[k], 'Probe-' + Game.time % time_offset, {memory: {role: 'probe'}}) == 0){
                 console.log('Room #' + k + ': Probe-' + Game.time % time_offset + ' spawning.');
             }
         }
@@ -335,43 +335,43 @@ module.exports.loop = function(){
     //spawning situational units...
         //recalibrators: if remote mining is viable
         else if (recalibrator_gang[k].length < Memory.recalibrator_MAX[k]){
-            if (nexi[k].spawnCreep(recal_body,
-            'Recalibrator-' + Game.time % time_offset, {memory: {role: 'recalibrator', home: nexi[k].room.name}}) == 0){
+            if (nexi[k].spawnCreep(recal_body, 'Recalibrator-' + Game.time % time_offset, {memory: {role: 'recalibrator', home: nexi[k].room.name, in_place: false}}) == 0){
                 console.log('Room #' + k + ': Recalibrator-' + Game.time % time_offset + ' spawning.');
             }
         }
         //orbital assimilators: if remote mining is viable
         else if (orbitalAssimilator_gang[k].length < Memory.orbitalAssimilator_MAX[k]){
-            if (nexi[k].spawnCreep(oassim_body[k],
-            'OrbitalAssimilator-' + Game.time % time_offset, {memory: {role: 'orbitalAssimilator', home: nexi[k].room.name}}) == 0){
+            if (nexi[k].spawnCreep(oassim_body[k], 'OrbitalAssimilator-' + Game.time % time_offset, {memory: {role: 'orbitalAssimilator', home: nexi[k].room.name, in_place: false}}) == 0){
                 console.log('Room #' + k + ': OrbitalAssimilator-' + Game.time % time_offset + ' spawning.');
             }
         }
         //orbital drones: if remote mining is viable
         else if (orbitalDrone_gang[k].length < Memory.orbitalDrone_MAX[k]){
-            if (nexi[k].spawnCreep(odrone_body[k],
-            'OrbitalDrone-' + Game.time % time_offset, {memory: {role: 'orbitalDrone', home: nexi[k].room.name}}) == 0){
+            if (nexi[k].spawnCreep(odrone_body[k], 'OrbitalDrone-' + Game.time % time_offset, {memory: {role: 'orbitalDrone', home: nexi[k].room.name, in_place: false}}) == 0){
                 console.log('Room #' + k + ': OrbitalDrone-' + Game.time % time_offset + ' spawning.');
+            }
+        }
+        //blood hunters: if remote mining is being disrupted
+        else if (bloodhunter_gang[k].length < Memory.bloodhunter_MAX[k]){
+            if (nexi[k].spawnCreep(bloodh_body[k], 'Bloodhunter-' + Game.time % time_offset, {memory: {role: 'bloodhunter', home: nexi[k].room.name}}) == 0){
+                console.log('Room #' + k + ': Bloodhunter-' + Game.time % time_offset + ' spawning.');
             }
         }
         //ancient drones: if minerals are available to mine
         else if (ancientDrone_gang[k].length < Memory.ancientDrone_MAX[k]){
-            if (nexi[k].spawnCreep(androne_body,
-            'AncientDrone-' + Game.time % time_offset, {memory: {role: 'ancientDrone'}}) == 0){
+            if (nexi[k].spawnCreep(androne_body, 'AncientDrone-' + Game.time % time_offset, {memory: {role: 'ancientDrone'}}) == 0){
                 console.log('Room #' + k + ': AncientDrone-' + Game.time % time_offset + ' spawning.');
             }
         }
         //ancient assimilators: if minerals are available to mine
         else if (ancientAssimilator_gang[k].length < Memory.ancientAssimilator_MAX[k]){
-            if (nexi[k].spawnCreep(anassim_body,
-            'AncientAssimilator-' + Game.time % time_offset, {memory: {role: 'ancientAssimilator'}}) == 0){
+            if (nexi[k].spawnCreep(anassim_body, 'AncientAssimilator-' + Game.time % time_offset, {memory: {role: 'ancientAssimilator'}}) == 0){
                 console.log('Room #' + k + ': AncientAssimilator-' + Game.time % time_offset + ' spawning.');
             }
         }
         //architects: if there are construction projects to finish
         else if (architect_gang[k].length < Memory.architect_MAX[k]){
-            if (nexi[k].spawnCreep(archit_body[k],
-            'Architect-' + Game.time % time_offset, {memory: {role: 'architect'}}) == 0){
+            if (nexi[k].spawnCreep(archit_body[k], 'Architect-' + Game.time % time_offset, {memory: {role: 'architect'}}) == 0){
                 console.log('Room #' + k + ': Architect-' + Game.time % time_offset + ' spawning.');
             }
         }
@@ -379,15 +379,13 @@ module.exports.loop = function(){
     //spawning fast-track units...
         //specialist: used in setting up new rooms (assists architects)
         else if (specialist_gang.length < Memory.specialist_MAX){
-            if (nexi[0].spawnCreep(speci_body,
-            'Specialist-' + Game.time % time_offset, {memory: {role: 'specialist'}}) == 0){
+            if (nexi[0].spawnCreep(speci_body, 'Specialist-' + Game.time % time_offset, {memory: {role: 'specialist'}}) == 0){
                 console.log('Specialist-' + Game.time % time_offset + ' spawning.');
             }
         }
         //saviour: used in setting up new rooms (assists sacrificers)
         else if (saviour_gang.length < Memory.saviour_MAX){
-            if (nexi[0].spawnCreep(speci_body,
-            'Saviour-' + Game.time % time_offset, {memory: {role: 'saviour'}}) == 0){
+            if (nexi[0].spawnCreep(speci_body, 'Saviour-' + Game.time % time_offset, {memory: {role: 'saviour'}}) == 0){
                 console.log('Saviour-' + Game.time % time_offset + ' spawning.');
             }
         }
@@ -395,36 +393,31 @@ module.exports.loop = function(){
     //spawning military units...
         //emissary: used situationally for scouting
         else if (emissary_gang[k].length < Memory.emissary_MAX[k]){
-            if (nexi[k].spawnCreep(emiss_body,
-            'Emissary-' + Game.time % time_offset, {memory: {role: 'emissary'}}) == 0){
+            if (nexi[k].spawnCreep(emiss_body, 'Emissary-' + Game.time % time_offset, {memory: {role: 'emissary', in_place: false}}) == 0){
                 console.log('Room #' + k + ': Emissary-' + Game.time % time_offset + ' spawning.');
             }
         }
         //dark templar: used during battle
         else if (darktemplar_gang[k].length < Memory.darktemplar_MAX[k]){
-            if (nexi[k].spawnCreep(dt_body[k],
-            'Darktemplar-' + Game.time % time_offset, {memory: {role: 'darktemplar'}}) == 0){
+            if (nexi[k].spawnCreep(dt_body[k], 'Darktemplar-' + Game.time % time_offset, {memory: {role: 'darktemplar', in_place: false}}) == 0){
                 console.log('Room #' + k + ': Darktemplar-' + Game.time % time_offset + ' spawning.');
             }
         }
         //hallucination: used during battle
         else if (hallucination_gang.length < Memory.hallucination_MAX){
-            if (nexi[0].spawnCreep(halluc_body,
-            'Hallucination-' + Game.time % time_offset, {memory: {role: 'hallucination'}}) == 0){
+            if (nexi[0].spawnCreep(halluc_body, 'Hallucination-' + Game.time % time_offset, {memory: {role: 'hallucination'}}) == 0){
                 console.log('Hallucination-' + Game.time % time_offset + ' spawning.');
             }
         }
         //high templar: used during battle
         else if (hightemplar_gang.length < Memory.hightemplar_MAX){
-            if (nexi[0].spawnCreep(ht_body,
-            'Hightemplar-' + Game.time % time_offset, {memory: {role: 'hightemplar'}}) == 0){
+            if (nexi[0].spawnCreep(ht_body, 'Hightemplar-' + Game.time % time_offset, {memory: {role: 'hightemplar'}}) == 0){
                 console.log('Hightemplar-' + Game.time % time_offset + ' spawning.');
             }
         }
         //zealot: used during battle
         else if (zealot_gang.length < Memory.zealot_MAX){
-            if (nexi[0].spawnCreep(zealot_body,
-            'Zealot-' + Game.time % time_offset, {memory: {role: 'zealot'}}) == 0){
+            if (nexi[0].spawnCreep(zealot_body, 'Zealot-' + Game.time % time_offset, {memory: {role: 'zealot', in_place: false}}) == 0){
                 console.log('Zealot-' + Game.time % time_offset + ' spawning.');
             }
         }
@@ -445,13 +438,13 @@ module.exports.loop = function(){
                         assimilator.run(unit, source2_id[k], canister2_id[k]);
                         break;
                     case 'drone':
-                        drone.run(unit, nexus_id[k], drone_pickup_min, canister_ignore_lim);
+                        drone.run(unit, nexus_id[k], en_ignore_lim);
                         break;
                     case 'energiser':
                         energiser.run(unit, nexi[k]);
                         break;
                     case 'sacrificer':
-                        sacrificer.run(unit, controller_id[k], canister_ignore_lim);
+                        sacrificer.run(unit, controller_id[k], en_ignore_lim);
                         break;
                     case 'acolyte':
                         acolyte.run(unit, holy_source[k][0], warpRX_id[k], warpTX_id[k][0], acoly_tile_id[k][0]);
@@ -466,7 +459,7 @@ module.exports.loop = function(){
                         supplicant.run(unit, nexi[k], vault_reserve_min);
                         break;
                     case 'probe':
-                        probe.run(unit, nexi[k], fixation_override_threshold, canister_ignore_lim, vault_reserve_min);
+                        probe.run(unit, nexi[k], fixation_override, en_ignore_lim, vault_reserve_min);
                         break;
                     case 'ancientDrone':
                         ancientDrone.run(unit, nexus_id[k], mineralcanister_id[k]);
@@ -502,7 +495,6 @@ module.exports.loop = function(){
                 }
                 break;
             case 'orbitalAssimilator':
-                //determine homeroom to call AI script using appropriate args
                 for (let i=0; i<nexi.length; i++){
                     if (unit.memory.home == nexi[i].room.name){
                         orbitalAssimilator.run(unit, remotesource_id[i], remoteflag[i], remotecanister_id[i], tower_id[i][0], i);
@@ -511,10 +503,17 @@ module.exports.loop = function(){
                 }
                 break;
             case 'orbitalDrone':
-                //determine homeroom to call AI script using appropriate args
                 for (let i=0; i<nexi.length; i++){
                     if (unit.memory.home == nexi[i].room.name){
-                        orbitalDrone.run(unit, remotecanister_id[i], remoteflag[i], remotedrop_id[i], tower_id[i][0], i);
+                        orbitalDrone.run(unit, remotecanister_id[i], remoteflag[i], remotedrop_id[i], en_ignore_lim, tower_id[i][0], i);
+                        break;
+                    }
+                }
+                break;
+            case 'bloodhunter':
+                for (let i=0; i<nexi.length; i++){
+                    if (unit.memory.home == nexi[i].room.name){
+                        bloodhunter.run(unit, remoteflag[i], i);
                         break;
                     }
                 }

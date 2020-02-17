@@ -1,13 +1,8 @@
-//ZEALOT: cross-room mobile warrior that pairs with a HALLUCINATION
+//ZEALOT: cross-room warrior that pairs with a HALLUCINATION
 //red trail ("fighter")
 
 module.exports = {
     run: function(unit,standby_flag,target_flag){
-        
-        if (unit.memory.in_place == undefined){
-            unit.memory.in_place = false;
-        }
-        
         
         //trek to the standby point once
         if (!unit.memory.in_place){

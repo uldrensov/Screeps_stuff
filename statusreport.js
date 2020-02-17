@@ -15,11 +15,12 @@ module.exports = {
         
         //memory validation
         if
-        (Memory.wall_threshold ==                   undefined || Memory.rampart_threshold ==                undefined || Memory.sacrificer_MAX[room_num] ==          undefined || Memory.architect_MAX[room_num] ==          undefined ||
-        Memory.probe_MAX[room_num] ==               undefined || Memory.assimilator_MAX[room_num] ==        undefined || Memory.assimilator2_MAX[room_num] ==        undefined || Memory.drone_MAX[room_num] ==              undefined ||
-        Memory.energiser_MAX[room_num] ==           undefined || Memory.recalibrator_MAX[room_num] ==       undefined || Memory.orbitalAssimilator_MAX[room_num] ==  undefined || Memory.orbitalDrone_MAX[room_num] ==       undefined ||
-        Memory.acolyte_MAX[room_num] ==             undefined || Memory.acolyte2_MAX[room_num] ==           undefined || Memory.adherent_MAX[room_num] ==            undefined || Memory.supplicant_MAX[room_num] ==         undefined ||
-        Memory.ancientDrone_MAX[room_num] ==        undefined || Memory.ancientAssimilator_MAX[room_num] == undefined || Memory.specialist_MAX ==                    undefined || Memory.saviour_MAX ==                      undefined)
+        (Memory.wall_threshold ==           undefined || Memory.rampart_threshold ==            undefined || Memory.sacrificer_MAX[room_num] ==         undefined || Memory.architect_MAX[room_num] ==      undefined ||
+        Memory.probe_MAX[room_num] ==       undefined || Memory.assimilator_MAX[room_num] ==    undefined || Memory.assimilator2_MAX[room_num] ==       undefined || Memory.drone_MAX[room_num] ==          undefined ||
+        Memory.energiser_MAX[room_num] ==   undefined || Memory.recalibrator_MAX[room_num] ==   undefined || Memory.orbitalAssimilator_MAX[room_num] == undefined || Memory.orbitalDrone_MAX[room_num] ==   undefined ||
+        Memory.bloodhunter_MAX[room_num] == undefined || Memory.acolyte_MAX[room_num] ==        undefined || Memory.acolyte2_MAX[room_num] ==           undefined || Memory.adherent_MAX[room_num] ==       undefined ||
+        Memory.supplicant_MAX[room_num] ==  undefined || Memory.ancientDrone_MAX[room_num] ==   undefined || Memory.ancientAssimilator_MAX[room_num] == undefined || Memory.specialist_MAX ==               undefined ||
+        Memory.saviour_MAX ==               undefined)
         {
             return 'ERROR: main.js failed to initialise memory';
         }
@@ -41,6 +42,7 @@ module.exports = {
         var recalibrator_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'recalibrator'          && creep.memory.home == nexi[room_num].room.name);
         var orbitalAssimilator_gang =   _.filter(Game.creeps, creep => creep.memory.role == 'orbitalAssimilator'    && creep.memory.home == nexi[room_num].room.name);
         var orbitalDrone_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'orbitalDrone'          && creep.memory.home == nexi[room_num].room.name);
+        var bloodhunter_gang =          _.filter(Game.creeps, creep => creep.memory.role == 'bloodhunter'           && creep.memory.home == nexi[room_num].room.name);
         var ancientDrone_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'ancientDrone'          && creep.room == nexi[room_num].room);
         var ancientAssimilator_gang =   _.filter(Game.creeps, creep => creep.memory.role == 'ancientAssimilator'    && creep.room == nexi[room_num].room);
         var architect_gang =            _.filter(Game.creeps, creep => creep.memory.role == 'architect'             && creep.room == nexi[room_num].room);
@@ -174,6 +176,9 @@ module.exports = {
         console.log('Recalibrators : ' + recalibrator_gang.length + '/' + Memory.recalibrator_MAX[room_num]);
         console.log('Orbital assimilators : ' + orbitalAssimilator_gang.length + '/' + Memory.orbitalAssimilator_MAX[room_num]);
         console.log('Orbital drones : ' + orbitalDrone_gang.length + '/' + Memory.orbitalDrone_MAX[room_num]);
+        if (Memory.bloodhunter_MAX[room_num] > 0){
+            console.log('Blood hunters: ' + bloodhunter_gang.length + '/' + Memory.bloodhunter_MAX[room_num]);
+        }
         console.log('Ancient drone : ' + ancientDrone_gang.length + '/' + Memory.ancientDrone_MAX[room_num]);
         console.log('Ancient assimilator : ' + ancientAssimilator_gang.length + '/' + Memory.ancientAssimilator_MAX[room_num]);
         if (Memory.architect_MAX[room_num] > 0){

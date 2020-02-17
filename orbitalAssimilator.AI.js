@@ -4,11 +4,6 @@
 module.exports = {
     run: function(unit,src_id,remote_flag,canister_id,flee_point,home_index){
         
-        if (unit.memory.in_place == undefined){
-            unit.memory.in_place = false;
-        }
-        
-        
         //no enemies present
         if (Memory.evac_timer[home_index] == 0){
             //inputs: source
@@ -51,7 +46,9 @@ assess:             for (let i=0; i<enemy.length; i++){
                         for (let j=0; j<enemy[i].body.length; j++){
                             if (enemy[i].body[j]['type'] == ATTACK || enemy[i].body[j]['type'] == RANGED_ATTACK){
                                 Memory.evac_timer[home_index] = 1500;
+                                console.log('------------------------------');
                                 console.log('>>>EVACUATING SECTOR ' + home_index + '<<<');
+                                console.log('------------------------------');
                                 unit.memory.in_place = false;
                                 threat = true;
                                 break assess;
