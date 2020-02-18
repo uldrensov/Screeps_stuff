@@ -66,38 +66,33 @@ module.exports = {
                 }
             }
             if (treasure_held){
-                if (unit.transfer(nexus.room.storage, treasure_to_deposit) == ERR_NOT_IN_RANGE){
+                if (unit.transfer(nexus.room.storage, treasure_to_deposit) == ERR_NOT_IN_RANGE)
                     unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
-                }
             }
             else{
                 //unload: pylons
                 if (pylons.length){
                     var nearest_pylon = unit.pos.findClosestByPath(pylons);
-                    if (unit.transfer(nearest_pylon, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                    if (unit.transfer(nearest_pylon, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(nearest_pylon, {visualizePathStyle: {stroke: '#ffffff'}});
-                    }
                 }
                 //unload: nexus
                 else if (nexus.store.getFreeCapacity(RESOURCE_ENERGY) != 0){
-                    if (unit.transfer(nexus, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                    if (unit.transfer(nexus, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(nexus, {visualizePathStyle: {stroke: '#ffffff'}});
-                    }
                 }
                 //unload: vault<energy>
                 else if (nexus.room.storage != undefined){
-                    if (unit.transfer(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                    if (unit.transfer(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
-                    }
                 }
             }
         }
         else{
         //fetch: tombstones<minerals>, tombstones<energy> (fullest), ruins
             if (remains.length){
-                if (unit.withdraw(remains[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                if (unit.withdraw(remains[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(remains[0], {visualizePathStyle: {stroke: '#ffffff'}});
-                }
             }
             else if (tombs.length){
                 var richest_tomb = tombs[0];
@@ -114,9 +109,8 @@ module.exports = {
                             break;
                         }
                     }
-                    if (treasure_found_t){
+                    if (treasure_found_t)
                         break;
-                    }
                 }
                 
                 //if no minerals found, re-run the search with respect to energy
@@ -148,9 +142,8 @@ module.exports = {
                 //if no minerals found, re-run the search with respect to energy
                 if (!treasure_found_s){
                     for (let i=0; i<scraps.length; i++){
-                        if (scraps[i].energy > chosen_scrap.energy){
+                        if (scraps[i].energy > chosen_scrap.energy)
                             chosen_scrap = scraps[i];
-                        }
                     }
                 }
                 
@@ -171,25 +164,21 @@ module.exports = {
                 }
                 
                 //if there is no current target container, "fixate" on the fullest one
-                if (unit.memory.fixation == undefined){
+                if (unit.memory.fixation == undefined)
                     unit.memory.fixation = fullest_canister.id;
-                }
                 //otherwise, only switch fixation if the previous one crosses beneath the "ignore" criteria
-                else if (Game.getObjectById(unit.memory.fixation).store[RESOURCE_ENERGY] < ignore_lim){
+                else if (Game.getObjectById(unit.memory.fixation).store[RESOURCE_ENERGY] < ignore_lim)
                     unit.memory.fixation = fullest_canister.id;
-                }
                 
                 //finally, withdraw from the fixated target
                 var canister_target = Game.getObjectById(unit.memory.fixation);
-                if (unit.withdraw(canister_target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                if (unit.withdraw(canister_target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(canister_target, {visualizePathStyle: {stroke: '#ffffff'}});
-                }
             }
             //fetch: vault
             else if (nexus.room.storage != undefined){
-                if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
-                }
             }
         }
     }

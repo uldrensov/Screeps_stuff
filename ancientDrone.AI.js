@@ -26,15 +26,13 @@ module.exports = {
         //behaviour execution...
         //unload: vault
         if (unit.memory.homebound){
-            if (unit.transfer(nexus.room.storage, mineral_type) == ERR_NOT_IN_RANGE){
+            if (unit.transfer(nexus.room.storage, mineral_type) == ERR_NOT_IN_RANGE)
                 unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
-            }
         }
         //fetch: container
         else{
-            if (unit.withdraw(canister, mineral_type) == ERR_NOT_IN_RANGE){
+            if (unit.withdraw(canister, mineral_type) == ERR_NOT_IN_RANGE)
                 unit.moveTo(canister, {visualizePathStyle: {stroke: '#ffffff'}});
-            }
         }
     }
 };

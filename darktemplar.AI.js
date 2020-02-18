@@ -32,22 +32,16 @@ module.exports = {
             
             //select and attack target
             if (hatcheries.length){
-                if (unit.attack(hatcheries[0]) == ERR_NOT_IN_RANGE){
+                if (unit.attack(hatcheries[0]) == ERR_NOT_IN_RANGE)
                     unit.moveTo(hatcheries[0], {visualizePathStyle: {stroke: '#ff0000'}});
-                }
             }
             else if (organs.length){
-                if (unit.attack(organs[0]) == ERR_NOT_IN_RANGE){
+                if (unit.attack(organs[0]) == ERR_NOT_IN_RANGE)
                     unit.moveTo(organs[0], {visualizePathStyle: {stroke: '#ff0000'}});
-                }
             }
             else if (abomination){
-                if (unit.attack(abomination) == ERR_NOT_IN_RANGE){
+                if (unit.attack(abomination) == ERR_NOT_IN_RANGE)
                     unit.moveTo(abomination, {visualizePathStyle: {stroke: '#ff0000'}});
-                }
-            }
-            else{
-                unit.say('PURIFIED');
             }
         }
     }

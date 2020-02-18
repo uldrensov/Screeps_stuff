@@ -54,23 +54,36 @@ module.exports = {
                 }
                 else{
                     //watch for invaders/intruders
-                    var enemy = unit.room.find(FIND_HOSTILE_CREEPS);
                     var threat = false;
+                    var enemy = unit.room.find(FIND_HOSTILE_CREEPS);
                     if (enemy.length){
                         //assess threat level
 assess:                 for (let i=0; i<enemy.length; i++){
                             for (let j=0; j<enemy[i].body.length; j++){
                                 if (enemy[i].body[j]['type'] == ATTACK || enemy[i].body[j]['type'] == RANGED_ATTACK){
                                     Memory.evac_timer[home_index] = 1500;
-                                    console.log('------------------------------');
-                                    console.log('>>>EVACUATING SECTOR ' + home_index + '<<<');
-                                    console.log('------------------------------');
                                     unit.memory.in_place = false;
                                     threat = true;
+                                    console.log('------------------------------');
+                                    console.log('>>>EVACUATING SECTOR #' + home_index + '...HOSTILE INBOUND<<<');
+                                    console.log('------------------------------');
                                     break assess;
                                 }
                             }
                         }
+                    }
+                    //watch for hostile cores
+                    var invadercores = unit.room.find(FIND_HOSTILE_STRUCTURES, {
+                        filter: structure => {
+                            return structure.structureType == STRUCTURE_INVADER_CORE;
+                        }
+                    });
+                    if (invadercores.length && Memory.core_sighting[home_index] == false){
+                        Memory.core_sighting[home_index] = true;
+                        threat = true;
+                        console.log('------------------------------');
+                        console.log('>>>LOCKING SECTOR #' + home_index + '...CORE SIGHTED<<<');
+                        console.log('------------------------------');
                     }
                     //fetch from inputs
                     if (!threat){

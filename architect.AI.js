@@ -33,30 +33,26 @@ module.exports = {
         if (unit.memory.homebound){
             if (hotspots.length){
                 var nearest_hotspot = unit.pos.findClosestByPath(hotspots);
-                if (unit.build(nearest_hotspot) == ERR_NOT_IN_RANGE){
+                if (unit.build(nearest_hotspot) == ERR_NOT_IN_RANGE)
                     unit.moveTo(nearest_hotspot, {visualizePathStyle: {stroke: '#00ff00'}});
-                }
             }
         }
         else{
             //fetch: vault (respect limit)
             if (nexus.room.storage != undefined && nexus.room.storage.store.energy > reserve){
-                if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#00ff00'}});
-                }
             }
             //fetch: containers (fullest)
             else if (canisters.length){
                 var fullest_canister = canisters[0];
                 if (canisters.length == 2 &&
-                canisters[1].store.getUsedCapacity(RESOURCE_ENERGY) >
-                canisters[0].store.getUsedCapacity(RESOURCE_ENERGY)){
+                canisters[1].store.getUsedCapacity(RESOURCE_ENERGY) > canisters[0].store.getUsedCapacity(RESOURCE_ENERGY)){
                     fullest_canister = canisters[1];
                 }
                 
-                if (unit.withdraw(fullest_canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                if (unit.withdraw(fullest_canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(fullest_canister, {visualizePathStyle: {stroke: '#00ff00'}});
-                }
             }
         }
     }

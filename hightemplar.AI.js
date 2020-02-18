@@ -13,8 +13,6 @@ module.exports = {
             unit.moveTo(waypoint, {visualizePathStyle: {stroke: '#00ffff'}});
         }
         //heal targets whenever possible
-        else{
-            unit.heal(patients[0]);
-        }
+        else unit.heal(patients[0]);
     }
 };
