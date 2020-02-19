@@ -10,11 +10,6 @@ module.exports = {
         //secure the room
         else{
             var bloodmark = unit.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-            var heretic = unit.room.find(FIND_HOSTILE_STRUCTURES, {
-                filter: structure => {
-                    return structure.structureType == STRUCTURE_INVADER_CORE;
-                }
-            });
             
             //kill invader
             if (bloodmark){
@@ -23,14 +18,13 @@ module.exports = {
             }
             //regenerate
             else if (unit.hits < unit.hitsMax) unit.heal(unit);
-            //kill cores
-            else if (heretic.length){
-                if (unit.attack(heretic[0]) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(heretic[0], {visualizePathStyle: {stroke: '#ff0000'}});
-            }
             //force-reset evac timer
-            else if (Memory.evac_timer[home_index] > 0)
+            else if (Memory.evac_timer[home_index] > 0){
                 Memory.evac_timer[home_index] = 0;
+                console.log('------------------------------');
+                console.log('SECTOR #' + home_index + ' HOSTILES ELIMINATED');
+                console.log('------------------------------');
+            }
         }
     }
 };

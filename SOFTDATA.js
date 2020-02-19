@@ -1,11 +1,11 @@
-//library containing all reconfigurable and server-specific variables
+//library: contains all reconfigurable and server-specific variables
 
 module.exports = {
     
     //numbers
     time_offset:            100000,
     fixation_override:      .25, //probes will break fixation upon spotting an absolute % gap this wide
-    drone_price:            [1000,1000,600],
+    drone_price:            [750,750,600],
     en_ignore_lim:          150, //drones/sacrificers/probes will ignore containers/pickups containing less energy than this
     tower_reserve_ratio:    .5, //towers will reserve this percentage of their energy for attacking
     vault_reserve_min:      100000, //all units except (e)drones and energisers will avoid vaults containing less than this
@@ -24,7 +24,7 @@ module.exports = {
     reserveflag:            [Game.flags['Core1'], Game.flags['Core2'], Game.flags['Core3']], //rally point for remote room reservation
     remoteflag:             [Game.flags['Terrazine'], Game.flags['Vespene'], Game.flags['Jorium']], //rally point for remote mining
     remotesource_id:        ['5bbcae809099fc012e6392ee', '5bbcae989099fc012e63947b', '5bbcaea69099fc012e63960e'],
-    remotecanister_id:      ['5e4761c7b1b0bd16bd38baf0', '5e4b8e89d4e9fb1bea4e27a1', '5e490bf22a3d564b0565c52d'], //drop-mining containers (o.assimilator)
+    remotecanister_id:      ['5e4c68eb12701789c879b329', '5e4b8e89d4e9fb1bea4e27a1', '5e490bf22a3d564b0565c52d'], //drop-mining containers (o.assimilator)
     remotedrop_id:          ['5e323d61aa9957193cc8ec6c', '5e3ff330d9c0d0411296ffb0', '5e48c7a10359276c64092767'], //destination receptacles (o.drone)
 
     tower_id:               [['5e2f4a33e8af4a1c6459ccd8', '5e346820d632bc24398489ab'], ['5e3a68c9aa99575a56cba5da', '5e401cc59c6dc7073200b5b7'], ['5e473a110058163253b64554', '5e4a55092f9d26c57d90c465']],

@@ -1,4 +1,4 @@
-//initialises global variables in memory
+//function: initialises global variables in memory
 
 module.exports = {
     run: function(){
@@ -19,6 +19,7 @@ module.exports = {
         if (Memory.acolyte_MAX == undefined){Memory.acolyte_MAX =                       [0,0,0];}
             if (Memory.acolyte2_MAX == undefined){Memory.acolyte2_MAX =                 [0,0,0];}
         if (Memory.adherent_MAX == undefined){Memory.adherent_MAX =                     [0,0,0];}
+        if (Memory.nullAdherent_MAX == undefined){Memory.nullAdherent_MAX =             [0,0,0];}
         if (Memory.supplicant_MAX == undefined){Memory.supplicant_MAX =                 [0,0,0];}
         if (Memory.ancientDrone_MAX == undefined){Memory.ancientDrone_MAX =             [0,0,0];}
         if (Memory.ancientAssimilator_MAX == undefined){Memory.ancientAssimilator_MAX = [0,0,0];}

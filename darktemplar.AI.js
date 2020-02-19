@@ -16,32 +16,36 @@ module.exports = {
         //destroy everything in sight
         if (unit.memory.in_place){
             //acquire targets
-            var hatcheries = unit.room.find(FIND_HOSTILE_STRUCTURES, {
+            var hatchery = unit.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_SPAWN;
                 }
             });
-            var organs = unit.room.find(FIND_HOSTILE_STRUCTURES, {
+            var creeptumor = unit.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
                 filter: structure => {
-                    return structure.structureType == STRUCTURE_EXTENSION ||
-                    structure.structureType == STRUCTURE_INVADER_CORE;
+                    return structure.structureType == STRUCTURE_EXTENSION;
                 }
             });
-            var abomination = unit.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-            var larvae = unit.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+            var spinecrawler = unit.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
+                filter: structure => {
+                    return structure.structureType == STRUCTURE_TOWER;
+                }
+            });
+            var abomination = unit.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
             
             //select and attack target
-            if (hatcheries.length){
-                if (unit.attack(hatcheries[0]) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(hatcheries[0], {visualizePathStyle: {stroke: '#ff0000'}});
-            }
-            else if (organs.length){
-                if (unit.attack(organs[0]) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(organs[0], {visualizePathStyle: {stroke: '#ff0000'}});
-            }
-            else if (abomination){
-                if (unit.attack(abomination) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(abomination, {visualizePathStyle: {stroke: '#ff0000'}});
+            var lockon;
+            if (spinecrawler) lockon = spinecrawler;
+            else if (creeptumor) lockon = creeptumor;
+            else if (hatchery) lockon = hatchery;
+            else if (abomination) lockon = abomination;
+            else lockon = unit.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES); //any remaining structures
+            
+            if (lockon){
+                if (unit.attack(lockon) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(lockon, {visualizePathStyle: {stroke: '#ff0000'}});
+                else if (unit.attack(lockon) == ERR_NO_BODYPART) //safe mode
+                    unit.moveTo(Game.flags['Vespene'], {visualizePathStyle: {stroke: '#ff0000'}});
             }
         }
     }

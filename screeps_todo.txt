@@ -1,11 +1,11 @@
 TODO urgent:
-	if invaders and cores at same time, but invaders are then killed, bloodhunters still spawn bc the final else is not taken
-	1liner if elses
-	terminal marketplace
-	stop drones from doing -that- when theres no work
-	tower email blacklist?
+	drones must ignore tombs and pickups from beyond walls (terminals?)
+
+	nulladherent
+	record TTK cores?
+	limit purifier spawns to only if reserv timer is big
+	1liner if elses, unnecessary newlines
 	energy source vars could be merged
-	dt went thru alot of changes (darkprelate?)
 	specialist has wonky code
 	[DEFENCE] tower should reuse probe's fixation mechanic
 	[ECON] summon bloodhunter only if 1 enemy?
@@ -13,15 +13,14 @@ TODO urgent:
 	[SOFTLOCK] fix (e)drone pickup
 	
 TODO backlog:
-	[MAINTENANCE] remove if/else spaces
 	[MAINTENANCE] git init (put this file inside), readme
 	[SOFTLOCK] before calling a softlock, drones should deposit pocket energy if there are no more assims/energy on the map
 	[QOL] more status report info (pickups, wall/rampart distinction, invader/core alert)
 	[SOFTLOCK] 'lack of assimilator' softlock? (if no assim & no money, emergency convert)
 	
 Look up:
+	terminal marketplace
 	renewing units
-	remote miners having drones
 	flagging a neutral controller
 
 JS help:

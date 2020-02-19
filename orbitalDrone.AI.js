@@ -60,7 +60,7 @@ module.exports = {
                         //assess threat level
 assess:                 for (let i=0; i<enemy.length; i++){
                             for (let j=0; j<enemy[i].body.length; j++){
-                                if (enemy[i].body[j]['type'] == ATTACK || enemy[i].body[j]['type'] == RANGED_ATTACK){
+                                if (enemy[i].body[j]['type'] == ATTACK || enemy[i].body[j]['type'] == RANGED_ATTACK || enemy[i].body[j]['type'] == WORK){
                                     Memory.evac_timer[home_index] = 1500;
                                     unit.memory.in_place = false;
                                     threat = true;
@@ -81,6 +81,7 @@ assess:                 for (let i=0; i<enemy.length; i++){
                     if (invadercores.length && Memory.core_sighting[home_index] == false){
                         Memory.core_sighting[home_index] = true;
                         threat = true;
+                        Game.notify('>>>LOCKING SECTOR #' + home_index + '...CORE SIGHTED<<<',0);
                         console.log('------------------------------');
                         console.log('>>>LOCKING SECTOR #' + home_index + '...CORE SIGHTED<<<');
                         console.log('------------------------------');

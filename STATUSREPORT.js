@@ -1,5 +1,4 @@
-//QoL status report script
-//execute by typing the following line into console:
+//executable script: creates a report providing details about a particular room
     //require('STATUSREPORT').run(0)
 
 module.exports = {
@@ -54,10 +53,10 @@ module.exports = {
         if (emergencyDrone_gang.length > 0) emergencyDrone_status = emergencyDrone_status + ' >>>ATTENTION<<<';
         
         //determine time until next unit death
-        var mortis = CREEP_LIFE_TIME;
+        var mortis = CREEP_LIFE_TIME; //init at max life value
         var shindeiru = 'NULL';
         for (var name in Game.creeps){
-            if (Game.creeps[name].ticksToLive < mortis && Game.creeps[name].room == nexi[room_num].room){
+            if (Game.creeps[name].ticksToLive < mortis && (Game.creeps[name].room == nexi[room_num].room || Game.creeps[name].memory.home == nexi[room_num].room.name)){
                 mortis = Game.creeps[name].ticksToLive;
                 shindeiru = name;
             }

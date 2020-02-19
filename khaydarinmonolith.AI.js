@@ -17,7 +17,21 @@ module.exports = {
         
         
         //outputs: enemies, allies (injured), structures (damaged)
-        var enemy = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+        var threat = false;
+        var target_enemy;
+        var enemy = tower.room.find(FIND_HOSTILE_CREEPS);
+        if (enemy.length){
+            //assess threat level
+assess:     for (let i=0; i<enemy.length; i++){
+                for (let j=0; j<enemy[i].body.length; j++){
+                    if (enemy[i].body[j]['type'] == ATTACK || enemy[i].body[j]['type'] == RANGED_ATTACK || enemy[i].body[j]['type'] == WORK){
+                        threat = true;
+                        target_enemy = enemy[i];
+                        break assess;
+                    }
+                }
+            }
+        }
         var injured_units = tower.room.find(FIND_MY_CREEPS, {
             filter: creep => {
                 return creep.hits < creep.hitsMax;
@@ -25,8 +39,7 @@ module.exports = {
         });
         var repairTargets = tower.room.find(FIND_STRUCTURES, {
             filter: structure => {
-                return ((structure.hits < structure.hitsMax * .5 && structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART) ||
-                (structure.hits < Memory.wall_threshold * .5 && structure.structureType == STRUCTURE_WALL));
+                return ((structure.hits < structure.hitsMax * .5 && structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART));
             }
         });
         var repairRamparts = tower.room.find(FIND_STRUCTURES, {
@@ -38,10 +51,10 @@ module.exports = {
 
         //priorities...
         //unload: enemies
-        if (enemy){
-            tower.attack(enemy);
-            if (enemy.owner.username != 'Invader'){
-                Game.notify(enemy.owner.username + ' DETECTED IN ROOM #' + homeroom,30);
+        if (threat){
+            tower.attack(target_enemy);
+            if (target_enemy.owner.username != 'Invader'){
+                Game.notify(target_enemy.owner.username + ' DETECTED IN ROOM #' + homeroom,30);
             }
         }
         //perform other tasks only if energy can be spared, and construction mode is disabled

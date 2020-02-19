@@ -37,6 +37,7 @@ module.exports = {
         //behaviour execution...
         //unload: structure (weakest %; fixation)
         if (unit.memory.homebound && repairTargets.length){
+            
             //find the weakest structure in terms of %
             var weakest = repairTargets[0];
             

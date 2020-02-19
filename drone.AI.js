@@ -31,7 +31,7 @@ module.exports = {
             }
         });
         
-        //outputs: pylons (non-full)
+        //outputs: extensions (non-full)
         var pylons = nexus.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_EXTENSION &&
@@ -70,7 +70,7 @@ module.exports = {
                     unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
             }
             else{
-                //unload: pylons
+                //unload: extensions
                 if (pylons.length){
                     var nearest_pylon = unit.pos.findClosestByPath(pylons);
                     if (unit.transfer(nearest_pylon, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
@@ -89,11 +89,13 @@ module.exports = {
             }
         }
         else{
-        //fetch: tombstones<minerals>, tombstones<energy> (fullest), ruins
+            //fetch: ruins
             if (remains.length){
                 if (unit.withdraw(remains[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(remains[0], {visualizePathStyle: {stroke: '#ffffff'}});
             }
+            ///*
+            //fetch: tombstones<minerals>, tombstones<energy> (fullest)
             else if (tombs.length){
                 var richest_tomb = tombs[0];
                 var treasure_found_t = false;
@@ -126,6 +128,7 @@ module.exports = {
                     unit.moveTo(richest_tomb, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
+            //*/
             ///*
             //fetch: pickups<minerals> (least TTL), pickups<energy> (fullest))
             else if (scraps.length){
@@ -152,6 +155,15 @@ module.exports = {
                 }
             }
             //*/
+            //fetch: terminal
+            /*
+            else if (nexus.room.terminal != undefined){
+                if (nexus.room.terminal.store.energy != 0){
+                    if (unit.withdraw(nexus.room.terminal, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(nexus.room.terminal, {visualizePathStyle: {stroke: '#ffffff'}});
+                }
+            }
+            */
             //fetch: containers (fullest; fixation)
             else if (canisters.length){
                 //determine the fullest container in play
@@ -177,8 +189,11 @@ module.exports = {
             }
             //fetch: vault
             else if (nexus.room.storage != undefined){
-                if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
+                //only fetch from the vault if the energy will actually be used
+                if (pylons.length || nexus.store.getFreeCapacity(RESOURCE_ENERGY) != 0){
+                    if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
+                }
             }
         }
     }
