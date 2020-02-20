@@ -6,13 +6,11 @@ module.exports = {
     run: function(unit,standby_1){
         
         //trek to the standby point once
-        if (!unit.memory.in_place){
+        if (!unit.memory.in_place)
             unit.moveTo(standby_1, {visualizePathStyle: {stroke: '#00ffff'}});
-        }
-        if (unit.pos.isEqualTo(standby_1.pos)){
+        if (unit.pos.isEqualTo(standby_1.pos))
             unit.memory.in_place = true;
-        }
-        
+
         
         if (unit.memory.in_place){
             //trample all hostile construction sites
@@ -21,13 +19,10 @@ module.exports = {
                     return RoomObject.progress > 0;
                 }
             });
-            if (shrines){
+            if (shrines)
                 unit.moveTo(shrines, {visualizePathStyle: {stroke: '#00ffff'}});
-            }
             //return to flag when there are no more sites to trample
-            else{
-                //unit.memory.in_place = false;
-            }
+            //else unit.memory.in_place = false;
         }
     }
 };

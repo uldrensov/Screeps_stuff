@@ -14,18 +14,15 @@ module.exports = {
             
             
             //two-states...
-            if (unit.memory.able == undefined){
+            if (unit.memory.able == undefined)
                 unit.memory.able = false;
-            }
             //if energy is over half, unit may repair
-            if (unit.store[RESOURCE_ENERGY] > unit.store.getCapacity()/2){
+            if (unit.store[RESOURCE_ENERGY] > unit.store.getCapacity()/2)
                 unit.memory.able = true;
-            }
             //if energy depletes to 0, unit may cease repairs
-            else if (unit.store[RESOURCE_ENERGY] == 0){
+            else if (unit.store[RESOURCE_ENERGY] == 0)
                 unit.memory.able = false;
-            }
-            
+
             
             //rally at flag first
             if (!unit.memory.in_place){

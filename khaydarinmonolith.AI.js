@@ -53,24 +53,20 @@ assess:     for (let i=0; i<enemy.length; i++){
         //unload: enemies
         if (threat){
             tower.attack(target_enemy);
-            if (target_enemy.owner.username != 'Invader'){
+            if (target_enemy.owner.username != 'Invader')
                 Game.notify(target_enemy.owner.username + ' DETECTED IN ROOM #' + homeroom,30);
-            }
         }
         //perform other tasks only if energy can be spared, and construction mode is disabled
         else if (!Memory.construction_mode && tower.store[RESOURCE_ENERGY] > tower.store.getCapacity(RESOURCE_ENERGY) * reserve_ratio){
             //unload: allies
-            if (injured_units.length){
+            if (injured_units.length)
                 tower.heal(injured_units[0]);
-            }
             //unload: structures
             else{
-                if (repairRamparts.length){
+                if (repairRamparts.length)
                     tower.repair(repairRamparts[0]);
-                }
-                else if (repairTargets.length){
+                else if (repairTargets.length)
                     tower.repair(repairTargets[0]);
-                }
             }
         }
     }

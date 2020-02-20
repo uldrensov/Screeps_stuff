@@ -10,11 +10,11 @@ module.exports = {
     
     
         //for storing population count in each room
-        var emergencyDrone_gang = [];   var sacrificer_gang = [];       var architect_gang = [];            var probe_gang = [];                var assimilator_gang = [];  var assimilator2_gang = [];
-        var drone_gang = [];            var energiser_gang = [];        var recalibrator_gang = [];         var orbitalAssimilator_gang = [];   var orbitalDrone_gang = []; var bloodhunter_gang = [];
-        var enforcer_gang = [];         var purifier_gang = [];         var acolyte_gang = [];              var acolyte2_gang = [];             var adherent_gang = [];     var nullAdherent_gang = [];
-        var supplicant_gang = [];       var ancientDrone_gang = [];     var ancientAssimilator_gang = [];   var specialist_gang;                var saviour_gang;           var emissary_gang = [];
-        var darktemplar_gang = [];      var hallucination_gang;         var hightemplar_gang;               var zealot_gang;
+        var emergencyDrone_gang = [];   var sacrificer_gang = [];       var architect_gang = [];        var probe_gang = [];                var assimilator_gang = [];  var assimilator2_gang = [];
+        var drone_gang = [];            var energiser_gang = [];        var recalibrator_gang = [];     var orbitalAssimilator_gang = [];   var orbitalDrone_gang = []; var bloodhunter_gang = [];
+        var enforcer_gang = [];         var purifier_gang = [];         var acolyte_gang = [];          var acolyte2_gang = [];             var adherent_gang = [];     var nullAdherent_gang = [];
+        var supplicant_gang = [];       var nullSupplicant_gang = [];   var ancientDrone_gang = [];     var ancientAssimilator_gang = [];   var specialist_gang;        var saviour_gang;
+        var emissary_gang = [];         var darktemplar_gang = [];      var hallucination_gang;         var hightemplar_gang;               var zealot_gang;
     
     
         //execute the auto-spawn and unit AI assignment routines for each room
@@ -40,6 +40,7 @@ module.exports = {
             adherent_gang[k] =              _.filter(Game.creeps, creep => creep.memory.role == 'adherent'              && creep.room == nexi[k].room);
             nullAdherent_gang[k] =          _.filter(Game.creeps, creep => creep.memory.role == 'nullAdherent'          && creep.room == nexi[k].room);
             supplicant_gang[k] =            _.filter(Game.creeps, creep => creep.memory.role == 'supplicant'            && creep.room == nexi[k].room);
+            nullSupplicant_gang[k] =        _.filter(Game.creeps, creep => creep.memory.role == 'nullSupplicant'        && creep.room == nexi[k].room);
             ancientDrone_gang[k] =          _.filter(Game.creeps, creep => creep.memory.role == 'ancientDrone'          && creep.room == nexi[k].room);
             ancientAssimilator_gang[k] =    _.filter(Game.creeps, creep => creep.memory.role == 'ancientAssimilator'    && creep.room == nexi[k].room);
             specialist_gang =               _.filter(Game.creeps, creep => creep.memory.role == 'specialist');
@@ -74,7 +75,7 @@ module.exports = {
             nexi[k].room.energyAvailable < SD.drone_price[k]){
                 if (nexi[k].spawnCreep(SD.edrone_body, 'EmergencyDrone-' + Game.time % SD.time_offset, {memory: {role: 'emergencyDrone'}}) == 0){
                     console.log('Room #' + k + ': >>>EmergencyDrone-' + Game.time % SD.time_offset + ' spawning.<<<');
-                    Game.notify('Emergency drone deployed',0);
+                    Game.notify('Emergency drone deployed in room #' + k,0);
                 }
             }
         
@@ -117,10 +118,18 @@ module.exports = {
                 if (nexi[k].spawnCreep(SD.adher_body, 'Adherent-' + Game.time % SD.time_offset, {memory: {role: 'adherent'}}) == 0)
                     console.log('Room #' + k + ': Adherent-' + Game.time % SD.time_offset + ' spawning.');
             }
+            else if (nullAdherent_gang[k].length < Memory.nullAdherent_MAX[k]){
+                if (nexi[k].spawnCreep(SD.adher_body, 'NullAdherent-' + Game.time % SD.time_offset, {memory: {role: 'nullAdherent'}}) == 0)
+                    console.log('Room #' + k + ': NullAdherent-' + Game.time % SD.time_offset + ' spawning.');
+            }
             //without supplicants, the room will level down (replaces sacrificers)
             else if (supplicant_gang[k].length < Memory.supplicant_MAX[k]){
                 if (nexi[k].spawnCreep(SD.suppl_body[k], 'Supplicant-' + Game.time % SD.time_offset, {memory: {role: 'supplicant'}}) == 0)
                     console.log('Room #' + k + ': Supplicant-' + Game.time % SD.time_offset + ' spawning.');
+            }
+            else if (nullSupplicant_gang[k].length < Memory.nullSupplicant_MAX[k]){
+                if (nexi[k].spawnCreep(SD.suppl_body[k], 'NullSupplicant-' + Game.time % SD.time_offset, {memory: {role: 'nullSupplicant'}}) == 0)
+                    console.log('Room #' + k + ': NullSupplicant-' + Game.time % SD.time_offset + ' spawning.');
             }
             //without probes, structures are not maintained
             else if (probe_gang[k].length < Memory.probe_MAX[k]){

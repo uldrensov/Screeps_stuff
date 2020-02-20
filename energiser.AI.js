@@ -23,14 +23,12 @@ module.exports = {
         
         //two-states...
         //if full energy while outbound, come back
-        if (!unit.memory.homebound && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
+        if (!unit.memory.homebound && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
             unit.memory.homebound = true;
-        }
         //if empty energy while inbound, go withdraw
-        if (unit.memory.homebound && unit.store[RESOURCE_ENERGY] == 0){
+        if (unit.memory.homebound && unit.store[RESOURCE_ENERGY] == 0)
             unit.memory.homebound = false;
-        }
-        
+
         
         //behaviour execution...
         //unload: towers (most drained)
@@ -38,34 +36,29 @@ module.exports = {
             if (towers.length){
                 var lowest_tower = towers[0];
                 for (let i=0; i<towers.length; i++){
-                    if (towers[i].store[RESOURCE_ENERGY] < lowest_tower.store[RESOURCE_ENERGY]){
+                    if (towers[i].store[RESOURCE_ENERGY] < lowest_tower.store[RESOURCE_ENERGY])
                         lowest_tower = towers[i];
-                    }
                 }
-                if (unit.transfer(lowest_tower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                if (unit.transfer(lowest_tower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(lowest_tower, {visualizePathStyle: {stroke: '#0000ff'}});
-                }
             }
         }
         else{
             //fetch: vault
             if (nexus.room.storage != undefined && nexus.room.storage.store.energy > 0){
-                if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#0000ff'}});
-                }
             }
             //fetch: containers (fullest)
             else if (canisters.length){
                 var fullest_canister = canisters[0];
                 if (canisters.length == 2 &&
-                canisters[1].store.getUsedCapacity(RESOURCE_ENERGY) >
-                canisters[0].store.getUsedCapacity(RESOURCE_ENERGY)){
+                canisters[1].store.getUsedCapacity(RESOURCE_ENERGY) > canisters[0].store.getUsedCapacity(RESOURCE_ENERGY)){
                     fullest_canister = canisters[1];
                 }
                 
-                if (unit.withdraw(fullest_canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                if (unit.withdraw(fullest_canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(fullest_canister, {visualizePathStyle: {stroke: '#0000ff'}});
-                }
             }
         }
     }

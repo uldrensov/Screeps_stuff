@@ -1,27 +1,27 @@
 TODO urgent:
 	drones must ignore tombs and pickups from beyond walls (terminals?)
 
-	nulladherent
+	
 	record TTK cores?
-	limit purifier spawns to only if reserv timer is big
+	limit purifier spawns to only if reserv timer is big?
 	1liner if elses, unnecessary newlines
+	2state comments
 	energy source vars could be merged
 	specialist has wonky code
-	[DEFENCE] tower should reuse probe's fixation mechanic
+	[DEFENCE] think about how tower should behave in general
 	[ECON] summon bloodhunter only if 1 enemy?
 	[BUG] dont let new things spawn when one briefly leaves room
 	[SOFTLOCK] fix (e)drone pickup
 	
 TODO backlog:
+	[QOL] more status report info (pickups, wall/rampart distinction, invader/core alert)
 	[MAINTENANCE] git init (put this file inside), readme
 	[SOFTLOCK] before calling a softlock, drones should deposit pocket energy if there are no more assims/energy on the map
-	[QOL] more status report info (pickups, wall/rampart distinction, invader/core alert)
 	[SOFTLOCK] 'lack of assimilator' softlock? (if no assim & no money, emergency convert)
 	
 Look up:
 	terminal marketplace
-	renewing units
-	flagging a neutral controller
+	renewing, recycling
 
 JS help:
 	lodash

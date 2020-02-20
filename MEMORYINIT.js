@@ -21,6 +21,7 @@ module.exports = {
         if (Memory.adherent_MAX == undefined){Memory.adherent_MAX =                     [0,0,0];}
         if (Memory.nullAdherent_MAX == undefined){Memory.nullAdherent_MAX =             [0,0,0];}
         if (Memory.supplicant_MAX == undefined){Memory.supplicant_MAX =                 [0,0,0];}
+        if (Memory.nullSupplicant_MAX == undefined){Memory.nullSupplicant_MAX =         [0,0,0];}
         if (Memory.ancientDrone_MAX == undefined){Memory.ancientDrone_MAX =             [0,0,0];}
         if (Memory.ancientAssimilator_MAX == undefined){Memory.ancientAssimilator_MAX = [0,0,0];}
         if (Memory.specialist_MAX == undefined){Memory.specialist_MAX =                 0;}

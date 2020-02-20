@@ -19,6 +19,7 @@ var acolyte =               require('acolyte.AI');
 var adherent =              require('adherent.AI');
 var nullAdherent =          require('nullAdherent.AI');
 var supplicant =            require('supplicant.AI');
+var nullSupplicant =        require('nullSupplicant.AI');
 var ancientDrone =          require('ancientDrone.AI');
 var ancientAssimilator =    require('ancientAssimilator.AI');
 var specialist =            require('specialist.AI');
@@ -71,8 +72,14 @@ module.exports = {
                         case 'adherent':
                             adherent.run(unit, SD.nexus_id[k], SD.adher_tile_id[k], SD.warpRX_id[k]);
                             break;
+                        case 'nullAdherent':
+                            nullAdherent.run(unit, SD.nexus_id[k], SD.adher_tile_id[k], SD.warpRX_id[k], SD.warpTX_id[k]);
+                            break;
                         case 'supplicant':
                             supplicant.run(unit, nexi[k], SD.vault_reserve_min);
+                            break;
+                        case 'nullSupplicant':
+                            nullSupplicant.run(unit, nexi[k], SD.warpTX_id[k]);
                             break;
                         case 'probe':
                             probe.run(unit, nexi[k], SD.fixation_override, SD.en_ignore_lim, SD.vault_reserve_min);

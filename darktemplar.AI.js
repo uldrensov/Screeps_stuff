@@ -5,13 +5,11 @@ module.exports = {
     run: function(unit,standby_flag){
         
         //trek to the standby point once
-        if (!unit.memory.in_place){
+        if (!unit.memory.in_place)
             unit.moveTo(standby_flag, {visualizePathStyle: {stroke: '#ff0000'}});
-        }
-        if (unit.pos.isEqualTo(standby_flag.pos)){
+        if (unit.pos.isEqualTo(standby_flag.pos))
             unit.memory.in_place = true;
-        }
-        
+
         
         //destroy everything in sight
         if (unit.memory.in_place){

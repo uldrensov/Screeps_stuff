@@ -40,63 +40,53 @@ module.exports = {
 
         //two-states...
         //if full energy while outbound, come back
-        if (!unit.memory.homebound && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
+        if (!unit.memory.homebound && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
             unit.memory.homebound = true;
-        }
         //if empty energy while inbound, go harvest
-        if (unit.memory.homebound && unit.store[RESOURCE_ENERGY] == 0){
+        if (unit.memory.homebound && unit.store[RESOURCE_ENERGY] == 0)
             unit.memory.homebound = false;
-        }
-        
+
         
         //behaviour execution...
         if (unit.memory.homebound){
             //unload: pylons
             if (pylons.length){
                 var nearest_pylon = unit.pos.findClosestByPath(pylons);
-                if (unit.transfer(nearest_pylon, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                if (unit.transfer(nearest_pylon, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(nearest_pylon, {visualizePathStyle: {stroke: '#ffffff'}});
-                }
             }
             //unload: nexus
             else{
-                if (unit.transfer(nexus, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                if (unit.transfer(nexus, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(nexus, {visualizePathStyle: {stroke: '#ffffff'}});
-                }
             }
         }
         else{
             //fetch: vault
             if (nexus.room.storage != undefined && nexus.room.storage.store.energy > 0){
-                if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
-                }
             }
             //fetch: containers (fullest; fixation)
             else if (canisters.length){
                 //determine the fullest container in play
                 var fullest_canister = canisters[0];
                 for (let i=0; i<canisters.length; i++){
-                    if (canisters[i].store.getUsedCapacity(RESOURCE_ENERGY) >
-                    fullest_canister.store.getUsedCapacity(RESOURCE_ENERGY)){
+                    if (canisters[i].store.getUsedCapacity(RESOURCE_ENERGY) > fullest_canister.store.getUsedCapacity(RESOURCE_ENERGY))
                         fullest_canister = canisters[i];
-                    }
                 }
                 
                 //if there is no current target container, "fixate" on the fullest one
-                if (unit.memory.fixation == undefined){
+                if (unit.memory.fixation == undefined)
                     unit.memory.fixation = fullest_canister.id;
-                }
                 //otherwise, only switch fixation if the previous one crosses beneath the (reduced) "ignore" criteria
-                else if (Game.getObjectById(unit.memory.fixation).store[RESOURCE_ENERGY] < lowbound){
+                else if (Game.getObjectById(unit.memory.fixation).store[RESOURCE_ENERGY] < lowbound)
                     unit.memory.fixation = fullest_canister.id;
-                }
-                
+
                 //finally, withdraw from the fixated target
                 var canister_target = Game.getObjectById(unit.memory.fixation);
-                if (unit.withdraw(canister_target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                if (unit.withdraw(canister_target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(canister_target, {visualizePathStyle: {stroke: '#ffffff'}});
-                }
             }
             //fetch: tombstones<energy> (fullest)
             else if (tombs.length){
@@ -109,9 +99,8 @@ module.exports = {
                     }
                 }
                 //approach and withdraw
-                if (unit.withdraw(richest_tomb, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                if (unit.withdraw(richest_tomb, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(richest_tomb, {visualizePathStyle: {stroke: '#ffffff'}});
-                }
             }
             //TODO: pickups
             ///*
@@ -120,20 +109,17 @@ module.exports = {
                 //
                 var chosen_scrap = scraps[0];
                 for (let i=0; i<scraps.length; i++){
-                    if (scraps[i].energy > chosen_scrap.energy){
+                    if (scraps[i].energy > chosen_scrap.energy)
                         chosen_scrap = scraps[i];
-                    }
                 }
                 
-                if (unit.pickup(chosen_scrap) == ERR_NOT_IN_RANGE){
+                if (unit.pickup(chosen_scrap) == ERR_NOT_IN_RANGE)
                     unit.moveTo(chosen_scrap, {visualizePathStyle: {stroke: '#ffffff'}});
-                }
             }
             //*/
             //fetch: sources
-            else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE){
+            else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE)
                 unit.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffffff'}});
-            }
         }
     }
 };

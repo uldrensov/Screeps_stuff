@@ -25,14 +25,12 @@ module.exports = {
         
         //two-states...
         //if full energy while outbound, come back
-        if (!unit.memory.homebound && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
+        if (!unit.memory.homebound && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
             unit.memory.homebound = true;
-        }
         //if empty energy while inbound, go withdraw
-        if (unit.memory.homebound && unit.store[RESOURCE_ENERGY] == 0){
+        if (unit.memory.homebound && unit.store[RESOURCE_ENERGY] == 0)
             unit.memory.homebound = false;
-        }
-        
+
         
         //behaviour execution...
         //unload: structure (weakest %; fixation)
@@ -95,14 +93,11 @@ module.exports = {
             //finally, attempt to repair the fixated target until its max / threshold
             var final_target = Game.getObjectById(unit.memory.fixation);
             if (final_target.hits < unit.memory.fixation_max){
-                if (unit.repair(final_target) == ERR_NOT_IN_RANGE){
+                if (unit.repair(final_target) == ERR_NOT_IN_RANGE)
                     unit.moveTo(final_target, {visualizePathStyle: {stroke: '#0000ff'}});
-                }
             }
             //release the fixation if it reaches max
-            else{
-                delete unit.memory.fixation;
-            }
+            else delete unit.memory.fixation;
         }
         else{
             //fetch: vault (respect limit)
@@ -115,14 +110,12 @@ module.exports = {
             else if (canisters.length){
                 var fullest_canister = canisters[0];
                 if (canisters.length == 2 &&
-                canisters[1].store.getUsedCapacity(RESOURCE_ENERGY) >
-                canisters[0].store.getUsedCapacity(RESOURCE_ENERGY)){
+                canisters[1].store.getUsedCapacity(RESOURCE_ENERGY) > canisters[0].store.getUsedCapacity(RESOURCE_ENERGY)){
                     fullest_canister = canisters[1];
                 }
                 
-                if (unit.withdraw(fullest_canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                if (unit.withdraw(fullest_canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(fullest_canister, {visualizePathStyle: {stroke: '#0000ff'}});
-                }
             }
         }
     }

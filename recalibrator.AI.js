@@ -4,21 +4,18 @@
 module.exports = {
     run: function(unit,standby_flag,flee_point,home_index){
         
-        if (unit.memory.annex == undefined){
+        if (unit.memory.annex == undefined)
             unit.memory.annex = false;
-        }
-        
+
         
         //no enemies present
-        if (Memory.evac_timer[home_index] == 0){
+        if (Memory.evac_timer[home_index] == 0)
             //trek to the standby point once
             if (!unit.memory.in_place){
                 unit.moveTo(standby_flag, {visualizePathStyle: {stroke: '#ffff00'}});
-            }
-            if (unit.pos.isEqualTo(standby_flag.pos)){
+            if (unit.pos.isEqualTo(standby_flag.pos))
                 unit.memory.in_place = true;
-            }
-            
+
             //actions while outbound
             if (unit.memory.in_place){
                 //watch for invaders/intruders
@@ -57,21 +54,17 @@ assess:             for (let i=0; i<enemy.length; i++){
                 //reserve/claim the controller
                 if (!threat){
                     if (unit.memory.annex){
-                        if (unit.attackController(unit.room.controller) == ERR_NOT_IN_RANGE){
+                        if (unit.attackController(unit.room.controller) == ERR_NOT_IN_RANGE)
                             unit.moveTo(unit.room.controller, {visualizePathStyle: {stroke: '#ffff00'}});
-                        }
                     }
                     else{
-                        if (unit.reserveController(unit.room.controller) == ERR_NOT_IN_RANGE){
+                        if (unit.reserveController(unit.room.controller) == ERR_NOT_IN_RANGE)
                         unit.moveTo(unit.room.controller, {visualizePathStyle: {stroke: '#ffff00'}});
-                        }
                     }
                 }
             }
         }
         //enemies detected
-        else{
-            unit.moveTo(Game.getObjectById(flee_point), {visualizePathStyle: {stroke: '#ffff00'}});
-        }
+        else unit.moveTo(Game.getObjectById(flee_point), {visualizePathStyle: {stroke: '#ffff00'}});
     }
 };

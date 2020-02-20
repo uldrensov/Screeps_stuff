@@ -14,13 +14,11 @@ module.exports = {
             
         //two states...
         //if full pockets while outbound, come back
-        if (!unit.memory.homebound && unit.store.getFreeCapacity() == 0){
+        if (!unit.memory.homebound && unit.store.getFreeCapacity() == 0)
             unit.memory.homebound = true;
-        }
         //if empty energy while inbound, go withdraw
-        if (unit.memory.homebound && unit.store[mineral_type] == 0){
+        if (unit.memory.homebound && unit.store[mineral_type] == 0)
             unit.memory.homebound = false;
-        }
             
             
         //behaviour execution...

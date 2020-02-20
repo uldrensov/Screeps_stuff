@@ -1,12 +1,16 @@
-//NULL ADHERENT: reverse variant of ADHERENT
+//NULL ADHERENT: reverse variant of ADHERENT with TX capabilities
 //white trail ("carrier")
 
 module.exports = {
-    run: function(unit,nexus_id,tile_id,warpRX_id){
+    run: function(unit,nexus_id,tile_id,warpTX0_id,warpRX0_id){
         
         var nexus = Game.getObjectById(nexus_id);
         var tile = Game.getObjectById(tile_id);
-        var warpRX = Game.getObjectById(warpRX_id);
+        var warpRX0 = Game.getObjectById(warpRX0_id);
+        
+        
+        //outputs: link
+        var warpTX0 = Game.getObjectById(warpTX0_id);
         
         
         //ensure correct position
@@ -14,14 +18,17 @@ module.exports = {
             unit.moveTo(tile, {visualizePathStyle: {stroke: '#ffffff'}});
         //remain there and work
         else{
-            //fetch: link
-            if (warpRX.store[RESOURCE_ENERGY] != 0){
-                unit.withdraw(warpRX, RESOURCE_ENERGY);
+            //transmit when the link reaches max capacity
+            if (warpTX0.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
+                warpTX0.transferEnergy(warpRX0, warpTX0.store[RESOURCE_ENERGY]);
             }
-            //unload: vault
-            if (unit.store[RESOURCE_ENERGY] != 0){
-                unit.transfer(nexus.room.storage, RESOURCE_ENERGY)
-            }
+                
+            //fetch: vault
+            if (unit.store.getFreeCapacity(RESOURCE_ENERGY) != 0) //if unit is not fully loaded
+                unit.withdraw(nexus.room.storage, RESOURCE_ENERGY);
+            //unload: link
+            else if (unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0) //only when unit is fully loaded
+                unit.transfer(warpTX0, RESOURCE_ENERGY);
         }
     }
 };

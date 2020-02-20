@@ -27,13 +27,21 @@ module.exports = {
     remotecanister_id:      ['5e4c68eb12701789c879b329', '5e4b8e89d4e9fb1bea4e27a1', '5e490bf22a3d564b0565c52d'], //drop-mining containers (o.assimilator)
     remotedrop_id:          ['5e323d61aa9957193cc8ec6c', '5e3ff330d9c0d0411296ffb0', '5e48c7a10359276c64092767'], //destination receptacles (o.drone)
 
-    tower_id:               [['5e2f4a33e8af4a1c6459ccd8', '5e346820d632bc24398489ab'], ['5e3a68c9aa99575a56cba5da', '5e401cc59c6dc7073200b5b7'], ['5e473a110058163253b64554', '5e4a55092f9d26c57d90c465']],
+    tower_id:               [['5e2f4a33e8af4a1c6459ccd8', '5e346820d632bc24398489ab', '5e4ddde90359274b650b1df9'],
+                            ['5e3a68c9aa99575a56cba5da', '5e401cc59c6dc7073200b5b7'],
+                            ['5e473a110058163253b64554', '5e4a55092f9d26c57d90c465']],
                 
     warpRX_id:              ['5e34d2403561285c52aba5b2', '5e437aa1ac1ec4151e946cb9', '5e4a79f221466ebb4fcc858b'], //receiver link (adherent)
-    warpTX_id:              [['5e437e083561285674b0989c','5e34d803221670187690e4d7'], ['5e3ff330d9c0d0411296ffb0']], //transmitter link (acolyte)
-    acoly_tile_id:          [['5e30677977034e78c09bdc43','5e354b518c0dfc0f7b8dc1d0'], ['5e393db88c0dfcfcb18f05d2']],
+    warpTX_id:              [['5e437e083561285674b0989c','5e34d803221670187690e4d7'],
+                            ['5e3ff330d9c0d0411296ffb0'],
+                            ['5e4a844a035927629b09d4a3']],
+                            //transmitter link (acolyte)
+    acoly_tile_id:          [['5e30677977034e78c09bdc43','5e354b518c0dfc0f7b8dc1d0'],
+                            ['5e393db88c0dfcfcb18f05d2']],
     adher_tile_id:          ['5e2ec350d41b0bd406dfd71b', '5e437ad0aa9957378eced59c', '5e4a7ac80f2d8f5302547cc6'],
-    holy_source:            [['5bbcae989099fc012e639476','5bbcae989099fc012e639475'], ['5bbcae989099fc012e639479']], //acolyte's chosen source
+    holy_source:            [['5bbcae989099fc012e639476','5bbcae989099fc012e639475'],
+                            ['5bbcae989099fc012e639479']],
+                            //acolyte's chosen source
     
     
     //body parts by role
@@ -102,9 +110,9 @@ module.exports = {
     emiss_body:             [MOVE],
                             //cost: 50
     dt_body:                [[MOVE,ATTACK, MOVE,ATTACK, MOVE,ATTACK, MOVE,ATTACK, MOVE,ATTACK, MOVE,ATTACK, MOVE,ATTACK, MOVE,ATTACK, MOVE,ATTACK, MOVE,ATTACK, MOVE,ATTACK, MOVE,ATTACK, MOVE,ATTACK, MOVE,ATTACK, MOVE,ATTACK,
-                                MOVE,ATTACK, MOVE,ATTACK],
+                                MOVE,ATTACK, MOVE,ATTACK, MOVE,ATTACK, MOVE,ATTACK, MOVE,ATTACK, MOVE,ATTACK, MOVE,ATTACK, MOVE,ATTACK],
                             [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE, ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK]],
-                            //cost: 2210, 1690
+                            //cost: 2990, 1690
     dp_body:                [[TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,
                                 MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE, ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK],
                             [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE, ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK]],

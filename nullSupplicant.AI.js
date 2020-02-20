@@ -1,8 +1,12 @@
-//SUPPLICANT: semi-stationary controller attendant
+//NULL SUPPLICANT: SUPPLICANT variant designed to mesh with NULL ADHERENT
 //violet trail ("upgrader")
 
 module.exports = {
-    run: function(unit,nexus,reserve){
+    run: function(unit,nexus,warpRX0_id){
+        
+        //inputs: link
+        var warpRX0 = Game.getObjectById(warpRX0_id);
+        
         
         //two-states...
         //if full pockets while outbound, come back
@@ -19,11 +23,8 @@ module.exports = {
             if (unit.upgradeController(nexus.room.controller) == ERR_NOT_IN_RANGE)
                 unit.moveTo(nexus.room.controller, {visualizePathStyle: {stroke: '#ff00ff'}});
         }
-        //fetch: vault
-        else if (nexus.room.storage.store.energy > reserve){
-            if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ff00ff'}});
-        }
-        
+        //fetch: link
+        else if (unit.withdraw(warpRX0, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+            unit.moveTo(warpRX0, {visualizePathStyle: {stroke: '#ff00ff'}});
     }
 };

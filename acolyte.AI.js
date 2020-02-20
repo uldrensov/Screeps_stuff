@@ -7,6 +7,7 @@ module.exports = {
         var warpRX = Game.getObjectById(warpRX_id);
         var canister = Game.getObjectById(canister_id);
         
+        
         //inputs: energy source
         var src = Game.getObjectById(src_id);
         

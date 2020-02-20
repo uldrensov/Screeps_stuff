@@ -31,10 +31,17 @@ module.exports = {
             }
         });
         
-        //outputs: extensions (non-full)
+        //outputs: extensions (non-full), nexi (non-full)
+        //NOTE: local_nexi includes main nexus as well
         var pylons = nexus.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_EXTENSION &&
+                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+            }
+        });
+        var local_nexi = nexus.room.find(FIND_STRUCTURES, {
+            filter: structure => {
+                return structure.structureType == STRUCTURE_SPAWN &&
                 structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         });
@@ -42,18 +49,16 @@ module.exports = {
         
         //two-states...
         //if full pockets while outbound, come back
-        if (!unit.memory.homebound && unit.store.getFreeCapacity() == 0){
+        if (!unit.memory.homebound && unit.store.getFreeCapacity() == 0)
             unit.memory.homebound = true;
-        }
         //if empty energy while inbound, go withdraw
-        if (unit.memory.homebound && unit.store[RESOURCE_ENERGY] == 0){
+        if (unit.memory.homebound && unit.store[RESOURCE_ENERGY] == 0)
             unit.memory.homebound = false;
-        }
-        
+
         
         //behaviour execution...
         if (unit.memory.homebound){
-        //unload: vault<minerals>
+            //unload: vault<minerals>
             var treasure_held = false;
             var treasure_to_deposit;
             
@@ -76,10 +81,16 @@ module.exports = {
                     if (unit.transfer(nearest_pylon, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(nearest_pylon, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
-                //unload: nexus
+                //unload: main nexus
                 else if (nexus.store.getFreeCapacity(RESOURCE_ENERGY) != 0){
                     if (unit.transfer(nexus, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(nexus, {visualizePathStyle: {stroke: '#ffffff'}});
+                }
+                //unload: local nexi
+                //NOTE: if this branch is taken, main nexus is already omitted from local_nexi
+                else if (local_nexi.length){
+                    if (unit.transfer(local_nexi[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(local_nexi[0], {visualizePathStyle: {stroke: '#ffffff'}});
                 }
                 //unload: vault<energy>
                 else if (nexus.room.storage != undefined){
@@ -150,9 +161,8 @@ module.exports = {
                     }
                 }
                 
-                if (unit.pickup(chosen_scrap) == ERR_NOT_IN_RANGE){
+                if (unit.pickup(chosen_scrap) == ERR_NOT_IN_RANGE)
                     unit.moveTo(chosen_scrap, {visualizePathStyle: {stroke: '#ffffff'}});
-                }
             }
             //*/
             //fetch: terminal
@@ -169,10 +179,8 @@ module.exports = {
                 //determine the fullest container in play
                 var fullest_canister = canisters[0];
                 for (let i=0; i<canisters.length; i++){
-                    if (canisters[i].store.getUsedCapacity(RESOURCE_ENERGY) >
-                    fullest_canister.store.getUsedCapacity(RESOURCE_ENERGY)){
+                    if (canisters[i].store.getUsedCapacity(RESOURCE_ENERGY) > fullest_canister.store.getUsedCapacity(RESOURCE_ENERGY))
                         fullest_canister = canisters[i];
-                    }
                 }
                 
                 //if there is no current target container, "fixate" on the fullest one
@@ -190,7 +198,7 @@ module.exports = {
             //fetch: vault
             else if (nexus.room.storage != undefined){
                 //only fetch from the vault if the energy will actually be used
-                if (pylons.length || nexus.store.getFreeCapacity(RESOURCE_ENERGY) != 0){
+                if (pylons.length || local_nexi.length){
                     if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
