@@ -2,7 +2,7 @@
 //blue trail ("maintainer")
 
 module.exports = {
-    run: function(unit,nexus,override_threshold,ignore_lim,reserve){
+    run: function(unit, nexus, override_threshold, ignore_lim, reserve){
         
         //inputs: energy sources, containers (ample)
         var sources = nexus.room.find(FIND_SOURCES);
@@ -23,18 +23,18 @@ module.exports = {
         });
         
         
-        //two-states...
-        //if full energy while outbound, come back
-        if (!unit.memory.homebound && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
-            unit.memory.homebound = true;
-        //if empty energy while inbound, go withdraw
-        if (unit.memory.homebound && unit.store[RESOURCE_ENERGY] == 0)
-            unit.memory.homebound = false;
+        //2-state fetch/unload FSM...
+        //if carry amt reaches full while fetching, switch to unloading
+        if (unit.memory.fetching && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
+            unit.memory.fetching = false;
+        //if carry amt depletes while unloading, switch to fetching
+        if (!unit.memory.fetching && unit.store[RESOURCE_ENERGY] == 0)
+            unit.memory.fetching = true;
 
         
         //behaviour execution...
         //unload: structure (weakest %; fixation)
-        if (unit.memory.homebound && repairTargets.length){
+        if (!unit.memory.fetching && repairTargets.length){
             
             //find the weakest structure in terms of %
             var weakest = repairTargets[0];

@@ -2,7 +2,7 @@
 //red trail ("fighter")
 
 module.exports = {
-    run: function(unit,standby_flag,target_flag){
+    run: function(unit, standby_flag, target_flag){
         
         //trek to the standby point once
         if (!unit.memory.in_place)
@@ -21,7 +21,6 @@ module.exports = {
                         unit.memory.tank_id = tank[0].id;
                 }
             }
-            
             //if the tank is found, and leaves the standby room, follow it into the foreign room
             else if (Game.getObjectById(unit.memory.tank_id).room == target_flag.room){
                 //follow

@@ -2,7 +2,7 @@
 //red trail ("fighter")
 
 module.exports = {
-    run: function(unit,bloodscent,home_index){
+    run: function(unit, bloodscent, home_index){
         
         //one-way room pathing
         if (unit.memory.home == unit.room.name)

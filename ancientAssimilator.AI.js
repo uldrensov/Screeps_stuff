@@ -2,7 +2,7 @@
 //black trail ("collector")
 
 module.exports = {
-    run: function(unit,canister_id){
+    run: function(unit, canister_id){
         
         var canister = Game.getObjectById(canister_id);
         

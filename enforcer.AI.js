@@ -2,7 +2,7 @@
 //red trail ("fighter")
 
 module.exports = {
-    run: function(unit,incident,home_index){
+    run: function(unit, incident, home_index){
         
         //one-way room pathing
         if (unit.memory.home == unit.room.name)
@@ -20,10 +20,27 @@ module.exports = {
                 if (unit.attack(heretic[0]) == ERR_NOT_IN_RANGE)
                     unit.moveTo(heretic[0], {visualizePathStyle: {stroke: '#ff0000'}});
             }
-            //clear the lockdown and call in a purifier
+            //clear the lockdown
             else if (Memory.core_sighting[home_index] == true){
                 Memory.core_sighting[home_index] = false;
-                Memory.purifier_MAX[home_index] = 1;
+                
+                //call in a purifier (if necessary)
+                if (unit.room.controller.reservation != undefined){
+                    if (unit.room.controller.reservation.username == 'Invader')
+                        Memory.purifier_MAX[home_index] = 1;
+                    else{
+                        Game.notify('>>>SECTOR #' + home_index + ' CORE PURGED<<<',0);
+                        console.log('------------------------------');
+                        console.log('>>>SECTOR #' + home_index + ' CORE PURGED<<<');
+                        console.log('------------------------------');
+                    }
+                }
+                else{
+                    Game.notify('>>>SECTOR #' + home_index + ' CORE PURGED<<<',0);
+                    console.log('------------------------------');
+                    console.log('>>>SECTOR #' + home_index + ' CORE PURGED<<<');
+                    console.log('------------------------------');
+                }
             }
         }
     }

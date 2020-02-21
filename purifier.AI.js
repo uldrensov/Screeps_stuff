@@ -2,7 +2,7 @@
 //cyan trail ("support")
 
 module.exports = {
-    run: function(unit,pollution,home_index){
+    run: function(unit, pollution, home_index){
         
         //one-way room pathing
         if (unit.memory.home == unit.room.name)
@@ -22,7 +22,7 @@ module.exports = {
                 console.log('------------------------------');
                 console.log('>>>SECTOR #' + home_index + ' CORE PURGED<<<');
                 console.log('------------------------------');
-                unit.suicide(); //by this point, it doesn't have enough TTL to survive a potential encounter with a second core
+                unit.suicide(); //by this point, unit doesn't have enough TTL to begin working on a potential second encounter
             }
         }
     }

@@ -2,7 +2,7 @@
 //yellow trail ("traveller")
 
 module.exports = {
-    run: function(unit,canister_id,remote_flag,dropoff_id,ignore_lim,flee_point,home_index){
+    run: function(unit, canister_id, remote_flag, dropoff_id, ignore_lim, flee_point, home_index){
         
         //no enemies present
         if (Memory.evac_timer[home_index] == 0){
@@ -13,19 +13,19 @@ module.exports = {
             var dropoff = Game.getObjectById(dropoff_id);
             
             
-            //two-states...
-            //if full pockets while outbound, come back
-            if (!unit.memory.homebound && unit.store.getFreeCapacity() == 0){
-                unit.memory.homebound = true;
+            //2-state fetch/unload FSM...
+            //if carry amt reaches full while fetching, switch to unloading
+            if (unit.memory.fetching && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
+                unit.memory.fetching = false;
                 unit.memory.in_place = false;
             }
-            //if empty energy while inbound, go harvest
-            if (unit.memory.homebound && unit.store[RESOURCE_ENERGY] == 0)
-                unit.memory.homebound = false;
+            //if carry amt depletes while unloading, switch to fetching
+            if (!unit.memory.fetching && unit.store[RESOURCE_ENERGY] == 0)
+                unit.memory.fetching = true;
 
             
             //behaviour execution...
-            if (unit.memory.homebound){
+            if (!unit.memory.fetching){
                 //navigate to homeroom
                 if (unit.room.name != unit.memory.home){
                     unit.moveTo(dropoff, {visualizePathStyle: {stroke: '#ffff00'}});

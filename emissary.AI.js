@@ -3,7 +3,7 @@
 //TODO: this model is a prototype
 
 module.exports = {
-    run: function(unit,standby_1){
+    run: function(unit, standby_1){
         
         //trek to the standby point once
         if (!unit.memory.in_place)

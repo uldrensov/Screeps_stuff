@@ -2,23 +2,23 @@
 //violet trail ("upgrader")
 
 module.exports = {
-    run: function(unit,SRCnexus_id,DESTctrl_id,reserve){
+    run: function(unit, SRCnexus_id, DESTctrl_id, reserve){
         
         var home = Game.getObjectById(SRCnexus_id).room;
         var away = Game.getObjectById(DESTctrl_id).room;
         
         
-        //two-states...
-        //if full energy after withdrawing, go upgrade
-        if (!unit.memory.venturing && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
-            unit.memory.venturing = true;
-        //if empty energy after upgrading, come withdraw
-        if (unit.memory.venturing && unit.store[RESOURCE_ENERGY] == 0)
-            unit.memory.venturing = false;
+        //2-state fetch/unload FSM...
+        //if carry amt reaches full while fetching, switch to unloading
+        if (unit.memory.fetching && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
+            unit.memory.fetching = false;
+        //if carry amt depletes while unloading, switch to fetching
+        if (!unit.memory.fetching && unit.store[RESOURCE_ENERGY] == 0)
+            unit.memory.fetching = true;
 
         
         //behaviour execution...
-        if (unit.memory.venturing){
+        if (!unit.memory.fetching){
             //leave the home room
             if (unit.room != away)
                 unit.moveTo(away.controller, {visualizePathStyle: {stroke: '#ff00ff'}});

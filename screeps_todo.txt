@@ -1,11 +1,8 @@
 TODO urgent:
 	drones must ignore tombs and pickups from beyond walls (terminals?)
 
-	
 	record TTK cores?
 	limit purifier spawns to only if reserv timer is big?
-	1liner if elses, unnecessary newlines
-	2state comments
 	energy source vars could be merged
 	specialist has wonky code
 	[DEFENCE] think about how tower should behave in general

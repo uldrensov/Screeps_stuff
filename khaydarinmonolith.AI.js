@@ -1,7 +1,7 @@
 //KHAYDARIN MONOLITH: <tower> globally attacks foes, heals allies, and repairs endangered structures
 
 module.exports = {
-    run: function(tower_id,reserve_ratio,nexi_id){
+    run: function(tower_id, reserve_ratio, nexi_id){
         
         var tower = Game.getObjectById(tower_id);
         

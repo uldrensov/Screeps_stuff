@@ -2,7 +2,7 @@
 //violet trail ("upgrader")
 
 module.exports = {
-    run: function(unit,ctrl_id,ignore_lim){
+    run: function(unit, ctrl_id, ignore_lim){
         
         var obelisk = Game.getObjectById(ctrl_id);
         
@@ -17,17 +17,17 @@ module.exports = {
         });
         
         
-        //two-states...
-        //if full energy while outbound, come back
-        if (!unit.memory.homebound && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
-            unit.memory.homebound = true;
-        //if empty energy while inbound, go withdraw
-        if (unit.memory.homebound && unit.store[RESOURCE_ENERGY] == 0)
-            unit.memory.homebound = false;
+        //2-state fetch/unload FSM...
+        //if carry amt reaches full while fetching, switch to unloading
+        if (unit.memory.fetching && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
+            unit.memory.fetching = false;
+        //if carry amt depletes while unloading, switch to fetching
+        if (!unit.memory.fetching && unit.store[RESOURCE_ENERGY] == 0)
+            unit.memory.fetching = true;
 
         
         //behaviour execution...
-        if (unit.memory.homebound){
+        if (!unit.memory.fetching){
             //unload: controller
             if (unit.upgradeController(obelisk) == ERR_NOT_IN_RANGE)
                 unit.moveTo(obelisk, {visualizePathStyle: {stroke: '#ff00ff'}});

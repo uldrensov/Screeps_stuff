@@ -2,7 +2,7 @@
 //red trail ("fighter")
 
 module.exports = {
-    run: function(unit,standby_flag){
+    run: function(unit, standby_flag){
         
         //trek to the standby point once
         if (!unit.memory.in_place)

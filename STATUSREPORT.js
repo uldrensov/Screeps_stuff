@@ -16,8 +16,9 @@ module.exports = {
         Memory.probe_MAX[room_num] ==               undefined || Memory.assimilator_MAX[room_num] ==    undefined || Memory.assimilator2_MAX[room_num] ==       undefined || Memory.drone_MAX[room_num] ==          undefined ||
         Memory.energiser_MAX[room_num] ==           undefined || Memory.recalibrator_MAX[room_num] ==   undefined || Memory.orbitalAssimilator_MAX[room_num] == undefined || Memory.orbitalDrone_MAX[room_num] ==   undefined ||
         Memory.bloodhunter_MAX[room_num] ==         undefined || Memory.enforcer_MAX[room_num] ==       undefined || Memory.purifier_MAX[room_num] ==           undefined || Memory.acolyte_MAX[room_num] ==        undefined || 
-        Memory.acolyte2_MAX[room_num] ==            undefined || Memory.adherent_MAX[room_num] ==       undefined || Memory.supplicant_MAX[room_num] ==         undefined || Memory.ancientDrone_MAX[room_num] ==   undefined ||
-        Memory.ancientAssimilator_MAX[room_num] ==  undefined || Memory.specialist_MAX ==               undefined || Memory.saviour_MAX ==                      undefined)
+        Memory.acolyte2_MAX[room_num] ==            undefined || Memory.adherent_MAX[room_num] ==       undefined || Memory.nullAdherent_MAX[room_num] ==       undefined || Memory.supplicant_MAX[room_num] ==     undefined ||
+        Memory.nullSupplicant_MAX[room_num] ==      undefined || Memory.ancientDrone_MAX[room_num] ==   undefined || Memory.ancientAssimilator_MAX[room_num] == undefined || Memory.specialist_MAX ==               undefined ||
+        Memory.saviour_MAX ==                       undefined)
         {
             return 'ERROR: MEMORYINIT.js failed to initialise memory';
         }
@@ -34,7 +35,9 @@ module.exports = {
         var acolyte_gang =              _.filter(Game.creeps, creep => creep.memory.role == 'acolyte'               && creep.room == nexi[room_num].room);
         var acolyte2_gang =             _.filter(Game.creeps, creep => creep.memory.role == 'acolyte2'              && creep.room == nexi[room_num].room);
         var adherent_gang =             _.filter(Game.creeps, creep => creep.memory.role == 'adherent'              && creep.room == nexi[room_num].room);
+        var nullAdherent_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'nullAdherent'          && creep.room == nexi[room_num].room);
         var supplicant_gang =           _.filter(Game.creeps, creep => creep.memory.role == 'supplicant'            && creep.room == nexi[room_num].room);
+        var nullSupplicant_gang =       _.filter(Game.creeps, creep => creep.memory.role == 'nullSupplicant'        && creep.room == nexi[room_num].room);
         var probe_gang =                _.filter(Game.creeps, creep => creep.memory.role == 'probe'                 && creep.room == nexi[room_num].room);
         var recalibrator_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'recalibrator'          && creep.memory.home == nexi[room_num].room.name);
         var orbitalAssimilator_gang =   _.filter(Game.creeps, creep => creep.memory.role == 'orbitalAssimilator'    && creep.memory.home == nexi[room_num].room.name);
@@ -151,7 +154,9 @@ module.exports = {
         if (Memory.acolyte_MAX[room_num] > 0) console.log('Acolyte[I]: ' + acolyte_gang.length + '/' + Memory.acolyte_MAX[room_num]);
         if (Memory.acolyte2_MAX[room_num] > 0) console.log('Acolyte[II]: ' + acolyte2_gang.length + '/' + Memory.acolyte2_MAX[room_num]);
         if (Memory.adherent_MAX[room_num] > 0) console.log('Adherent: ' + adherent_gang.length + '/' + Memory.adherent_MAX[room_num]);
+        if (Memory.nullAdherent_MAX[room_num] > 0) console.log('Null adherent: ' + nullAdherent_gang.length + '/' + Memory.nullAdherent_MAX[room_num]);
         if (Memory.supplicant_MAX[room_num] > 0) console.log('Supplicants: ' + supplicant_gang.length + '/' + Memory.supplicant_MAX[room_num]);
+        if (Memory.nullSupplicant_MAX[room_num] > 0) console.log('Null supplicants: ' + nullSupplicant_gang.length + '/' + Memory.nullSupplicant_MAX[room_num]);
         console.log('Probes: ' + probe_gang.length + '/' + Memory.probe_MAX[room_num]);
         console.log('Recalibrators : ' + recalibrator_gang.length + '/' + Memory.recalibrator_MAX[room_num]);
         console.log('Orbital assimilators : ' + orbitalAssimilator_gang.length + '/' + Memory.orbitalAssimilator_MAX[room_num]);

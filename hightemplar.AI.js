@@ -3,7 +3,7 @@
 //TODO: this model is a prototype
 
 module.exports = {
-    run: function(unit,waypoint){
+    run: function(unit, waypoint){
         
         var patients = _.filter(Game.creeps, creep => creep.memory.role == 'hallucination');
         

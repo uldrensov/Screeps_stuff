@@ -2,16 +2,16 @@
 //yellow trail ("traveller")
 
 module.exports = {
-    run: function(unit,standby_flag,flee_point,home_index){
+    run: function(unit, standby_flag, flee_point, home_index){
         
         if (unit.memory.annex == undefined)
             unit.memory.annex = false;
 
         
         //no enemies present
-        if (Memory.evac_timer[home_index] == 0)
+        if (Memory.evac_timer[home_index] == 0){
             //trek to the standby point once
-            if (!unit.memory.in_place){
+            if (!unit.memory.in_place)
                 unit.moveTo(standby_flag, {visualizePathStyle: {stroke: '#ffff00'}});
             if (unit.pos.isEqualTo(standby_flag.pos))
                 unit.memory.in_place = true;

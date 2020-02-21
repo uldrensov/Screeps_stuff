@@ -3,7 +3,7 @@
 //TODO: this model is a prototype
 
 module.exports = {
-    run: function(unit,waypoint,healpoint){
+    run: function(unit, waypoint, healpoint){
         
         //two-states...
         //if heavily damaged, come back

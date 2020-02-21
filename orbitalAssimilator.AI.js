@@ -2,7 +2,7 @@
 //yellow trail ("traveller")
 
 module.exports = {
-    run: function(unit,src_id,remote_flag,canister_id,flee_point,home_index){
+    run: function(unit, src_id, remote_flag, canister_id, flee_point, home_index){
         
         //no enemies present
         if (Memory.evac_timer[home_index] == 0){

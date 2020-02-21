@@ -138,89 +138,103 @@ module.exports = {
             }
         
         //spawning situational units...
-            //recalibrators: if remote mining is viable
-            else if (recalibrator_gang[k].length < Memory.recalibrator_MAX[k]){
-                if (nexi[k].spawnCreep(SD.recal_body, 'Recalibrator-' + Game.time % SD.time_offset, {memory: {role: 'recalibrator', home: nexi[k].room.name, in_place: false}}) == 0)
-                    console.log('Room #' + k + ': Recalibrator-' + Game.time % SD.time_offset + ' spawning.');
-            }
             //orbital assimilators: if remote mining is viable
             else if (orbitalAssimilator_gang[k].length < Memory.orbitalAssimilator_MAX[k]){
                 if (nexi[k].spawnCreep(SD.oassim_body[k], 'OrbitalAssimilator-' + Game.time % SD.time_offset, {memory: {role: 'orbitalAssimilator', home: nexi[k].room.name, in_place: false}}) == 0)
                     console.log('Room #' + k + ': OrbitalAssimilator-' + Game.time % SD.time_offset + ' spawning.');
             }
-            //orbital drones: if remote mining is viable
-            else if (orbitalDrone_gang[k].length < Memory.orbitalDrone_MAX[k]){
-                if (nexi[k].spawnCreep(SD.odrone_body[k], 'OrbitalDrone-' + Game.time % SD.time_offset, {memory: {role: 'orbitalDrone', home: nexi[k].room.name, in_place: false}}) == 0)
-                    console.log('Room #' + k + ': OrbitalDrone-' + Game.time % SD.time_offset + ' spawning.');
-            }
-            //blood hunters: if remote mining is being disrupted by invaders
-            else if (bloodhunter_gang[k].length < Memory.bloodhunter_MAX[k]){
-                if (nexi[k].spawnCreep(SD.bloodh_body[k], 'Bloodhunter-' + Game.time % SD.time_offset, {memory: {role: 'bloodhunter', home: nexi[k].room.name}}) == 0)
-                    console.log('Room #' + k + ': Bloodhunter-' + Game.time % SD.time_offset + ' spawning.');
-            }
-            //enforcers: if remote mining is being disrupted by invader cores
-            else if (enforcer_gang[k].length < Memory.enforcer_MAX[k]){
-                if (nexi[k].spawnCreep(SD.dt_body[k], 'Enforcer-' + Game.time % SD.time_offset, {memory: {role: 'enforcer', home: nexi[k].room.name}}) == 0)
-                    console.log('Room #' + k + ': Enforcer-' + Game.time % SD.time_offset + ' spawning.');
-            }
-            //purifiers: if an invader core's efforts must be undone
-            else if (purifier_gang[k].length < Memory.purifier_MAX[k]){
-                if (nexi[k].spawnCreep(SD.purif_body[k], 'Purifier-' + Game.time % SD.time_offset, {memory: {role: 'purifier', home: nexi[k].room.name}}) == 0)
-                    console.log('Room #' + k + ': Purifier-' + Game.time % SD.time_offset + ' spawning.');
-            }
-            //ancient drones: if minerals are available to mine
-            else if (ancientDrone_gang[k].length < Memory.ancientDrone_MAX[k]){
-                if (nexi[k].spawnCreep(SD.androne_body, 'AncientDrone-' + Game.time % SD.time_offset, {memory: {role: 'ancientDrone'}}) == 0)
-                    console.log('Room #' + k + ': AncientDrone-' + Game.time % SD.time_offset + ' spawning.');
-            }
-            //ancient assimilators: if minerals are available to mine
-            else if (ancientAssimilator_gang[k].length < Memory.ancientAssimilator_MAX[k]){
-                if (nexi[k].spawnCreep(SD.anassim_body, 'AncientAssimilator-' + Game.time % SD.time_offset, {memory: {role: 'ancientAssimilator'}}) == 0)
-                    console.log('Room #' + k + ': AncientAssimilator-' + Game.time % SD.time_offset + ' spawning.');
-            }
-            //architects: if there are construction projects to finish
-            else if (architect_gang[k].length < Memory.architect_MAX[k]){
-                if (nexi[k].spawnCreep(SD.archit_body[k], 'Architect-' + Game.time % SD.time_offset, {memory: {role: 'architect'}}) == 0)
-                    console.log('Room #' + k + ': Architect-' + Game.time % SD.time_offset + ' spawning.');
-            }
-        
+            
+            //NOTE: beyond this point, recalibrators are first in line and must initially validate the existence of their remote controllers
+            //this may happen immediately if there are units in the remote room already, but at worst, the check must wait for a unit to enter the empty room (spawning an oassim beforehand ensures this)
+            //alternatively, the wait can be bypassed (succeeding the check) if no recalibrators are needed in the first place
+            else if (Game.getObjectById(SD.remotectrl_id[k]) != undefined || recalibrator_gang[k].length >= Memory.recalibrator_MAX[k]){
+                
+                //recalibrators: if remote mining is viable
+                //NOTE: 2 separate cases are checked; both cannot be checked together (cannot get .ticksToEnd if .reservation is undefined), but only one will succeed regardless
+                if (recalibrator_gang[k].length < Memory.recalibrator_MAX[k] && (Game.getObjectById(SD.remotectrl_id[k]).reservation == undefined)){
+                    //only attempt to spawn when the recalibrator's lifetime contribution to timer surplus will not overflow past the 5000 cap
+                    if (nexi[k].spawnCreep(SD.recal_body[k], 'Recalibrator-' + Game.time % SD.time_offset, {memory: {role: 'recalibrator', home: nexi[k].room.name, in_place: false}}) == 0)
+                        console.log('Room #' + k + ': Recalibrator-' + Game.time % SD.time_offset + ' spawning.');
+                }
+                else if (recalibrator_gang[k].length < Memory.recalibrator_MAX[k] && (Game.getObjectById(SD.remotectrl_id[k]).reservation.ticksToEnd < 5000 - (SD.claim_strength[k]-1)*600)){
+                    //only attempt to spawn when the recalibrator's lifetime contribution to timer surplus will not overflow past the 5000 cap
+                    if (nexi[k].spawnCreep(SD.recal_body[k], 'Recalibrator-' + Game.time % SD.time_offset, {memory: {role: 'recalibrator', home: nexi[k].room.name, in_place: false}}) == 0)
+                        console.log('Room #' + k + ': Recalibrator-' + Game.time % SD.time_offset + ' spawning.');
+                }
+                //orbital drones: if remote mining is viable
+                else if (orbitalDrone_gang[k].length < Memory.orbitalDrone_MAX[k]){
+                    if (nexi[k].spawnCreep(SD.odrone_body[k], 'OrbitalDrone-' + Game.time % SD.time_offset, {memory: {role: 'orbitalDrone', home: nexi[k].room.name, in_place: false}}) == 0)
+                        console.log('Room #' + k + ': OrbitalDrone-' + Game.time % SD.time_offset + ' spawning.');
+                }
+                //blood hunters: if remote mining is being disrupted by invaders
+                else if (bloodhunter_gang[k].length < Memory.bloodhunter_MAX[k]){
+                    if (nexi[k].spawnCreep(SD.bloodh_body[k], 'Bloodhunter-' + Game.time % SD.time_offset, {memory: {role: 'bloodhunter', home: nexi[k].room.name}}) == 0)
+                        console.log('Room #' + k + ': Bloodhunter-' + Game.time % SD.time_offset + ' spawning.');
+                }
+                //enforcers: if remote mining is being disrupted by invader cores
+                else if (enforcer_gang[k].length < Memory.enforcer_MAX[k]){
+                    if (nexi[k].spawnCreep(SD.dt_body[k], 'Enforcer-' + Game.time % SD.time_offset, {memory: {role: 'enforcer', home: nexi[k].room.name}}) == 0)
+                        console.log('Room #' + k + ': Enforcer-' + Game.time % SD.time_offset + ' spawning.');
+                }
+                //purifiers: if an invader core's efforts must be undone
+                else if (purifier_gang[k].length < Memory.purifier_MAX[k]){
+                    if (nexi[k].spawnCreep(SD.purif_body[k], 'Purifier-' + Game.time % SD.time_offset, {memory: {role: 'purifier', home: nexi[k].room.name}}) == 0)
+                        console.log('Room #' + k + ': Purifier-' + Game.time % SD.time_offset + ' spawning.');
+                }
+                //ancient drones: if minerals are available to mine
+                else if (ancientDrone_gang[k].length < Memory.ancientDrone_MAX[k]){
+                    if (nexi[k].spawnCreep(SD.androne_body, 'AncientDrone-' + Game.time % SD.time_offset, {memory: {role: 'ancientDrone'}}) == 0)
+                        console.log('Room #' + k + ': AncientDrone-' + Game.time % SD.time_offset + ' spawning.');
+                }
+                //ancient assimilators: if minerals are available to mine
+                else if (ancientAssimilator_gang[k].length < Memory.ancientAssimilator_MAX[k]){
+                    if (nexi[k].spawnCreep(SD.anassim_body, 'AncientAssimilator-' + Game.time % SD.time_offset, {memory: {role: 'ancientAssimilator'}}) == 0)
+                        console.log('Room #' + k + ': AncientAssimilator-' + Game.time % SD.time_offset + ' spawning.');
+                }
+                //architects: if there are construction projects to finish
+                else if (architect_gang[k].length < Memory.architect_MAX[k]){
+                    if (nexi[k].spawnCreep(SD.archit_body[k], 'Architect-' + Game.time % SD.time_offset, {memory: {role: 'architect'}}) == 0)
+                        console.log('Room #' + k + ': Architect-' + Game.time % SD.time_offset + ' spawning.');
+                }
+            
         //spawning fast-track units...
-            //specialist: used in setting up new rooms (assists architects)
-            else if (specialist_gang.length < Memory.specialist_MAX){
-                if (nexi[0].spawnCreep(SD.speci_body, 'Specialist-' + Game.time % SD.time_offset, {memory: {role: 'specialist'}}) == 0)
-                    console.log('Specialist-' + Game.time % SD.time_offset + ' spawning.');
-            }
-            //saviour: used in setting up new rooms (assists sacrificers)
-            else if (saviour_gang.length < Memory.saviour_MAX){
-                if (nexi[0].spawnCreep(SD.speci_body, 'Saviour-' + Game.time % SD.time_offset, {memory: {role: 'saviour'}}) == 0)
-                    console.log('Saviour-' + Game.time % SD.time_offset + ' spawning.');
-            }
-        
+                //specialist: used in setting up new rooms (assists architects)
+                else if (specialist_gang.length < Memory.specialist_MAX){
+                    if (nexi[0].spawnCreep(SD.speci_body, 'Specialist-' + Game.time % SD.time_offset, {memory: {role: 'specialist'}}) == 0)
+                        console.log('Specialist-' + Game.time % SD.time_offset + ' spawning.');
+                }
+                //saviour: used in setting up new rooms (assists sacrificers)
+                else if (saviour_gang.length < Memory.saviour_MAX){
+                    if (nexi[0].spawnCreep(SD.speci_body, 'Saviour-' + Game.time % SD.time_offset, {memory: {role: 'saviour'}}) == 0)
+                        console.log('Saviour-' + Game.time % SD.time_offset + ' spawning.');
+                }
+            
         //spawning military units...
-            //emissary: used situationally for scouting
-            else if (emissary_gang[k].length < Memory.emissary_MAX[k]){
-                if (nexi[k].spawnCreep(SD.emiss_body, 'Emissary-' + Game.time % SD.time_offset, {memory: {role: 'emissary', in_place: false}}) == 0)
-                    console.log('Room #' + k + ': Emissary-' + Game.time % SD.time_offset + ' spawning.');
-            }
-            //dark templar: used during battle
-            else if (darktemplar_gang[k].length < Memory.darktemplar_MAX[k]){
-                if (nexi[k].spawnCreep(SD.dt_body[k], 'Darktemplar-' + Game.time % SD.time_offset, {memory: {role: 'darktemplar', in_place: false}}) == 0)
-                    console.log('Room #' + k + ': Darktemplar-' + Game.time % SD.time_offset + ' spawning.');
-            }
-            //hallucination: used during battle
-            else if (hallucination_gang.length < Memory.hallucination_MAX){
-                if (nexi[0].spawnCreep(SD.halluc_body, 'Hallucination-' + Game.time % SD.time_offset, {memory: {role: 'hallucination'}}) == 0)
-                    console.log('Hallucination-' + Game.time % SD.time_offset + ' spawning.');
-            }
-            //high templar: used during battle
-            else if (hightemplar_gang.length < Memory.hightemplar_MAX){
-                if (nexi[0].spawnCreep(SD.ht_body, 'Hightemplar-' + Game.time % SD.time_offset, {memory: {role: 'hightemplar'}}) == 0)
-                    console.log('Hightemplar-' + Game.time % SD.time_offset + ' spawning.');
-            }
-            //zealot: used during battle
-            else if (zealot_gang.length < Memory.zealot_MAX){
-                if (nexi[0].spawnCreep(SD.zealot_body, 'Zealot-' + Game.time % SD.time_offset, {memory: {role: 'zealot', in_place: false}}) == 0)
-                    console.log('Zealot-' + Game.time % SD.time_offset + ' spawning.');
+                //emissary: used situationally for scouting
+                else if (emissary_gang[k].length < Memory.emissary_MAX[k]){
+                    if (nexi[k].spawnCreep(SD.emiss_body, 'Emissary-' + Game.time % SD.time_offset, {memory: {role: 'emissary', in_place: false}}) == 0)
+                        console.log('Room #' + k + ': Emissary-' + Game.time % SD.time_offset + ' spawning.');
+                }
+                //dark templar: used during battle
+                else if (darktemplar_gang[k].length < Memory.darktemplar_MAX[k]){
+                    if (nexi[k].spawnCreep(SD.dt_body[k], 'Darktemplar-' + Game.time % SD.time_offset, {memory: {role: 'darktemplar', in_place: false}}) == 0)
+                        console.log('Room #' + k + ': Darktemplar-' + Game.time % SD.time_offset + ' spawning.');
+                }
+                //hallucination: used during battle
+                else if (hallucination_gang.length < Memory.hallucination_MAX){
+                    if (nexi[0].spawnCreep(SD.halluc_body, 'Hallucination-' + Game.time % SD.time_offset, {memory: {role: 'hallucination'}}) == 0)
+                        console.log('Hallucination-' + Game.time % SD.time_offset + ' spawning.');
+                }
+                //high templar: used during battle
+                else if (hightemplar_gang.length < Memory.hightemplar_MAX){
+                    if (nexi[0].spawnCreep(SD.ht_body, 'Hightemplar-' + Game.time % SD.time_offset, {memory: {role: 'hightemplar'}}) == 0)
+                        console.log('Hightemplar-' + Game.time % SD.time_offset + ' spawning.');
+                }
+                //zealot: used during battle
+                else if (zealot_gang.length < Memory.zealot_MAX){
+                    if (nexi[0].spawnCreep(SD.zealot_body, 'Zealot-' + Game.time % SD.time_offset, {memory: {role: 'zealot', in_place: false}}) == 0)
+                        console.log('Zealot-' + Game.time % SD.time_offset + ' spawning.');
+                }
             }
         }
     }
