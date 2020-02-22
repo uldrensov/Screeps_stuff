@@ -77,8 +77,8 @@ module.exports = {
                             //cost: 1650, 950, 1700
     probe_body:             [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]],
-                            //cost: 2050, 1600, 1300
+                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]],
+                            //cost: 2050, 1600, 1600
     recal_body:             [[CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE],
                             [CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE],
                             [CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE]],
@@ -98,8 +98,8 @@ module.exports = {
                             //cost: 950, 950, 950
     purif_body:             [[CLAIM,CLAIM,CLAIM, MOVE,MOVE],
                             [CLAIM,CLAIM,CLAIM, MOVE,MOVE],
-                            [CLAIM,CLAIM, MOVE]],
-                            //cost: 2050, 2050, 1350
+                            [CLAIM,CLAIM,CLAIM, MOVE,MOVE]],
+                            //cost: 2050, 2050, 2050
     androne_body:           [CARRY,CARRY,CARRY,CARRY, MOVE, MOVE],
                             //cost: 300
     anassim_body:           [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
@@ -110,6 +110,10 @@ module.exports = {
                             //cost: 2300, 2050, 1800
     speci_body:             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             //cost: 2300
+    treas_body:             [[CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE],
+                            [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE],
+                            [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE]],
+                            //cost: 550, 550, 550
                 
     emiss_body:             [MOVE],
                             //cost: 50

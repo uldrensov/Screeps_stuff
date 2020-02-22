@@ -17,10 +17,10 @@ module.exports = {
             }
             //disable further purifier spawns when the room is truly clear
             else if (Memory.core_sighting[home_index] == false){
-                Memory.purifier_MAX[home_index] = 0;
-                Game.notify('>>>SECTOR #' + home_index + ' CORE PURGED<<<',0);
+                Memory.purifier_MAX[home_index] = -1;
+                Game.notify('>>>SECTOR #' + home_index + ' RESTORED: CORE TRACES PURIFIED<<<',0);
                 console.log('------------------------------');
-                console.log('>>>SECTOR #' + home_index + ' CORE PURGED<<<');
+                console.log('>>>SECTOR #' + home_index + ' RESTORED: CORE TRACES PURIFIED<<<');
                 console.log('------------------------------');
                 unit.suicide(); //by this point, unit doesn't have enough TTL to begin working on a potential second encounter
             }

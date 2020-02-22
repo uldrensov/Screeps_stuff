@@ -19,9 +19,8 @@ module.exports = {
         //remain there and work
         else{
             //transmit when the link reaches max capacity
-            if (warpTX0.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
+            if (warpTX0.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
                 warpTX0.transferEnergy(warpRX0, warpTX0.store[RESOURCE_ENERGY]);
-            }
                 
             //fetch: vault
             if (unit.store.getFreeCapacity(RESOURCE_ENERGY) != 0) //if unit is not fully loaded

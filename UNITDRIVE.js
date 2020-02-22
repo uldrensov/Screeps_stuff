@@ -24,6 +24,7 @@ var ancientDrone =          require('ancientDrone.AI');
 var ancientAssimilator =    require('ancientAssimilator.AI');
 var specialist =            require('specialist.AI');
 var saviour =               require('saviour.AI');
+var treasurer =             require('treasurer.AI');
 var emissary =              require('emissary.AI');
 var darktemplar =           require('darktemplar.AI');
 var hallucination =         require('hallucination.AI');
@@ -92,6 +93,9 @@ module.exports = {
                             break;
                         case 'architect':
                             architect.run(unit, nexi[k], SD.vault_reserve_min);
+                            break;
+                        case 'treasurer':
+                            treasurer.run(unit, SD.nexus_id[k], k);
                             break;
                     }
                 }

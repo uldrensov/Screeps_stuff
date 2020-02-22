@@ -29,16 +29,16 @@ module.exports = {
                     if (unit.room.controller.reservation.username == 'Invader')
                         Memory.purifier_MAX[home_index] = 1;
                     else{
-                        Game.notify('>>>SECTOR #' + home_index + ' CORE PURGED<<<',0);
+                        Game.notify('>>>SECTOR #' + home_index + ' RESTORED: CORE DESTROYED<<<',0);
                         console.log('------------------------------');
-                        console.log('>>>SECTOR #' + home_index + ' CORE PURGED<<<');
+                        console.log('>>>SECTOR #' + home_index + ' RESTORED: CORE DESTROYED<<<');
                         console.log('------------------------------');
                     }
                 }
                 else{
-                    Game.notify('>>>SECTOR #' + home_index + ' CORE PURGED<<<',0);
+                    Game.notify('>>>SECTOR #' + home_index + ' RESTORED: CORE DESTROYED<<<',0);
                     console.log('------------------------------');
-                    console.log('>>>SECTOR #' + home_index + ' CORE PURGED<<<');
+                    console.log('>>>SECTOR #' + home_index + ' RESTORED: CORE DESTROYED<<<');
                     console.log('------------------------------');
                 }
             }

@@ -22,7 +22,7 @@ module.exports = {
             else if (Memory.evac_timer[home_index] > 0){
                 Memory.evac_timer[home_index] = 0;
                 console.log('------------------------------');
-                console.log('SECTOR #' + home_index + ' HOSTILES ELIMINATED');
+                console.log('SECTOR #' + home_index + ': HOSTILES ELIMINATED');
                 console.log('------------------------------');
             }
         }

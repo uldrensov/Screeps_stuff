@@ -40,12 +40,12 @@ module.exports.loop = function(){
             Memory.evac_timer[i]--;
             Memory.bloodhunter_MAX[i] = 1;
         }
-        else Memory.bloodhunter_MAX[i] = 0;
+        else Memory.bloodhunter_MAX[i] = -1;
             
         //if it's a core, enable enforcers
         if (Memory.core_sighting[i] == true)
             Memory.enforcer_MAX[i] = 1;
-        else Memory.enforcer_MAX[i] = 0;
+        else Memory.enforcer_MAX[i] = -1;
     }
     
     //email alerts for vault energy conservation

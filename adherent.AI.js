@@ -18,10 +18,10 @@ module.exports = {
         //remain there and work
         else{
             //fetch: link
-            if (unit.store.getFreeCapacity(RESOURCE_ENERGY) != 0)
+            if (unit.store.getFreeCapacity(RESOURCE_ENERGY) != 0) //if unit is not fully loaded
                 unit.withdraw(warpRX, RESOURCE_ENERGY);
             //unload: vault
-            else if (unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
+            else if (unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0) //only when unit is fully loaded
                 unit.transfer(nexus.room.storage, RESOURCE_ENERGY)
         }
     }
