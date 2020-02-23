@@ -92,10 +92,14 @@ module.exports = {
                             [CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE],
                             [CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE]],
                             //cost: 2100, 900, 1800
-    bloodh_body:            [[ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, HEAL,MOVE],
-                            [ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, HEAL,MOVE],
-                            [ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, HEAL,MOVE]],
-                            //cost: 950, 950, 950
+    bloodh_body:            [[ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE],
+                            [ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE],
+                            [ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE]],
+                            //cost: 650, 650, 650
+    enforc_body:             [[ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE],
+                            [ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE],
+                            [ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE]],
+                            //cost: 390, 390, 390
     purif_body:             [[CLAIM,CLAIM,CLAIM, MOVE,MOVE],
                             [CLAIM,CLAIM,CLAIM, MOVE,MOVE],
                             [CLAIM,CLAIM,CLAIM, MOVE,MOVE]],

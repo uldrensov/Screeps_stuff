@@ -140,7 +140,7 @@ module.exports = {
                 case 'bloodhunter':
                     for (let i=0; i<nexi.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
-                            bloodhunter.run(unit, SD.remoteflag[i], i);
+                            bloodhunter.run(unit, SD.nexus_id[i], SD.remoteflag[i], i);
                             break;
                         }
                     }

@@ -35,12 +35,16 @@ module.exports.loop = function(){
         }
         
         //additional case-specific handling...
-        //if it's an invader, count down the timer and enable blood hunters
+        //if it's an invader, count down the timer and possibly enable blood hunters
         if (Memory.evac_timer[i] > 0){
             Memory.evac_timer[i]--;
-            Memory.bloodhunter_MAX[i] = 1;
+            if (Memory.viable_prey[i] == true)
+                Memory.bloodhunter_MAX[i] = 1;
         }
-        else Memory.bloodhunter_MAX[i] = -1;
+        else{
+            Memory.bloodhunter_MAX[i] = -1;
+            Memory.viable_prey[i] = false;
+        }
             
         //if it's a core, enable enforcers
         if (Memory.core_sighting[i] == true)

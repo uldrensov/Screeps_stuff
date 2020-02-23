@@ -1,36 +1,32 @@
 TODO urgent:
-
-	currently, remote spawns stop on core spawn => only stop if core is winning
-		//worst case scen can be ~700 ticks or even more to kill/purify,
-
-	treasurer:
-		-withdraw all types
-		-working w unclean numbers of resources
-		-walk during unload
-		
-	killswitch blood hunters?
-	drones must ignore tombs and pickups from beyond walls (terminals?)
-	inner walls
-	limit purifier spawns to only if reserv timer is big?
+	remove terminal case from drones
+	recalibs should contest invaders
+	currently, remote spawns stop on invadercore => only stop if core is winning
+		//worst case scen can be ~1000 ticks or even more to kill/ possibly purify
+	limit purifier spawns to only if enemy reserve timer is big?
+	rework: inner walls
+	drones must ignore tombs and pickups from beyond walls
 	energy source vars could be merged
 	specialist has wonky code
 	[DEFENCE] think about how tower should behave in general
-	[ECON] summon bloodhunter only if 1 enemy?
 	[BUG] dont let new things spawn when one briefly leaves room
 	[SOFTLOCK] fix (e)drone pickup
 	
 TODO backlog:
 	[QOL] more status report info (pickups, wall/rampart distinction, invader/core alert)
+	modify treasurer to work w labs too
+	treasurer withdraw/deposit RESOURCES_ALL
 	[MAINTENANCE] git init (put this file inside), readme
+	work part / thief detection in remotes?
 	[SOFTLOCK] before calling a softlock, drones should deposit pocket energy if there are no more assims/energy on the map
 	[SOFTLOCK] 'lack of assimilator' softlock? (if no assim & no money, emergency convert)
+	localnexi energy count distinction in statusreport
 	
 Look up:
-	terminal marketplace
+	-
 
 JS help:
 	lodash
 	filter method (lambda notation)
-	run: function()
 	prototypes
 	utils

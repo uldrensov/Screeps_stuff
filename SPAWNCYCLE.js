@@ -63,9 +63,9 @@ module.exports = {
                 Memory.ancientDrone_MAX[k] = 1;
                 Memory.ancientAssimilator_MAX[k] = 1;
             }
-            else{
-                Memory.ancientDrone_MAX[k] = 0;
-                Memory.ancientAssimilator_MAX[k] = 0;
+            else if (extractor.length){
+                Memory.ancientDrone_MAX[k] = -1;
+                Memory.ancientAssimilator_MAX[k] = -1;
             }
             
             
@@ -186,7 +186,7 @@ module.exports = {
                     }
                     //enforcers: if remote mining is being disrupted by invader cores
                     else if (enforcer_gang[k].length < Memory.enforcer_MAX[k]){
-                        if (nexi[k].spawnCreep(SD.bloodh_body[k], 'Enforcer-' + Game.time % SD.time_offset, {memory: {role: 'enforcer', home: nexi[k].room.name}}) == 0)
+                        if (nexi[k].spawnCreep(SD.enforc_body[k], 'Enforcer-' + Game.time % SD.time_offset, {memory: {role: 'enforcer', home: nexi[k].room.name}}) == 0)
                             console.log('Room #' + k + ': Enforcer-' + Game.time % SD.time_offset + ' spawning.');
                     }
                     //purifiers: if an invader core's efforts must be undone

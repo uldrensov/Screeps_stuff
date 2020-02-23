@@ -29,14 +29,21 @@ module.exports = {
                 }
                 
                 //fetch
+                var input_remainder = false;
                 if (unit.store.getFreeCapacity(unit.memory.order_type) != 0){ //if unit is not fully loaded
-                    if (unit.withdraw(input, unit.memory.order_type) == ERR_NOT_IN_RANGE)
+                    if (input.store.getUsedCapacity(unit.memory.order_type) == 0) //but there is no more to load
+                        input_remainder = true;
+                    else if (unit.withdraw(input, unit.memory.order_type) == ERR_NOT_IN_RANGE)
                         unit.moveTo(input, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
                 //unload
-                else if (unit.store.getFreeCapacity(unit.memory.order_type) == 0){ //only when unit is fully loaded
-                    unit.memory.task_progress = unit.memory.task_progress + unit.store.getUsedCapacity(unit.memory.order_type);
-                    unit.transfer(output, unit.memory.order_type);
+                if (unit.store.getFreeCapacity(unit.memory.order_type) == 0 || input_remainder){ //only when unit is fully loaded
+                    var unload_result = unit.transfer(output, unit.memory.order_type);
+                    if (unload_result == ERR_NOT_IN_RANGE)
+                        unit.moveTo(output, {visualizePathStyle: {stroke: '#ffffff'}});
+                    //record work done to memery
+                    else if (unload_result == OK)
+                        unit.memory.task_progress += unit.store.getUsedCapacity(unit.memory.order_type);
                 }
             }
             //task complete notification

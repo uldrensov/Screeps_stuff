@@ -1,4 +1,4 @@
-//PURIFIER: cleanses enemy controller reservation
+//PURIFIER: cleanses enemy controller reservation in remote mining rooms
 //cyan trail ("support")
 
 module.exports = {
@@ -22,7 +22,7 @@ module.exports = {
                 console.log('------------------------------');
                 console.log('>>>SECTOR #' + home_index + ' RESTORED: CORE TRACES PURIFIED<<<');
                 console.log('------------------------------');
-                unit.suicide(); //by this point, unit doesn't have enough TTL to begin working on a potential second encounter
+                unit.suicide(); //by this point, unit doesn't have enough TTL to survive until the end of a potential second encounter
             }
         }
     }
