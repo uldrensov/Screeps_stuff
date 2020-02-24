@@ -11,7 +11,6 @@ module.exports = {
             unit.memory.in_place = true;
 
         
-        //locate a tank within the standby room, and follow it closely within the room
         if (unit.memory.in_place){
             //commit the tank unit's ID to memory (once) when both units are in the same room
             if (unit.memory.tank_id == undefined){
@@ -21,9 +20,9 @@ module.exports = {
                         unit.memory.tank_id = tank[0].id;
                 }
             }
-            //if the tank is found, and leaves the standby room, follow it into the foreign room
+            //when the tank is found, and leaves the standby room, follow it into the foreign room
             else if (Game.getObjectById(unit.memory.tank_id).room == target_flag.room){
-                //follow
+                //follow into room
                 if (unit.room != target_flag.room)
                     unit.moveTo(target_flag, {visualizePathStyle: {stroke: '#ff0000'}});
                 //once followed, attack a target

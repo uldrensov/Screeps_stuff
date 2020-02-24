@@ -51,10 +51,6 @@ module.exports = {
         var specialist_gang =           _.filter(Game.creeps, creep => creep.memory.role == 'specialist');
         var saviour_gang =              _.filter(Game.creeps, creep => creep.memory.role == 'saviour');
         
-        //special console output for emergency drones
-        var emergencyDrone_status = 'Emergency drones: ' + emergencyDrone_gang.length;
-        if (emergencyDrone_gang.length > 0) emergencyDrone_status = emergencyDrone_status + ' >>>ATTENTION<<<';
-        
         //determine time until next unit death
         var mortis = CREEP_LIFE_TIME; //init at max life value
         var shindeiru = 'NULL';
@@ -145,7 +141,7 @@ module.exports = {
         
         //unit census
         console.log('<<<--Census-->>>');
-        console.log(emergencyDrone_status);
+        if (emergencyDrone_gang.length) console.log('Emergency drone: ACTIVE');
         if (Memory.assimilator_MAX[room_num] > 0) console.log('Assimilator[I]: ' + assimilator_gang.length + '/' + Memory.assimilator_MAX[room_num]);
         if (Memory.assimilator2_MAX[room_num] > 0) console.log('Assimilator[II]: ' + assimilator2_gang.length + '/' + Memory.assimilator2_MAX[room_num]);
         console.log('Drones: ' + drone_gang.length + '/' + Memory.drone_MAX[room_num]);

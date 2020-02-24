@@ -165,15 +165,6 @@ module.exports = {
                     unit.moveTo(chosen_scrap, {visualizePathStyle: {stroke: '#ffffff'}});
             }
             //*/
-            //fetch: terminal
-            /*
-            else if (nexus.room.terminal != undefined){
-                if (nexus.room.terminal.store.energy != 0){
-                    if (unit.withdraw(nexus.room.terminal, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(nexus.room.terminal, {visualizePathStyle: {stroke: '#ffffff'}});
-                }
-            }
-            */
             //fetch: containers (fullest; fixation)
             else if (canisters.length){
                 //determine the fullest container in play

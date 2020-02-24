@@ -46,6 +46,13 @@ module.exports = {
                         unit.moveTo(remote_flag, {visualizePathStyle: {stroke: '#ffff00'}});
                     else unit.memory.in_place = true;
                 }
+                //if the reservation is lost, cut off remote worker spawns and self-killswitch
+                else if (unit.room.controller.reservation.username == 'Invader'){
+                    Memory.recalibrator_MAX[home_index] = -1;
+                    Memory.orbitalAssimilator_MAX[home_index] = -1;
+                    Memory.orbitalDrone_MAX[home_index] = -1;
+                    unit.memory.killswitch = true;
+                }
                 else{
                     //watch for invaders/intruders
                     var i_threats = 0;
@@ -83,13 +90,13 @@ module.exports = {
                             //case: 1 invader
                             else if (i_threats == 1){
                                 console.log('>>>EVACUATING SECTOR #' + home_index + '...INVADER INBOUND<<<');
-                                Memory.evac_timer[home_index] = 1500;
+                                Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
                                 Memory.viable_prey[home_index] = true;
                             }
                             //case: multiple invaders
                             else if (i_threats > 1){
                                 console.log('>>>EVACUATING SECTOR #' + home_index + '...INVADER HORDE INBOUND<<<');
-                                Memory.evac_timer[home_index] = 1500;
+                                Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
                             }
                             
                             console.log('------------------------------');
@@ -103,12 +110,12 @@ module.exports = {
                     });
                     if (invadercores.length && Memory.core_sighting[home_index] == false){
                         Memory.core_sighting[home_index] = true;
-                        threat = true;
                         //Game.notify('>>>LOCKING SECTOR #' + home_index + '...CORE SIGHTED<<<',0);
                         console.log('------------------------------');
                         console.log('>>>LOCKING SECTOR #' + home_index + '...CORE SIGHTED<<<');
                         console.log('------------------------------');
                     }
+                    
                     //fetch from inputs
                     if (i_threats == 0 && p_threats == 0){
                         //inputs: pickups, tombstones (non-empty)

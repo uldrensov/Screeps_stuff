@@ -20,35 +20,24 @@ module.exports.loop = function(){
     
     //remote mining security system
     for (let i=0; i<Memory.evac_timer.length; i++){
-        //generic handling...
-        //if anything is disturbing remote mining, disable remote worker spawns
-        if (Memory.evac_timer[i] > 0 || Memory.core_sighting[i] == true){
+        //invader handling: count down the timer, disable remote worker spawns, and possibly enable blood hunters
+        if (Memory.evac_timer[i] > 0){
+            Memory.evac_timer[i]--;
             if (Memory.recalibrator_MAX[i] > 0) Memory.recalibrator_MAX[i] = -1;
             if (Memory.orbitalAssimilator_MAX[i] > 0) Memory.orbitalAssimilator_MAX[i] = -1;
             if (Memory.orbitalDrone_MAX[i] > 0) Memory.orbitalDrone_MAX[i] = -1;
+            if (Memory.viable_prey[i] == true) Memory.bloodhunter_MAX[i] = 1;
         }
-        //if neither of the 2 cases are occurring, restore worker spawns
         else{
             if (Memory.recalibrator_MAX[i] < 0) Memory.recalibrator_MAX[i] = 1;
             if (Memory.orbitalAssimilator_MAX[i] < 0) Memory.orbitalAssimilator_MAX[i] = 1;
             if (Memory.orbitalDrone_MAX[i] < 0) Memory.orbitalDrone_MAX[i] = 1;
-        }
-        
-        //additional case-specific handling...
-        //if it's an invader, count down the timer and possibly enable blood hunters
-        if (Memory.evac_timer[i] > 0){
-            Memory.evac_timer[i]--;
-            if (Memory.viable_prey[i] == true)
-                Memory.bloodhunter_MAX[i] = 1;
-        }
-        else{
             Memory.bloodhunter_MAX[i] = -1;
             Memory.viable_prey[i] = false;
         }
             
-        //if it's a core, enable enforcers
-        if (Memory.core_sighting[i] == true)
-            Memory.enforcer_MAX[i] = 1;
+        //core handling: enable enforcers
+        if (Memory.core_sighting[i] == true) Memory.enforcer_MAX[i] = 1;
         else Memory.enforcer_MAX[i] = -1;
     }
     

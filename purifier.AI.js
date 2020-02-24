@@ -2,28 +2,44 @@
 //cyan trail ("support")
 
 module.exports = {
-    run: function(unit, pollution, home_index){
+    run: function(unit, nexus_id, pollution, home_index){
         
-        //one-way room pathing
-        if (unit.memory.home == unit.room.name)
-            unit.moveTo(pollution, {visualizePathStyle: {stroke: '#00ffff'}});
-        //reclaim the room
-        else{
-            if (unit.room.controller.reservation != undefined){
-                if (unit.room.controller.reservation.username == 'Invader'){
-                    if (unit.attackController(unit.room.controller) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(unit.room.controller, {visualizePathStyle: {stroke: '#00ffff'}});
+        var nexus = Game.getObjectById(nexus_id);
+        
+        
+        if (!unit.memory.killswitch){
+            //one-way room pathing
+            if (unit.memory.home == unit.room.name)
+                unit.moveTo(pollution, {visualizePathStyle: {stroke: '#00ffff'}});
+            //reclaim the room
+            else{
+                if (unit.room.controller.reservation != undefined){
+                    if (unit.room.controller.reservation.username == 'Invader'){
+                        if (unit.attackController(unit.room.controller) == ERR_NOT_IN_RANGE)
+                            unit.moveTo(unit.room.controller, {visualizePathStyle: {stroke: '#00ffff'}});
+                    }
+                    //edge case: false alarm
+                    else if (unit.room.controller.reservation.username == unit.owner.username){
+                        Memory.purifier_MAX[home_index] = -1;
+                        unit.memory.killswitch = true;
+                    }
+                }
+                //disable further purifiers when the room is truly clear, re-enable remote workers, then self-killswitch
+                else if (Memory.core_sighting[home_index] == false){
+                    Memory.purifier_MAX[home_index] = -1;
+                    Game.notify('>>>SECTOR #' + home_index + ' RESTORED: CORE TRACES PURIFIED<<<',0);
+                    console.log('------------------------------');
+                    console.log('>>>SECTOR #' + home_index + ' RESTORED: CORE TRACES PURIFIED<<<');
+                    console.log('------------------------------');
+                    if (Memory.recalibrator_MAX[home_index] < 0) Memory.recalibrator_MAX[home_index] = 1;
+                    if (Memory.orbitalAssimilator_MAX[home_index] < 0) Memory.orbitalAssimilator_MAX[home_index] = 1;
+                    if (Memory.orbitalDrone_MAX[home_index] < 0) Memory.orbitalDrone_MAX[home_index] = 1;
+                    unit.memory.killswitch = true;
                 }
             }
-            //disable further purifier spawns when the room is truly clear
-            else if (Memory.core_sighting[home_index] == false){
-                Memory.purifier_MAX[home_index] = -1;
-                Game.notify('>>>SECTOR #' + home_index + ' RESTORED: CORE TRACES PURIFIED<<<',0);
-                console.log('------------------------------');
-                console.log('>>>SECTOR #' + home_index + ' RESTORED: CORE TRACES PURIFIED<<<');
-                console.log('------------------------------');
-                unit.suicide(); //by this point, unit doesn't have enough TTL to survive until the end of a potential second encounter
-            }
         }
+        //built-in economic killswitch
+        else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
+            unit.moveTo(nexus, {visualizePathStyle: {stroke: '#00ffff'}});
     }
 };

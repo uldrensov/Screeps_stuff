@@ -84,8 +84,7 @@ module.exports = {
                 unit.memory.fixation_max = HPmax_base;
             }
             //otherwise, determine if the previous fixation is worth overriding for the new weakest structure
-            else if ((Game.getObjectById(unit.memory.fixation).hits / unit.memory.fixation_max)
-            - base_perc > override_threshold){
+            else if ((Game.getObjectById(unit.memory.fixation).hits / unit.memory.fixation_max) - base_perc > override_threshold){
                 unit.memory.fixation = weakest.id;
                 unit.memory.fixation_max = HPmax_base;
             }
@@ -102,17 +101,14 @@ module.exports = {
         else{
             //fetch: vault (respect limit)
             if (nexus.room.storage != undefined && nexus.room.storage.store.energy > reserve){
-                if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#0000ff'}});
-                }
             }
             //fetch: containers (fullest)
             else if (canisters.length){
                 var fullest_canister = canisters[0];
-                if (canisters.length == 2 &&
-                canisters[1].store.getUsedCapacity(RESOURCE_ENERGY) > canisters[0].store.getUsedCapacity(RESOURCE_ENERGY)){
+                if (canisters.length == 2 && canisters[1].store.getUsedCapacity(RESOURCE_ENERGY) > canisters[0].store.getUsedCapacity(RESOURCE_ENERGY))
                     fullest_canister = canisters[1];
-                }
                 
                 if (unit.withdraw(fullest_canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(fullest_canister, {visualizePathStyle: {stroke: '#0000ff'}});

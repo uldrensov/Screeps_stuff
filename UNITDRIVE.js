@@ -148,7 +148,7 @@ module.exports = {
                 case 'enforcer':
                     for (let i=0; i<nexi.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
-                            enforcer.run(unit, SD.remoteflag[i], i);
+                            enforcer.run(unit, SD.nexus_id[i], SD.remoteflag[i], i);
                             break;
                         }
                     }
@@ -156,19 +156,19 @@ module.exports = {
                 case 'purifier':
                     for (let i=0; i<nexi.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
-                            purifier.run(unit, SD.remoteflag[i], i);
+                            purifier.run(unit, SD.nexus_id[i], SD.remoteflag[i], i);
                             break;
                         }
                     }
                     break;
                 case 'specialist':
-                    specialist.run(unit, '5bbcae809099fc012e6392ef');
+                    specialist.run(unit, Game.flags['DARKPYLON']);
                     break;
                 case 'saviour':
                     saviour.run(unit, SD.nexus_id[0], SD.controller_id[2], SD.vault_reserve_min);
                     break;
                 case 'emissary':
-                    emissary.run(unit, Game.flags['Flag1']);
+                    //emissary.run(unit, Game.flags['']);
                     break;
                 case 'darktemplar':
                     darktemplar.run(unit, Game.flags['allahu']);
