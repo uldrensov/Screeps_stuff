@@ -22,6 +22,7 @@ var supplicant =            require('supplicant.AI');
 var nullSupplicant =        require('nullSupplicant.AI');
 var ancientDrone =          require('ancientDrone.AI');
 var ancientAssimilator =    require('ancientAssimilator.AI');
+var visionary =             require('visionary.AI');
 var specialist =            require('specialist.AI');
 var saviour =               require('saviour.AI');
 var treasurer =             require('treasurer.AI');
@@ -59,7 +60,7 @@ module.exports = {
                             drone.run(unit, SD.nexus_id[k], SD.en_ignore_lim);
                             break;
                         case 'energiser':
-                            energiser.run(unit, nexi[k]);
+                            energiser.run(unit);
                             break;
                         case 'sacrificer':
                             sacrificer.run(unit, SD.controller_id[k], SD.en_ignore_lim);
@@ -71,22 +72,22 @@ module.exports = {
                             acolyte.run(unit, SD.holy_source[k][1], SD.warpRX_id[k], SD.warpTX_id[k][1], SD.acoly_tile_id[k][1]);
                             break;
                         case 'adherent':
-                            adherent.run(unit, SD.nexus_id[k], SD.adher_tile_id[k], SD.warpRX_id[k]);
+                            adherent.run(unit, SD.adher_tile_id[k], SD.warpRX_id[k]);
                             break;
                         case 'nullAdherent':
-                            nullAdherent.run(unit, SD.nexus_id[k], SD.adher_tile_id[k], SD.warpRX_id[k], SD.warpTX_id[k]);
+                            nullAdherent.run(unit, SD.adher_tile_id[k], SD.warpRX_id[k], SD.warpTX_id[k]);
                             break;
                         case 'supplicant':
-                            supplicant.run(unit, nexi[k], SD.vault_reserve_min);
+                            supplicant.run(unit, SD.vault_reserve_min);
                             break;
                         case 'nullSupplicant':
-                            nullSupplicant.run(unit, nexi[k], SD.warpTX_id[k]);
+                            nullSupplicant.run(unit, SD.warpTX_id[k]);
                             break;
                         case 'probe':
                             probe.run(unit, nexi[k], SD.fixation_override, SD.en_ignore_lim, SD.vault_reserve_min);
                             break;
                         case 'ancientDrone':
-                            ancientDrone.run(unit, SD.nexus_id[k], SD.mineralcanister_id[k]);
+                            ancientDrone.run(unit, SD.mineralcanister_id[k]);
                             break;
                         case 'ancientAssimilator':
                             ancientAssimilator.run(unit, SD.mineralcanister_id[k]);
@@ -100,10 +101,15 @@ module.exports = {
                     }
                 }
             }
-        
+            
             //towers
-            for (let i=0; i<SD.tower_id[k].length; i++){
-                khaydarinmonolith.run(SD.tower_id[k][i], SD.tower_reserve_ratio, SD.nexus_id);
+            var local_towers = nexi[k].room.find(FIND_STRUCTURES, {
+                filter: structure => {
+                    return structure.structureType == STRUCTURE_TOWER;
+                }
+            });
+            for (let i=0; i<local_towers.length; i++){
+                khaydarinmonolith.run(local_towers[i].id, SD.tower_reserve_ratio, k);
             }
         }
     
@@ -116,7 +122,7 @@ module.exports = {
                     //determine homeroom to call AI script using appropriate args
                     for (let i=0; i<nexi.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
-                            recalibrator.run(unit, SD.reserveflag[i], SD.tower_id[i][0], i);
+                            recalibrator.run(unit, SD.nexus_id[i], SD.reserveflag[i], SD.tower_id[i][0], i);
                             break;
                         }
                     }
@@ -124,7 +130,7 @@ module.exports = {
                 case 'orbitalAssimilator':
                     for (let i=0; i<nexi.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
-                            orbitalAssimilator.run(unit, SD.remotesource_id[i], SD.remoteflag[i], SD.remotecanister_id[i], SD.tower_id[i][0], i);
+                            orbitalAssimilator.run(unit, SD.nexus_id[i], SD.remotesource_id[i], SD.remoteflag[i], SD.remotecanister_id[i], SD.tower_id[i][0], i);
                             break;
                         }
                     }
@@ -132,7 +138,7 @@ module.exports = {
                 case 'orbitalDrone':
                     for (let i=0; i<nexi.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
-                            orbitalDrone.run(unit, SD.remotecanister_id[i], SD.remoteflag[i], SD.remotedrop_id[i], SD.en_ignore_lim, SD.tower_id[i][0], i);
+                            orbitalDrone.run(unit, SD.nexus_id[i], SD.remotecanister_id[i], SD.remoteflag[i], SD.remotedrop_id[i], SD.en_ignore_lim, SD.tower_id[i][0], i);
                             break;
                         }
                     }
@@ -161,8 +167,11 @@ module.exports = {
                         }
                     }
                     break;
+                case 'visionary':
+                    visionary.run(unit, Game.flags['Terrans']);
+                    break;
                 case 'specialist':
-                    specialist.run(unit, Game.flags['DARKPYLON']);
+                    specialist.run(unit, Game.flags['Terrans']);
                     break;
                 case 'saviour':
                     saviour.run(unit, SD.nexus_id[0], SD.controller_id[2], SD.vault_reserve_min);
@@ -171,7 +180,12 @@ module.exports = {
                     //emissary.run(unit, Game.flags['']);
                     break;
                 case 'darktemplar':
-                    darktemplar.run(unit, Game.flags['allahu']);
+                    for (let i=0; i<nexi.length; i++){
+                        if (unit.memory.home == nexi[i].room.name){
+                            darktemplar.run(unit, SD.nexus_id[i], Game.flags['Terrans']);
+                            break;
+                        }
+                    }
                     break;
                 case 'hallucination':
                     //hallucination.run(unit, Game.flags[''], Game.flags['']);

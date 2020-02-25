@@ -2,7 +2,7 @@
 //violet trail ("upgrader")
 
 module.exports = {
-    run: function(unit, nexus, reserve){
+    run: function(unit, reserve){
         
         //2-state fetch/unload FSM...
         //if carry amt reaches full while fetching, switch to unloading
@@ -16,13 +16,13 @@ module.exports = {
         //state behaviour...
         //unload: controller
         if (!unit.memory.fetching){
-            if (unit.upgradeController(nexus.room.controller) == ERR_NOT_IN_RANGE)
-                unit.moveTo(nexus.room.controller, {visualizePathStyle: {stroke: '#ff00ff'}});
+            if (unit.upgradeController(unit.room.controller) == ERR_NOT_IN_RANGE)
+                unit.moveTo(unit.room.controller, {visualizePathStyle: {stroke: '#ff00ff'}});
         }
         //fetch: vault
-        else if (nexus.room.storage.store.energy > reserve){
-            if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ff00ff'}});
+        else if (unit.room.storage.store.energy > reserve){
+            if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#ff00ff'}});
         }
         
     }

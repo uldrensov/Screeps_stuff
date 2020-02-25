@@ -7,14 +7,15 @@ module.exports = {
     run: function(){
         
         var nexi = [Game.getObjectById(SD.nexus_id[0]), Game.getObjectById(SD.nexus_id[1]), Game.getObjectById(SD.nexus_id[2])];
+        var gateways = [Game.getObjectById(SD.gateway_id[0])];
     
     
         //for storing population count in each room
         var emergencyDrone_gang = [];   var sacrificer_gang = [];       var architect_gang = [];        var probe_gang = [];                var assimilator_gang = [];  var assimilator2_gang = [];
         var drone_gang = [];            var energiser_gang = [];        var recalibrator_gang = [];     var orbitalAssimilator_gang = [];   var orbitalDrone_gang = []; var bloodhunter_gang = [];
         var enforcer_gang = [];         var purifier_gang = [];         var acolyte_gang = [];          var acolyte2_gang = [];             var adherent_gang = [];     var nullAdherent_gang = [];
-        var supplicant_gang = [];       var nullSupplicant_gang = [];   var ancientDrone_gang = [];     var ancientAssimilator_gang = [];   var specialist_gang;        var saviour_gang;
-        var emissary_gang = [];         var darktemplar_gang = [];      var hallucination_gang;         var hightemplar_gang;               var zealot_gang;
+        var supplicant_gang = [];       var nullSupplicant_gang = [];   var ancientDrone_gang = [];     var ancientAssimilator_gang = [];   var visionary_gang = [];    var specialist_gang;
+        var saviour_gang;               var emissary_gang = [];         var darktemplar_gang = [];      var hallucination_gang;             var hightemplar_gang;       var zealot_gang;
     
     
         //execute the auto-spawn and unit AI assignment routines for each room
@@ -43,6 +44,7 @@ module.exports = {
             nullSupplicant_gang[k] =        _.filter(Game.creeps, creep => creep.memory.role == 'nullSupplicant'        && creep.room == nexi[k].room);
             ancientDrone_gang[k] =          _.filter(Game.creeps, creep => creep.memory.role == 'ancientDrone'          && creep.room == nexi[k].room);
             ancientAssimilator_gang[k] =    _.filter(Game.creeps, creep => creep.memory.role == 'ancientAssimilator'    && creep.room == nexi[k].room);
+            visionary_gang[k] =             _.filter(Game.creeps, creep => creep.memory.role == 'visionary');
             specialist_gang =               _.filter(Game.creeps, creep => creep.memory.role == 'specialist');
             saviour_gang =                  _.filter(Game.creeps, creep => creep.memory.role == 'saviour');
             emissary_gang[k] =              _.filter(Game.creeps, creep => creep.memory.role == 'emissary');
@@ -97,6 +99,8 @@ module.exports = {
             //without energisers, the room is defenceless
             else if (energiser_gang[k].length < Memory.energiser_MAX[k]){
                 if (nexi[k].spawnCreep(SD.energ_body[k], 'Energiser-' + Game.time % SD.time_offset, {memory: {role: 'energiser'}}) == OK)
+                    console.log('Room #' + k + ': Energiser-' + Game.time % SD.time_offset + ' spawning.');
+                else if (gateways[k].spawnCreep(SD.energ_body[k], 'Energiser-' + Game.time % SD.time_offset, {memory: {role: 'energiser'}}) == OK)
                     console.log('Room #' + k + ': Energiser-' + Game.time % SD.time_offset + ' spawning.');
             }
             //without sacrificers, the room will level down
@@ -211,6 +215,11 @@ module.exports = {
                     }
             
             //spawning fast-track units...
+                    //visionary: used in claiming up new rooms
+                    else if (visionary_gang[k].length < Memory.visionary_MAX[k]){
+                        if (nexi[k].spawnCreep(SD.visio_body[k], 'Visionary-' + Game.time % SD.time_offset, {memory: {role: 'visionary', in_place: false}}) == OK)
+                            console.log('Visionary-' + Game.time % SD.time_offset + ' spawning.');
+                    }
                     //specialist: used in setting up new rooms (assists architects)
                     else if (specialist_gang.length < Memory.specialist_MAX){
                         if (nexi[0].spawnCreep(SD.speci_body, 'Specialist-' + Game.time % SD.time_offset, {memory: {role: 'specialist', in_place: false}}) == OK)
@@ -230,7 +239,7 @@ module.exports = {
                     }
                     //dark templar: used during battle
                     else if (darktemplar_gang[k].length < Memory.darktemplar_MAX[k]){
-                        if (nexi[k].spawnCreep(SD.dt_body[k], 'Darktemplar-' + Game.time % SD.time_offset, {memory: {role: 'darktemplar', in_place: false}}) == OK)
+                        if (nexi[k].spawnCreep(SD.dt_body[k], 'Darktemplar-' + Game.time % SD.time_offset, {memory: {role: 'darktemplar', home: nexi[k].room.name, in_place: false}}) == OK)
                             console.log('Room #' + k + ': Darktemplar-' + Game.time % SD.time_offset + ' spawning.');
                     }
                     //hallucination: used during battle

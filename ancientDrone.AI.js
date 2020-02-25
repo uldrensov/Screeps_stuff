@@ -2,9 +2,8 @@
 //white trail ("carrier")
 
 module.exports = {
-    run: function(unit, nexus_id, canister_id){
+    run: function(unit, canister_id){
         
-        var nexus = Game.getObjectById(nexus_id);
         var mineral_type = unit.room.find(FIND_MINERALS)[0].mineralType;
         
         
@@ -24,8 +23,8 @@ module.exports = {
         //behaviour execution...
         //unload: vault
         if (!unit.memory.fetching){
-            if (unit.transfer(nexus.room.storage, mineral_type) == ERR_NOT_IN_RANGE)
-                unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
+            if (unit.transfer(unit.room.storage, mineral_type) == ERR_NOT_IN_RANGE)
+                unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
         }
         //fetch: container
         else if (unit.withdraw(canister, mineral_type) == ERR_NOT_IN_RANGE)

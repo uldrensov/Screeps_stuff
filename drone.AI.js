@@ -8,24 +8,24 @@ module.exports = {
         
         
         //inputs: containers (ample), pickups<energy> (ample), pickups<mineral>, tombstones (non-empty), ruins (non-empty)
-        var canisters = nexus.room.find(FIND_STRUCTURES, {
+        var canisters = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER &&
                 structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
             }
         });
-        var scraps = nexus.room.find(FIND_DROPPED_RESOURCES, {
+        var scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
             filter: resource => {
                 return (resource.resourceType == RESOURCE_ENERGY && resource.amount > ignore_lim) ||
                 resource.resourceType != RESOURCE_ENERGY;
             }
         });
-        var tombs = nexus.room.find(FIND_TOMBSTONES, {
+        var tombs = unit.room.find(FIND_TOMBSTONES, {
             filter: RoomObject => {
                 return RoomObject.store.getUsedCapacity() > 0;
             }
         });
-        var remains = nexus.room.find(FIND_RUINS, {
+        var remains = unit.room.find(FIND_RUINS, {
             filter: RoomObject => {
                 return RoomObject.store.getUsedCapacity() > 0;
             }
@@ -33,13 +33,13 @@ module.exports = {
         
         //outputs: extensions (non-full), nexi (non-full)
         //NOTE: local_nexi includes main nexus as well
-        var pylons = nexus.room.find(FIND_STRUCTURES, {
+        var pylons = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_EXTENSION &&
                 structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         });
-        var local_nexi = nexus.room.find(FIND_STRUCTURES, {
+        var local_nexi = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_SPAWN &&
                 structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
@@ -71,8 +71,8 @@ module.exports = {
                 }
             }
             if (treasure_held){
-                if (unit.transfer(nexus.room.storage, treasure_to_deposit) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
+                if (unit.transfer(unit.room.storage, treasure_to_deposit) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
             }
             else{
                 //unload: extensions
@@ -190,8 +190,8 @@ module.exports = {
             else if (nexus.room.storage != undefined){
                 //only fetch from the vault if the energy will actually be used
                 if (pylons.length || local_nexi.length){
-                    if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
+                    if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
         }

@@ -2,9 +2,8 @@
 //white trail ("carrier")
 
 module.exports = {
-    run: function(unit, nexus_id, tile_id, warpRX_id){
+    run: function(unit, tile_id, warpRX_id){
         
-        var nexus = Game.getObjectById(nexus_id);
         var tile = Game.getObjectById(tile_id);
         
         
@@ -22,7 +21,7 @@ module.exports = {
                 unit.withdraw(warpRX, RESOURCE_ENERGY);
             //unload: vault
             else if (unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0) //only when unit is fully loaded
-                unit.transfer(nexus.room.storage, RESOURCE_ENERGY)
+                unit.transfer(unit.room.storage, RESOURCE_ENERGY)
         }
     }
 };

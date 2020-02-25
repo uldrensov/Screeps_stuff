@@ -11,19 +11,19 @@ module.exports = {
         
         
         //inputs: energy sources, containers (ample), pickups (ample), tombstones (non-empty)
-        var sources = nexus.room.find(FIND_SOURCES);
-        var canisters = nexus.room.find(FIND_STRUCTURES, {
+        var sources = unit.room.find(FIND_SOURCES);
+        var canisters = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER &&
                 structure.store.getUsedCapacity(RESOURCE_ENERGY) > lowbound;
             }
         });
-        var scraps = nexus.room.find(FIND_DROPPED_RESOURCES, {
+        var scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
             filter: resource => {
                 return resource.amount > lowbound && resource.resourceType == RESOURCE_ENERGY;
             }
         });
-        var tombs = nexus.room.find(FIND_TOMBSTONES, {
+        var tombs = unit.room.find(FIND_TOMBSTONES, {
             filter: RoomObject => {
                 return RoomObject.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
             }
@@ -64,8 +64,8 @@ module.exports = {
         else{
             //fetch: vault
             if (nexus.room.storage != undefined && nexus.room.storage.store.energy > 0){
-                if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
+                if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
             }
             //fetch: containers (fullest; fixation)
             else if (canisters.length){

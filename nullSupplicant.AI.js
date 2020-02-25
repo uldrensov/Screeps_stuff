@@ -2,7 +2,7 @@
 //violet trail ("upgrader")
 
 module.exports = {
-    run: function(unit, nexus, warpRX0_id){
+    run: function(unit, warpRX0_id){
         
         //inputs: link
         var warpRX0 = Game.getObjectById(warpRX0_id);
@@ -20,8 +20,8 @@ module.exports = {
         //behaviour execution...
         //unload: controller
         if (!unit.memory.fetching){
-            if (unit.upgradeController(nexus.room.controller) == ERR_NOT_IN_RANGE)
-                unit.moveTo(nexus.room.controller, {visualizePathStyle: {stroke: '#ff00ff'}});
+            if (unit.upgradeController(unit.room.controller) == ERR_NOT_IN_RANGE)
+                unit.moveTo(unit.room.controller, {visualizePathStyle: {stroke: '#ff00ff'}});
         }
         //fetch: link
         else if (unit.withdraw(warpRX0, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)

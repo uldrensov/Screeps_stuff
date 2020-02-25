@@ -2,10 +2,10 @@
 //blue trail ("maintainer")
 
 module.exports = {
-    run: function(unit, nexus){
+    run: function(unit){
         
         //inputs: containers (non-empty)
-        var canisters = nexus.room.find(FIND_STRUCTURES, {
+        var canisters = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER &&
                 structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
@@ -13,7 +13,7 @@ module.exports = {
         });
         
         //outputs: towers (non-full)
-        var towers = nexus.room.find(FIND_STRUCTURES, {
+        var towers = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return (structure.structureType == STRUCTURE_TOWER) &&
                 structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
@@ -45,9 +45,9 @@ module.exports = {
         }
         else{
             //fetch: vault
-            if (nexus.room.storage != undefined && nexus.room.storage.store.energy > 0){
-                if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#0000ff'}});
+            if (unit.room.storage != undefined && unit.room.storage.store.energy > 0){
+                if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#0000ff'}});
             }
             //fetch: containers (fullest)
             else if (canisters.length){

@@ -6,8 +6,8 @@ module.exports = {
         
         if (!unit.memory.killswitch){
             //inputs: energy sources, containers (non-empty)
-            var sources = nexus.room.find(FIND_SOURCES);
-            var canisters = nexus.room.find(FIND_STRUCTURES, {
+            var sources = unit.room.find(FIND_SOURCES);
+            var canisters = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_CONTAINER &&
                     structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
@@ -15,7 +15,7 @@ module.exports = {
             });
             
             //outputs: construction hotspots
-            var hotspots = nexus.room.find(FIND_CONSTRUCTION_SITES);
+            var hotspots = unit.room.find(FIND_CONSTRUCTION_SITES);
             
             
             //2-state fetch/unload FSM...
@@ -38,9 +38,9 @@ module.exports = {
             }
             else{
                 //fetch: vault (respect limit)
-                if (nexus.room.storage != undefined && nexus.room.storage.store.energy > reserve){
-                    if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#00ff00'}});
+                if (unit.room.storage != undefined && unit.room.storage.store.energy > reserve){
+                    if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#00ff00'}});
                 }
                 //fetch: containers (fullest)
                 else if (canisters.length){
