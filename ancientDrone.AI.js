@@ -24,10 +24,10 @@ module.exports = {
         //unload: vault
         if (!unit.memory.fetching){
             if (unit.transfer(unit.room.storage, mineral_type) == ERR_NOT_IN_RANGE)
-                unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
+                unit.moveTo(unit.room.storage);
         }
         //fetch: container
         else if (unit.withdraw(canister, mineral_type) == ERR_NOT_IN_RANGE)
-            unit.moveTo(canister, {visualizePathStyle: {stroke: '#ffffff'}});
+            unit.moveTo(canister);
     }
 };

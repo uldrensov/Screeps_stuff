@@ -39,7 +39,7 @@ module.exports = {
         else{
             //stand on the overflow container
             if (!unit.pos.isEqualTo(canister.pos))
-                unit.moveTo(canister, {visualizePathStyle: {stroke: '#000000'}});
+                unit.moveTo(canister);
             else unit.harvest(src);
         }
     }

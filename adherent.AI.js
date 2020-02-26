@@ -13,7 +13,7 @@ module.exports = {
         
         //ensure correct position
         if (!unit.pos.isEqualTo(tile.pos))
-            unit.moveTo(tile, {visualizePathStyle: {stroke: '#ffffff'}});
+            unit.moveTo(tile);
         //remain there and work
         else{
             //fetch: link

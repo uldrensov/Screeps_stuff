@@ -16,8 +16,8 @@ module.exports = {
             //input: sources
             var sources = unit.room.find(FIND_SOURCES);
         
-            //output: construction hotspots
-            var hotspots = unit.room.find(FIND_CONSTRUCTION_SITES);
+            //output: construction hotspot
+            var hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
         
         
             //2-state fetch/unload FSM...
@@ -30,10 +30,10 @@ module.exports = {
                 
                 
             //behaviour execution...
-            //unload: construction hotspots (nearest)
-            if (!unit.memory.fetching){
-                if (unit.build(hotspots[0]) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(hotspots[0], {visualizePathStyle: {stroke: '#00ff00'}});
+            //unload: construction hotspot
+            if (!unit.memory.fetching && hotspot){
+                if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(hotspot, {visualizePathStyle: {stroke: '#00ff00'}});
             }
             //fetch: sources
             else{

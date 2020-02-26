@@ -1,4 +1,5 @@
 TODO urgent:
+	temporary architect that suicides
 	war probe + drone = doesnt go beyond walls; only bare essentials for base maintenance
 		//needs reg probe+drone manual killswitch
 		//war mode: auto killswitch non war and set maxes for war?

@@ -7,7 +7,7 @@ var UNITDRIVE =             require('UNITDRIVE');
 module.exports.loop = function(){
     
     MEMORYINIT.run();
-    var nexi = [Game.getObjectById(SD.nexus_id[0]), Game.getObjectById(SD.nexus_id[1]), Game.getObjectById(SD.nexus_id[2])];
+    var nexi = [Game.getObjectById(SD.nexus_id[0]), Game.getObjectById(SD.nexus_id[1]), Game.getObjectById(SD.nexus_id[2]), Game.getObjectById(SD.nexus_id[3])];
     
     
     //garbage collect the names of expired units

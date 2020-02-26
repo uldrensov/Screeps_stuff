@@ -6,7 +6,7 @@ var SD = require('SOFTDATA');
 module.exports = {
     run: function(){
         
-        var nexi = [Game.getObjectById(SD.nexus_id[0]), Game.getObjectById(SD.nexus_id[1]), Game.getObjectById(SD.nexus_id[2])];
+        var nexi = [Game.getObjectById(SD.nexus_id[0]), Game.getObjectById(SD.nexus_id[1]), Game.getObjectById(SD.nexus_id[2]), Game.getObjectById(SD.nexus_id[3])];
         var gateways = [Game.getObjectById(SD.gateway_id[0])];
     
     
@@ -73,8 +73,7 @@ module.exports = {
             
         //spawning emergency units...
             //emergency drone: if there are no other drones, and costs are too high to spawn normal drones
-            if (drone_gang[k].length == 0 && emergencyDrone_gang[k].length == 0 &&
-            nexi[k].room.energyAvailable < SD.drone_price[k]){
+            if (drone_gang[k].length == 0 && emergencyDrone_gang[k].length == 0 && nexi[k].room.energyAvailable < SD.drone_price[k]){
                 if (nexi[k].spawnCreep(SD.edrone_body, 'EmergencyDrone-' + Game.time % SD.time_offset, {memory: {role: 'emergencyDrone'}}) == OK){
                     console.log('Room #' + k + ': >>>EmergencyDrone-' + Game.time % SD.time_offset + ' spawning.<<<');
                     Game.notify('Emergency drone deployed in room #' + k,0);
@@ -100,8 +99,10 @@ module.exports = {
             else if (energiser_gang[k].length < Memory.energiser_MAX[k]){
                 if (nexi[k].spawnCreep(SD.energ_body[k], 'Energiser-' + Game.time % SD.time_offset, {memory: {role: 'energiser'}}) == OK)
                     console.log('Room #' + k + ': Energiser-' + Game.time % SD.time_offset + ' spawning.');
-                else if (gateways[k].spawnCreep(SD.energ_body[k], 'Energiser-' + Game.time % SD.time_offset, {memory: {role: 'energiser'}}) == OK)
-                    console.log('Room #' + k + ': Energiser-' + Game.time % SD.time_offset + ' spawning.');
+                else if (gateways[k] != undefined){
+                    if (gateways[0].spawnCreep(SD.energ_body[k], 'Energiser-' + Game.time % SD.time_offset, {memory: {role: 'energiser'}}) == OK)
+                        console.log('Room #' + k + ': Energiser-' + Game.time % SD.time_offset + ' spawning.');
+                }
             }
             //without sacrificers, the room will level down
             else if (sacrificer_gang[k].length < Memory.sacrificer_MAX[k]){

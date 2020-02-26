@@ -14,7 +14,7 @@ module.exports = {
         //continually mine from a designated source while standing on a container...
         //ensure correct position
         if (!unit.pos.isEqualTo(canister.pos))
-            unit.moveTo(canister, {visualizePathStyle: {stroke: '#000000'}});
+            unit.moveTo(canister);
         //fetch: mineral source
         else unit.harvest(mineral_src[0]);
     }

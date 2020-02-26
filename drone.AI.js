@@ -10,8 +10,7 @@ module.exports = {
         //inputs: containers (ample), pickups<energy> (ample), pickups<mineral>, tombstones (non-empty), ruins (non-empty)
         var canisters = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
-                return structure.structureType == STRUCTURE_CONTAINER &&
-                structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
+                return structure.structureType == STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
             }
         });
         var scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
@@ -35,14 +34,12 @@ module.exports = {
         //NOTE: local_nexi includes main nexus as well
         var pylons = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
-                return structure.structureType == STRUCTURE_EXTENSION &&
-                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                return structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         });
         var local_nexi = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
-                return structure.structureType == STRUCTURE_SPAWN &&
-                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                return structure.structureType == STRUCTURE_SPAWN && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         });
         

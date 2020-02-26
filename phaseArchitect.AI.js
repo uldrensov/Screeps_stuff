@@ -1,4 +1,4 @@
-//ARCHITECT: standard construction unit
+//PHASE ARCHITECT: manually-summoned ARCHITECT variant with automatic self-termination protocols
 //green trail ("builder")
 
 module.exports = {
@@ -14,8 +14,12 @@ module.exports = {
                 }
             });
             
-            //outputs: construction hotspot
-            var hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+            //outputs: construction hotspots
+            var hotspots = unit.room.find(FIND_CONSTRUCTION_SITES);
+            
+            
+            //self-killswitch routine
+            //if (hotspots)
             
             
             //2-state fetch/unload FSM...
@@ -28,11 +32,12 @@ module.exports = {
                 
                 
             //behaviour execution...
-            //unload: construction hotspot
+            //unload: construction hotspots (nearest)
             if (!unit.memory.fetching){
-                if (hotspot){
-                    if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(hotspot, {visualizePathStyle: {stroke: '#00ff00'}});
+                if (hotspots.length){
+                    var nearest_hotspot = unit.pos.findClosestByPath(hotspots);
+                    if (unit.build(nearest_hotspot) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(nearest_hotspot, {visualizePathStyle: {stroke: '#00ff00'}});
                 }
             }
             else{

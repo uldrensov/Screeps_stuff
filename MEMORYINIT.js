@@ -5,6 +5,7 @@ module.exports = {
         
         if (Memory.sacrificer_MAX == undefined){Memory.sacrificer_MAX =                 [1,0,0,0];}
         if (Memory.architect_MAX == undefined){Memory.architect_MAX =                   [1,0,0,0];}
+        if (Memory.phaseArchitect_MAX == undefined){Memory.phaseArchitect_MAX =         [1,0,0,0];}
         if (Memory.probe_MAX == undefined){Memory.probe_MAX =                           [1,0,0,0];}
         if (Memory.assimilator_MAX == undefined){Memory.assimilator_MAX =               [0,0,0,0];}
             if (Memory.assimilator2_MAX == undefined){Memory.assimilator2_MAX =         [0,0,0,0];}

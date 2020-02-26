@@ -37,7 +37,7 @@ var khaydarinmonolith =     require('khaydarinmonolith.AI');
 module.exports = {
     run: function(){
         
-        var nexi = [Game.getObjectById(SD.nexus_id[0]), Game.getObjectById(SD.nexus_id[1]), Game.getObjectById(SD.nexus_id[2])];
+        var nexi = [Game.getObjectById(SD.nexus_id[0]), Game.getObjectById(SD.nexus_id[1]), Game.getObjectById(SD.nexus_id[2]), Game.getObjectById(SD.nexus_id[3])];
         
         
         for (let k=0; k<nexi.length; k++){
@@ -93,7 +93,7 @@ module.exports = {
                             ancientAssimilator.run(unit, SD.mineralcanister_id[k]);
                             break;
                         case 'architect':
-                            architect.run(unit, nexi[k], SD.vault_reserve_min);
+                            architect.run(unit, nexi[k], SD.canister_bias, SD.vault_reserve_min);
                             break;
                         case 'treasurer':
                             treasurer.run(unit, SD.nexus_id[k], k);

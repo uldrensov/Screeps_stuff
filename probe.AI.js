@@ -79,7 +79,7 @@ module.exports = {
             }
             
             //if there is no current target, "fixate" on the weakest one
-            if (unit.memory.fixation == undefined){
+            if (Game.getObjectById(unit.memory.fixation) == undefined){
                 unit.memory.fixation = weakest.id;
                 unit.memory.fixation_max = HPmax_base;
             }

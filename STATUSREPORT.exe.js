@@ -4,7 +4,7 @@
 module.exports = {
     run: function(room_num){
         
-        var nexi = [Game.spawns['Spawn1'], Game.spawns['Spawn2'], Game.spawns['Spawn3']];
+        var nexi = [Game.spawns['Spawn1'], Game.spawns['Spawn2'], Game.spawns['Spawn3'], Game.spawns['Spawn4']];
         
         
         //arg validation
@@ -20,7 +20,7 @@ module.exports = {
         Memory.nullSupplicant_MAX[room_num] ==      undefined || Memory.ancientDrone_MAX[room_num] ==   undefined || Memory.ancientAssimilator_MAX[room_num] == undefined || Memory.specialist_MAX ==               undefined ||
         Memory.saviour_MAX ==                       undefined)
         {
-            return 'ERROR: MEMORYINIT.js failed to initialise memory';
+            return 'ERROR: Memory validation failed';
         }
         
         
