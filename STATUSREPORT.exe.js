@@ -27,9 +27,9 @@ module.exports = {
         //census...
         //count unit population by role
         var emergencyDrone_gang =       _.filter(Game.creeps, creep => creep.memory.role == 'emergencyDrone'        && creep.room == nexi[room_num].room);
+        var drone_gang =                _.filter(Game.creeps, creep => creep.memory.role == 'drone'                 && creep.room == nexi[room_num].room);
         var assimilator_gang =          _.filter(Game.creeps, creep => creep.memory.role == 'assimilator'           && creep.room == nexi[room_num].room);
         var assimilator2_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'assimilator2'          && creep.room == nexi[room_num].room);
-        var drone_gang =                _.filter(Game.creeps, creep => creep.memory.role == 'drone'                 && creep.room == nexi[room_num].room);
         var energiser_gang =            _.filter(Game.creeps, creep => creep.memory.role == 'energiser'             && creep.room == nexi[room_num].room);
         var sacrificer_gang =           _.filter(Game.creeps, creep => creep.memory.role == 'sacrificer'            && creep.room == nexi[room_num].room);
         var acolyte_gang =              _.filter(Game.creeps, creep => creep.memory.role == 'acolyte'               && creep.room == nexi[room_num].room);
@@ -142,9 +142,9 @@ module.exports = {
         //unit census
         console.log('<<<--Census-->>>');
         if (emergencyDrone_gang.length) console.log('Emergency drone: ACTIVE');
+        console.log('Drones: ' + drone_gang.length + '/' + Memory.drone_MAX[room_num]);
         if (Memory.assimilator_MAX[room_num] > 0) console.log('Assimilator[I]: ' + assimilator_gang.length + '/' + Memory.assimilator_MAX[room_num]);
         if (Memory.assimilator2_MAX[room_num] > 0) console.log('Assimilator[II]: ' + assimilator2_gang.length + '/' + Memory.assimilator2_MAX[room_num]);
-        console.log('Drones: ' + drone_gang.length + '/' + Memory.drone_MAX[room_num]);
         console.log('Energisers: ' + energiser_gang.length + '/' + Memory.energiser_MAX[room_num]);
         if (Memory.sacrificer_MAX[room_num] > 0) console.log('Sacrificers: ' + sacrificer_gang.length + '/' + Memory.sacrificer_MAX[room_num]);
         if (Memory.acolyte_MAX[room_num] > 0) console.log('Acolyte[I]: ' + acolyte_gang.length + '/' + Memory.acolyte_MAX[room_num]);

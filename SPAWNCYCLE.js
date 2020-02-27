@@ -11,11 +11,12 @@ module.exports = {
     
     
         //for storing population count in each room
-        var emergencyDrone_gang = [];   var sacrificer_gang = [];       var architect_gang = [];        var probe_gang = [];                var assimilator_gang = [];  var assimilator2_gang = [];
-        var drone_gang = [];            var energiser_gang = [];        var recalibrator_gang = [];     var orbitalAssimilator_gang = [];   var orbitalDrone_gang = []; var bloodhunter_gang = [];
-        var enforcer_gang = [];         var purifier_gang = [];         var acolyte_gang = [];          var acolyte2_gang = [];             var adherent_gang = [];     var nullAdherent_gang = [];
-        var supplicant_gang = [];       var nullSupplicant_gang = [];   var ancientDrone_gang = [];     var ancientAssimilator_gang = [];   var visionary_gang = [];    var specialist_gang;
-        var saviour_gang;               var emissary_gang = [];         var darktemplar_gang = [];      var hallucination_gang;             var hightemplar_gang;       var zealot_gang;
+        var emergencyDrone_gang = [];   var sacrificer_gang = [];   var architect_gang = [];        var phaseArchitect_gang = [];   var probe_gang = [];                var assimilator_gang = [];
+        var assimilator2_gang = [];     var drone_gang = [];        var energiser_gang = [];        var recalibrator_gang = [];     var orbitalAssimilator_gang = [];   var orbitalDrone_gang = [];
+        var bloodhunter_gang = [];      var enforcer_gang = [];     var purifier_gang = [];         var acolyte_gang = [];          var acolyte2_gang = [];             var adherent_gang = [];
+        var nullAdherent_gang = [];     var supplicant_gang = [];   var nullSupplicant_gang = [];   var ancientDrone_gang = [];     var ancientAssimilator_gang = [];   var visionary_gang = [];
+        var specialist_gang;            var saviour_gang;           var emissary_gang = [];         var darktemplar_gang = [];      var hallucination_gang;             var hightemplar_gang;
+        var zealot_gang;
     
     
         //execute the auto-spawn and unit AI assignment routines for each room
@@ -25,6 +26,7 @@ module.exports = {
             emergencyDrone_gang[k] =        _.filter(Game.creeps, creep => creep.memory.role == 'emergencyDrone'        && creep.room == nexi[k].room);
             sacrificer_gang[k] =            _.filter(Game.creeps, creep => creep.memory.role == 'sacrificer'            && creep.room == nexi[k].room);
             architect_gang[k] =             _.filter(Game.creeps, creep => creep.memory.role == 'architect'             && creep.room == nexi[k].room);
+            phaseArchitect_gang[k] =        _.filter(Game.creeps, creep => creep.memory.role == 'phaseArchitect'        && creep.room == nexi[k].room);
             probe_gang[k] =                 _.filter(Game.creeps, creep => creep.memory.role == 'probe'                 && creep.room == nexi[k].room);
             assimilator_gang[k] =           _.filter(Game.creeps, creep => creep.memory.role == 'assimilator'           && creep.room == nexi[k].room);
                 assimilator2_gang[k] =      _.filter(Game.creeps, creep => creep.memory.role == 'assimilator2'          && creep.room == nexi[k].room);
@@ -59,7 +61,7 @@ module.exports = {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_EXTRACTOR;
                 }
-            })
+            });
             var minerals = nexi[k].room.find(FIND_MINERALS)[0];
             if (extractor.length && minerals.mineralAmount > 0){
                 Memory.ancientDrone_MAX[k] = 1;
@@ -70,10 +72,26 @@ module.exports = {
                 Memory.ancientAssimilator_MAX[k] = -1;
             }
             
+            //for edrone spawn condition, count up total room energy within spawn structures, canisters, and the vault
+            var local_canisters = nexi[k].room.find(FIND_STRUCTURES, {
+                filter: structure => {
+                    return structure.structureType == STRUCTURE_CONTAINER;
+                }
+            });
+            var canister_energy = 0;
+            for (let i=0; i<local_canisters.length; i++){
+                canister_energy += local_canisters[i].store.energy;
+            }
+            var vault_energy = 0;
+            if (nexi[k].room.storage != undefined)
+                vault_energy = nexi[k].room.storage.store.energy;
+            var accessible_energy = nexi[k].room.energyAvailable + canister_energy + vault_energy;
             
         //spawning emergency units...
-            //emergency drone: if there are no other drones, and costs are too high to spawn normal drones
-            if (drone_gang[k].length == 0 && emergencyDrone_gang[k].length == 0 && nexi[k].room.energyAvailable < SD.drone_price[k]){
+            //emergency drone: if drones go extinct, or if both assimilators and acolytes go extinct without leaving behind enough canister/vault energy for either
+            if ((drone_gang[k].length == 0 && emergencyDrone_gang[k].length == 0 && nexi[k].room.energyAvailable < SD.drone_price[k]) ||
+            ((assimilator_gang[k].length == 0 && assimilator2_gang[k].length == 0 && acolyte_gang[k].length == 0 && acolyte2_gang[k].length == 0) &&
+            (accessible_energy < SD.assim_price[k] || accessible_energy < SD.acoly_price[k]))){
                 if (nexi[k].spawnCreep(SD.edrone_body, 'EmergencyDrone-' + Game.time % SD.time_offset, {memory: {role: 'emergencyDrone'}}) == OK){
                     console.log('Room #' + k + ': >>>EmergencyDrone-' + Game.time % SD.time_offset + ' spawning.<<<');
                     Game.notify('Emergency drone deployed in room #' + k,0);
@@ -81,7 +99,12 @@ module.exports = {
             }
         
         //spawning core units...
-            //without assimilators, there is no usable energy
+            //without drones, nothing else may spawn
+            else if (drone_gang[k].length < Memory.drone_MAX[k]){
+                if (nexi[k].spawnCreep(SD.drone_body[k], 'Drone-' + Game.time % SD.time_offset, {memory: {role: 'drone'}}) == OK)
+                    console.log('Room #' + k + ': Drone-' + Game.time % SD.time_offset + ' spawning.');
+            }
+            //without assimilators, there is no energy income
             else if (assimilator_gang[k].length < Memory.assimilator_MAX[k]){
                 if (nexi[k].spawnCreep(SD.assim_body[k], 'Assimilator-' + Game.time % SD.time_offset, {memory: {role: 'assimilator'}}) == OK)
                     console.log('Room #' + k + ': Assimilator-' + Game.time % SD.time_offset + ' spawning.');
@@ -89,11 +112,6 @@ module.exports = {
             else if (assimilator2_gang[k].length < Memory.assimilator2_MAX[k]){
                 if (nexi[k].spawnCreep(SD.assim_body[k], 'Assimilator_II-' + Game.time % SD.time_offset, {memory: {role: 'assimilator2'}}) == OK)
                     console.log('Room #' + k + ': Assimilator_II-' + Game.time % SD.time_offset + ' spawning.');
-            }
-            //without drones, nothing else may spawn
-            else if (drone_gang[k].length < Memory.drone_MAX[k]){
-                if (nexi[k].spawnCreep(SD.drone_body[k], 'Drone-' + Game.time % SD.time_offset, {memory: {role: 'drone'}}) == OK)
-                    console.log('Room #' + k + ': Drone-' + Game.time % SD.time_offset + ' spawning.');
             }
             //without energisers, the room is defenceless
             else if (energiser_gang[k].length < Memory.energiser_MAX[k]){
@@ -213,6 +231,10 @@ module.exports = {
                     else if (architect_gang[k].length < Memory.architect_MAX[k]){
                         if (nexi[k].spawnCreep(SD.archit_body[k], 'Architect-' + Game.time % SD.time_offset, {memory: {role: 'architect'}}) == OK)
                             console.log('Room #' + k + ': Architect-' + Game.time % SD.time_offset + ' spawning.');
+                    }
+                    else if (phaseArchitect_gang[k].length < Memory.phaseArchitect_MAX[k]){
+                        if (nexi[k].spawnCreep(SD.phasarc_body[k], 'PhaseArchitect-' + Game.time % SD.time_offset, {memory: {role: 'phaseArchitect'}}) == OK)
+                            console.log('Room #' + k + ': PhaseArchitect-' + Game.time % SD.time_offset + ' spawning.');
                     }
             
             //spawning fast-track units...

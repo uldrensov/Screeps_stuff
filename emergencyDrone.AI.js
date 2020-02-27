@@ -14,8 +14,7 @@ module.exports = {
         var sources = unit.room.find(FIND_SOURCES);
         var canisters = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
-                return structure.structureType == STRUCTURE_CONTAINER &&
-                structure.store.getUsedCapacity(RESOURCE_ENERGY) > lowbound;
+                return structure.structureType == STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > lowbound;
             }
         });
         var scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
@@ -29,13 +28,13 @@ module.exports = {
             }
         });
         
-        //outputs: pylons (non-full)
+        //outputs: extension (non-full)
         var pylons = nexus.room.find(FIND_STRUCTURES, {
             filter: structure => {
-                return structure.structureType == STRUCTURE_EXTENSION &&
-                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                return structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         });
+        if (pylons.length) var pylon = unit.pos.findClosestByPath(pylons);
         
 
         //2-state fetch/unload FSM...
@@ -49,11 +48,10 @@ module.exports = {
         
         //behaviour execution...
         if (!unit.memory.fetching){
-            //unload: pylons
-            if (pylons.length){
-                var nearest_pylon = unit.pos.findClosestByPath(pylons);
-                if (unit.transfer(nearest_pylon, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(nearest_pylon, {visualizePathStyle: {stroke: '#ffffff'}});
+            //unload: extension
+            if (pylon){
+                if (unit.transfer(pylon, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(pylon, {visualizePathStyle: {stroke: '#ffffff'}});
             }
             //unload: nexus
             else{
@@ -93,8 +91,7 @@ module.exports = {
                 //determine the fullest tomb in play
                 var richest_tomb = tombs[0];
                 for (let i=0; i<tombs.length; i++){
-                    if (tombs[i].store.getUsedCapacity(RESOURCE_ENERGY) >
-                        richest_tomb.store.getUsedCapacity(RESOURCE_ENERGY)){
+                    if (tombs[i].store.getUsedCapacity(RESOURCE_ENERGY) > richest_tomb.store.getUsedCapacity(RESOURCE_ENERGY)){
                         richest_tomb = tombs[i];
                     }
                 }

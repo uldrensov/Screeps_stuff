@@ -30,13 +30,14 @@ module.exports = {
             }
         });
         
-        //outputs: extensions (non-full), nexi (non-full)
+        //outputs: extension (non-full), nexi (non-full)
         //NOTE: local_nexi includes main nexus as well
         var pylons = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         });
+        if (pylons.length) var pylon = unit.pos.findClosestByPath(pylons);
         var local_nexi = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_SPAWN && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
@@ -72,11 +73,10 @@ module.exports = {
                     unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
             }
             else{
-                //unload: extensions
-                if (pylons.length){
-                    var nearest_pylon = unit.pos.findClosestByPath(pylons);
-                    if (unit.transfer(nearest_pylon, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(nearest_pylon, {visualizePathStyle: {stroke: '#ffffff'}});
+                //unload: extension
+                if (pylon){
+                    if (unit.transfer(pylon, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(pylon, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
                 //unload: main nexus
                 else if (nexus.store.getFreeCapacity(RESOURCE_ENERGY) != 0){
@@ -186,7 +186,7 @@ module.exports = {
             //fetch: vault
             else if (nexus.room.storage != undefined){
                 //only fetch from the vault if the energy will actually be used
-                if (pylons.length || local_nexi.length){
+                if (pylon || local_nexi.length){
                     if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
                 }

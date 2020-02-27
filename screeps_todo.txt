@@ -1,5 +1,4 @@
 TODO urgent:
-	temporary architect that suicides
 	war probe + drone = doesnt go beyond walls; only bare essentials for base maintenance
 		//needs reg probe+drone manual killswitch
 		//war mode: auto killswitch non war and set maxes for war?
@@ -10,7 +9,7 @@ TODO urgent:
 	nexus id not necessary for all units?
 	energy source / nexus / ctrller vars could be merged
 	[DEFENCE] think about how tower should behave in general
-	[BUG] dont let new things spawn when one briefly leaves room
+	[BUG] dont let new things spawn when one briefly leaves room (expand everything as crossroom in unitdrive?)
 	[SOFTLOCK] fix (e)drone pickup
 	trek to standby vs. rally at flag
 	
@@ -21,7 +20,7 @@ TODO backlog:
 	[MAINTENANCE] git init (put this file inside), readme
 	work-part / thief detection in remotes?
 	[SOFTLOCK] before calling a softlock, drones should deposit pocket energy if there are no more assims/energy on the map
-	[SOFTLOCK] 'lack of assimilator' softlock? (if no assim & no money, emergency convert)
+	[SOFTLOCK] take into acc the drone's ignore lim and their current pocket energy when calcing room energy?
 	localnexi energy count distinction in statusreport
 	
 Look up:

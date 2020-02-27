@@ -29,11 +29,9 @@ module.exports = {
                 
             //behaviour execution...
             //unload: construction hotspot
-            if (!unit.memory.fetching){
-                if (hotspot){
-                    if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(hotspot, {visualizePathStyle: {stroke: '#00ff00'}});
-                }
+            if (!unit.memory.fetching && hotspot){
+                if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(hotspot, {visualizePathStyle: {stroke: '#00ff00'}});
             }
             else{
                 //fetch: vault (respect limit)

@@ -7,16 +7,14 @@ module.exports = {
         //inputs: containers (non-empty)
         var canisters = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
-                return structure.structureType == STRUCTURE_CONTAINER &&
-                structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+                return structure.structureType == STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
             }
         });
         
         //outputs: towers (non-full)
         var towers = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
-                return (structure.structureType == STRUCTURE_TOWER) &&
-                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                return (structure.structureType == STRUCTURE_TOWER) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         });
         

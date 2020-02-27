@@ -5,6 +5,7 @@ var SD = require('SOFTDATA');
 var emergencyDrone =        require('emergencyDrone.AI');
 var sacrificer =            require('sacrificer.AI');
 var architect =             require('architect.AI');
+var phaseArchitect =        require('phaseArchitect.AI');
 var probe =                 require('probe.AI');
 var assimilator =           require('assimilator.AI');
 var drone =                 require('drone.AI');
@@ -50,14 +51,14 @@ module.exports = {
                         case 'emergencyDrone':
                             emergencyDrone.run(unit, SD.nexus_id[k]);
                             break;
+                        case 'drone':
+                            drone.run(unit, SD.nexus_id[k], SD.en_ignore_lim);
+                            break;
                         case 'assimilator':
                             assimilator.run(unit, SD.source1_id[k], SD.canister1_id[k]);
                             break;
                         case 'assimilator2':
                             assimilator.run(unit, SD.source2_id[k], SD.canister2_id[k]);
-                            break;
-                        case 'drone':
-                            drone.run(unit, SD.nexus_id[k], SD.en_ignore_lim);
                             break;
                         case 'energiser':
                             energiser.run(unit);
@@ -94,6 +95,9 @@ module.exports = {
                             break;
                         case 'architect':
                             architect.run(unit, nexi[k], SD.canister_bias, SD.vault_reserve_min);
+                            break;
+                        case 'phaseArchitect':
+                            phaseArchitect.run(unit, nexi[k], SD.canister_bias, SD.vault_reserve_min, k);
                             break;
                         case 'treasurer':
                             treasurer.run(unit, SD.nexus_id[k], k);

@@ -7,6 +7,8 @@ module.exports = {
     fixation_override:      .25, //probes will break fixation upon spotting an absolute % gap this wide
     canister_bias:          500, //can force canister-fetching units to prefer one by default, until this wide of a disparity is detected
     drone_price:            [750,750,600,400],
+    assim_price:            [650,650,550,650],
+    acoly_price:            [850,1050,0,0],
     claim_strength:         [4,3,3],
     en_ignore_lim:          150, //drones/sacrificers/probes will ignore containers/pickups containing less energy than this
     tower_reserve_ratio:    .5, //towers will reserve this percentage of their energy for attacking
@@ -33,7 +35,8 @@ module.exports = {
 
     tower_id:               [['5e2f4a33e8af4a1c6459ccd8', '5e346820d632bc24398489ab', '5e549f64a3d520f54f770738'],
                             ['5e3a68c9aa99575a56cba5da', '5e401cc59c6dc7073200b5b7'],
-                            ['5e473a110058163253b64554', '5e4a55092f9d26c57d90c465']],
+                            ['5e473a110058163253b64554', '5e4a55092f9d26c57d90c465'],
+                            ['5e57663e6fced9baca5d9db2']],
                 
     warpRX_id:              ['5e34d2403561285c52aba5b2', '5e437aa1ac1ec4151e946cb9', '5e4a79f221466ebb4fcc858b'], //receiver link (adherent)
     warpTX_id:              [['5e437e083561285674b0989c','5e34d803221670187690e4d7'],
@@ -51,29 +54,31 @@ module.exports = {
     //body parts by role
     edrone_body:            [WORK, CARRY,CARRY, MOVE,MOVE],
                             //cost: 300
-    assim_body:             [[WORK,WORK,WORK,WORK,WORK, MOVE,MOVE,MOVE],
-                            [WORK,WORK,WORK,WORK,WORK, MOVE,MOVE,MOVE],
-                            [WORK,WORK,WORK,WORK,WORK, MOVE],
-                            [WORK,WORK,WORK,WORK,WORK, MOVE]],
-                            //cost: 650, 650, 550, 550
     drone_body:             [[CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
                             [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
                             [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE],
                             [CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE]],
                             //cost: 750, 750, 600, 400
+    assim_body:             [[WORK,WORK,WORK,WORK,WORK, MOVE,MOVE,MOVE],
+                            [WORK,WORK,WORK,WORK,WORK, MOVE,MOVE,MOVE],
+                            [WORK,WORK,WORK,WORK,WORK, MOVE],
+                            [WORK,WORK,WORK,WORK,WORK, MOVE,MOVE,MOVE]],
+                            //cost: 650, 650, 550, 650
     energ_body:             [[CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
                             [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
-                            [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE]],
-                            //cost: 750, 750, 750
+                            [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
+                            [CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE]],
+                            //cost: 750, 750, 750, 400
     sacrif_body:            [[],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                            [WORK,WORK,WORK, CARRY,CARRY, MOVE,MOVE,MOVE]],
-                            //cost: NULL, 1200, 1200, 550
+                            [WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE]],
+                            //cost: NULL, 1200, 1200, 800
     acoly_body:             [[WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE],
+                            [],
                             []],
-                            //cost: 850, 1050, NULL
+                            //cost: 850, 1050, NULL, NULL
     adher_body:             [CARRY,CARRY,CARRY,CARRY, MOVE],
                             //cost: 250
     suppl_body:             [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE],
@@ -83,8 +88,8 @@ module.exports = {
     probe_body:             [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                            [WORK,WORK, CARRY,CARRY, MOVE,MOVE]],
-                            //cost: 2050, 1600, 1600, 400
+                            [WORK,WORK,WORK, CARRY,CARRY,CARRY, MOVE,MOVE,MOVE]],
+                            //cost: 2050, 1600, 1600, 600
     recal_body:             [[CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE],
                             [CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE],
                             [CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE]],
@@ -118,8 +123,13 @@ module.exports = {
     archit_body:            [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                            [WORK,WORK,WORK, CARRY,CARRY, MOVE,MOVE,MOVE]],
-                            //cost: 2300, 2050, 1800, 550
+                            [WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE]],
+                            //cost: 2300, 2050, 1800, 800
+    phasarc_body:           [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+                            [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+                            [WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE]],
+                            //cost: 1800, 1800, 1200, 800
     visio_body:             [[CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE],
                             [CLAIM,MOVE],
                             [CLAIM,MOVE]],

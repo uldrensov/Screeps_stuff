@@ -2,7 +2,7 @@
 //green trail ("builder")
 
 module.exports = {
-    run: function(unit, nexus, bias, reserve){
+    run: function(unit, nexus, bias, reserve, home_index){
         
         if (!unit.memory.killswitch){
             //inputs: energy sources, containers (non-empty)
@@ -14,12 +14,15 @@ module.exports = {
                 }
             });
             
-            //outputs: construction hotspots
-            var hotspots = unit.room.find(FIND_CONSTRUCTION_SITES);
+            //outputs: construction hotspot
+            var hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
             
             
             //self-killswitch routine
-            //if (hotspots)
+            if (!hotspot){
+                unit.memory.killswitch = true;
+                Memory.phaseArchitect_MAX[home_index] = -1;
+            }
             
             
             //2-state fetch/unload FSM...
@@ -32,13 +35,10 @@ module.exports = {
                 
                 
             //behaviour execution...
-            //unload: construction hotspots (nearest)
-            if (!unit.memory.fetching){
-                if (hotspots.length){
-                    var nearest_hotspot = unit.pos.findClosestByPath(hotspots);
-                    if (unit.build(nearest_hotspot) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(nearest_hotspot, {visualizePathStyle: {stroke: '#00ff00'}});
-                }
+            //unload: construction hotspot (nearest)
+            if (!unit.memory.fetching && hotspot){
+                if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(hotspot, {visualizePathStyle: {stroke: '#00ff00'}});
             }
             else{
                 //fetch: vault (respect limit)
