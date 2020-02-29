@@ -25,7 +25,7 @@ module.exports = {
                     }
                 }
                 //disable further purifiers when the room is truly clear, re-enable remote workers, then self-killswitch
-                else if (Memory.core_sighting[home_index] == false){
+                else if (Memory.enforcer_MAX[home_index] < 0){
                     Memory.purifier_MAX[home_index] = -1;
                     Game.notify('>>>SECTOR #' + home_index + ' RESTORED: CORE TRACES PURIFIED<<<',0);
                     console.log('------------------------------');

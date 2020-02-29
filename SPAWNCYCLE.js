@@ -89,13 +89,19 @@ module.exports = {
             
         //spawning emergency units...
             //emergency drone: if drones go extinct, or if both assimilators and acolytes go extinct without leaving behind enough canister/vault energy for either
-            if ((drone_gang[k].length == 0 && emergencyDrone_gang[k].length == 0 && nexi[k].room.energyAvailable < SD.drone_price[k]) ||
+            if (((drone_gang[k].length == 0 && nexi[k].room.energyAvailable < SD.drone_price[k]) ||
             ((assimilator_gang[k].length == 0 && assimilator2_gang[k].length == 0 && acolyte_gang[k].length == 0 && acolyte2_gang[k].length == 0) &&
-            (accessible_energy < SD.assim_price[k] || accessible_energy < SD.acoly_price[k]))){
+            (accessible_energy < SD.assim_price[k] || accessible_energy < SD.acoly_price[k])))
+            && emergencyDrone_gang[k].length == 0){
                 if (nexi[k].spawnCreep(SD.edrone_body, 'EmergencyDrone-' + Game.time % SD.time_offset, {memory: {role: 'emergencyDrone'}}) == OK){
                     console.log('Room #' + k + ': >>>EmergencyDrone-' + Game.time % SD.time_offset + ' spawning.<<<');
                     Game.notify('Emergency drone deployed in room #' + k,0);
                 }
+            }
+            //assimilator: shortbut-spawn these to accompany the emergency drone, if one is active
+            else if (assimilator_gang[k].length < Memory.assimilator_MAX[k] && emergencyDrone_gang[k].length != 0){
+                if (nexi[k].spawnCreep(SD.assim_body[k], 'Assimilator-' + Game.time % SD.time_offset, {memory: {role: 'assimilator'}}) == OK)
+                    console.log('Room #' + k + ': Assimilator-' + Game.time % SD.time_offset + ' spawning.');
             }
         
         //spawning core units...

@@ -30,7 +30,7 @@ module.exports = {
         if (!unit.memory.fetching){
             //unload: controller
             if (unit.upgradeController(obelisk) == ERR_NOT_IN_RANGE)
-                unit.moveTo(obelisk, {visualizePathStyle: {stroke: '#ff00ff'}});
+                unit.moveTo(obelisk);
         }
         else{
             //fetch: containers (fullest; fixation)
@@ -52,11 +52,11 @@ module.exports = {
                 //finally, withdraw from the fixated target
                 var canister_target = Game.getObjectById(unit.memory.fixation);
                 if (unit.withdraw(canister_target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(canister_target, {visualizePathStyle: {stroke: '#ff00ff'}});
+                    unit.moveTo(canister_target);
             }
             //fetch: sources
             else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE)
-                unit.moveTo(sources[0], {visualizePathStyle: {stroke: '#ff00ff'}});
+                unit.moveTo(sources[0]);
         }
     }
 };

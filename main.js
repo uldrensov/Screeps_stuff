@@ -35,10 +35,6 @@ module.exports.loop = function(){
             Memory.bloodhunter_MAX[i] = -1;
             Memory.viable_prey[i] = false;
         }
-            
-        //core handling: enable enforcers
-        if (Memory.core_sighting[i] == true) Memory.enforcer_MAX[i] = 1;
-        else Memory.enforcer_MAX[i] = -1;
     }
     
     //email alerts for vault energy conservation

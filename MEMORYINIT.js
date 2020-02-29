@@ -39,6 +39,5 @@ module.exports = {
         if (Memory.vaultAlert_EN == undefined){Memory.vaultAlert_EN =                   [false,false,false,false,false,false];}
         if (Memory.evac_timer == undefined){Memory.evac_timer =                         [0,0,0,0,0,0];}
         if (Memory.viable_prey == undefined){Memory.viable_prey =                       [false,false,false,false,false,false];}
-        if (Memory.core_sighting == undefined){Memory.core_sighting =                   [false,false,false,false,false,false];}
     }
 };

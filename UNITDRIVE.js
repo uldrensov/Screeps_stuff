@@ -67,10 +67,10 @@ module.exports = {
                             sacrificer.run(unit, SD.controller_id[k], SD.en_ignore_lim);
                             break;
                         case 'acolyte':
-                            acolyte.run(unit, SD.holy_source[k][0], SD.warpRX_id[k], SD.warpTX_id[k][0], SD.acoly_tile_id[k][0]);
+                            acolyte.run(unit, SD.source1_id[k], SD.warpRX_id[k], SD.warpTX_id[k][0], SD.canister1_id[k]);
                             break;
                         case 'acolyte2':
-                            acolyte.run(unit, SD.holy_source[k][1], SD.warpRX_id[k], SD.warpTX_id[k][1], SD.acoly_tile_id[k][1]);
+                            acolyte.run(unit, SD.source2_id[k], SD.warpRX_id[k], SD.warpTX_id[k][1], SD.canister2_id[k]);
                             break;
                         case 'adherent':
                             adherent.run(unit, SD.adher_tile_id[k], SD.warpRX_id[k]);
@@ -85,7 +85,7 @@ module.exports = {
                             nullSupplicant.run(unit, SD.warpTX_id[k]);
                             break;
                         case 'probe':
-                            probe.run(unit, nexi[k], SD.fixation_override, SD.en_ignore_lim, SD.vault_reserve_min);
+                            probe.run(unit, SD.fixation_override, SD.en_ignore_lim, SD.vault_reserve_min);
                             break;
                         case 'ancientDrone':
                             ancientDrone.run(unit, SD.mineralcanister_id[k]);

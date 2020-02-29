@@ -25,8 +25,8 @@ module.exports = {
                         unit.moveTo(heretic[0], {visualizePathStyle: {stroke: '#ff0000'}});
                 }
                 //clear the lockdown, self-killswitch, and possibly re-enable remote workers
-                else if (Memory.core_sighting[home_index] == true){
-                    Memory.core_sighting[home_index] = false;
+                else if (Memory.enforcer_MAX[home_index] > 0){
+                    Memory.enforcer_MAX[home_index] = -1;
                     unit.memory.killswitch = true;
                 
                     //call in a purifier (if necessary)

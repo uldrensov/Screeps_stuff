@@ -79,7 +79,7 @@ module.exports = {
                         unit.moveTo(pylon, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
                 //unload: main nexus
-                else if (nexus.store.getFreeCapacity(RESOURCE_ENERGY) != 0){
+                else if (unit.store.getFreeCapacity(RESOURCE_ENERGY) != 0){
                     if (unit.transfer(nexus, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(nexus, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
@@ -90,9 +90,9 @@ module.exports = {
                         unit.moveTo(local_nexi[0], {visualizePathStyle: {stroke: '#ffffff'}});
                 }
                 //unload: vault<energy>
-                else if (nexus.room.storage != undefined){
-                    if (unit.transfer(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
+                else if (unit.room.storage != undefined){
+                    if (unit.transfer(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
         }
@@ -184,7 +184,7 @@ module.exports = {
                     unit.moveTo(canister_target, {visualizePathStyle: {stroke: '#ffffff'}});
             }
             //fetch: vault
-            else if (nexus.room.storage != undefined){
+            else if (unit.room.storage != undefined){
                 //only fetch from the vault if the energy will actually be used
                 if (pylon || local_nexi.length){
                     if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)

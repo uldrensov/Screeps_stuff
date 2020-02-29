@@ -2,18 +2,18 @@
 //blue trail ("maintainer")
 
 module.exports = {
-    run: function(unit, nexus, override_threshold, ignore_lim, reserve){
+    run: function(unit, override_threshold, ignore_lim, reserve){
         
         //inputs: energy sources, containers (ample)
-        var sources = nexus.room.find(FIND_SOURCES);
-        var canisters = nexus.room.find(FIND_STRUCTURES, {
+        var sources = unit.room.find(FIND_SOURCES);
+        var canisters = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
             }
         });
         
         //outputs: structures (non-full/threshold)
-        var repairTargets = nexus.room.find(FIND_STRUCTURES, {
+        var repairTargets = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return ((structure.hits < structure.hitsMax && structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART) ||
                 (structure.hits < Memory.wall_threshold && structure.structureType == STRUCTURE_WALL) ||
@@ -38,7 +38,7 @@ module.exports = {
             //find the weakest structure in terms of %
             var weakest = repairTargets[0];
             
-            //get the base case's proper maximum / threshold value before calculating %
+            //init a base case: get proper maximum / threshold value before calculating %
             var HPmax_base;
             var base_perc;
             switch (weakest.structureType){
@@ -77,20 +77,14 @@ module.exports = {
                 }
             }
             
-            //if there is no current target, "fixate" on the weakest one
-            if (Game.getObjectById(unit.memory.fixation) == undefined){
+            //select an initial target to fixate upon, or determine if the previous fixation is worth overriding for the new weakest structure (subtract percentage values)
+            if (Game.getObjectById(unit.memory.fixation) == undefined ||
+            (Game.getObjectById(unit.memory.fixation).hits / Game.getObjectById(unit.memory.fixation).hitsMax) - base_perc > override_threshold)
                 unit.memory.fixation = weakest.id;
-                unit.memory.fixation_max = HPmax_base;
-            }
-            //otherwise, determine if the previous fixation is worth overriding for the new weakest structure
-            else if ((Game.getObjectById(unit.memory.fixation).hits / unit.memory.fixation_max) - base_perc > override_threshold){
-                unit.memory.fixation = weakest.id;
-                unit.memory.fixation_max = HPmax_base;
-            }
             
             //finally, attempt to repair the fixated target until its max / threshold
             var final_target = Game.getObjectById(unit.memory.fixation);
-            if (final_target.hits < unit.memory.fixation_max){
+            if (final_target.hits < final_target.hitsMax){
                 if (unit.repair(final_target) == ERR_NOT_IN_RANGE)
                     unit.moveTo(final_target, {visualizePathStyle: {stroke: '#0000ff'}});
             }
@@ -99,9 +93,9 @@ module.exports = {
         }
         else{
             //fetch: vault (respect limit)
-            if (nexus.room.storage != undefined && nexus.room.storage.store.energy > reserve){
-                if (unit.withdraw(nexus.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(nexus.room.storage, {visualizePathStyle: {stroke: '#0000ff'}});
+            if (unit.room.storage != undefined && unit.room.storage.store.energy > reserve){
+                if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#0000ff'}});
             }
             //fetch: containers (fullest)
             else if (canisters.length){

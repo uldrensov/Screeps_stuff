@@ -17,12 +17,12 @@ module.exports = {
         //unload: controller
         if (!unit.memory.fetching){
             if (unit.upgradeController(unit.room.controller) == ERR_NOT_IN_RANGE)
-                unit.moveTo(unit.room.controller, {visualizePathStyle: {stroke: '#ff00ff'}});
+                unit.moveTo(unit.room.controller);
         }
         //fetch: vault
         else if (unit.room.storage.store.energy > reserve){
             if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#ff00ff'}});
+                unit.moveTo(unit.room.storage);
         }
         
     }

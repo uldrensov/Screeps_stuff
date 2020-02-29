@@ -1,27 +1,23 @@
 TODO urgent:
-	war probe + drone = doesnt go beyond walls; only bare essentials for base maintenance
-		//needs reg probe+drone manual killswitch
-		//war mode: auto killswitch non war and set maxes for war?
-	decouple hardcodes from unitdrive
-	purifiers can contest cores that are taken
-	probe didnt release fixation on maxhp targ
-	replace coresighting with just the enf max?
-	nexus id not necessary for all units?
-	energy source / nexus / ctrller vars could be merged
+	purifiers should contest cores that are taken (e.g. controller subducts and core is still not dead)
 	[DEFENCE] think about how tower should behave in general
-	[BUG] dont let new things spawn when one briefly leaves room (expand everything as crossroom in unitdrive?)
-	[SOFTLOCK] fix (e)drone pickup
-	trek to standby vs. rally at flag
+	[SOFTLOCK] before calling a softlock, drones should deposit pocket energy if there are no more assims/energy on the map
+	[SOFTLOCK] take into acc the drone's ignore lim and their current pocket energy when calcing room energy?
+	war probe + drone = doesnt go beyond walls; only bare essentials for base maintenance
+		//war mode: roleswap non war and set maxes for war
 	
 TODO backlog:
 	[QOL] more status report info (pickups, wall/rampart distinction, invader/core alert)
 	modify treasurer to work w labs/factories too
 	treasurer withdraw/deposit RESOURCES_ALL
-	[MAINTENANCE] git init (put this file inside), readme
+	[BUG] dont let new things spawn when one briefly leaves room (expand everything as crossroom in unitdrive?)
 	work-part / thief detection in remotes?
-	[SOFTLOCK] before calling a softlock, drones should deposit pocket energy if there are no more assims/energy on the map
-	[SOFTLOCK] take into acc the drone's ignore lim and their current pocket energy when calcing room energy?
-	localnexi energy count distinction in statusreport
+	[SOFTLOCK] fix (e)drone pickup
+	[MAINTENANCE] decouple hardcodes from unitdrive (and from argpasses?)
+	[MAINTENANCE] energy source / nexus / ctrller vars could be merged
+	[MAINTENANCE] git init (put this file inside), readme
+	[MAINTENANCE] trek to standby vs. rally at flag
+	[QOL] localnexi energy count distinction in statusreport
 	
 Look up:
 	-

@@ -21,10 +21,10 @@ module.exports = {
         //unload: controller
         if (!unit.memory.fetching){
             if (unit.upgradeController(unit.room.controller) == ERR_NOT_IN_RANGE)
-                unit.moveTo(unit.room.controller, {visualizePathStyle: {stroke: '#ff00ff'}});
+                unit.moveTo(unit.room.controller);
         }
         //fetch: link
         else if (unit.withdraw(warpRX0, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-            unit.moveTo(warpRX0, {visualizePathStyle: {stroke: '#ff00ff'}});
+            unit.moveTo(warpRX0);
     }
 };

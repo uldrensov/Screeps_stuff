@@ -92,7 +92,6 @@ module.exports = {
                         
                             //decide how to handle threats
                             if (i_threats > 0 || p_threats > 0){
-                                unit.memory.in_place = false;
                                 console.log('------------------------------');
                             
                                 //case: enemy player(s)
@@ -122,8 +121,8 @@ module.exports = {
                                 return structure.structureType == STRUCTURE_INVADER_CORE;
                             }
                         });
-                        if (invadercores.length && Memory.core_sighting[home_index] == false){
-                            Memory.core_sighting[home_index] = true;
+                        if (invadercores.length && Memory.enforcer_MAX[home_index] < 0){
+                            Memory.enforcer_MAX[home_index] = 1;
                             //Game.notify('>>>LOCKING SECTOR #' + home_index + '...CORE SIGHTED<<<',0);
                             console.log('------------------------------');
                             console.log('>>>LOCKING SECTOR #' + home_index + '...CORE SIGHTED<<<');
@@ -163,7 +162,10 @@ module.exports = {
                 }
             }
             //enemies detected
-            else unit.moveTo(Game.getObjectById(flee_point), {visualizePathStyle: {stroke: '#ffff00'}});
+            else{
+                unit.moveTo(Game.getObjectById(flee_point), {visualizePathStyle: {stroke: '#ffff00'}});
+                unit.memory.in_place = false;
+            }
         }
         //built-in economic killswitch
         else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
