@@ -87,6 +87,7 @@ module.exports = {
                 vault_energy = nexi[k].room.storage.store.energy;
             var accessible_energy = nexi[k].room.energyAvailable + canister_energy + vault_energy;
             
+            
         //spawning emergency units...
             //emergency drone: if drones go extinct, or if both assimilators and acolytes go extinct without leaving behind enough canister/vault energy for either
             if (((drone_gang[k].length == 0 && nexi[k].room.energyAvailable < SD.drone_price[k]) ||

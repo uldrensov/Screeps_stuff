@@ -13,8 +13,22 @@ module.exports = {
         
         if (unit.memory.in_place){
             
-            //input: sources
-            var sources = unit.room.find(FIND_SOURCES);
+            //input: sources (non-empty), pickups, ruins (non-empty)
+            var sources = unit.room.find(FIND_SOURCES, {
+                filter: RoomObject => {
+                    return RoomObject.energy > 0;
+                }
+            });
+            var scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
+                filter: resource => {
+                    return resource.resourceType == RESOURCE_ENERGY;
+                }
+            });
+            var remains = unit.room.find(FIND_RUINS, {
+                filter: RoomObject => {
+                    return RoomObject.store.getUsedCapacity() > 0;
+                }
+            });
         
             //output: construction hotspot
             var hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
@@ -30,22 +44,37 @@ module.exports = {
                 
                 
             //behaviour execution...
-            //unload: construction hotspot
             if (!unit.memory.fetching && hotspot){
+                //unload: construction hotspot
                 if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
                     unit.moveTo(hotspot, {visualizePathStyle: {stroke: '#00ff00'}});
             }
-            //fetch: sources
+            
             else{
-                //manual source selection
-                if (unit.memory.force_src != undefined){
+                //fetch: pickups (fullest)
+                if (scraps.length){
+                    //
+                    var chosen_scrap = scraps[0];
+                    for (let i=0; i<scraps.length; i++){
+                        if (scraps[i].energy > chosen_scrap.energy)
+                            chosen_scrap = scraps[i];
+                    }
+                    if (unit.pickup(chosen_scrap) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(chosen_scrap, {visualizePathStyle: {stroke: '#00ff00'}});
+                }
+                //fetch: ruins
+                else if (remains.length){
+                    if (unit.withdraw(remains[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(remains[0], {visualizePathStyle: {stroke: '#00ff00'}});
+                }
+                //fetch: source (manual override)
+                else if (unit.memory.force_src != undefined){
                     if (unit.harvest(Game.getObjectById(unit.memory.force_src)) == ERR_NOT_IN_RANGE)
                         unit.moveTo(Game.getObjectById(unit.memory.force_src), {visualizePathStyle: {stroke: '#00ff00'}});
                 }
-                else{
-                    if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(sources[0], {visualizePathStyle: {stroke: '#00ff00'}});
-                }
+                //fetch: sources
+                else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(sources[0], {visualizePathStyle: {stroke: '#00ff00'}});
             }
         }
     }

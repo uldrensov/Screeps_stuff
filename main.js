@@ -39,6 +39,7 @@ module.exports.loop = function(){
     
     //email alerts for vault energy conservation
     for (let i=0; i<Memory.vaultAlert_EN.length; i++){
+        if (i == 1) continue;
         //enable alert for a room when its vault rises past 15% of the minimum threshold
         if ((nexi[i].room.storage.store.energy > SD.vault_reserve_min * 1.15) && !Memory.vaultAlert_EN[i])
             Memory.vaultAlert_EN[i] = true;

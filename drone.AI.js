@@ -79,7 +79,7 @@ module.exports = {
                         unit.moveTo(pylon, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
                 //unload: main nexus
-                else if (unit.store.getFreeCapacity(RESOURCE_ENERGY) != 0){
+                else if (nexus.store.getFreeCapacity(RESOURCE_ENERGY) != 0){
                     if (unit.transfer(nexus, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(nexus, {visualizePathStyle: {stroke: '#ffffff'}});
                 }

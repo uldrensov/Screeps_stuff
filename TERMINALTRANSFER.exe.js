@@ -8,6 +8,7 @@ module.exports = {
     run: function(room_num, o_type, o_amt, dir){
         
         var nexus = Game.getObjectById(SD.nexus_id[room_num]);
+        var gateway = Game.getObjectById(SD.gateway_id[room_num]);
         
         
         //determine if a treasurer already exists in the specified room
@@ -25,7 +26,13 @@ module.exports = {
             var spawn_result = nexus.spawnCreep(SD.treas_body[room_num], 'Treasurer-' + Game.time % SD.time_offset, {memory: {role: 'treasurer', order_type: o_type, order_amt: o_amt, dir: dir, task_progress: 0}});
             if (spawn_result == OK)
                 console.log('Room #' + room_num + ': Treasurer-' + Game.time % SD.time_offset + ' spawning.');
-            else return spawn_result;
+            else if (spawn_result == ERR_BUSY && gateway != undefined){
+                var spawn_result2 = gateway.spawnCreep(SD.treas_body[room_num], 'Treasurer-' + Game.time % SD.time_offset, {memory: {role: 'treasurer', order_type: o_type, order_amt: o_amt, dir: dir, task_progress: 0}});
+                if (spawn_result2 == OK)
+                    console.log('Room #' + room_num + ': Treasurer-' + Game.time % SD.time_offset + ' spawning.');
+                else return 'GATEWAY ERROR: ' + spawn_result;
+            }
+            else return 'NEXUS ERROR: ' + spawn_result;
         }
         //if one exists, rewrite its memory contents to issue a new command
         else{

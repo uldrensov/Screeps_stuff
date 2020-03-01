@@ -54,10 +54,8 @@ module.exports = {
                     unit.moveTo(pylon, {visualizePathStyle: {stroke: '#ffffff'}});
             }
             //unload: nexus
-            else{
-                if (unit.transfer(nexus, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(nexus, {visualizePathStyle: {stroke: '#ffffff'}});
-            }
+            else if (unit.transfer(nexus, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                unit.moveTo(nexus, {visualizePathStyle: {stroke: '#ffffff'}});
         }
         else{
             //fetch: vault
@@ -91,9 +89,8 @@ module.exports = {
                 //determine the fullest tomb in play
                 var richest_tomb = tombs[0];
                 for (let i=0; i<tombs.length; i++){
-                    if (tombs[i].store.getUsedCapacity(RESOURCE_ENERGY) > richest_tomb.store.getUsedCapacity(RESOURCE_ENERGY)){
+                    if (tombs[i].store.getUsedCapacity(RESOURCE_ENERGY) > richest_tomb.store.getUsedCapacity(RESOURCE_ENERGY))
                         richest_tomb = tombs[i];
-                    }
                 }
                 //approach and withdraw
                 if (unit.withdraw(richest_tomb, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)

@@ -42,7 +42,6 @@ module.exports = {
         
         
         for (let k=0; k<nexi.length; k++){
-        
             //room-locked units
             for (var name in Game.creeps){
                 var unit = Game.creeps[name];
@@ -126,7 +125,7 @@ module.exports = {
                     //determine homeroom to call AI script using appropriate args
                     for (let i=0; i<nexi.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
-                            recalibrator.run(unit, SD.nexus_id[i], SD.reserveflag[i], SD.tower_id[i][0], i);
+                            recalibrator.run(unit, SD.nexus_id[i], SD.reserveflag[i], SD.tower_id[i], i);
                             break;
                         }
                     }
@@ -134,7 +133,7 @@ module.exports = {
                 case 'orbitalAssimilator':
                     for (let i=0; i<nexi.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
-                            orbitalAssimilator.run(unit, SD.nexus_id[i], SD.remotesource_id[i], SD.remoteflag[i], SD.remotecanister_id[i], SD.tower_id[i][0], i);
+                            orbitalAssimilator.run(unit, SD.nexus_id[i], SD.remotesource_id[i], SD.remoteflag[i], SD.remotecanister_id[i], SD.tower_id[i], i);
                             break;
                         }
                     }
@@ -142,7 +141,7 @@ module.exports = {
                 case 'orbitalDrone':
                     for (let i=0; i<nexi.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
-                            orbitalDrone.run(unit, SD.nexus_id[i], SD.remotecanister_id[i], SD.remoteflag[i], SD.remotedrop_id[i], SD.en_ignore_lim, SD.tower_id[i][0], i);
+                            orbitalDrone.run(unit, SD.nexus_id[i], SD.remotecanister_id[i], SD.remoteflag[i], SD.remotedrop_id[i], SD.en_ignore_lim, SD.tower_id[i], i);
                             break;
                         }
                     }
@@ -172,10 +171,10 @@ module.exports = {
                     }
                     break;
                 case 'visionary':
-                    visionary.run(unit, Game.flags['Terrans']);
+                    visionary.run(unit, Game.flags['GOGO']);
                     break;
                 case 'specialist':
-                    specialist.run(unit, Game.flags['Terrans']);
+                    specialist.run(unit, Game.flags['GOGO']);
                     break;
                 case 'saviour':
                     saviour.run(unit, SD.nexus_id[0], SD.controller_id[2], SD.vault_reserve_min);

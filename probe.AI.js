@@ -106,6 +106,9 @@ module.exports = {
                 if (unit.withdraw(fullest_canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(fullest_canister, {visualizePathStyle: {stroke: '#0000ff'}});
             }
+            //fetch: sources
+            else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE)
+                unit.moveTo(sources[0], {visualizePathStyle: {stroke: '#0000ff'}});
         }
     }
 };

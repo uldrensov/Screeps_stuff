@@ -1,4 +1,5 @@
 TODO urgent:
+	probe wont switch fixat on rampart/wall thresh bc it reads from a getMAX instead of the thresh
 	purifiers should contest cores that are taken (e.g. controller subducts and core is still not dead)
 	[DEFENCE] think about how tower should behave in general
 	[SOFTLOCK] before calling a softlock, drones should deposit pocket energy if there are no more assims/energy on the map
