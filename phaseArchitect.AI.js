@@ -1,4 +1,4 @@
-//PHASE ARCHITECT: manually-summoned ARCHITECT variant with automatic self-termination protocols
+//PHASE ARCHITECT: manually-summoned ARCHITECT variant with automatic self-termination protocols, designed for quick and cost-efficient execution of one-time tasks
 //green trail ("builder")
 
 module.exports = {

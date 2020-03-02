@@ -6,7 +6,7 @@ var UNITDRIVE =             require('UNITDRIVE');
 
 module.exports.loop = function(){
     
-    MEMORYINIT.run();
+    MEMORYINIT.run(SD.roomcount);
     var nexi = [Game.getObjectById(SD.nexus_id[0]), Game.getObjectById(SD.nexus_id[1]), Game.getObjectById(SD.nexus_id[2]), Game.getObjectById(SD.nexus_id[3])];
     
     
@@ -19,7 +19,7 @@ module.exports.loop = function(){
     }
     
     //remote mining security system
-    for (let i=0; i<Memory.evac_timer.length; i++){
+    for (let i=0; i<SD.roomcount; i++){
         //invader handling: count down the timer, disable remote worker spawns, and possibly enable blood hunters
         if (Memory.evac_timer[i] > 0){
             Memory.evac_timer[i]--;
@@ -38,7 +38,7 @@ module.exports.loop = function(){
     }
     
     //email alerts for vault energy conservation
-    for (let i=0; i<Memory.vaultAlert_EN.length; i++){
+    for (let i=0; i<SD.roomcount; i++){
         if (i == 1) continue;
         //enable alert for a room when its vault rises past 15% of the minimum threshold
         if ((nexi[i].room.storage.store.energy > SD.vault_reserve_min * 1.15) && !Memory.vaultAlert_EN[i])

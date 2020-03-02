@@ -79,12 +79,14 @@ module.exports = {
             
             //select an initial target to fixate upon, or determine if the previous fixation is worth overriding for the new weakest structure (subtract percentage values)
             if (Game.getObjectById(unit.memory.fixation) == undefined ||
-            (Game.getObjectById(unit.memory.fixation).hits / Game.getObjectById(unit.memory.fixation).hitsMax) - base_perc > override_threshold)
+            (Game.getObjectById(unit.memory.fixation).hits / unit.memory.fixation_max) - base_perc > override_threshold){
                 unit.memory.fixation = weakest.id;
+                unit.memory.fixation_max = HPmax_base;
+            }
             
             //finally, attempt to repair the fixated target until its max / threshold
             var final_target = Game.getObjectById(unit.memory.fixation);
-            if (final_target.hits < final_target.hitsMax){
+            if (final_target.hits < unit.memory.fixation_max){
                 if (unit.repair(final_target) == ERR_NOT_IN_RANGE)
                     unit.moveTo(final_target, {visualizePathStyle: {stroke: '#0000ff'}});
             }

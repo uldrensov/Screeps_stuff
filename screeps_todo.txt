@@ -1,11 +1,10 @@
 TODO urgent:
-	probe wont switch fixat on rampart/wall thresh bc it reads from a getMAX instead of the thresh
 	purifiers should contest cores that are taken (e.g. controller subducts and core is still not dead)
 	[DEFENCE] think about how tower should behave in general
 	[SOFTLOCK] before calling a softlock, drones should deposit pocket energy if there are no more assims/energy on the map
 	[SOFTLOCK] take into acc the drone's ignore lim and their current pocket energy when calcing room energy?
 	war probe + drone = doesnt go beyond walls; only bare essentials for base maintenance
-		//war mode: roleswap non war and set maxes for war
+		//war mode: disables pickups and tombs for those who can see it
 	
 TODO backlog:
 	[QOL] more status report info (pickups, wall/rampart distinction, invader/core alert)
