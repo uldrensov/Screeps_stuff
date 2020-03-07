@@ -2,7 +2,7 @@
 //cyan trail ("support")
 
 module.exports = {
-    run: function(unit, standby_flag){
+    run: function(unit, standby_flag, home_index){
         
         //trek to the standby point once
         if (!unit.memory.in_place)
@@ -19,6 +19,10 @@ module.exports = {
             }
             else if (unit.claimController(unit.room.controller) == ERR_NOT_IN_RANGE)
                 unit.moveTo(unit.room.controller, {visualizePathStyle: {stroke: '#00ffff'}});
+            else if (unit.room.controller.my){
+                Memory.visionary_MAX[home_index] = 0;
+                unit.suicide();
+            }
         }
     }
 };

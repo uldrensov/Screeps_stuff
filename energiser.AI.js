@@ -38,14 +38,14 @@ module.exports = {
                         lowest_tower = towers[i];
                 }
                 if (unit.transfer(lowest_tower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(lowest_tower, {visualizePathStyle: {stroke: '#0000ff'}});
+                    unit.moveTo(lowest_tower);
             }
         }
         else{
             //fetch: vault
             if (unit.room.storage != undefined && unit.room.storage.store.energy > 0){
                 if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#0000ff'}});
+                    unit.moveTo(unit.room.storage);
             }
             //fetch: containers (fullest)
             else if (canisters.length){
@@ -56,7 +56,7 @@ module.exports = {
                 }
                 
                 if (unit.withdraw(fullest_canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(fullest_canister, {visualizePathStyle: {stroke: '#0000ff'}});
+                    unit.moveTo(fullest_canister);
             }
         }
     }

@@ -38,7 +38,7 @@ var khaydarinmonolith =     require('khaydarinmonolith.AI');
 module.exports = {
     run: function(){
         
-        var nexi = [Game.getObjectById(SD.nexus_id[0]), Game.getObjectById(SD.nexus_id[1]), Game.getObjectById(SD.nexus_id[2]), Game.getObjectById(SD.nexus_id[3])];
+        var nexi = [Game.getObjectById(SD.nexus_id[0]), Game.getObjectById(SD.nexus_id[1]), Game.getObjectById(SD.nexus_id[2]), Game.getObjectById(SD.nexus_id[3]), Game.getObjectById(SD.nexus_id[4])];
         
         
         for (let k=0; k<nexi.length; k++){
@@ -171,7 +171,12 @@ module.exports = {
                     }
                     break;
                 case 'visionary':
-                    visionary.run(unit, Game.flags['GOGO']);
+                    for (let i=0; i<nexi.length; i++){
+                        if (unit.memory.home == nexi[i].room.name){
+                            visionary.run(unit, Game.flags['GOGO'], i);
+                            break;
+                        }
+                    }
                     break;
                 case 'specialist':
                     specialist.run(unit, Game.flags['GOGO']);

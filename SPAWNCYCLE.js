@@ -6,7 +6,7 @@ var SD = require('SOFTDATA');
 module.exports = {
     run: function(){
         
-        var nexi = [Game.getObjectById(SD.nexus_id[0]), Game.getObjectById(SD.nexus_id[1]), Game.getObjectById(SD.nexus_id[2]), Game.getObjectById(SD.nexus_id[3])];
+        var nexi = [Game.getObjectById(SD.nexus_id[0]), Game.getObjectById(SD.nexus_id[1]), Game.getObjectById(SD.nexus_id[2]), Game.getObjectById(SD.nexus_id[3]), Game.getObjectById(SD.nexus_id[4])];
         var gateways = [Game.getObjectById(SD.gateway_id[0]), Game.getObjectById(SD.gateway_id[1]), Game.getObjectById(SD.gateway_id[2]),];
     
     
@@ -96,7 +96,7 @@ module.exports = {
             && emergencyDrone_gang[k].length == 0){
                 if (nexi[k].spawnCreep(SD.edrone_body, 'EmergencyDrone-' + Game.time % SD.time_offset, {memory: {role: 'emergencyDrone'}}) == OK){
                     console.log('Room #' + k + ': >>>EmergencyDrone-' + Game.time % SD.time_offset + ' spawning.<<<');
-                    Game.notify('Emergency drone deployed in room #' + k,0);
+                    //Game.notify('Emergency drone deployed in room #' + k,0);
                 }
             }
             //assimilator: shortbut-spawn these to accompany the emergency drone, if one is active
@@ -247,7 +247,7 @@ module.exports = {
             //spawning fast-track units...
                     //visionary: used in claiming up new rooms
                     else if (visionary_gang[k].length < Memory.visionary_MAX[k]){
-                        if (nexi[k].spawnCreep(SD.visio_body[k], 'Visionary-' + Game.time % SD.time_offset, {memory: {role: 'visionary', in_place: false}}) == OK)
+                        if (nexi[k].spawnCreep(SD.visio_body[k], 'Visionary-' + Game.time % SD.time_offset, {memory: {role: 'visionary', home: nexi[k].room.name, in_place: false}}) == OK)
                             console.log('Visionary-' + Game.time % SD.time_offset + ' spawning.');
                     }
                     //specialist: used in setting up new rooms (assists architects)

@@ -68,31 +68,31 @@ module.exports = {
                     break;
                 }
             }
-            if (treasure_held){
+            if (treasure_held && unit.room.storage != undefined){
                 if (unit.transfer(unit.room.storage, treasure_to_deposit) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
+                    unit.moveTo(unit.room.storage);
             }
             else{
                 //unload: extension
                 if (pylon){
                     if (unit.transfer(pylon, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(pylon, {visualizePathStyle: {stroke: '#ffffff'}});
+                        unit.moveTo(pylon);
                 }
                 //unload: main nexus
                 else if (nexus.store.getFreeCapacity(RESOURCE_ENERGY) != 0){
                     if (unit.transfer(nexus, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(nexus, {visualizePathStyle: {stroke: '#ffffff'}});
+                        unit.moveTo(nexus);
                 }
                 //unload: local nexi
                 //NOTE: if this branch is taken, main nexus is already omitted from local_nexi
                 else if (local_nexi.length){
                     if (unit.transfer(local_nexi[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(local_nexi[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                        unit.moveTo(local_nexi[0]);
                 }
                 //unload: vault<energy>
                 else if (unit.room.storage != undefined){
                     if (unit.transfer(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
+                        unit.moveTo(unit.room.storage);
                 }
             }
         }
@@ -100,7 +100,7 @@ module.exports = {
             //fetch: ruins
             if (remains.length){
                 if (unit.withdraw(remains[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(remains[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                    unit.moveTo(remains[0],);
             }
             ///*
             //fetch: tombstones<minerals>, tombstones<energy> (fullest)
@@ -133,7 +133,7 @@ module.exports = {
                     }
                 }
                 if (unit.withdraw(richest_tomb, treasure_to_withdraw) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(richest_tomb, {visualizePathStyle: {stroke: '#ffffff'}});
+                    unit.moveTo(richest_tomb);
                 }
             }
             //*/
@@ -159,7 +159,7 @@ module.exports = {
                 }
                 
                 if (unit.pickup(chosen_scrap) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(chosen_scrap, {visualizePathStyle: {stroke: '#ffffff'}});
+                    unit.moveTo(chosen_scrap);
             }
             //*/
             //fetch: containers (fullest; fixation)
@@ -181,14 +181,14 @@ module.exports = {
                 //finally, withdraw from the fixated target
                 var canister_target = Game.getObjectById(unit.memory.fixation);
                 if (unit.withdraw(canister_target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(canister_target, {visualizePathStyle: {stroke: '#ffffff'}});
+                    unit.moveTo(canister_target);
             }
             //fetch: vault
             else if (unit.room.storage != undefined){
                 //only fetch from the vault if the energy will actually be used
                 if (pylon || local_nexi.length){
                     if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
+                        unit.moveTo(unit.room.storage);
                 }
             }
         }

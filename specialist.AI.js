@@ -6,7 +6,7 @@ module.exports = {
         
         //trek to the standby point once
         if (!unit.memory.in_place)
-            unit.moveTo(standby_flag, {visualizePathStyle: {stroke: '#00ff00'}});
+            unit.moveTo(standby_flag);
         if (unit.pos.isEqualTo(standby_flag.pos))
             unit.memory.in_place = true;
         
@@ -47,7 +47,7 @@ module.exports = {
             if (!unit.memory.fetching && hotspot){
                 //unload: construction hotspot
                 if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(hotspot, {visualizePathStyle: {stroke: '#00ff00'}});
+                    unit.moveTo(hotspot);
             }
             
             else{
@@ -60,21 +60,21 @@ module.exports = {
                             chosen_scrap = scraps[i];
                     }
                     if (unit.pickup(chosen_scrap) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(chosen_scrap, {visualizePathStyle: {stroke: '#00ff00'}});
+                        unit.moveTo(chosen_scrap);
                 }
                 //fetch: ruins
                 else if (remains.length){
                     if (unit.withdraw(remains[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(remains[0], {visualizePathStyle: {stroke: '#00ff00'}});
+                        unit.moveTo(remains[0]);
                 }
                 //fetch: source (manual override)
                 else if (unit.memory.force_src != undefined){
                     if (unit.harvest(Game.getObjectById(unit.memory.force_src)) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(Game.getObjectById(unit.memory.force_src), {visualizePathStyle: {stroke: '#00ff00'}});
+                        unit.moveTo(Game.getObjectById(unit.memory.force_src));
                 }
                 //fetch: sources
                 else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(sources[0], {visualizePathStyle: {stroke: '#00ff00'}});
+                    unit.moveTo(sources[0]);
             }
         }
     }

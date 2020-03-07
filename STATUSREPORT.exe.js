@@ -4,7 +4,7 @@
 module.exports = {
     run: function(room_num){
         
-        var nexi = [Game.spawns['Spawn1'], Game.spawns['Spawn2'], Game.spawns['Spawn3'], Game.spawns['Spawn4']];
+        var nexi = [Game.spawns['Spawn1'], Game.spawns['Spawn2'], Game.spawns['Spawn3'], Game.spawns['Spawn4'], Game.spawns['Spawn5']];
         
         
         //arg validation

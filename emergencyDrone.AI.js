@@ -51,17 +51,17 @@ module.exports = {
             //unload: extension
             if (pylon){
                 if (unit.transfer(pylon, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(pylon, {visualizePathStyle: {stroke: '#ffffff'}});
+                    unit.moveTo(pylon);
             }
             //unload: nexus
             else if (unit.transfer(nexus, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                unit.moveTo(nexus, {visualizePathStyle: {stroke: '#ffffff'}});
+                unit.moveTo(nexus);
         }
         else{
             //fetch: vault
             if (unit.room.storage != undefined && unit.room.storage.store.energy > 0){
                 if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
+                    unit.moveTo(unit.room.storage);
             }
             //fetch: containers (fullest; fixation)
             else if (canisters.length){
@@ -82,7 +82,7 @@ module.exports = {
                 //finally, withdraw from the fixated target
                 var canister_target = Game.getObjectById(unit.memory.fixation);
                 if (unit.withdraw(canister_target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(canister_target, {visualizePathStyle: {stroke: '#ffffff'}});
+                    unit.moveTo(canister_target);
             }
             //fetch: tombstones<energy> (fullest)
             else if (tombs.length){
@@ -94,7 +94,7 @@ module.exports = {
                 }
                 //approach and withdraw
                 if (unit.withdraw(richest_tomb, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(richest_tomb, {visualizePathStyle: {stroke: '#ffffff'}});
+                    unit.moveTo(richest_tomb);
             }
             //TODO: pickups
             ///*
@@ -108,12 +108,12 @@ module.exports = {
                 }
                 
                 if (unit.pickup(chosen_scrap) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(chosen_scrap, {visualizePathStyle: {stroke: '#ffffff'}});
+                    unit.moveTo(chosen_scrap);
             }
             //*/
             //fetch: sources
             else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE)
-                unit.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                unit.moveTo(sources[0]);
         }
     }
 };

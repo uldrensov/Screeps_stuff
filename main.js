@@ -7,7 +7,7 @@ var UNITDRIVE =             require('UNITDRIVE');
 module.exports.loop = function(){
     
     MEMORYINIT.run(SD.roomcount);
-    var nexi = [Game.getObjectById(SD.nexus_id[0]), Game.getObjectById(SD.nexus_id[1]), Game.getObjectById(SD.nexus_id[2]), Game.getObjectById(SD.nexus_id[3])];
+    var nexi = [Game.getObjectById(SD.nexus_id[0]), Game.getObjectById(SD.nexus_id[1]), Game.getObjectById(SD.nexus_id[2]), Game.getObjectById(SD.nexus_id[3]), Game.getObjectById(SD.nexus_id[4])];
     
     
     //garbage collect the names of expired units
@@ -39,7 +39,8 @@ module.exports.loop = function(){
     
     //email alerts for vault energy conservation
     for (let i=0; i<SD.roomcount; i++){
-        if (i == 1) continue;
+        if (nexi[i].room.storage == undefined) continue;
+        
         //enable alert for a room when its vault rises past 15% of the minimum threshold
         if ((nexi[i].room.storage.store.energy > SD.vault_reserve_min * 1.15) && !Memory.vaultAlert_EN[i])
             Memory.vaultAlert_EN[i] = true;

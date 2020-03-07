@@ -88,7 +88,7 @@ module.exports = {
             var final_target = Game.getObjectById(unit.memory.fixation);
             if (final_target.hits < unit.memory.fixation_max){
                 if (unit.repair(final_target) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(final_target, {visualizePathStyle: {stroke: '#0000ff'}});
+                    unit.moveTo(final_target);
             }
             //release the fixation if it reaches max
             else delete unit.memory.fixation;
@@ -97,7 +97,7 @@ module.exports = {
             //fetch: vault (respect limit)
             if (unit.room.storage != undefined && unit.room.storage.store.energy > reserve){
                 if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#0000ff'}});
+                    unit.moveTo(unit.room.storage);
             }
             //fetch: containers (fullest)
             else if (canisters.length){
@@ -106,11 +106,11 @@ module.exports = {
                     fullest_canister = canisters[1];
                 
                 if (unit.withdraw(fullest_canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(fullest_canister, {visualizePathStyle: {stroke: '#0000ff'}});
+                    unit.moveTo(fullest_canister);
             }
             //fetch: sources
             else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE)
-                unit.moveTo(sources[0], {visualizePathStyle: {stroke: '#0000ff'}});
+                unit.moveTo(sources[0]);
         }
     }
 };
