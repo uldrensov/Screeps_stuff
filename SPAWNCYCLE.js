@@ -6,8 +6,14 @@ var SD = require('SOFTDATA');
 module.exports = {
     run: function(){
         
-        var nexi = [Game.getObjectById(SD.nexus_id[0]), Game.getObjectById(SD.nexus_id[1]), Game.getObjectById(SD.nexus_id[2]), Game.getObjectById(SD.nexus_id[3]), Game.getObjectById(SD.nexus_id[4])];
-        var gateways = [Game.getObjectById(SD.gateway_id[0]), Game.getObjectById(SD.gateway_id[1]), Game.getObjectById(SD.gateway_id[2]),];
+        var nexi = [];
+        for (let i=0; i<SD.nexus_id.length; i++){
+            nexi[i] = Game.getObjectById(SD.nexus_id[i]);
+        }
+        var gateways = [];
+        for (let i=0; i<SD.gateway_id.length; i++){
+            gateways[i] = Game.getObjectById(SD.gateway_id[i]);
+        }
     
     
         //for storing population count in each room
@@ -125,7 +131,7 @@ module.exports = {
                 if (nexi[k].spawnCreep(SD.energ_body[k], 'Energiser-' + Game.time % SD.time_offset, {memory: {role: 'energiser'}}) == OK)
                     console.log('Room #' + k + ': Energiser-' + Game.time % SD.time_offset + ' spawning.');
                 else if (gateways[k] != undefined){
-                    if (gateways[0].spawnCreep(SD.energ_body[k], 'Energiser-' + Game.time % SD.time_offset, {memory: {role: 'energiser'}}) == OK)
+                    if (gateways[k].spawnCreep(SD.energ_body[k], 'Energiser-' + Game.time % SD.time_offset, {memory: {role: 'energiser'}}) == OK)
                         console.log('Room #' + k + ': Energiser-' + Game.time % SD.time_offset + ' spawning.');
                 }
             }

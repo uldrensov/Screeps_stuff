@@ -34,13 +34,13 @@ module.exports = {
                     if (input.store.getUsedCapacity(unit.memory.order_type) == 0) //but there is no more to load
                         input_remainder = true;
                     else if (unit.withdraw(input, unit.memory.order_type) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(input, {visualizePathStyle: {stroke: '#ffffff'}});
+                        unit.moveTo(input);
                 }
                 //unload
                 if (unit.store.getFreeCapacity(unit.memory.order_type) == 0 || input_remainder){ //only when unit is fully loaded
                     var unload_result = unit.transfer(output, unit.memory.order_type);
                     if (unload_result == ERR_NOT_IN_RANGE)
-                        unit.moveTo(output, {visualizePathStyle: {stroke: '#ffffff'}});
+                        unit.moveTo(output);
                     //record work done to memery
                     else if (unload_result == OK)
                         unit.memory.task_progress += unit.store.getUsedCapacity(unit.memory.order_type);
@@ -56,6 +56,6 @@ module.exports = {
         }
         //built-in economic killswitch
         else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
-            unit.moveTo(nexus, {visualizePathStyle: {stroke: '#ffffff'}});
+            unit.moveTo(nexus);
     }
 };

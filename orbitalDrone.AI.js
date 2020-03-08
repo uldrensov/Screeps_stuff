@@ -32,22 +32,22 @@ module.exports = {
                 if (!unit.memory.fetching){
                     //navigate to homeroom
                     if (unit.room.name != unit.memory.home){
-                        unit.moveTo(dropoff, {visualizePathStyle: {stroke: '#ffff00'}});
+                        unit.moveTo(dropoff);
                     }
                     else{
                         //unload: vault (if container/link is designated, but full)
                         if (dropoff.store.getFreeCapacity(RESOURCE_ENERGY) == 0 && unit.room.storage != undefined)
-                            unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#ffff00'}});
+                            unit.moveTo(unit.room.storage);
                         //unload: container/link/vault
                         else if (unit.transfer(dropoff, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                            unit.moveTo(dropoff, {visualizePathStyle: {stroke: '#ffff00'}});
+                            unit.moveTo(dropoff);
                     }
                 }
                 else{
                     //rally at flag first
                     if (!unit.memory.in_place){
                         if (!unit.pos.isEqualTo(remote_flag.pos))
-                            unit.moveTo(remote_flag, {visualizePathStyle: {stroke: '#ffff00'}});
+                            unit.moveTo(remote_flag);
                         else unit.memory.in_place = true;
                     }
                     //if the reservation is lost, cut off remote worker spawns and self-killswitch
@@ -147,28 +147,28 @@ module.exports = {
                             //fetch: pickups<energy>
                             if (scraps.length){
                                 if (unit.pickup(scraps[0]) == ERR_NOT_IN_RANGE)
-                                    unit.moveTo(scraps[0], {visualizePathStyle: {stroke: '#ffff00'}});
+                                    unit.moveTo(scraps[0]);
                             }
                             //fetch: tombstones<energy>
                             else if (tombs.length){
                                 if (unit.withdraw(tombs[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                                    unit.moveTo(tombs[0], {visualizePathStyle: {stroke: '#ffff00'}});
+                                    unit.moveTo(tombs[0]);
                             }
                             //fetch: container
                             else if (unit.withdraw(canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                                unit.moveTo(canister, {visualizePathStyle: {stroke: '#ffff00'}});
+                                unit.moveTo(canister);
                         }
                     }
                 }
             }
             //enemies detected
             else{
-                unit.moveTo(Game.getObjectById(flee_point), {visualizePathStyle: {stroke: '#ffff00'}});
+                unit.moveTo(Game.getObjectById(flee_point));
                 unit.memory.in_place = false;
             }
         }
         //built-in economic killswitch
         else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
-            unit.moveTo(nexus, {visualizePathStyle: {stroke: '#ffff00'}});
+            unit.moveTo(nexus);
     }
 };

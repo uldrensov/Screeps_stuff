@@ -12,7 +12,7 @@ module.exports = {
             if (Memory.evac_timer[home_index] == 0){
                 //trek to the standby point once
                 if (!unit.memory.in_place)
-                    unit.moveTo(standby_flag, {visualizePathStyle: {stroke: '#ffff00'}});
+                    unit.moveTo(standby_flag);
                 if (unit.pos.isEqualTo(standby_flag.pos))
                     unit.memory.in_place = true;
                 
@@ -99,19 +99,19 @@ module.exports = {
                         //reserve the controller
                         if (i_threats == 0 && p_threats == 0){
                             if (unit.reserveController(unit.room.controller) == ERR_NOT_IN_RANGE)
-                                unit.moveTo(unit.room.controller, {visualizePathStyle: {stroke: '#ffff00'}});
+                                unit.moveTo(unit.room.controller);
                         }
                     }
                 }
             }
             //enemies detected
             else{
-                unit.moveTo(Game.getObjectById(flee_point), {visualizePathStyle: {stroke: '#ffff00'}});
+                unit.moveTo(Game.getObjectById(flee_point));
                 unit.memory.in_place = false;
             }
         }
         //built-in economic killswitch
         else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
-            unit.moveTo(nexus, {visualizePathStyle: {stroke: '#ffff00'}});
+            unit.moveTo(nexus);
     }
 };

@@ -1,10 +1,16 @@
 //executable script: creates a report providing details about a particular room
     //require('STATUSREPORT.exe').run(0)
 
+var SD = require('SOFTDATA');
+
+
 module.exports = {
     run: function(room_num){
         
-        var nexi = [Game.spawns['Spawn1'], Game.spawns['Spawn2'], Game.spawns['Spawn3'], Game.spawns['Spawn4'], Game.spawns['Spawn5']];
+        var nexi = [];
+        for (let i=0; i<SD.nexus_id.length; i++){
+            nexi[i] = Game.getObjectById(SD.nexus_id[i]);
+        }
         
         
         //arg validation

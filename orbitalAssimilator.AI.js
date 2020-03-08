@@ -31,7 +31,7 @@ module.exports = {
                 //rally at flag first
                 if (!unit.memory.in_place){
                     if (!unit.pos.isEqualTo(remote_flag.pos))
-                        unit.moveTo(remote_flag, {visualizePathStyle: {stroke: '#ffff00'}});
+                        unit.moveTo(remote_flag);
                     else unit.memory.in_place = true;
                 }
                 //if the reservation is lost, cut off remote worker spawns and self-killswitch
@@ -119,28 +119,28 @@ module.exports = {
                         if (dmg_canister){
                             if (unit.memory.able && dmg_canister.hits < dmg_canister.hitsMax){
                                 if (!unit.pos.isEqualTo(dmg_canister.pos))
-                                    unit.moveTo(dmg_canister, {visualizePathStyle: {stroke: '#ffff00'}});
+                                    unit.moveTo(dmg_canister);
                                 else unit.repair(dmg_canister);
                             }
                             else if (unit.harvest(src) == ERR_NOT_IN_RANGE)
                                 //fetch: sources
-                                unit.moveTo(src, {visualizePathStyle: {stroke: '#ffff00'}});
+                                unit.moveTo(src);
                         }
                         //fetch regardless of container's presence
                         else if (unit.harvest(src) == ERR_NOT_IN_RANGE)
                             //fetch: sources
-                            unit.moveTo(src, {visualizePathStyle: {stroke: '#ffff00'}});
+                            unit.moveTo(src);
                     }
                 }
             }
             //enemies detected
             else{
-                unit.moveTo(Game.getObjectById(flee_point), {visualizePathStyle: {stroke: '#ffff00'}});
+                unit.moveTo(Game.getObjectById(flee_point));
                 unit.memory.in_place = false;
             }
         }
         //built-in economic killswitch
         else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
-            unit.moveTo(nexus, {visualizePathStyle: {stroke: '#ffff00'}});
+            unit.moveTo(nexus);
     }
 };

@@ -10,13 +10,13 @@ module.exports = {
         if (!unit.memory.killswitch){
             //one-way room pathing
             if (unit.memory.home == unit.room.name)
-                unit.moveTo(pollution, {visualizePathStyle: {stroke: '#00ffff'}});
+                unit.moveTo(pollution);
             //reclaim the room
             else{
                 if (unit.room.controller.reservation != undefined){
                     if (unit.room.controller.reservation.username == 'Invader'){
                         if (unit.attackController(unit.room.controller) == ERR_NOT_IN_RANGE)
-                            unit.moveTo(unit.room.controller, {visualizePathStyle: {stroke: '#00ffff'}});
+                            unit.moveTo(unit.room.controller);
                     }
                     //edge case: false alarm
                     else if (unit.room.controller.reservation.username == unit.owner.username){
@@ -40,6 +40,6 @@ module.exports = {
         }
         //built-in economic killswitch
         else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
-            unit.moveTo(nexus, {visualizePathStyle: {stroke: '#00ffff'}});
+            unit.moveTo(nexus);
     }
 };

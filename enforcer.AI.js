@@ -10,7 +10,7 @@ module.exports = {
         if (!unit.memory.killswitch){
             //one-way room pathing
             if (unit.memory.home == unit.room.name)
-                unit.moveTo(incident, {visualizePathStyle: {stroke: '#ff0000'}});
+                unit.moveTo(incident);
             //secure the room
             else{
                 var heretic = unit.room.find(FIND_HOSTILE_STRUCTURES, {
@@ -22,7 +22,7 @@ module.exports = {
                 //kill cores
                 if (heretic.length){
                     if (unit.attack(heretic[0]) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(heretic[0], {visualizePathStyle: {stroke: '#ff0000'}});
+                        unit.moveTo(heretic[0]);
                 }
                 //clear the lockdown, self-killswitch, and possibly re-enable remote workers
                 else if (Memory.enforcer_MAX[home_index] > 0){
@@ -57,6 +57,6 @@ module.exports = {
         }
         //built-in economic killswitch
         else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
-            unit.moveTo(nexus, {visualizePathStyle: {stroke: '#ff0000'}});
+            unit.moveTo(nexus);
     }
 };

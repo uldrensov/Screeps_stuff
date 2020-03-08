@@ -17,7 +17,7 @@ module.exports = {
         if (!unit.memory.killswitch){
             //one-way room pathing
             if (unit.memory.home == unit.room.name)
-                unit.moveTo(bloodscent, {visualizePathStyle: {stroke: '#ff0000'}});
+                unit.moveTo(bloodscent);
             //secure the room
             else{
                 var bloodmark = unit.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
@@ -25,7 +25,7 @@ module.exports = {
                 //kill invader
                 if (bloodmark){
                     if (unit.attack(bloodmark) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(bloodmark, {visualizePathStyle: {stroke: '#ff0000'}});
+                        unit.moveTo(bloodmark);
                 }
                 //force-reset evac timer, then self-killswitch
                 else if (Memory.evac_timer[home_index] > 0){
@@ -41,6 +41,6 @@ module.exports = {
         }
         //built-in economic killswitch
         else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
-            unit.moveTo(nexus, {visualizePathStyle: {stroke: '#ff0000'}});
+            unit.moveTo(nexus);
     }
 };

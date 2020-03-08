@@ -38,7 +38,10 @@ var khaydarinmonolith =     require('khaydarinmonolith.AI');
 module.exports = {
     run: function(){
         
-        var nexi = [Game.getObjectById(SD.nexus_id[0]), Game.getObjectById(SD.nexus_id[1]), Game.getObjectById(SD.nexus_id[2]), Game.getObjectById(SD.nexus_id[3]), Game.getObjectById(SD.nexus_id[4])];
+        var nexi = [];
+        for (let i=0; i<SD.nexus_id.length; i++){
+            nexi[i] = Game.getObjectById(SD.nexus_id[i]);
+        }
         
         
         for (let k=0; k<nexi.length; k++){
