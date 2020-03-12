@@ -8,41 +8,53 @@ module.exports = {
         
         
         //inputs: containers (ample), pickups<energy> (ample), pickups<mineral>, tombstones (non-empty), ruins (non-empty)
-        var canisters = unit.room.find(FIND_STRUCTURES, {
-            filter: structure => {
-                return structure.structureType == STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
-            }
-        });
-        var scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
-            filter: resource => {
-                return (resource.resourceType == RESOURCE_ENERGY && resource.amount > ignore_lim) ||
-                resource.resourceType != RESOURCE_ENERGY;
-            }
-        });
-        var tombs = unit.room.find(FIND_TOMBSTONES, {
-            filter: RoomObject => {
-                return RoomObject.store.getUsedCapacity() > 0;
-            }
-        });
-        var remains = unit.room.find(FIND_RUINS, {
-            filter: RoomObject => {
-                return RoomObject.store.getUsedCapacity() > 0;
-            }
-        });
+        if (unit.memory.canisters == undefined || Game.time % 10 == 0){
+            unit.memory.canisters = unit.room.find(FIND_STRUCTURES, {
+                filter: structure => {
+                    return structure.structureType == STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
+                }
+            });
+        }
+        if (unit.memory.scraps == undefined || Game.time % 10 == 0){
+            unit.memory.scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
+                filter: resource => {
+                    return (resource.resourceType == RESOURCE_ENERGY && resource.amount > ignore_lim) ||
+                    resource.resourceType != RESOURCE_ENERGY;
+                }
+            });
+        }
+        if (unit.memory.tombs == undefined || Game.time % 10 == 0){
+            unit.memory.tombs = unit.room.find(FIND_TOMBSTONES, {
+                filter: RoomObject => {
+                    return RoomObject.store.getUsedCapacity() > 0;
+                }
+            });
+        }
+        if (unit.memory.remains == undefined || Game.time % 10 == 0){
+            unit.memory.remains = unit.room.find(FIND_RUINS, {
+                filter: RoomObject => {
+                    return RoomObject.store.getUsedCapacity() > 0;
+                }
+            });
+        }
         
         //outputs: extension (non-full), nexi (non-full)
         //NOTE: local_nexi includes main nexus as well
-        var pylons = unit.room.find(FIND_STRUCTURES, {
-            filter: structure => {
-                return structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-            }
-        });
-        if (pylons.length) var pylon = unit.pos.findClosestByPath(pylons);
-        var local_nexi = unit.room.find(FIND_STRUCTURES, {
-            filter: structure => {
-                return structure.structureType == STRUCTURE_SPAWN && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-            }
-        });
+        if (unit.memory.pylons == undefined || Game.time % 10 == 0){
+            unit.memory.pylons = unit.room.find(FIND_STRUCTURES, {
+                filter: structure => {
+                    return structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                }
+            });
+        }
+        if (unit.memory.pylons.length) var pylon = unit.pos.findClosestByPath(unit.memory.pylons);
+        if (unit.memory.local_nexi == undefined || Game.time % 10 == 0){
+            unit.memory.local_nexi = unit.room.find(FIND_STRUCTURES, {
+                filter: structure => {
+                    return structure.structureType == STRUCTURE_SPAWN && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                }
+            });
+        }
         
         
         //2-state fetch/unload FSM...
@@ -85,9 +97,9 @@ module.exports = {
                 }
                 //unload: local nexi
                 //NOTE: if this branch is taken, main nexus is already omitted from local_nexi
-                else if (local_nexi.length){
-                    if (unit.transfer(local_nexi[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(local_nexi[0]);
+                else if (unit.memory.local_nexi.length){
+                    if (unit.transfer(Game.getObjectById(unit.memory.local_nexi[0].id), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(Game.getObjectById(unit.memory.local_nexi[0].id));
                 }
                 //unload: vault<energy>
                 else if (unit.room.storage != undefined){
@@ -98,23 +110,23 @@ module.exports = {
         }
         else{
             //fetch: ruins
-            if (remains.length){
-                if (unit.withdraw(remains[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(remains[0],);
+            if (unit.memory.remains.length){
+                if (unit.withdraw(Game.getObjectById(unit.memory.remains[0].id), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(Game.getObjectById(unit.memory.remains[0].id));
             }
             ///*
             //fetch: tombstones<minerals>, tombstones<energy> (fullest)
-            else if (tombs.length){
-                var richest_tomb = tombs[0];
+            else if (unit.memory.tombs.length){
+                var richest_tomb = unit.memory.tombs[0];
                 var treasure_found_t = false;
                 var treasure_to_withdraw = RESOURCE_ENERGY;
                 
                 //search each tombstone for any minerals (index 1 to skip energy)
-                for (let i=0; i<tombs.length; i++){
+                for (let i=0; i<unit.memory.tombs.length; i++){
                     for (let j=1; j<RESOURCES_ALL.length; j++){
-                        if (tombs[i].store.getUsedCapacity(RESOURCES_ALL[j]) != 0){
+                        if (Game.getObjectById(unit.memory.tombs[i].id).store.getUsedCapacity(RESOURCES_ALL[j]) != 0){
                             treasure_found_t = true;
-                            richest_tomb = tombs[i];
+                            richest_tomb = unit.memory.tombs[i];
                             treasure_to_withdraw = RESOURCES_ALL[j];
                             break;
                         }
@@ -125,50 +137,50 @@ module.exports = {
                 
                 //if no minerals found, re-run the search with respect to energy
                 if (!treasure_found_t){
-                    for (let i=0; i<tombs.length; i++){
-                        if (tombs[i].store.getUsedCapacity(RESOURCE_ENERGY) >
-                            richest_tomb.store.getUsedCapacity(RESOURCE_ENERGY)){
-                            richest_tomb = tombs[i];
+                    for (let i=0; i<unit.memory.tombs.length; i++){
+                        if (Game.getObjectById(unit.memory.tombs[i].id).store.getUsedCapacity(RESOURCE_ENERGY) >
+                            Game.getObjectById(richest_tomb.id).store.getUsedCapacity(RESOURCE_ENERGY)){
+                            richest_tomb = unit.memory.tombs[i];
                         }
                     }
                 }
-                if (unit.withdraw(richest_tomb, treasure_to_withdraw) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(richest_tomb);
+                if (unit.withdraw(Game.getObjectById(richest_tomb.id), treasure_to_withdraw) == ERR_NOT_IN_RANGE){
+                    unit.moveTo(Game.getObjectById(richest_tomb.id));
                 }
             }
             //*/
             ///*
             //fetch: pickups<minerals> (least TTL), pickups<energy> (fullest))
-            else if (scraps.length){
-                var chosen_scrap = scraps[0];
+            else if (unit.memory.scraps.length){
+                var chosen_scrap = unit.memory.scraps[0];
                 var treasure_found_s = false;
                 
                 //find the most endangered mineral pickup
-                for (let i=0; i<scraps.length; i++){
-                    if (scraps[i].resourceType != RESOURCE_ENERGY && scraps[i].amount < chosen_scrap.amount){
-                        chosen_scrap = scraps[i];
+                for (let i=0; i<unit.memory.scraps.length; i++){
+                    if (unit.memory.scraps[i].resourceType != RESOURCE_ENERGY && unit.memory.scraps[i].amount < chosen_scrap.amount){
+                        chosen_scrap = unit.memory.scraps[i];
                         treasure_found_s = true;
                     }
                 }
                 //if no minerals found, re-run the search with respect to energy
                 if (!treasure_found_s){
-                    for (let i=0; i<scraps.length; i++){
-                        if (scraps[i].energy > chosen_scrap.energy)
-                            chosen_scrap = scraps[i];
+                    for (let i=0; i<unit.memory.scraps.length; i++){
+                        if (unit.memory.scraps[i].energy > chosen_scrap.energy)
+                            chosen_scrap = unit.memory.scraps[i];
                     }
                 }
                 
-                if (unit.pickup(chosen_scrap) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(chosen_scrap);
+                if (unit.pickup(Game.getObjectById(chosen_scrap.id)) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(Game.getObjectById(chosen_scrap.id));
             }
             //*/
             //fetch: containers (fullest; fixation)
-            else if (canisters.length){
+            else if (unit.memory.canisters.length){
                 //determine the fullest container in play
-                var fullest_canister = canisters[0];
-                for (let i=0; i<canisters.length; i++){
-                    if (canisters[i].store.getUsedCapacity(RESOURCE_ENERGY) > fullest_canister.store.getUsedCapacity(RESOURCE_ENERGY))
-                        fullest_canister = canisters[i];
+                var fullest_canister = unit.memory.canisters[0];
+                for (let i=0; i<unit.memory.canisters.length; i++){
+                    if (Game.getObjectById(unit.memory.canisters[i].id).store.getUsedCapacity(RESOURCE_ENERGY) > Game.getObjectById(fullest_canister.id).store.getUsedCapacity(RESOURCE_ENERGY))
+                        fullest_canister = unit.memory.canisters[i];
                 }
                 
                 //if there is no current target container, "fixate" on the fullest one
@@ -186,7 +198,7 @@ module.exports = {
             //fetch: vault
             else if (unit.room.storage != undefined){
                 //only fetch from the vault if the energy will actually be used
-                if (pylon || local_nexi.length){
+                if (pylon || unit.memory.local_nexi.length){
                     if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(unit.room.storage);
                 }

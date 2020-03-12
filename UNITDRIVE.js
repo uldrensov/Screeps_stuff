@@ -109,13 +109,15 @@ module.exports = {
             }
             
             //towers
-            var local_towers = nexi[k].room.find(FIND_STRUCTURES, {
-                filter: structure => {
-                    return structure.structureType == STRUCTURE_TOWER;
-                }
-            });
-            for (let i=0; i<local_towers.length; i++){
-                khaydarinmonolith.run(local_towers[i].id, SD.tower_reserve_ratio, k);
+            if (Memory.UNITDRIVE__local_towers == undefined || Game.time % 10 == 0){
+                Memory.UNITDRIVE__local_towers = nexi[k].room.find(FIND_STRUCTURES, {
+                    filter: structure => {
+                        return structure.structureType == STRUCTURE_TOWER;
+                    }
+                });
+            }
+            for (let i=0; i<Memory.UNITDRIVE__local_towers.length; i++){
+                khaydarinmonolith.run(Memory.UNITDRIVE__local_towers[i].id, SD.tower_reserve_ratio, k);
             }
         }
     
@@ -144,7 +146,7 @@ module.exports = {
                 case 'orbitalDrone':
                     for (let i=0; i<nexi.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
-                            orbitalDrone.run(unit, SD.nexus_id[i], SD.remotecanister_id[i], SD.remoteflag[i], SD.remotedrop_id[i], SD.en_ignore_lim, SD.tower_id[i], i);
+                            orbitalDrone.run(unit, SD.nexus_id[i], SD.remotecanister_id[i], SD.reserveflag[i], SD.remotedrop_id[i], SD.en_ignore_lim, SD.tower_id[i], i);
                             break;
                         }
                     }
@@ -182,7 +184,7 @@ module.exports = {
                     }
                     break;
                 case 'specialist':
-                    specialist.run(unit, Game.flags['GOGO']);
+                    specialist.run(unit, Game.flags['Protodermis']);
                     break;
                 case 'saviour':
                     saviour.run(unit, SD.nexus_id[0], SD.controller_id[2], SD.vault_reserve_min);

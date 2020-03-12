@@ -63,30 +63,56 @@ module.exports = {
         
         
             //determine if mineral mining is possible
-            var extractor = nexi[k].room.find(FIND_STRUCTURES, {
-                filter: structure => {
-                    return structure.structureType == STRUCTURE_EXTRACTOR;
-                }
-            });
-            var minerals = nexi[k].room.find(FIND_MINERALS)[0];
-            if (extractor.length && minerals.mineralAmount > 0){
+            if (Memory.SPAWNCYCLE__extractor[k] == undefined || Game.time % 10 == 0){
+                Memory.SPAWNCYCLE__extractor[k] = nexi[k].room.find(FIND_STRUCTURES, {
+                    filter: structure => {
+                        return structure.structureType == STRUCTURE_EXTRACTOR;
+                    }
+                });
+            }
+            if (Memory.SPAWNCYCLE__minerals[k] == undefined || Game.time % 10 == 0)
+                Memory.SPAWNCYCLE__minerals[k] = nexi[k].room.find(FIND_MINERALS)[0];
+            if (Memory.SPAWNCYCLE__extractor[k].length && Memory.SPAWNCYCLE__minerals[k].mineralAmount > 0){
                 Memory.ancientDrone_MAX[k] = 1;
                 Memory.ancientAssimilator_MAX[k] = 1;
             }
-            else if (extractor.length){
+            else if (Memory.SPAWNCYCLE__extractor[k].length){
                 Memory.ancientDrone_MAX[k] = -1;
                 Memory.ancientAssimilator_MAX[k] = -1;
             }
             
-            //for edrone spawn condition, count up total room energy within spawn structures, canisters, and the vault
-            var local_canisters = nexi[k].room.find(FIND_STRUCTURES, {
-                filter: structure => {
-                    return structure.structureType == STRUCTURE_CONTAINER;
-                }
-            });
+            //for edrone spawn condition, calculate the room's drone/assimilator/acolyte prices
+            var drone_price = 1;
+            for (let i=0; i<SD.drone_body[k].length; i++){
+                if (SD.drone_body[k][i] == CARRY || SD.drone_body[k][i] == MOVE)
+                    drone_price += 50;
+            }
+            var assim_price = 0;
+            for (let i=0; i<SD.assim_body[k].length; i++){
+                if (SD.assim_body[k][i] == WORK)
+                    assim_price += 100;
+                else if (SD.drone_body[k][i] == MOVE)
+                    assim_price += 50;
+            }
+            var acoly_price = 0;
+            for (let i=0; i<SD.acoly_body[k].length; i++){
+                if (SD.acoly_body[k][i] == WORK)
+                    assim_price += 100;
+                else if (SD.acoly_body[k][i] == CARRY || SD.drone_body[k][i] == MOVE)
+                    acoly_price += 50;
+            }
+            
+            //also for edrone spawn condition, count up total room energy within spawn structures, canisters, and the vault
+            if (Memory.SPAWNCYCLE__local_canisters[k] == undefined || Game.time % 10 == 0){
+                Memory.SPAWNCYCLE__local_canisters[k] = nexi[k].room.find(FIND_STRUCTURES, {
+                    filter: structure => {
+                        return structure.structureType == STRUCTURE_CONTAINER;
+                    }
+                });
+            }
             var canister_energy = 0;
-            for (let i=0; i<local_canisters.length; i++){
-                canister_energy += local_canisters[i].store.energy;
+            for (let i=0; i<Memory.SPAWNCYCLE__local_canisters[k].length; i++){
+                canister_energy += Memory.SPAWNCYCLE__local_canisters[k][i].store.energy;
             }
             var vault_energy = 0;
             if (nexi[k].room.storage != undefined)
@@ -96,9 +122,9 @@ module.exports = {
             
         //spawning emergency units...
             //emergency drone: if drones go extinct, or if both assimilators and acolytes go extinct without leaving behind enough canister/vault energy for either
-            if (((drone_gang[k].length == 0 && nexi[k].room.energyAvailable < SD.drone_price[k]) ||
+            if (((drone_gang[k].length == 0 && nexi[k].room.energyAvailable < drone_price) ||
             ((assimilator_gang[k].length == 0 && assimilator2_gang[k].length == 0 && acolyte_gang[k].length == 0 && acolyte2_gang[k].length == 0) &&
-            (accessible_energy < SD.assim_price[k] || accessible_energy < SD.acoly_price[k])))
+            (accessible_energy < assim_price[k] || accessible_energy < acoly_price[k])))
             && emergencyDrone_gang[k].length == 0){
                 if (nexi[k].spawnCreep(SD.edrone_body, 'EmergencyDrone-' + Game.time % SD.time_offset, {memory: {role: 'emergencyDrone'}}) == OK){
                     console.log('Room #' + k + ': >>>EmergencyDrone-' + Game.time % SD.time_offset + ' spawning.<<<');

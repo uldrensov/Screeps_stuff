@@ -7,9 +7,6 @@ module.exports = {
     time_offset:            100000,
     fixation_override:      .25, //probes will break fixation upon spotting an absolute % gap this wide
     canister_bias:          300, //can force canister-fetching units to prefer one by default, until this wide of a disparity is detected
-    drone_price:            [1500,600,1500,1200,400], //must be set to >300
-    assim_price:            [650,650,550,650],
-    acoly_price:            [850,0,0,1050],
     claim_strength:         [4,3,3,2],
     en_ignore_lim:          100, //drones/sacrificers/probes will ignore containers/pickups containing less energy than this
     tower_reserve_ratio:    .5, //towers will reserve this percentage of their energy for attacking
@@ -31,18 +28,19 @@ module.exports = {
     remoteflag:             [Game.flags['Terrazine'], Game.flags['Vespene'], Game.flags['Jorium'], Game.flags['Protodermis']], //rally point for remote mining
     remotectrl_id:          ['5bbcae809099fc012e6392ef', 'NULL', '5bbcaea69099fc012e63960d', '5bbcae809099fc012e6392f2'],
     remotesource_id:        ['5bbcae809099fc012e6392ee', 'NULL', '5bbcaea69099fc012e63960e', '5bbcae809099fc012e6392f1'],
-    remotecanister_id:      ['5e4c68eb12701789c879b329', 'NULL', '5e490bf22a3d564b0565c52d', '5e5c6b583fccdf0ca1dfcf37'], //drop-mining containers (o.assimilator)
+    remotecanister_id:      ['5e6586c57abdad3e01ad88f7', 'NULL', '5e490bf22a3d564b0565c52d', '5e65cace7abdad46d3ada2fc'], //drop-mining containers (o.assimilator)
     remotedrop_id:          ['5e323d61aa9957193cc8ec6c', 'NULL', '5e48c7a10359276c64092767', '5e579f8095b8912c485a874f'], //destination receptacles (o.drone)
 
     tower_id:               ['5e2f4a33e8af4a1c6459ccd8', '5e5c992bb655c985f872fdd1', '5e473a110058163253b64554', '5e57663e6fced9baca5d9db2'],
                 
-    warpRX_id:              ['5e34d2403561285c52aba5b2', '5e5fde06e4c9ff32dfb1a4d1', '5e4a79f221466ebb4fcc858b', '5e5b2064a981827aa51b60e7'], //receiver link (adherent)
+    warpRX_id:              ['5e34d2403561285c52aba5b2', '5e5fde06e4c9ff32dfb1a4d1', '5e4a79f221466ebb4fcc858b', '5e5b2064a981827aa51b60e7', '5e686d03c5ef3b7a6e6f21b7'], //receiver link (adherent)
     warpTX_id:              [['5e437e083561285674b0989c','5e34d803221670187690e4d7'],
                             ['5e601a514f07353e676e5376'],
                             ['5e4a844a035927629b09d4a3'],
-                            ['NULL', '5e5b5c7d02d3761fb826bbec']],
+                            ['NULL', '5e5b5c7d02d3761fb826bbec'],
+                            ['5e687dae79654f271243ddc4']],
                             //transmitter link (acolyte)
-    adher_tile_id:          ['5e2ec350d41b0bd406dfd71b', '5e5dab190fb27e9efd036585', '5e4a7ac80f2d8f5302547cc6', '5e55f3ea976d8d949fbe40ce'],
+    adher_tile_id:          ['5e2ec350d41b0bd406dfd71b', '5e5dab190fb27e9efd036585', '5e4a7ac80f2d8f5302547cc6', '5e55f3ea976d8d949fbe40ce', '5e686ad59a55357c46e65029'],
     
     
     //body parts by role
@@ -53,7 +51,7 @@ module.exports = {
                             [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE]],
-                            //cost: 1500, 600, 1500, 1200, 400
+                            //cost: 1500, 600, 1500, 1200, 450
     assim_body:             [[WORK,WORK,WORK,WORK,WORK, MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK, MOVE],
                             [WORK,WORK,WORK,WORK,WORK, MOVE],
@@ -70,26 +68,27 @@ module.exports = {
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                            [WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE]],
-                            //cost: NULL, 1200, 1200, 1800, 800
+                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]],
+                            //cost: NULL, 1200, 1200, 1800, 1800
     acoly_body:             [[WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE],
                             [],
-                            [WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE]],
-                            //cost: 850, 1050, NULL, 1050
+                            [WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE],
+                            []],
+                            //cost: 850, 1050, NULL, 1050, NULL
     adher_body:             [CARRY,CARRY,CARRY,CARRY, MOVE],
                             //cost: 250
     suppl_body:             [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
-                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY, MOVE,MOVE,MOVE,MOVE],
-                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE],
+                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
+                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE]],
-                            //cost: 2250, 1800, 1900, 1850
+                            //cost: 2250, 2250, 2250, 1850
     probe_body:             [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                            [WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE]],
-                            //cost: 2050, 1200, 1600, 1200, 800
+                            [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]],
+                            //cost: 2050, 1200, 1600, 1200, 1200
     recal_body:             [[CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE],
                             [CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE],
                             [CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE],
@@ -131,8 +130,8 @@ module.exports = {
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,
                                 MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                            [WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE]],
-                            //cost: 2300, 1600, 3000, 2300, 800
+                            [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]],
+                            //cost: 2300, 1600, 3000, 2300, 1200
     phasarc_body:           [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
@@ -150,8 +149,10 @@ module.exports = {
                             //cost: 2650, 1800, NULL, 1800
     treas_body:             [[CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE],
+                            [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE],
+                            [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE],
                             [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE]],
-                            //cost: 1500, 550, 550
+                            //cost: 1500, 550, 550, 550, 550
                 
     emiss_body:             [MOVE],
                             //cost: 50

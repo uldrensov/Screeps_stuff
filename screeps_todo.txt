@@ -1,5 +1,11 @@
+MINOR BUGS:
+	2 drones sometimes spawn when MAX=1
+
 TODO urgent:
-	reduce dependence on repetitive find() calls (save things to unit mem)
+	new treasurer param that auto-killswitches
+	kill edrone when he is no longer needed
+	dynamically choose drone size when its time to replace it (middle gnd between waiting for edrone and trying to spawn a big one)
+	reduce dependence on repetitive find() calls (save things to unit mem) (global check interval? currently 10)
 	purifiers should contest cores that are taken (e.g. controller subducts and core is still not dead)
 	[DEFENCE] think about how tower should behave in general
 	[SOFTLOCK] before calling a softlock, drones should deposit pocket energy if there are no more assims/energy on the map
