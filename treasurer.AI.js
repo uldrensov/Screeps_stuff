@@ -52,6 +52,7 @@ module.exports = {
                 console.log('*********************');
                 console.log('ORDER COMPLETE (ROOM #' + home_index + ')');
                 console.log('*********************');
+                if (unit.memory.autokill) unit.memory.killswitch = true;
             }
         }
         //built-in economic killswitch

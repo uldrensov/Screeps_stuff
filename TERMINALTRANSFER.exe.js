@@ -1,11 +1,11 @@
 //executable script: spawns a treasurer unit (if applicable), and writes a command into its memory
-    //require('TERMINALTRANSFER.exe').run(2,RESOURCE_ENERGY,10000,true)
+    //require('TERMINALTRANSFER.exe').run(2,RESOURCE_ENERGY,10000,true,true)
     
 var SD = require('SOFTDATA');
 
 
 module.exports = {
-    run: function(room_num, o_type, o_amt, dir){
+    run: function(room_num, o_type, o_amt, dir, autokill){
         
         var nexus = Game.getObjectById(SD.nexus_id[room_num]);
         var gateway = Game.getObjectById(SD.gateway_id[room_num]);
@@ -23,11 +23,11 @@ module.exports = {
                     
         //if one doesn't exist, spawn one and issue order parameters at spawn
         if (!treasurer){
-            var spawn_result = nexus.spawnCreep(SD.treas_body[room_num], 'Treasurer-' + Game.time % SD.time_offset, {memory: {role: 'treasurer', order_type: o_type, order_amt: o_amt, dir: dir, task_progress: 0}});
+            var spawn_result = nexus.spawnCreep(SD.treas_body[room_num], 'Treasurer-' + Game.time % SD.time_offset, {memory: {role: 'treasurer', order_type: o_type, order_amt: o_amt, dir: dir, task_progress: 0, autokill: autokill}});
             if (spawn_result == OK)
                 console.log('Room #' + room_num + ': Treasurer-' + Game.time % SD.time_offset + ' spawning.');
             else if (spawn_result == ERR_BUSY && gateway != undefined){
-                var spawn_result2 = gateway.spawnCreep(SD.treas_body[room_num], 'Treasurer-' + Game.time % SD.time_offset, {memory: {role: 'treasurer', order_type: o_type, order_amt: o_amt, dir: dir, task_progress: 0}});
+                var spawn_result2 = gateway.spawnCreep(SD.treas_body[room_num], 'Treasurer-' + Game.time % SD.time_offset, {memory: {role: 'treasurer', order_type: o_type, order_amt: o_amt, dir: dir, task_progress: 0, autokill: autokill}});
                 if (spawn_result2 == OK)
                     console.log('Room #' + room_num + ': Treasurer-' + Game.time % SD.time_offset + ' spawning.');
                 else return 'GATEWAY ERROR: ' + spawn_result;
@@ -40,6 +40,7 @@ module.exports = {
             unit.memory.order_amt = o_amt;
             unit.memory.dir = dir;
             unit.memory.task_progress = 0;
+            unit.memory.autokill = autokill;
         }
         
         var dir_toString = dir? 'loading':'unloading';

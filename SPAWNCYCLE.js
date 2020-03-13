@@ -63,6 +63,7 @@ module.exports = {
         
         
             //determine if mineral mining is possible
+            if (Memory.SPAWNCYCLE__extractor == undefined) Memory.SPAWNCYCLE__extractor = [];
             if (Memory.SPAWNCYCLE__extractor[k] == undefined || Game.time % 10 == 0){
                 Memory.SPAWNCYCLE__extractor[k] = nexi[k].room.find(FIND_STRUCTURES, {
                     filter: structure => {
@@ -70,9 +71,9 @@ module.exports = {
                     }
                 });
             }
-            if (Memory.SPAWNCYCLE__minerals[k] == undefined || Game.time % 10 == 0)
-                Memory.SPAWNCYCLE__minerals[k] = nexi[k].room.find(FIND_MINERALS)[0];
-            if (Memory.SPAWNCYCLE__extractor[k].length && Memory.SPAWNCYCLE__minerals[k].mineralAmount > 0){
+            if (Memory.SPAWNCYCLE__minerals == undefined) Memory.SPAWNCYCLE__minerals = [];
+            if (Memory.SPAWNCYCLE__minerals[k] == undefined) Memory.SPAWNCYCLE__minerals[k] = nexi[k].room.find(FIND_MINERALS)[0];
+            if (Memory.SPAWNCYCLE__extractor[k].length && Game.getObjectById(Memory.SPAWNCYCLE__minerals[k].id).mineralAmount > 0){
                 Memory.ancientDrone_MAX[k] = 1;
                 Memory.ancientAssimilator_MAX[k] = 1;
             }
@@ -102,7 +103,15 @@ module.exports = {
                     acoly_price += 50;
             }
             
+            //for recalibrator spawn condition, calculate that room's recalibrator's CLAIM "strength"
+            var claim_strength = 0;
+            for (let i=0; i<SD.recal_body[k].length; i++){
+                if (SD.recal_body[k][i] == CLAIM)
+                    claim_strength++;
+            }
+            
             //also for edrone spawn condition, count up total room energy within spawn structures, canisters, and the vault
+            if (Memory.SPAWNCYCLE__local_canisters == undefined) Memory.SPAWNCYCLE__local_canisters = [];
             if (Memory.SPAWNCYCLE__local_canisters[k] == undefined || Game.time % 10 == 0){
                 Memory.SPAWNCYCLE__local_canisters[k] = nexi[k].room.find(FIND_STRUCTURES, {
                     filter: structure => {
@@ -112,7 +121,7 @@ module.exports = {
             }
             var canister_energy = 0;
             for (let i=0; i<Memory.SPAWNCYCLE__local_canisters[k].length; i++){
-                canister_energy += Memory.SPAWNCYCLE__local_canisters[k][i].store.energy;
+                canister_energy += Game.getObjectById(Memory.SPAWNCYCLE__local_canisters[k][i].id).store.energy;
             }
             var vault_energy = 0;
             if (nexi[k].room.storage != undefined)
@@ -224,7 +233,7 @@ module.exports = {
                         if (nexi[k].spawnCreep(SD.recal_body[k], 'Recalibrator-' + Game.time % SD.time_offset, {memory: {role: 'recalibrator', home: nexi[k].room.name, in_place: false}}) == OK)
                             console.log('Room #' + k + ': Recalibrator-' + Game.time % SD.time_offset + ' spawning.');
                     }
-                    else if (recalibrator_gang[k].length < Memory.recalibrator_MAX[k] && (Game.getObjectById(SD.remotectrl_id[k]).reservation.ticksToEnd < 5000 - (SD.claim_strength[k]-1)*600)){
+                    else if (recalibrator_gang[k].length < Memory.recalibrator_MAX[k] && (Game.getObjectById(SD.remotectrl_id[k]).reservation.ticksToEnd < 5000 - (claim_strength-1)*600)){
                         //only attempt to spawn when the recalibrator's lifetime contribution to timer surplus will not overflow past the 5000 cap
                         if (nexi[k].spawnCreep(SD.recal_body[k], 'Recalibrator-' + Game.time % SD.time_offset, {memory: {role: 'recalibrator', home: nexi[k].room.name, in_place: false}}) == OK)
                         console.log('Room #' + k + ': Recalibrator-' + Game.time % SD.time_offset + ' spawning.');

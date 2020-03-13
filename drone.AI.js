@@ -40,14 +40,11 @@ module.exports = {
         
         //outputs: extension (non-full), nexi (non-full)
         //NOTE: local_nexi includes main nexus as well
-        if (unit.memory.pylons == undefined || Game.time % 10 == 0){
-            unit.memory.pylons = unit.room.find(FIND_STRUCTURES, {
-                filter: structure => {
-                    return structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-                }
-            });
-        }
-        if (unit.memory.pylons.length) var pylon = unit.pos.findClosestByPath(unit.memory.pylons);
+        var pylon = unit.pos.findClosestByPath(FIND_STRUCTURES, {
+            filter: structure => {
+                return structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+            }
+        });
         if (unit.memory.local_nexi == undefined || Game.time % 10 == 0){
             unit.memory.local_nexi = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
@@ -111,8 +108,11 @@ module.exports = {
         else{
             //fetch: ruins
             if (unit.memory.remains.length){
-                if (unit.withdraw(Game.getObjectById(unit.memory.remains[0].id), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(Game.getObjectById(unit.memory.remains[0].id));
+                var getRemains = Game.getObjectById(unit.memory.remains[0].id);
+                if (getRemains != null){
+                    if (unit.withdraw(getRemains, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(getRemains);
+                }
             }
             ///*
             //fetch: tombstones<minerals>, tombstones<energy> (fullest)
@@ -120,32 +120,42 @@ module.exports = {
                 var richest_tomb = unit.memory.tombs[0];
                 var treasure_found_t = false;
                 var treasure_to_withdraw = RESOURCE_ENERGY;
+                var getTomb;
                 
                 //search each tombstone for any minerals (index 1 to skip energy)
                 for (let i=0; i<unit.memory.tombs.length; i++){
+                    getTomb = Game.getObjectById(unit.memory.tombs[i].id);
+                    if (getTomb == null) continue;
                     for (let j=1; j<RESOURCES_ALL.length; j++){
-                        if (Game.getObjectById(unit.memory.tombs[i].id).store.getUsedCapacity(RESOURCES_ALL[j]) != 0){
+                        if (getTomb.store.getUsedCapacity(RESOURCES_ALL[j]) != 0){
                             treasure_found_t = true;
-                            richest_tomb = unit.memory.tombs[i];
+                            richest_tomb = getTomb;
                             treasure_to_withdraw = RESOURCES_ALL[j];
                             break;
                         }
                     }
-                    if (treasure_found_t)
-                        break;
+                    if (treasure_found_t) break;
                 }
                 
                 //if no minerals found, re-run the search with respect to energy
                 if (!treasure_found_t){
                     for (let i=0; i<unit.memory.tombs.length; i++){
-                        if (Game.getObjectById(unit.memory.tombs[i].id).store.getUsedCapacity(RESOURCE_ENERGY) >
-                            Game.getObjectById(richest_tomb.id).store.getUsedCapacity(RESOURCE_ENERGY)){
-                            richest_tomb = unit.memory.tombs[i];
+                        getTomb = Game.getObjectById(unit.memory.tombs[i].id);
+                        if (getTomb == null) continue;
+                        try{
+                            if (getTomb.store.getUsedCapacity(RESOURCE_ENERGY) > Game.getObjectById(richest_tomb.id).store.getUsedCapacity(RESOURCE_ENERGY))
+                                richest_tomb = getTomb;
+                        }
+                        catch{
+                            richest_tomb = getTomb;
                         }
                     }
                 }
-                if (unit.withdraw(Game.getObjectById(richest_tomb.id), treasure_to_withdraw) == ERR_NOT_IN_RANGE){
-                    unit.moveTo(Game.getObjectById(richest_tomb.id));
+                
+                var getRichestTomb = Game.getObjectById(richest_tomb.id);
+                if (getRichestTomb != null){
+                    if (unit.withdraw(getRichestTomb, treasure_to_withdraw) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(getRichestTomb);
                 }
             }
             //*/
@@ -154,33 +164,63 @@ module.exports = {
             else if (unit.memory.scraps.length){
                 var chosen_scrap = unit.memory.scraps[0];
                 var treasure_found_s = false;
+                var getScrap;
                 
                 //find the most endangered mineral pickup
                 for (let i=0; i<unit.memory.scraps.length; i++){
-                    if (unit.memory.scraps[i].resourceType != RESOURCE_ENERGY && unit.memory.scraps[i].amount < chosen_scrap.amount){
-                        chosen_scrap = unit.memory.scraps[i];
-                        treasure_found_s = true;
+                    getScrap = Game.getObjectById(unit.memory.scraps[i].id);
+                    if (getScrap == null) continue;
+                    try{
+                        if (getScrap.resourceType != RESOURCE_ENERGY && getScrap.amount < Game.getObjectById(chosen_scrap.id).amount){
+                            chosen_scrap = getScrap;
+                            treasure_found_s = true;
+                        }
+                    }
+                    catch{
+                        if (getScrap.resourceType != RESOURCE_ENERGY){
+                            chosen_scrap = getScrap;
+                            treasure_found_s = true;
+                        }
                     }
                 }
                 //if no minerals found, re-run the search with respect to energy
                 if (!treasure_found_s){
                     for (let i=0; i<unit.memory.scraps.length; i++){
-                        if (unit.memory.scraps[i].energy > chosen_scrap.energy)
-                            chosen_scrap = unit.memory.scraps[i];
+                        getScrap = Game.getObjectById(unit.memory.scraps[i].id);
+                        if (getScrap == null) continue;
+                        try{
+                            if (getScrap.energy > Game.getObjectById(chosen_scrap.id).energy)
+                                chosen_scrap = getScrap;
+                        }
+                        catch{
+                            chosen_scrap = getScrap;
+                        }
                     }
                 }
                 
-                if (unit.pickup(Game.getObjectById(chosen_scrap.id)) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(Game.getObjectById(chosen_scrap.id));
+                var getChosenScrap = Game.getObjectById(chosen_scrap.id);
+                if (getChosenScrap != null){
+                    if (unit.pickup(getChosenScrap) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(getChosenScrap);
+                }
             }
             //*/
             //fetch: containers (fullest; fixation)
             else if (unit.memory.canisters.length){
-                //determine the fullest container in play
                 var fullest_canister = unit.memory.canisters[0];
+                var getCanister;
+                
+                //determine the fullest container in play
                 for (let i=0; i<unit.memory.canisters.length; i++){
-                    if (Game.getObjectById(unit.memory.canisters[i].id).store.getUsedCapacity(RESOURCE_ENERGY) > Game.getObjectById(fullest_canister.id).store.getUsedCapacity(RESOURCE_ENERGY))
-                        fullest_canister = unit.memory.canisters[i];
+                    getCanister = Game.getObjectById(unit.memory.canisters[i].id);
+                    if (getCanister == null) continue;
+                    try{
+                        if (getCanister.store.getUsedCapacity(RESOURCE_ENERGY) > Game.getObjectById(fullest_canister.id).store.getUsedCapacity(RESOURCE_ENERGY))
+                            fullest_canister = getCanister;
+                    }
+                    catch{
+                        fullest_canister = getCanister;
+                    }
                 }
                 
                 //if there is no current target container, "fixate" on the fullest one

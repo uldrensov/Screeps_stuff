@@ -29,12 +29,11 @@ module.exports = {
         });
         
         //outputs: extension (non-full)
-        var pylons = unit.room.find(FIND_STRUCTURES, {
+        var pylon = unit.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         });
-        if (pylons.length) var pylon = unit.pos.findClosestByPath(pylons);
         
 
         //2-state fetch/unload FSM...

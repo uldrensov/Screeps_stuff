@@ -109,15 +109,16 @@ module.exports = {
             }
             
             //towers
-            if (Memory.UNITDRIVE__local_towers == undefined || Game.time % 10 == 0){
-                Memory.UNITDRIVE__local_towers = nexi[k].room.find(FIND_STRUCTURES, {
+            if (Memory.UNITDRIVE__local_towers == undefined) Memory.UNITDRIVE__local_towers = [];
+            if (Memory.UNITDRIVE__local_towers[k] == undefined || Game.time % 10 == 0){
+                Memory.UNITDRIVE__local_towers[k] = nexi[k].room.find(FIND_STRUCTURES, {
                     filter: structure => {
                         return structure.structureType == STRUCTURE_TOWER;
                     }
                 });
             }
-            for (let i=0; i<Memory.UNITDRIVE__local_towers.length; i++){
-                khaydarinmonolith.run(Memory.UNITDRIVE__local_towers[i].id, SD.tower_reserve_ratio, k);
+            for (let i=0; i<Memory.UNITDRIVE__local_towers[k].length; i++){
+                khaydarinmonolith.run(Memory.UNITDRIVE__local_towers[k][i].id, SD.tower_reserve_ratio, k);
             }
         }
     

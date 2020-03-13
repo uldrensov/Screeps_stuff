@@ -1,8 +1,10 @@
-MINOR BUGS:
+BUGS:
+	if memval w/ elements not defined, define it.
 	2 drones sometimes spawn when MAX=1
 
 TODO urgent:
-	new treasurer param that auto-killswitches
+	remote mining crew should save tower id to mem instead of having it coded in SD
+	optimise supplicant parts (every transferral is close to work part count) (other roles?)
 	kill edrone when he is no longer needed
 	dynamically choose drone size when its time to replace it (middle gnd between waiting for edrone and trying to spawn a big one)
 	reduce dependence on repetitive find() calls (save things to unit mem) (global check interval? currently 10)
