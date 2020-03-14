@@ -1,5 +1,4 @@
 BUGS:
-	if memval w/ elements not defined, define it.
 	2 drones sometimes spawn when MAX=1
 
 TODO urgent:
@@ -16,10 +15,10 @@ TODO urgent:
 		//war mode: disables pickups and tombs for those who can see it
 	
 TODO backlog:
-	[QOL] more status report info (pickups, wall/rampart distinction, invader/core alert)
+	[QOL] more status report info (remote room info, wall/rampart distinction, invader/core alert)
 	modify treasurer to work w labs/factories too
 	treasurer withdraw/deposit RESOURCES_ALL
-	[BUG] dont let new things spawn when one briefly leaves room (expand everything as crossroom in unitdrive?)
+	dont let new things spawn when one briefly leaves room (expand everything as crossroom in unitdrive?)
 	work-part / thief detection in remotes?
 	[SOFTLOCK] fix (e)drone pickup
 	[MAINTENANCE] decouple hardcodes from unitdrive (and from argpasses?)

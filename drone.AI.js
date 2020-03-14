@@ -39,7 +39,6 @@ module.exports = {
         }
         
         //outputs: extension (non-full), nexi (non-full)
-        //NOTE: local_nexi includes main nexus as well
         var pylon = unit.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
@@ -48,7 +47,7 @@ module.exports = {
         if (unit.memory.local_nexi == undefined || Game.time % 10 == 0){
             unit.memory.local_nexi = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
-                    return structure.structureType == STRUCTURE_SPAWN && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                    return structure.structureType == STRUCTURE_SPAWN && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0 && structure.name != nexus.name;
                 }
             });
         }
@@ -93,10 +92,10 @@ module.exports = {
                         unit.moveTo(nexus);
                 }
                 //unload: local nexi
-                //NOTE: if this branch is taken, main nexus is already omitted from local_nexi
                 else if (unit.memory.local_nexi.length){
-                    if (unit.transfer(Game.getObjectById(unit.memory.local_nexi[0].id), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(Game.getObjectById(unit.memory.local_nexi[0].id));
+                    var getLocalNex = Game.getObjectById(unit.memory.local_nexi[0].id);
+                    if (unit.transfer(getLocalNex, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(getLocalNex);
                 }
                 //unload: vault<energy>
                 else if (unit.room.storage != undefined){
@@ -108,8 +107,9 @@ module.exports = {
         else{
             //fetch: ruins
             if (unit.memory.remains.length){
-                var getRemains = Game.getObjectById(unit.memory.remains[0].id);
-                if (getRemains != null){
+                for (let i=0; i<unit.memory.remains.length; i++){
+                    var getRemains = Game.getObjectById(unit.memory.remains[i].id);
+                    if (getRemains == null) continue;
                     if (unit.withdraw(getRemains, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(getRemains);
                 }
@@ -223,17 +223,21 @@ module.exports = {
                     }
                 }
                 
-                //if there is no current target container, "fixate" on the fullest one
-                if (unit.memory.fixation == undefined)
-                    unit.memory.fixation = fullest_canister.id;
-                //otherwise, only switch fixation if the previous one crosses beneath the "ignore" criteria
-                else if (Game.getObjectById(unit.memory.fixation).store[RESOURCE_ENERGY] < ignore_lim)
-                    unit.memory.fixation = fullest_canister.id;
+                if (Game.getObjectById(fullest_canister.id) != null){
+                    var getFixationPrev = Game.getObjectById(unit.memory.fixation);
+                    
+                    //if there is no current "fixated" container, set fixation on the fullest one
+                    if (getFixationPrev == null)
+                        unit.memory.fixation = fullest_canister.id;
+                    //otherwise, only switch fixation if the previous one crosses beneath the "ignore" criteria
+                    else if (getFixationPrev.store[RESOURCE_ENERGY] < ignore_lim)
+                        unit.memory.fixation = fullest_canister.id;
                 
-                //finally, withdraw from the fixated target
-                var canister_target = Game.getObjectById(unit.memory.fixation);
-                if (unit.withdraw(canister_target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(canister_target);
+                    //finally, withdraw from the fixated target
+                    var getFixationNew = Game.getObjectById(unit.memory.fixation);
+                    if (unit.withdraw(getFixationNew, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(getFixationNew);
+                }
             }
             //fetch: vault
             else if (unit.room.storage != undefined){

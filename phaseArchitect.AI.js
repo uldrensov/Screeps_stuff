@@ -38,13 +38,13 @@ module.exports = {
             //unload: construction hotspot (nearest)
             if (!unit.memory.fetching && hotspot){
                 if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(hotspot, {visualizePathStyle: {stroke: '#00ff00'}});
+                    unit.moveTo(hotspot);
             }
             else{
                 //fetch: vault (respect limit)
                 if (unit.room.storage != undefined && unit.room.storage.store.energy > reserve){
                     if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(unit.room.storage, {visualizePathStyle: {stroke: '#00ff00'}});
+                        unit.moveTo(unit.room.storage);
                 }
                 //fetch: containers (fullest)
                 else if (canisters.length){
@@ -53,12 +53,12 @@ module.exports = {
                         fullest_canister = canisters[1];
                     
                     if (unit.withdraw(fullest_canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(fullest_canister, {visualizePathStyle: {stroke: '#00ff00'}});
+                        unit.moveTo(fullest_canister);
                 }
             }
         }
         //built-in economic killswitch
         else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
-            unit.moveTo(nexus, {visualizePathStyle: {stroke: '#00ff00'}});
+            unit.moveTo(nexus);
     }
 };
