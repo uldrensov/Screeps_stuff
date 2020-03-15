@@ -5,18 +5,22 @@ module.exports = {
     run: function(unit){
         
         //inputs: containers (non-empty)
-        var canisters = unit.room.find(FIND_STRUCTURES, {
-            filter: structure => {
-                return structure.structureType == STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
-            }
-        });
+        if (unit.memory.canisters == undefined || Game.time % 10 == 0){
+            unit.memory.canisters = unit.room.find(FIND_STRUCTURES, {
+                filter: structure => {
+                    return structure.structureType == STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+                }
+            });
+        }
         
         //outputs: towers (non-full)
-        var towers = unit.room.find(FIND_STRUCTURES, {
-            filter: structure => {
-                return (structure.structureType == STRUCTURE_TOWER) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-            }
-        });
+        if (unit.memory.towers == undefined || Game.time % 10 == 0){
+            unit.memory.towers = unit.room.find(FIND_STRUCTURES, {
+                filter: structure => {
+                    return (structure.structureType == STRUCTURE_TOWER) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                }
+            });
+        }
         
         
         //2-state fetch/unload FSM...
@@ -31,14 +35,24 @@ module.exports = {
         //behaviour execution...
         //unload: towers (most drained)
         if (!unit.memory.fetching){
-            if (towers.length){
-                var lowest_tower = towers[0];
-                for (let i=0; i<towers.length; i++){
-                    if (towers[i].store[RESOURCE_ENERGY] < lowest_tower.store[RESOURCE_ENERGY])
-                        lowest_tower = towers[i];
+            if (unit.memory.towers.length){
+                var lowest_tower = Game.getObjectById(unit.memory.towers[0].id);
+                for (let i=0; i<unit.memory.towers.length; i++){
+                    var getTower = Game.getObjectById(unit.memory.towers[i].id);
+                    if (getLowestTower == null) continue;
+                    try{
+                        if (getTower.store[RESOURCE_ENERGY] < lowest_tower.store[RESOURCE_ENERGY])
+                            lowest_tower = getTower;
+                    }
+                    catch{
+                        lowest_tower = getTower;
+                    }
                 }
-                if (unit.transfer(lowest_tower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(lowest_tower);
+                var getLowestTower = Game.getObjectById(lowest_tower.id);
+                if (getLowestTower != null){
+                    if (unit.transfer(getLowestTower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(getLowestTower);
+                }
             }
         }
         else{
@@ -48,15 +62,24 @@ module.exports = {
                     unit.moveTo(unit.room.storage);
             }
             //fetch: containers (fullest)
-            else if (canisters.length){
-                var fullest_canister = canisters[0];
-                if (canisters.length == 2 &&
-                canisters[1].store.getUsedCapacity(RESOURCE_ENERGY) > canisters[0].store.getUsedCapacity(RESOURCE_ENERGY)){
-                    fullest_canister = canisters[1];
+            else if (unit.memory.canisters.length){
+                var fullest_canister = Game.getObjectById(unit.memory.canisters[0].id);
+                for (let i=0; i<unit.memory.canisters.length; i++){
+                    var getCanister = Game.getObjectById(unit.memory.canisters[i].id);
+                    if (getCanister == null) continue;
+                    try{
+                        if (getCanister.store.getUsedCapacity(RESOURCE_ENERGY) > fullest_canister.store.getUsedCapacity(RESOURCE_ENERGY))
+                            fullest_canister = getCanister;
+                    }
+                    catch{
+                        fullest_canister = getCanister;
+                    }
                 }
-                
-                if (unit.withdraw(fullest_canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(fullest_canister);
+                var getFullestCanister = Game.getObjectById(fullest_canister.id);
+                if (getFullestCanister != null){
+                    if (unit.withdraw(getFullestCanister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(getFullestCanister);
+                }
             }
         }
     }

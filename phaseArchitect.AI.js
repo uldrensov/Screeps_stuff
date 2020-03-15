@@ -20,8 +20,11 @@ module.exports = {
             
             //self-killswitch routine
             if (!hotspot){
-                unit.memory.killswitch = true;
                 Memory.phaseArchitect_MAX[home_index] = -1;
+                console.log('*********************');
+                console.log('PHASE CONSTRUCTION COMPLETE (ROOM #' + home_index + ')');
+                console.log('*********************');
+                unit.memory.killswitch = true;
             }
             
             

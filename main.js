@@ -60,7 +60,8 @@ module.exports.loop = function(){
     
     
     //run spawning algorithm
-    SPAWNCYCLE.run();
+    if (Game.time % 5 == 0)
+        SPAWNCYCLE.run();
     
     //run unit AI scripts
     UNITDRIVE.run();

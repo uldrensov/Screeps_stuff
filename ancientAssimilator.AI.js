@@ -7,15 +7,17 @@ module.exports = {
         var canister = Game.getObjectById(canister_id);
         
         
-        //inputs: mineral source
-        var mineral_src = unit.room.find(FIND_MINERALS);
+        if (canister != null){
+            //inputs: mineral source
+            var mineral_src = unit.room.find(FIND_MINERALS);
         
         
-        //continually mine from a designated source while standing on a container...
-        //ensure correct position
-        if (!unit.pos.isEqualTo(canister.pos))
-            unit.moveTo(canister);
-        //fetch: mineral source
-        else unit.harvest(mineral_src[0]);
+            //continually mine from a designated source while standing on a container...
+            //ensure correct position
+            if (!unit.pos.isEqualTo(canister.pos))
+                unit.moveTo(canister);
+            //fetch: mineral source
+            else unit.harvest(mineral_src[0]);
+        }
     }
 };

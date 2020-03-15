@@ -21,7 +21,7 @@ module.exports = {
     source2_id:             ['5bbcae989099fc012e639475', '5bbcae819099fc012e639304', '5bbcae989099fc012e639480', '5bbcae809099fc012e6392f6', '5bbcae809099fc012e6392fd'],
     canister1_id:           ['5e30677977034e78c09bdc43', '5e5b806d74988df745a4b854', '5e46d3baed5fa02c73c87173', '5e5507eea3d520c61a772d62', '5e633eec0fb27ea4b9057705'], //corresponds to source1
     canister2_id:           ['5e354b518c0dfc0f7b8dc1d0', '5e5c5f2b27cac98f038eed99', '5e466fb08bfc04c165b13edb', '5e561baebcb7d67abec5f433', '5e634359c5abbb02df5ba123'], //corresponds to source2
-    mineralcanister_id:     ['5e3ca0a32f38f39b095da816', '5e5c909be1a1395885e81156', '5e4f6a0761106b557aa66abe', '5e5b5b1c403d152c992428c4'],
+    mineralcanister_id:     ['5e3ca0a32f38f39b095da816', '5e5c909be1a1395885e81156', '5e4f6a0761106b557aa66abe', '5e5b5b1c403d152c992428c4', '5e6399727e402f275b8831ee'],
 
     reserveflag:            [Game.flags['Core1'], Game.flags['Core2'], Game.flags['Core3'], Game.flags['Core4']], //rally point for remote room reservation
     remoteflag:             [Game.flags['Terrazine'], Game.flags['Vespene'], Game.flags['Jorium'], Game.flags['Protodermis']], //rally point for remote mining
@@ -36,9 +36,8 @@ module.exports = {
     warpTX_id:              [['5e437e083561285674b0989c','5e34d803221670187690e4d7'],
                             ['5e601a514f07353e676e5376'],
                             ['5e4a844a035927629b09d4a3'],
-                            ['NULL', '5e5b5c7d02d3761fb826bbec'],
-                            ['5e687dae79654f271243ddc4']],
-                            //transmitter link (acolyte)
+                            ['5e6cad8c43e2d4d024ddfbb6', '5e5b5c7d02d3761fb826bbec'],
+                            ['5e687dae79654f271243ddc4']], //transmitter link (acolyte)
     adher_tile_id:          ['5e2ec350d41b0bd406dfd71b', '5e5dab190fb27e9efd036585', '5e4a7ac80f2d8f5302547cc6', '5e55f3ea976d8d949fbe40ce', '5e686ad59a55357c46e65029'],
     
     
@@ -77,12 +76,12 @@ module.exports = {
                             //cost: 850, 1050, NULL, 1050, NULL
     adher_body:             [CARRY,CARRY,CARRY,CARRY, MOVE],
                             //cost: 250
-    suppl_body:             [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
-                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
-                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
-                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE],
-                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE]],
-                            //cost: 2250, 2250, 2250, 1850, 1750
+    suppl_body:             [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
+                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
+                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
+                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE],
+                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE]],
+                            //cost: 2150, 2150, 2150, 1950, 2150
     probe_body:             [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
