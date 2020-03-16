@@ -99,7 +99,7 @@ module.exports = {
                             architect.run(unit, nexi[k], SD.canister_bias, SD.vault_reserve_min);
                             break;
                         case 'phaseArchitect':
-                            phaseArchitect.run(unit, nexi[k], SD.canister_bias, SD.vault_reserve_min, k);
+                            phaseArchitect.run(unit, nexi[k], SD.canister_bias, k);
                             break;
                         case 'treasurer':
                             treasurer.run(unit, SD.nexus_id[k], k);

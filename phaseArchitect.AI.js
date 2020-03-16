@@ -2,7 +2,7 @@
 //green trail ("builder")
 
 module.exports = {
-    run: function(unit, nexus, bias, reserve, home_index){
+    run: function(unit, nexus, bias, home_index){
         
         if (!unit.memory.killswitch){
             //inputs: energy sources, containers (non-empty)
@@ -45,7 +45,7 @@ module.exports = {
             }
             else{
                 //fetch: vault (respect limit)
-                if (unit.room.storage != undefined && unit.room.storage.store.energy > reserve){
+                if (unit.room.storage != undefined){
                     if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(unit.room.storage);
                 }

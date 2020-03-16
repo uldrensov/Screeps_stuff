@@ -12,8 +12,8 @@ module.exports = {
             return 'INVALID ROOM NUMBER';
         
         //init
-        var vault = Game.getObjectById(SD.nexus_id[room_num]).room.storage;
-        if (vault == null) return 'ERROR: ROOM DOES NOT CONTAIN A VAULT';
+        var GE = Game.getObjectById(SD.nexus_id[room_num]).room.terminal;
+        if (GE == null) return 'ERROR: ROOM DOES NOT CONTAIN A TERMINAL';
         var minType = Memory.SPAWNCYCLE__minerals[room_num].mineralType;
         var hist = Game.market.getHistory(minType);
         var clientele = Game.market.getAllOrders({type: ORDER_BUY, resourceType: minType});
@@ -36,10 +36,15 @@ module.exports = {
         if (bestOffer.price < streetPrice * .95) return 'NO SUITABLE OFFERS WITHIN DESIRED PRICE RANGE...TRY AGAIN LATER';
         
         //make the transaction
-        var tradeAmount = bestOffer.amount < vault.store.getUsedCapacity(minType) ? bestOffer.amount : vault.getUsedCapacity(minType);
-        Game.market.deal(bestOffer.id, tradeAmount, vault.room.name);
+        var tradeAmount = bestOffer.amount < GE.store.getUsedCapacity(minType) ? bestOffer.amount : GE.store.getUsedCapacity(minType);
+        var tax = Game.market.calcTransactionCost(tradeAmount, bestOffer.roomName, GE.room.name);
+        var transaction = Game.market.deal(bestOffer.id, tradeAmount, GE.room.name);
+        
+        if (transaction == ERR_NOT_ENOUGH_ENERGY) return 'INSUFFICIENT RESOURCES...OFFER REQUIRES ' + tradeAmount + ' OF ' + minType + ' AND ' + tax + ' TRANSMISSION ENERGY';
+        if (transaction != OK) return transaction;
         
         console.log('SOLD ' + tradeAmount + ' OF ' + minType + ' FOR ' + bestOffer.price + ' EACH');
+        console.log('TRANSMISSION TAX: ' + tax);
         return 'TRANSACTION SUCCESSFUL (ROOM #' + room_num + ')';
     }
 };

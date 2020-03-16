@@ -9,12 +9,12 @@ module.exports = {
     canister_bias:          300, //can force canister-fetching units to prefer one by default, until this wide of a disparity is detected
     en_ignore_lim:          100, //drones/sacrificers/probes will ignore containers/pickups containing less energy than this
     tower_reserve_ratio:    .5, //towers will reserve this percentage of their energy for attacking
-    vault_reserve_min:      100000, //all units except (e)drones and energisers will avoid vaults containing less than this
+    vault_reserve_min:      100000, //all units except (e)drones, energisers, and phase architects will avoid vaults containing less than this
     
     
     //object IDs
     nexus_id:               ['5e2d15a9e152154167131760', '5e5b6eabb5c443745759aa65', '5e466c796fffaf84254b19ed', '5e54f87a1db3d7858ff87a0b', '5e6350bb6270f3464c31ca11'],
-    gateway_id:             ['5e4df021084d7dbe916b582f', 'NULL', '5e5c5789da4b319e561048c5', 'NULL'],
+    gateway_id:             ['5e4df021084d7dbe916b582f', 'NULL', '5e5c5789da4b319e561048c5', '5e6eb58342d74fc7e693d717'],
     controller_id:          ['5bbcae989099fc012e639474', '5bbcae819099fc012e639302', '5bbcae989099fc012e63947f', '5bbcae809099fc012e6392f5', '5bbcae809099fc012e6392fb'],
 
     source1_id:             ['5bbcae989099fc012e639476', '5bbcae819099fc012e639303', '5bbcae989099fc012e63947e', '5bbcae809099fc012e6392f4', '5bbcae809099fc012e6392fc'],
