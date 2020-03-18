@@ -2,8 +2,7 @@ BUGS:
 	phase archit prematurely ends
 
 TODO frontlog:
-	redraw wall boundaries
-	relocate rm0 terminal
+	redraw wall boundaries + relocate rm0 terminal
 	remote mining crew should save tower id to mem instead of having it coded in SD
 	optimise supplicant parts (every transferral is close to work part count) (other roles?)
 	kill edrone when he is no longer needed

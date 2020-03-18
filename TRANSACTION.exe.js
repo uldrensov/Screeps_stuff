@@ -40,10 +40,10 @@ module.exports = {
         var tax = Game.market.calcTransactionCost(tradeAmount, bestOffer.roomName, GE.room.name);
         var transaction = Game.market.deal(bestOffer.id, tradeAmount, GE.room.name);
         
-        if (transaction == ERR_NOT_ENOUGH_ENERGY) return 'INSUFFICIENT RESOURCES...OFFER REQUIRES ' + tradeAmount + ' OF ' + minType + ' AND ' + tax + ' TRANSMISSION ENERGY';
+        if (transaction == ERR_NOT_ENOUGH_ENERGY) return 'INSUFFICIENT RESOURCES...OFFER REQUIRES ' + tradeAmount + ' [' + minType + '] AND ' + tax + ' TRANSMISSION ENERGY';
         if (transaction != OK) return transaction;
         
-        console.log('SOLD ' + tradeAmount + ' OF ' + minType + ' FOR ' + bestOffer.price + ' EACH');
+        console.log('SOLD ' + tradeAmount + ' [' + minType + '] FOR ' + bestOffer.price + ' EACH');
         console.log('TRANSMISSION TAX: ' + tax);
         return 'TRANSACTION SUCCESSFUL (ROOM #' + room_num + ')';
     }

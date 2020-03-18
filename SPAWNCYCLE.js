@@ -17,12 +17,12 @@ module.exports = {
     
     
         //for storing population count in each room
-        var emergencyDrone_gang = [];   var sacrificer_gang = [];   var architect_gang = [];        var phaseArchitect_gang = [];   var probe_gang = [];                var assimilator_gang = [];
-        var assimilator2_gang = [];     var drone_gang = [];        var energiser_gang = [];        var recalibrator_gang = [];     var orbitalAssimilator_gang = [];   var orbitalDrone_gang = [];
-        var bloodhunter_gang = [];      var enforcer_gang = [];     var purifier_gang = [];         var acolyte_gang = [];          var acolyte2_gang = [];             var adherent_gang = [];
-        var nullAdherent_gang = [];     var supplicant_gang = [];   var nullSupplicant_gang = [];   var ancientDrone_gang = [];     var ancientAssimilator_gang = [];   var visionary_gang = [];
-        var specialist_gang = [];       var saviour_gang;           var emissary_gang = [];         var darktemplar_gang = [];      var hallucination_gang;             var hightemplar_gang;
-        var zealot_gang;
+        var emergencyDrone_gang = [];   var sacrificer_gang = [];       var architect_gang = [];    var phaseArchitect_gang = [];   var probe_gang = [];            var assimilator_gang = [];
+        var assimilator2_gang = [];     var drone_gang = [];            var energiser_gang = [];    var retrieverDrone_gang = [];   var recalibrator_gang = [];     var orbitalAssimilator_gang = [];
+        var orbitalDrone_gang = [];     var bloodhunter_gang = [];      var enforcer_gang = [];     var purifier_gang = [];         var acolyte_gang = [];          var acolyte2_gang = [];
+        var adherent_gang = [];         var nullAdherent_gang = [];     var supplicant_gang = [];   var nullSupplicant_gang = [];   var ancientDrone_gang = [];     var ancientAssimilator_gang = [];
+        var visionary_gang = [];        var specialist_gang = [];       var saviour_gang;           var emissary_gang = [];         var darktemplar_gang = [];      var hallucination_gang;
+        var hightemplar_gang;           var zealot_gang;
     
     
         //execute the auto-spawn and unit AI assignment routines for each room
@@ -38,6 +38,7 @@ module.exports = {
                 assimilator2_gang[k] =      _.filter(Game.creeps, creep => creep.memory.role == 'assimilator2'          && creep.room == nexi[k].room);
             drone_gang[k] =                 _.filter(Game.creeps, creep => creep.memory.role == 'drone'                 && creep.room == nexi[k].room);
             energiser_gang[k] =             _.filter(Game.creeps, creep => creep.memory.role == 'energiser'             && creep.room == nexi[k].room);
+            retrieverDrone_gang[k] =        _.filter(Game.creeps, creep => creep.memory.role == 'retrieverDrone'        && creep.room == nexi[k].room);
             recalibrator_gang[k] =          _.filter(Game.creeps, creep => creep.memory.role == 'recalibrator'          && creep.memory.home == nexi[k].room.name);
             orbitalAssimilator_gang[k] =    _.filter(Game.creeps, creep => creep.memory.role == 'orbitalAssimilator'    && creep.memory.home == nexi[k].room.name);
             orbitalDrone_gang[k] =          _.filter(Game.creeps, creep => creep.memory.role == 'orbitalDrone'          && creep.memory.home == nexi[k].room.name);
@@ -62,7 +63,7 @@ module.exports = {
             zealot_gang =                   _.filter(Game.creeps, creep => creep.memory.role == 'zealot');
         
         
-            //determine if mineral mining is possible
+            //determine if mineral mining is possible (for ancient drone / assimilator spawns)
             if (Memory.SPAWNCYCLE__extractor == undefined) Memory.SPAWNCYCLE__extractor = [];
             if (Memory.SPAWNCYCLE__extractor[k] == undefined || Game.time % 10 == 0){
                 Memory.SPAWNCYCLE__extractor[k] = nexi[k].room.find(FIND_STRUCTURES, {
@@ -82,7 +83,7 @@ module.exports = {
                 Memory.ancientAssimilator_MAX[k] = -1;
             }
             
-            //for edrone spawn condition, calculate the room's drone/assimilator/acolyte prices
+            //for edrone spawn, calculate the room's drone/assimilator/acolyte prices
             var drone_price = 1;
             for (let i=0; i<SD.drone_body[k].length; i++){
                 if (SD.drone_body[k][i] == CARRY || SD.drone_body[k][i] == MOVE)
@@ -103,14 +104,7 @@ module.exports = {
                     acoly_price += 50;
             }
             
-            //for recalibrator spawn condition, calculate that room's recalibrator's CLAIM "strength"
-            var claim_strength = 0;
-            for (let i=0; i<SD.recal_body[k].length; i++){
-                if (SD.recal_body[k][i] == CLAIM)
-                    claim_strength++;
-            }
-            
-            //also for edrone spawn condition, count up total room energy within spawn structures, canisters, and the vault
+            //also for edrone spawn, count up total room energy within spawn structures, canisters, and the vault
             if (Memory.SPAWNCYCLE__local_canisters == undefined) Memory.SPAWNCYCLE__local_canisters = [];
             if (Memory.SPAWNCYCLE__local_canisters[k] == undefined || Game.time % 10 == 0){
                 Memory.SPAWNCYCLE__local_canisters[k] = nexi[k].room.find(FIND_STRUCTURES, {
@@ -128,40 +122,83 @@ module.exports = {
                 vault_energy = nexi[k].room.storage.store.energy;
             var accessible_energy = nexi[k].room.energyAvailable + canister_energy + vault_energy;
             
+            //for recalibrator spawn condition, calculate that room's recalibrator's CLAIM "strength"
+            var claim_strength = 0;
+            for (let i=0; i<SD.recal_body[k].length; i++){
+                if (SD.recal_body[k][i] == CLAIM)
+                    claim_strength++;
+            }
             
+            //for retriever drone spawn, determine how much energy is dropped on the ground
+            if (Memory.SPAWNCYCLE__scraps == undefined) Memory.SPAWNCYCLE__scraps = [];
+            if (Memory.SPAWNCYCLE__scraps[k] == undefined || Game.time % 10 == 0){
+                Memory.SPAWNCYCLE__scraps[k] = nexi[k].room.find(FIND_DROPPED_RESOURCES, {
+                    filter: resource => {
+                        return (resource.resourceType == RESOURCE_ENERGY && resource.amount > SD.en_ignore_lim) ||
+                        resource.resourceType != RESOURCE_ENERGY;
+                    }
+                });
+            }
+            var total_dropped_energy = 0;
+            var scrap;
+            for (let i=0; i<Memory.SPAWNCYCLE__scraps[k].length; i++){
+                scrap = Game.getObjectById(Memory.SPAWNCYCLE__scraps[k][i].id);
+                if (scrap == null) continue;
+                total_dropped_energy += scrap.amount;
+            }
+            if (total_dropped_energy > SD.cleanup_thresh) Memory.retrieverDrone_MAX[k] = 1;
+            else if (total_dropped_energy < SD.cleanup_thresh/4) Memory.retrieverDrone_MAX[k] = -1;
+            
+            
+            var spawnResult;
         //spawning emergency units...
             //emergency drone: if drones go extinct, or if both assimilators and acolytes go extinct without leaving behind enough canister/vault energy for either
             if (((drone_gang[k].length == 0 && nexi[k].room.energyAvailable < drone_price) ||
             ((assimilator_gang[k].length == 0 && assimilator2_gang[k].length == 0 && acolyte_gang[k].length == 0 && acolyte2_gang[k].length == 0) &&
             (accessible_energy < assim_price[k] || accessible_energy < acoly_price[k])))
             && emergencyDrone_gang[k].length == 0){
-                if (nexi[k].spawnCreep(SD.edrone_body, 'EmergencyDrone-' + Game.time % SD.time_offset, {memory: {role: 'emergencyDrone'}}) == OK){
+                spawnResult = nexi[k].spawnCreep(SD.edrone_body, 'EmergencyDrone-' + Game.time % SD.time_offset, {memory: {role: 'emergencyDrone'}});
+                if (spawnResult == OK){
                     console.log('Room #' + k + ': >>>EmergencyDrone-' + Game.time % SD.time_offset + ' spawning.<<<');
                     //Game.notify('Emergency drone deployed in room #' + k,0);
                 }
+                else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                    console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
             }
             //assimilator: shortbut-spawn these to accompany the emergency drone, if one is active
             else if (assimilator_gang[k].length < Memory.assimilator_MAX[k] && emergencyDrone_gang[k].length != 0){
-                if (nexi[k].spawnCreep(SD.assim_body[k], 'Assimilator-' + Game.time % SD.time_offset, {memory: {role: 'assimilator'}}) == OK)
+                spawnResult = nexi[k].spawnCreep(SD.assim_body[k], 'Assimilator-' + Game.time % SD.time_offset, {memory: {role: 'assimilator'}});
+                if (spawnResult == OK)
                     console.log('Room #' + k + ': Assimilator-' + Game.time % SD.time_offset + ' spawning.');
+                else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                    console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
             }
         
         //spawning core units...
             //without drones, nothing else may spawn
             else if (drone_gang[k].length < Memory.drone_MAX[k]){
-                if (nexi[k].spawnCreep(SD.drone_body[k], 'Drone-' + Game.time % SD.time_offset, {memory: {role: 'drone'}}) == OK)
+                spawnResult = nexi[k].spawnCreep(SD.drone_body[k], 'Drone-' + Game.time % SD.time_offset, {memory: {role: 'drone'}});
+                if (spawnResult == OK)
                     console.log('Room #' + k + ': Drone-' + Game.time % SD.time_offset + ' spawning.');
+                else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                    console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
             }
             //without assimilators, there is no energy income
             else if (assimilator_gang[k].length < Memory.assimilator_MAX[k]){
-                if (nexi[k].spawnCreep(SD.assim_body[k], 'Assimilator-' + Game.time % SD.time_offset, {memory: {role: 'assimilator'}}) == OK)
+                spawnResult = nexi[k].spawnCreep(SD.assim_body[k], 'Assimilator-' + Game.time % SD.time_offset, {memory: {role: 'assimilator'}});
+                if (spawnResult == OK)
                     console.log('Room #' + k + ': Assimilator-' + Game.time % SD.time_offset + ' spawning.');
+                else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                    console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
             }
             else if (assimilator2_gang[k].length < Memory.assimilator2_MAX[k]){
-                if (nexi[k].spawnCreep(SD.assim_body[k], 'Assimilator_II-' + Game.time % SD.time_offset, {memory: {role: 'assimilator2'}}) == OK)
+                spawnResult = nexi[k].spawnCreep(SD.assim_body[k], 'Assimilator_II-' + Game.time % SD.time_offset, {memory: {role: 'assimilator2'}});
+                if (spawnResult == OK)
                     console.log('Room #' + k + ': Assimilator_II-' + Game.time % SD.time_offset + ' spawning.');
+                else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                    console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
             }
-            //without energisers, the room is defenceless
+            //without energisers, the room's defences are crippled
             else if (energiser_gang[k].length < Memory.energiser_MAX[k]){
                 if (nexi[k].spawnCreep(SD.energ_body[k], 'Energiser-' + Game.time % SD.time_offset, {memory: {role: 'energiser'}}) == OK)
                     console.log('Room #' + k + ': Energiser-' + Game.time % SD.time_offset + ' spawning.');
@@ -170,49 +207,84 @@ module.exports = {
                         console.log('Room #' + k + ': Energiser-' + Game.time % SD.time_offset + ' spawning.');
                 }
             }
+            //without retriever drones, dropped energy is wasted
+            else if (retrieverDrone_gang[k].length < Memory.retrieverDrone_MAX[k]){
+                spawnResult = nexi[k].spawnCreep(SD.drone_body[k], 'RetrieverDrone-' + Game.time % SD.time_offset, {memory: {role: 'retrieverDrone'}});
+                if (spawnResult == OK)
+                    console.log('Room #' + k + ': RetrieverDrone-' + Game.time % SD.time_offset + ' spawning.');
+                else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                    console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
+            }
             //without sacrificers, the room will level down
             else if (sacrificer_gang[k].length < Memory.sacrificer_MAX[k]){
-                if (nexi[k].spawnCreep(SD.sacrif_body[k], 'Sacrificer-' + Game.time % SD.time_offset, {memory: {role: 'sacrificer'}}) == OK)
+                spawnResult = nexi[k].spawnCreep(SD.sacrif_body[k], 'Sacrificer-' + Game.time % SD.time_offset, {memory: {role: 'sacrificer'}});
+                if (spawnResult == OK)
                     console.log('Room #' + k + ': Sacrificer-' + Game.time % SD.time_offset + ' spawning.');
+                else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                    console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
             }
             //without acolytes, links cannot transmit
             else if (acolyte_gang[k].length < Memory.acolyte_MAX[k]){
-                if (nexi[k].spawnCreep(SD.acoly_body[k], 'Acolyte-' + Game.time % SD.time_offset, {memory: {role: 'acolyte'}}) == OK)
+                spawnResult = nexi[k].spawnCreep(SD.acoly_body[k], 'Acolyte-' + Game.time % SD.time_offset, {memory: {role: 'acolyte'}});
+                if (spawnResult == OK)
                     console.log('Room #' + k + ': Acolyte-' + Game.time % SD.time_offset + ' spawning.');
+                else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                    console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
             }
             else if (acolyte2_gang[k].length < Memory.acolyte2_MAX[k]){
-                if (nexi[k].spawnCreep(SD.acoly_body[k], 'Acolyte_II-' + Game.time % SD.time_offset, {memory: {role: 'acolyte2'}}) == OK)
+                spawnResult = nexi[k].spawnCreep(SD.acoly_body[k], 'Acolyte_II-' + Game.time % SD.time_offset, {memory: {role: 'acolyte2'}});
+                if (spawnResult == OK)
                     console.log('Room #' + k + ': Acolyte_II-' + Game.time % SD.time_offset + ' spawning.');
+                else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                    console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
             }
             //without adherents, links cannot be unloaded
             else if (adherent_gang[k].length < Memory.adherent_MAX[k]){
-                if (nexi[k].spawnCreep(SD.adher_body, 'Adherent-' + Game.time % SD.time_offset, {memory: {role: 'adherent'}}) == OK)
+                spawnResult = nexi[k].spawnCreep(SD.adher_body, 'Adherent-' + Game.time % SD.time_offset, {memory: {role: 'adherent'}});
+                if (spawnResult == OK)
                     console.log('Room #' + k + ': Adherent-' + Game.time % SD.time_offset + ' spawning.');
+                else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                    console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
             }
             else if (nullAdherent_gang[k].length < Memory.nullAdherent_MAX[k]){
-                if (nexi[k].spawnCreep(SD.adher_body, 'NullAdherent-' + Game.time % SD.time_offset, {memory: {role: 'nullAdherent'}}) == OK)
+                spawnResult = nexi[k].spawnCreep(SD.adher_body, 'NullAdherent-' + Game.time % SD.time_offset, {memory: {role: 'nullAdherent'}});
+                if (spawnResult == OK)
                     console.log('Room #' + k + ': NullAdherent-' + Game.time % SD.time_offset + ' spawning.');
+                else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                    console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
             }
             //without supplicants, the room will level down (replaces sacrificers)
             else if (supplicant_gang[k].length < Memory.supplicant_MAX[k]){
-                if (nexi[k].spawnCreep(SD.suppl_body[k], 'Supplicant-' + Game.time % SD.time_offset, {memory: {role: 'supplicant'}}) == OK)
+                spawnResult = nexi[k].spawnCreep(SD.suppl_body[k], 'Supplicant-' + Game.time % SD.time_offset, {memory: {role: 'supplicant'}});
+                if (spawnResult == OK)
                     console.log('Room #' + k + ': Supplicant-' + Game.time % SD.time_offset + ' spawning.');
+                else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                    console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
             }
             else if (nullSupplicant_gang[k].length < Memory.nullSupplicant_MAX[k]){
-                if (nexi[k].spawnCreep(SD.suppl_body[k], 'NullSupplicant-' + Game.time % SD.time_offset, {memory: {role: 'nullSupplicant'}}) == OK)
+                spawnResult = nexi[k].spawnCreep(SD.suppl_body[k], 'NullSupplicant-' + Game.time % SD.time_offset, {memory: {role: 'nullSupplicant'}});
+                if (spawnResult == OK)
                     console.log('Room #' + k + ': NullSupplicant-' + Game.time % SD.time_offset + ' spawning.');
+                else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                    console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
             }
             //without probes, structures are not maintained
             else if (probe_gang[k].length < Memory.probe_MAX[k]){
-                if (nexi[k].spawnCreep(SD.probe_body[k], 'Probe-' + Game.time % SD.time_offset, {memory: {role: 'probe'}}) == OK)
+                spawnResult = nexi[k].spawnCreep(SD.probe_body[k], 'Probe-' + Game.time % SD.time_offset, {memory: {role: 'probe'}});
+                if (spawnResult == OK)
                     console.log('Room #' + k + ': Probe-' + Game.time % SD.time_offset + ' spawning.');
+                else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                    console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
             }
         
         //spawning situational units...
             //orbital assimilators: if remote mining is viable
             else if (orbitalAssimilator_gang[k].length < Memory.orbitalAssimilator_MAX[k]){
-                if (nexi[k].spawnCreep(SD.oassim_body[k], 'OrbitalAssimilator-' + Game.time % SD.time_offset, {memory: {role: 'orbitalAssimilator', home: nexi[k].room.name, in_place: false}}) == OK)
+                spawnResult = nexi[k].spawnCreep(SD.oassim_body[k], 'OrbitalAssimilator-' + Game.time % SD.time_offset, {memory: {role: 'orbitalAssimilator', home: nexi[k].room.name, in_place: false}});
+                if (spawnResult == OK)
                     console.log('Room #' + k + ': OrbitalAssimilator-' + Game.time % SD.time_offset + ' spawning.');
+                else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                    console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
             }
             
             //NOTE: beyond this point, recalibrators are first in line and must initially validate the existence of their remote controllers
@@ -247,86 +319,134 @@ module.exports = {
                 if (take_branch){
                     //orbital drones: if remote mining is viable
                     if (orbitalDrone_gang[k].length < Memory.orbitalDrone_MAX[k]){
-                        if (nexi[k].spawnCreep(SD.odrone_body[k], 'OrbitalDrone-' + Game.time % SD.time_offset, {memory: {role: 'orbitalDrone', home: nexi[k].room.name, in_place: false}}) == OK)
+                        spawnResult = nexi[k].spawnCreep(SD.odrone_body[k], 'OrbitalDrone-' + Game.time % SD.time_offset, {memory: {role: 'orbitalDrone', home: nexi[k].room.name, in_place: false}});
+                        if (spawnResult == OK)
                             console.log('Room #' + k + ': OrbitalDrone-' + Game.time % SD.time_offset + ' spawning.');
+                        else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                            console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
                     }
                     //blood hunters: if remote mining is being disrupted by invaders
                     else if (bloodhunter_gang[k].length < Memory.bloodhunter_MAX[k]){
-                        if (nexi[k].spawnCreep(SD.bloodh_body[k], 'Bloodhunter-' + Game.time % SD.time_offset, {memory: {role: 'bloodhunter', home: nexi[k].room.name}}) == OK)
+                        spawnResult = nexi[k].spawnCreep(SD.bloodh_body[k], 'Bloodhunter-' + Game.time % SD.time_offset, {memory: {role: 'bloodhunter', home: nexi[k].room.name}});
+                        if (spawnResult == OK)
                             console.log('Room #' + k + ': Bloodhunter-' + Game.time % SD.time_offset + ' spawning.');
+                        else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                            console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
                     }
                     //enforcers: if remote mining is being disrupted by invader cores
                     else if (enforcer_gang[k].length < Memory.enforcer_MAX[k]){
-                        if (nexi[k].spawnCreep(SD.enforc_body[k], 'Enforcer-' + Game.time % SD.time_offset, {memory: {role: 'enforcer', home: nexi[k].room.name}}) == OK)
+                        spawnResult = nexi[k].spawnCreep(SD.enforc_body[k], 'Enforcer-' + Game.time % SD.time_offset, {memory: {role: 'enforcer', home: nexi[k].room.name}});
+                        if (spawnResult == OK)
                             console.log('Room #' + k + ': Enforcer-' + Game.time % SD.time_offset + ' spawning.');
+                        else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                            console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
                     }
                     //purifiers: if an invader core's efforts must be undone
                     else if (purifier_gang[k].length < Memory.purifier_MAX[k]){
-                        if (nexi[k].spawnCreep(SD.purif_body[k], 'Purifier-' + Game.time % SD.time_offset, {memory: {role: 'purifier', home: nexi[k].room.name}}) == OK)
+                        spawnResult = nexi[k].spawnCreep(SD.purif_body[k], 'Purifier-' + Game.time % SD.time_offset, {memory: {role: 'purifier', home: nexi[k].room.name}});
+                        if (spawnResult == OK)
                             console.log('Room #' + k + ': Purifier-' + Game.time % SD.time_offset + ' spawning.');
+                        else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                            console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
                     }
                     //ancient drones: if minerals are available to mine
                     else if (ancientDrone_gang[k].length < Memory.ancientDrone_MAX[k]){
-                        if (nexi[k].spawnCreep(SD.androne_body, 'AncientDrone-' + Game.time % SD.time_offset, {memory: {role: 'ancientDrone'}}) == OK)
+                        spawnResult = nexi[k].spawnCreep(SD.androne_body, 'AncientDrone-' + Game.time % SD.time_offset, {memory: {role: 'ancientDrone'}});
+                        if (spawnResult == OK)
                             console.log('Room #' + k + ': AncientDrone-' + Game.time % SD.time_offset + ' spawning.');
+                        else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                            console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
                     }
                     //ancient assimilators: if minerals are available to mine
                     else if (ancientAssimilator_gang[k].length < Memory.ancientAssimilator_MAX[k]){
-                        if (nexi[k].spawnCreep(SD.anassim_body, 'AncientAssimilator-' + Game.time % SD.time_offset, {memory: {role: 'ancientAssimilator'}}) == OK)
+                        spawnResult = nexi[k].spawnCreep(SD.anassim_body, 'AncientAssimilator-' + Game.time % SD.time_offset, {memory: {role: 'ancientAssimilator'}});
+                        if (spawnResult == OK)
                             console.log('Room #' + k + ': AncientAssimilator-' + Game.time % SD.time_offset + ' spawning.');
+                        else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                            console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
                     }
                     //architects: if there are construction projects to finish
                     else if (architect_gang[k].length < Memory.architect_MAX[k]){
-                        if (nexi[k].spawnCreep(SD.archit_body[k], 'Architect-' + Game.time % SD.time_offset, {memory: {role: 'architect'}}) == OK)
+                        spawnResult = nexi[k].spawnCreep(SD.archit_body[k], 'Architect-' + Game.time % SD.time_offset, {memory: {role: 'architect'}});
+                        if (spawnResult == OK)
                             console.log('Room #' + k + ': Architect-' + Game.time % SD.time_offset + ' spawning.');
+                        else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                            console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
                     }
                     else if (phaseArchitect_gang[k].length < Memory.phaseArchitect_MAX[k]){
-                        if (nexi[k].spawnCreep(SD.phasarc_body[k], 'PhaseArchitect-' + Game.time % SD.time_offset, {memory: {role: 'phaseArchitect'}}) == OK)
+                        spawnResult = nexi[k].spawnCreep(SD.phasarc_body[k], 'PhaseArchitect-' + Game.time % SD.time_offset, {memory: {role: 'phaseArchitect'}});
+                        if (spawnResult == OK)
                             console.log('Room #' + k + ': PhaseArchitect-' + Game.time % SD.time_offset + ' spawning.');
+                        else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                            console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
                     }
             
             //spawning fast-track units...
                     //visionary: used in claiming up new rooms
                     else if (visionary_gang[k].length < Memory.visionary_MAX[k]){
-                        if (nexi[k].spawnCreep(SD.visio_body[k], 'Visionary-' + Game.time % SD.time_offset, {memory: {role: 'visionary', home: nexi[k].room.name, in_place: false}}) == OK)
+                        spawnResult = nexi[k].spawnCreep(SD.visio_body[k], 'Visionary-' + Game.time % SD.time_offset, {memory: {role: 'visionary', home: nexi[k].room.name, in_place: false}});
+                        if (spawnResult == OK)
                             console.log('Visionary-' + Game.time % SD.time_offset + ' spawning.');
+                        else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                            console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
                     }
                     //specialist: used in setting up new rooms (assists architects)
                     else if (specialist_gang[k].length < Memory.specialist_MAX[k]){
-                        if (nexi[k].spawnCreep(SD.speci_body[k], 'Specialist-' + Game.time % SD.time_offset, {memory: {role: 'specialist', home: nexi[k].room.name, in_place: false}}) == OK)
+                        spawnResult = nexi[k].spawnCreep(SD.speci_body[k], 'Specialist-' + Game.time % SD.time_offset, {memory: {role: 'specialist', home: nexi[k].room.name, in_place: false}});
+                        if (spawnResult == OK)
                             console.log('Specialist-' + Game.time % SD.time_offset + ' spawning.');
+                        else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                            console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
                     }
                     //saviour: used in setting up new rooms (assists sacrificers)
                     else if (saviour_gang.length < Memory.saviour_MAX){
-                        if (nexi[0].spawnCreep(SD.speci_body, 'Saviour-' + Game.time % SD.time_offset, {memory: {role: 'saviour'}}) == OK)
+                        spawnResult = nexi[0].spawnCreep(SD.speci_body, 'Saviour-' + Game.time % SD.time_offset, {memory: {role: 'saviour'}});
+                        if (spawnResult == OK)
                             console.log('Saviour-' + Game.time % SD.time_offset + ' spawning.');
+                        else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                            console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
                     }
             
             //spawning military units...
                     //emissary: used situationally for scouting
                     else if (emissary_gang[k].length < Memory.emissary_MAX[k]){
-                        if (nexi[k].spawnCreep(SD.emiss_body, 'Emissary-' + Game.time % SD.time_offset, {memory: {role: 'emissary', in_place: false}}) == OK)
+                        spawnResult = nexi[k].spawnCreep(SD.emiss_body, 'Emissary-' + Game.time % SD.time_offset, {memory: {role: 'emissary', in_place: false}});
+                        if (spawnResult == OK)
                             console.log('Room #' + k + ': Emissary-' + Game.time % SD.time_offset + ' spawning.');
+                        else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                            console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
                     }
                     //dark templar: used during battle
                     else if (darktemplar_gang[k].length < Memory.darktemplar_MAX[k]){
-                        if (nexi[k].spawnCreep(SD.dt_body[k], 'Darktemplar-' + Game.time % SD.time_offset, {memory: {role: 'darktemplar', home: nexi[k].room.name, in_place: false}}) == OK)
+                        spawnResult = nexi[k].spawnCreep(SD.dt_body[k], 'Darktemplar-' + Game.time % SD.time_offset, {memory: {role: 'darktemplar', home: nexi[k].room.name, in_place: false}});
+                        if (spawnResult == OK)
                             console.log('Room #' + k + ': Darktemplar-' + Game.time % SD.time_offset + ' spawning.');
+                        else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                            console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
                     }
                     //hallucination: used during battle
                     else if (hallucination_gang.length < Memory.hallucination_MAX){
-                        if (nexi[0].spawnCreep(SD.halluc_body, 'Hallucination-' + Game.time % SD.time_offset, {memory: {role: 'hallucination'}}) == OK)
+                        spawnResult = nexi[0].spawnCreep(SD.halluc_body, 'Hallucination-' + Game.time % SD.time_offset, {memory: {role: 'hallucination'}});
+                        if (spawnResult == OK)
                             console.log('Hallucination-' + Game.time % SD.time_offset + ' spawning.');
+                        else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                            console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
                     }
                     //high templar: used during battle
                     else if (hightemplar_gang.length < Memory.hightemplar_MAX){
-                        if (nexi[0].spawnCreep(SD.ht_body, 'Hightemplar-' + Game.time % SD.time_offset, {memory: {role: 'hightemplar'}}) == OK)
+                        spawnResult = nexi[0].spawnCreep(SD.ht_body, 'Hightemplar-' + Game.time % SD.time_offset, {memory: {role: 'hightemplar'}});
+                        if (spawnResult == OK)
                             console.log('Hightemplar-' + Game.time % SD.time_offset + ' spawning.');
+                        else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                            console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
                     }
                     //zealot: used during battle
                     else if (zealot_gang.length < Memory.zealot_MAX){
-                        if (nexi[0].spawnCreep(SD.zealot_body, 'Zealot-' + Game.time % SD.time_offset, {memory: {role: 'zealot', in_place: false}}) == OK)
+                        spawnResult = nexi[0].spawnCreep(SD.zealot_body, 'Zealot-' + Game.time % SD.time_offset, {memory: {role: 'zealot', in_place: false}});
+                        if (spawnResult == OK)
                             console.log('Zealot-' + Game.time % SD.time_offset + ' spawning.');
+                        else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
+                            console.log('SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']');
                     }
                 }
             }

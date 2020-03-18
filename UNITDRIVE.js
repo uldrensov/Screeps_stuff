@@ -10,6 +10,7 @@ var probe =                 require('probe.AI');
 var assimilator =           require('assimilator.AI');
 var drone =                 require('drone.AI');
 var energiser =             require('energiser.AI');
+var retrieverDrone =        require('retrieverDrone.AI');
 var recalibrator =          require('recalibrator.AI');
 var orbitalAssimilator =    require('orbitalAssimilator.AI');
 var orbitalDrone =          require('orbitalDrone.AI');
@@ -65,8 +66,11 @@ module.exports = {
                         case 'energiser':
                             energiser.run(unit);
                             break;
+                        case 'retrieverDrone':
+                            retrieverDrone.run(unit, SD.nexus_id[k], SD.en_ignore_lim);
+                            break;
                         case 'sacrificer':
-                            sacrificer.run(unit, SD.controller_id[k], SD.en_ignore_lim);
+                            sacrificer.run(unit, SD.en_ignore_lim);
                             break;
                         case 'acolyte':
                             acolyte.run(unit, SD.source1_id[k], SD.warpRX_id[k], SD.warpTX_id[k][0], SD.canister1_id[k]);
@@ -147,7 +151,7 @@ module.exports = {
                 case 'orbitalDrone':
                     for (let i=0; i<nexi.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
-                            orbitalDrone.run(unit, SD.nexus_id[i], SD.remotecanister_id[i], SD.reserveflag[i], SD.remotedrop_id[i], SD.en_ignore_lim, SD.tower_id[i], i);
+                            orbitalDrone.run(unit, SD.nexus_id[i], SD.remotecanister_id[i], SD.reserveflag[i], SD.en_ignore_lim, SD.tower_id[i], i);
                             break;
                         }
                     }
@@ -188,7 +192,7 @@ module.exports = {
                     specialist.run(unit, Game.flags['Protodermis']);
                     break;
                 case 'saviour':
-                    saviour.run(unit, SD.nexus_id[0], SD.controller_id[2], SD.vault_reserve_min);
+                    saviour.run(unit, SD.nexus_id[0], SD.nexus_id[2], SD.vault_reserve_min);
                     break;
                 case 'emissary':
                     //emissary.run(unit, Game.flags['']);

@@ -2,10 +2,10 @@
 //violet trail ("upgrader")
 
 module.exports = {
-    run: function(unit, SRCnexus_id, DESTctrl_id, reserve){
+    run: function(unit, SRCnexus_id, DESTnexus_id, reserve){
         
         var home = Game.getObjectById(SRCnexus_id).room;
-        var away = Game.getObjectById(DESTctrl_id).room;
+        var away = Game.getObjectById(DESTnexus_id).room;
         
         
         //2-state fetch/unload FSM...

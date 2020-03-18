@@ -3,6 +3,38 @@
 module.exports = {
     run: function(roomcount){
         
+        //init room-specific arrays...
+        if (Memory.sacrificer_MAX == undefined){Memory.sacrificer_MAX =                             [];}
+        if (Memory.architect_MAX == undefined){Memory.architect_MAX =                               [];}
+        if (Memory.phaseArchitect_MAX == undefined){Memory.phaseArchitect_MAX =                     [];}
+        if (Memory.probe_MAX == undefined){Memory.probe_MAX =                                       [];}
+        if (Memory.assimilator_MAX == undefined){Memory.assimilator_MAX =                           [];}
+            if (Memory.assimilator2_MAX == undefined){Memory.assimilator2_MAX =                     [];}
+        if (Memory.drone_MAX == undefined){Memory.drone_MAX =                                       [];}
+        if (Memory.energiser_MAX == undefined){Memory.energiser_MAX =                               [];}
+        if (Memory.retrieverDrone_MAX == undefined){Memory.retrieverDrone_MAX =                     [];}
+        if (Memory.recalibrator_MAX == undefined){Memory.recalibrator_MAX =                         [];}
+        if (Memory.orbitalAssimilator_MAX == undefined){Memory.orbitalAssimilator_MAX =             [];}
+        if (Memory.orbitalDrone_MAX == undefined){Memory.orbitalDrone_MAX =                         [];}
+        if (Memory.bloodhunter_MAX == undefined){Memory.bloodhunter_MAX =                           [];}
+        if (Memory.enforcer_MAX == undefined){Memory.enforcer_MAX =                                 [];}
+        if (Memory.purifier_MAX == undefined){Memory.purifier_MAX =                                 [];}
+        if (Memory.acolyte_MAX == undefined){Memory.acolyte_MAX =                                   [];}
+            if (Memory.acolyte2_MAX == undefined){Memory.acolyte2_MAX =                             [];}
+        if (Memory.adherent_MAX == undefined){Memory.adherent_MAX =                                 [];}
+        if (Memory.nullAdherent_MAX == undefined){Memory.nullAdherent_MAX =                         [];}
+        if (Memory.supplicant_MAX == undefined){Memory.supplicant_MAX =                             [];}
+        if (Memory.nullSupplicant_MAX == undefined){Memory.nullSupplicant_MAX =                     [];}
+        if (Memory.ancientDrone_MAX == undefined){Memory.ancientDrone_MAX =                         [];}
+        if (Memory.ancientAssimilator_MAX == undefined){Memory.ancientAssimilator_MAX =             [];}
+        if (Memory.visionary_MAX == undefined){Memory.visionary_MAX =                               [];}
+        if (Memory.specialist_MAX == undefined){Memory.specialist_MAX =                             [];}
+        if (Memory.emissary_MAX == undefined){Memory.emissary_MAX =                                 [];}
+        if (Memory.darktemplar_MAX == undefined){Memory.darktemplar_MAX =                           [];}
+        if (Memory.vaultAlert_EN == undefined){Memory.vaultAlert_EN =                               [];}
+        if (Memory.evac_timer == undefined){Memory.evac_timer =                                     [];}
+        if (Memory.viable_prey == undefined){Memory.viable_prey =                                   [];}
+        
         //room-specifics...
         for (let i=0; i<roomcount; i++){
             if (Memory.sacrificer_MAX[i] == undefined){Memory.sacrificer_MAX[i] =                   0;}
@@ -13,6 +45,7 @@ module.exports = {
                 if (Memory.assimilator2_MAX[i] == undefined){Memory.assimilator2_MAX[i] =           0;}
             if (Memory.drone_MAX[i] == undefined){Memory.drone_MAX[i] =                             0;}
             if (Memory.energiser_MAX[i] == undefined){Memory.energiser_MAX[i] =                     0;}
+            if (Memory.retrieverDrone_MAX[i] == undefined){Memory.retrieverDrone_MAX[i] =           0;}
             if (Memory.recalibrator_MAX[i] == undefined){Memory.recalibrator_MAX[i] =               0;}
             if (Memory.orbitalAssimilator_MAX[i] == undefined){Memory.orbitalAssimilator_MAX[i] =   0;}
             if (Memory.orbitalDrone_MAX[i] == undefined){Memory.orbitalDrone_MAX[i] =               0;}

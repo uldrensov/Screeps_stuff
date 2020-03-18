@@ -2,9 +2,11 @@
 //violet trail ("upgrader")
 
 module.exports = {
-    run: function(unit, ctrl_id, ignore_lim){
+    run: function(unit, ignore_lim){
         
-        var obelisk = Game.getObjectById(ctrl_id);
+        if (unit.memory.ctrl_id == undefined)
+            unit.memory.ctrl_id = unit.room.controller.id;
+        var obelisk = Game.getObjectById(unit.memory.ctrl_id);
         
         
         //inputs: energy sources, containers (ample)

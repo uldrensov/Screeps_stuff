@@ -2,9 +2,14 @@
 //yellow trail ("traveller")
 
 module.exports = {
-    run: function(unit, nexus_id, canister_id, remote_flag, dropoff_id, ignore_lim, flee_point, home_index){
+    run: function(unit, nexus_id, canister_id, remote_flag, ignore_lim, flee_point, home_index){
         
         var nexus = Game.getObjectById(nexus_id);
+        if (unit.memory.dropoff_id == undefined){
+            if (Game.getObjectById(nexus_id).room.storage != undefined)
+                unit.memory.dropoff_id = Game.getObjectById(nexus_id).room.storage.id;
+            else return 'UNIT ERROR: ' + unit.name + ' REQUIRES A HOME VAULT';
+        }
         
         
         if (!unit.memory.killswitch){
@@ -14,7 +19,7 @@ module.exports = {
                 var canister = Game.getObjectById(canister_id);
                 
                 //outputs: container/link/vault
-                var dropoff = Game.getObjectById(dropoff_id);
+                var dropoff = Game.getObjectById(unit.memory.dropoff_id);
             
             
                 //2-state fetch/unload FSM...

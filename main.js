@@ -6,7 +6,8 @@ var UNITDRIVE =             require('UNITDRIVE');
 
 module.exports.loop = function(){
     
-    MEMORYINIT.run(SD.roomcount);
+    if (Game.time % 5 == 0)
+        MEMORYINIT.run(SD.roomcount);
     
     var nexi = [];
     for (let i=0; i<SD.nexus_id.length; i++){
