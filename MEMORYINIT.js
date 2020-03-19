@@ -3,7 +3,7 @@
 module.exports = {
     run: function(roomcount){
         
-        //init room-specific arrays...
+        //init arrays for room-specifics...
         if (Memory.sacrificer_MAX == undefined){Memory.sacrificer_MAX =                             [];}
         if (Memory.architect_MAX == undefined){Memory.architect_MAX =                               [];}
         if (Memory.phaseArchitect_MAX == undefined){Memory.phaseArchitect_MAX =                     [];}

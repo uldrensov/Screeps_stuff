@@ -15,17 +15,18 @@ module.exports = {
             });
             
             //outputs: construction hotspot
-            var hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+            var hotspot_scan = unit.room.find(FIND_CONSTRUCTION_SITES);
             
             
             //self-killswitch routine
-            if (!hotspot){
+            if (!hotspot_scan.length){
                 Memory.phaseArchitect_MAX[home_index] = -1;
                 console.log('*********************');
                 console.log('PHASE CONSTRUCTION COMPLETE (ROOM #' + home_index + ')');
                 console.log('*********************');
                 unit.memory.killswitch = true;
             }
+            else var hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
             
             
             //2-state fetch/unload FSM...

@@ -97,8 +97,7 @@ module.exports = {
         }
         
         //determine controller levelup percentage
-        var control_perc = (nexus.room.controller.progress / nexus.room.controller.progressTotal) * 100;
-        control_perc = control_perc.toFixed(3);
+        var control_perc = ((nexus.room.controller.progress / nexus.room.controller.progressTotal) * 100).toFixed(3);
         
         //count worn structures and walls
         var worn_structs = nexus.room.find(FIND_STRUCTURES, {
@@ -126,8 +125,7 @@ module.exports = {
                     weakest_struct = worn_structs[i];
                 }
             }
-            weakstruct_perc = (weakest_struct.hits / weakest_struct.hitsMax) * 100;
-            weakstruct_perc = weakstruct_perc.toFixed(3);
+            weakstruct_perc = ((weakest_struct.hits / weakest_struct.hitsMax) * 100).toFixed(3);
         }
         else{
             weakest_struct = 'STRUCTURES ARE PRISTINE';
@@ -143,8 +141,7 @@ module.exports = {
                 if (worn_walls[i].hits / Memory.wall_threshold < weakest_wall.hits / Memory.wall_threshold)
                     weakest_wall = worn_walls[i];
             }
-            weakwall_perc = (weakest_wall.hits / Memory.wall_threshold) * 100;
-            weakwall_perc = weakwall_perc.toFixed(3);
+            weakwall_perc = ((weakest_wall.hits / Memory.wall_threshold) * 100).toFixed(3);
         }
         else{
             weakest_wall = 'WALLS ARE PRISTINE';

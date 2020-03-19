@@ -14,6 +14,7 @@ module.exports = {
         //init
         var GE = Game.getObjectById(SD.nexus_id[room_num]).room.terminal;
         if (GE == null) return 'ERROR: ROOM DOES NOT CONTAIN A TERMINAL';
+        if (GE.store.getUsedCapacity() == 0) return 'ERROR: TERMINAL IS EMPTY';
         var minType = Memory.SPAWNCYCLE__minerals[room_num].mineralType;
         var hist = Game.market.getHistory(minType);
         var clientele = Game.market.getAllOrders({type: ORDER_BUY, resourceType: minType});
@@ -43,7 +44,7 @@ module.exports = {
         if (transaction == ERR_NOT_ENOUGH_ENERGY) return 'INSUFFICIENT RESOURCES...OFFER REQUIRES ' + tradeAmount + ' [' + minType + '] AND ' + tax + ' TRANSMISSION ENERGY';
         if (transaction != OK) return transaction;
         
-        console.log('SOLD ' + tradeAmount + ' [' + minType + '] FOR ' + bestOffer.price + ' EACH');
+        console.log('SOLD ' + tradeAmount + ' [' + minType + '] FOR ' + bestOffer.price + ' EACH (+' + (tradeAmount*bestOffer.price).toFixed(3) + ' CREDITS)');
         console.log('TRANSMISSION TAX: ' + tax);
         return 'TRANSACTION SUCCESSFUL (ROOM #' + room_num + ')';
     }

@@ -114,7 +114,6 @@ module.exports = {
                         unit.moveTo(getRemains);
                 }
             }
-            ///*
             //fetch: tombstones<minerals>, tombstones<energy> (fullest)
             else if (unit.memory.tombs.length){
                 var richest_tomb = unit.memory.tombs[0];
@@ -158,8 +157,6 @@ module.exports = {
                         unit.moveTo(getRichestTomb);
                 }
             }
-            //*/
-            ///*
             //fetch: pickups<minerals> (least TTL), pickups<energy> (fullest))
             else if (unit.memory.scraps.length){
                 var chosen_scrap = unit.memory.scraps[0];
@@ -204,7 +201,6 @@ module.exports = {
                         unit.moveTo(getChosenScrap);
                 }
             }
-            //*/
             //fetch: containers (fullest; fixation)
             else if (unit.memory.canisters.length){
                 var fullest_canister = unit.memory.canisters[0];

@@ -2,13 +2,16 @@ BUGS:
 	phase archit prematurely ends
 
 TODO frontlog:
-	redraw wall boundaries + relocate rm0 terminal
-	remote mining crew should save tower id to mem instead of having it coded in SD
-	optimise supplicant parts (every transferral is close to work part count) (other roles?)
+	room 0 has unnecessary ramparts (consider how acolytes function if tx/rx breaks)
+	redraw room 0's extension layout
+	relieve dependence on SD by adding find() calls to units instead of passing ID args
+	optimise role parts
 	kill edrone when he is no longer needed
+		-requires detection of drones/assims/available energy
 	dynamically choose drone size when its time to replace it (middle gnd between waiting for edrone and trying to spawn a big one)
-	reduce dependence on repetitive find() calls (save things to unit mem) (global check interval? currently 10)
+	reduce dependence on repetitive find() calls (globalise check interval? currently 10)
 	purifiers should contest cores that are taken (e.g. controller subducts and core is still not dead)
+	stop remote workers from spawning if the ctrl belongs to invader (currently coded but not working; orbassim line 41)
 	[DEFENCE] think about how tower should behave in general
 	[SOFTLOCK] before calling a softlock, drones should deposit pocket energy if there are no more assims/energy on the map
 	[SOFTLOCK] take into acc the drone's ignore lim and their current pocket energy when calcing room energy?
@@ -21,7 +24,6 @@ TODO backlog:
 	treasurer withdraw/deposit RESOURCES_ALL
 	dont let new things spawn when one briefly leaves room (expand everything as crossroom in unitdrive?)
 	work-part / thief detection in remotes?
-	[SOFTLOCK] fix (e)drone pickup
 	[MAINTENANCE] decouple hardcodes from unitdrive (and from argpasses?)
 	[MAINTENANCE] energy source / nexus / ctrller vars could be merged
 	[MAINTENANCE] git init (put this file inside), readme

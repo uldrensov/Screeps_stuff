@@ -1,5 +1,5 @@
 //executable script: spawns a treasurer unit (if applicable), and writes a command into its memory
-    //require('TERMINALTRANSFER.exe').run(2,RESOURCE_ENERGY,10000,true,true)
+    //require('TERMINALTRANSFER.exe').run(2,RESOURCE_ENERGY,100000,true,true)
     
 var SD = require('SOFTDATA');
 
@@ -23,16 +23,16 @@ module.exports = {
                     
         //if one doesn't exist, spawn one and issue order parameters at spawn
         if (!treasurer){
-            var spawn_result = nexus.spawnCreep(SD.treas_body[room_num], 'Treasurer-' + Game.time % SD.time_offset, {memory: {role: 'treasurer', order_type: o_type, order_amt: o_amt, dir: dir, task_progress: 0, autokill: autokill}});
-            if (spawn_result == OK)
+            var spawnResult = nexus.spawnCreep(SD.treas_body, 'Treasurer-' + Game.time % SD.time_offset, {memory: {role: 'treasurer', order_type: o_type, order_amt: o_amt, dir: dir, task_progress: 0, autokill: autokill}});
+            if (spawnResult == OK)
                 console.log('Room #' + room_num + ': Treasurer-' + Game.time % SD.time_offset + ' spawning.');
-            else if (spawn_result == ERR_BUSY && gateway != undefined){
-                var spawn_result2 = gateway.spawnCreep(SD.treas_body[room_num], 'Treasurer-' + Game.time % SD.time_offset, {memory: {role: 'treasurer', order_type: o_type, order_amt: o_amt, dir: dir, task_progress: 0, autokill: autokill}});
-                if (spawn_result2 == OK)
+            else if (spawnResult == ERR_BUSY && gateway != undefined){
+                var spawnResult2 = gateway.spawnCreep(SD.treas_body[room_num], 'Treasurer-' + Game.time % SD.time_offset, {memory: {role: 'treasurer', order_type: o_type, order_amt: o_amt, dir: dir, task_progress: 0, autokill: autokill}});
+                if (spawnResult2 == OK)
                     console.log('Room #' + room_num + ': Treasurer-' + Game.time % SD.time_offset + ' spawning.');
-                else return 'GATEWAY ERROR: ' + spawn_result;
+                else return 'GATEWAY ERROR: ' + spawnResult;
             }
-            else return 'NEXUS ERROR: ' + spawn_result;
+            else return 'NEXUS ERROR: ' + spawnResult;
         }
         //if one exists, rewrite its memory contents to issue a new command
         else{

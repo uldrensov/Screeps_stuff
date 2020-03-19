@@ -96,7 +96,6 @@ module.exports = {
                     unit.moveTo(richest_tomb);
             }
             //TODO: pickups
-            ///*
             //fetch: pickups<energy> (fullest)
             else if (scraps.length){
                 //
@@ -109,7 +108,6 @@ module.exports = {
                 if (unit.pickup(chosen_scrap) == ERR_NOT_IN_RANGE)
                     unit.moveTo(chosen_scrap);
             }
-            //*/
             //fetch: sources
             else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE)
                 unit.moveTo(sources[0]);
