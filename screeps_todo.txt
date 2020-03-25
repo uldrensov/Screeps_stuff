@@ -2,6 +2,9 @@ BUGS:
 	phase archit prematurely ends
 
 TODO frontlog:
+	let edrone algo wait for spawner to charge to 300 before calcing
+	email on low bucket
+	dont pass roomnum as an arg, but store it in mem and use it to access SD directly instead of using a for loop to pass proper args
 	room 0 has unnecessary ramparts (consider how acolytes function if tx/rx breaks)
 	redraw room 0's extension layout
 	relieve dependence on SD by adding find() calls to units instead of passing ID args

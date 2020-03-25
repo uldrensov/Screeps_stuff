@@ -21,7 +21,7 @@ module.exports = {
         var assimilator2_gang = [];     var drone_gang = [];            var energiser_gang = [];    var retrieverDrone_gang = [];   var recalibrator_gang = [];     var orbitalAssimilator_gang = [];
         var orbitalDrone_gang = [];     var bloodhunter_gang = [];      var enforcer_gang = [];     var purifier_gang = [];         var acolyte_gang = [];          var acolyte2_gang = [];
         var adherent_gang = [];         var nullAdherent_gang = [];     var supplicant_gang = [];   var nullSupplicant_gang = [];   var ancientDrone_gang = [];     var ancientAssimilator_gang = [];
-        var visionary_gang = [];        var specialist_gang = [];       var saviour_gang;           var emissary_gang = [];         var darktemplar_gang = [];      var hallucination_gang;
+        var visionary_gang = [];        var specialist_gang = [];       var saviour_gang = [];      var emissary_gang = [];         var darktemplar_gang = [];      var hallucination_gang;
         var hightemplar_gang;           var zealot_gang;
     
     
@@ -55,7 +55,7 @@ module.exports = {
             ancientAssimilator_gang[k] =    _.filter(Game.creeps, creep => creep.memory.role == 'ancientAssimilator'    && creep.room == nexi[k].room);
             visionary_gang[k] =             _.filter(Game.creeps, creep => creep.memory.role == 'visionary');
             specialist_gang[k] =            _.filter(Game.creeps, creep => creep.memory.role == 'specialist');
-            saviour_gang =                  _.filter(Game.creeps, creep => creep.memory.role == 'saviour');
+            saviour_gang[k] =               _.filter(Game.creeps, creep => creep.memory.role == 'saviour');
             emissary_gang[k] =              _.filter(Game.creeps, creep => creep.memory.role == 'emissary');
             darktemplar_gang[k] =           _.filter(Game.creeps, creep => creep.memory.role == 'darktemplar');
             hallucination_gang =            _.filter(Game.creeps, creep => creep.memory.role == 'hallucination');
@@ -171,7 +171,7 @@ module.exports = {
                 else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                     console.log('>>>SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']<<<');
             }
-            //assimilator: shortbut-spawn these to accompany the emergency drone, if one is active
+            //assimilator: shortcut-spawn these to accompany the emergency drone, if one is active
             else if (assimilator_gang[k].length < Memory.assimilator_MAX[k] && emergencyDrone_gang[k].length != 0){
                 spawnResult = nexi[k].spawnCreep(SD.assim_body[k], 'Assimilator-' + Game.time % SD.time_offset, {memory: {role: 'assimilator'}});
                 if (spawnResult == OK)
@@ -214,7 +214,7 @@ module.exports = {
                 }
             }
             //without retriever drones, dropped energy is wasted
-            else if (retrieverDrone_gang[k].length < Memory.retrieverDrone_MAX[k]){
+            else if ((retrieverDrone_gang[k].length < Memory.retrieverDrone_MAX[k]) && nexi[k].room.storage != undefined){
                 spawnResult = nexi[k].spawnCreep(SD.drone_body[k], 'RetrieverDrone-' + Game.time % SD.time_offset, {memory: {role: 'retrieverDrone'}});
                 if (spawnResult == OK)
                     console.log('Room #' + k + ': RetrieverDrone-' + Game.time % SD.time_offset + ' spawning.');
@@ -387,10 +387,10 @@ module.exports = {
                             console.log('>>>SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']<<<');
                     }
             
-            //spawning fast-track units...
+            //spawning fast-track (new room) units...
                     //visionary: used in claiming up new rooms
                     else if (visionary_gang[k].length < Memory.visionary_MAX[k]){
-                        spawnResult = nexi[k].spawnCreep(SD.visio_body, 'Visionary-' + Game.time % SD.time_offset, {memory: {role: 'visionary', home: nexi[k].room.name, in_place: false}});
+                        spawnResult = nexi[k].spawnCreep(SD.visio_body, 'Visionary-' + Game.time % SD.time_offset, {memory: {role: 'visionary', home: nexi[k].room.name, in_place: false, in_place2: false}});
                         if (spawnResult == OK)
                             console.log('Visionary-' + Game.time % SD.time_offset + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
@@ -398,15 +398,15 @@ module.exports = {
                     }
                     //specialist: used in setting up new rooms (assists architects)
                     else if (specialist_gang[k].length < Memory.specialist_MAX[k]){
-                        spawnResult = nexi[k].spawnCreep(SD.speci_body[k], 'Specialist-' + Game.time % SD.time_offset, {memory: {role: 'specialist', home: nexi[k].room.name, in_place: false}});
+                        spawnResult = nexi[k].spawnCreep(SD.speci_body[k], 'Specialist-' + Game.time % SD.time_offset, {memory: {role: 'specialist', home: nexi[k].room.name, in_place: false, in_place2: false}});
                         if (spawnResult == OK)
                             console.log('Specialist-' + Game.time % SD.time_offset + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('>>>SPAWN FAILURE IN ROOM #' + k + ': CODE ' + '[' + spawnResult + ']<<<');
                     }
                     //saviour: used in setting up new rooms (assists sacrificers)
-                    else if (saviour_gang.length < Memory.saviour_MAX){
-                        spawnResult = nexi[0].spawnCreep(SD.speci_body, 'Saviour-' + Game.time % SD.time_offset, {memory: {role: 'saviour'}});
+                    else if (saviour_gang[k].length < Memory.saviour_MAX[k]){
+                        spawnResult = nexi[k].spawnCreep(SD.speci_body[k], 'Saviour-' + Game.time % SD.time_offset, {memory: {role: 'saviour', home: nexi[k].room.name, in_place: false, in_place2: false}});
                         if (spawnResult == OK)
                             console.log('Saviour-' + Game.time % SD.time_offset + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)

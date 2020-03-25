@@ -27,10 +27,10 @@ module.exports = {
             if (spawnResult == OK)
                 console.log('Room #' + room_num + ': Treasurer-' + Game.time % SD.time_offset + ' spawning.');
             else if (spawnResult == ERR_BUSY && gateway != undefined){
-                var spawnResult2 = gateway.spawnCreep(SD.treas_body[room_num], 'Treasurer-' + Game.time % SD.time_offset, {memory: {role: 'treasurer', order_type: o_type, order_amt: o_amt, dir: dir, task_progress: 0, autokill: autokill}});
+                var spawnResult2 = gateway.spawnCreep(SD.treas_body, 'Treasurer-' + Game.time % SD.time_offset, {memory: {role: 'treasurer', order_type: o_type, order_amt: o_amt, dir: dir, task_progress: 0, autokill: autokill}});
                 if (spawnResult2 == OK)
                     console.log('Room #' + room_num + ': Treasurer-' + Game.time % SD.time_offset + ' spawning.');
-                else return 'GATEWAY ERROR: ' + spawnResult;
+                else return 'GATEWAY ERROR: ' + spawnResult2;
             }
             else return 'NEXUS ERROR: ' + spawnResult;
         }

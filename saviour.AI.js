@@ -2,12 +2,34 @@
 //violet trail ("upgrader")
 
 module.exports = {
-    run: function(unit, SRCnexus_id, DESTnexus_id, reserve){
+    run: function(unit, standby_flag, standby_flag2){
         
-        var home = Game.getObjectById(SRCnexus_id).room;
-        var away = Game.getObjectById(DESTnexus_id).room;
+        //travelling...
+        //trek to the first checkpoint
+        if (unit.pos.isEqualTo(standby_flag.pos))
+            unit.memory.in_place = true;
+        if (!unit.memory.in_place){
+            unit.moveTo(standby_flag, {visualizePathStyle: {stroke: '#ff00ff'}});
+            return;
+        }
         
-        
+        //second checkpoint
+        if (unit.pos.isEqualTo(standby_flag2.pos))
+            unit.memory.in_place2 = true;
+        if (!unit.memory.in_place2){
+            unit.moveTo(standby_flag2, {visualizePathStyle: {stroke: '#ff00ff'}});
+            return;
+        }
+            
+            
+        //input: sources (non-empty)
+        var sources = unit.room.find(FIND_SOURCES, {
+            filter: RoomObject => {
+                return RoomObject.energy > 0;
+            }
+        });
+            
+            
         //2-state fetch/unload FSM...
         //if carry amt reaches full while fetching, switch to unloading
         if (unit.memory.fetching && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
@@ -19,20 +41,12 @@ module.exports = {
         
         //behaviour execution...
         if (!unit.memory.fetching){
-            //leave the home room
-            if (unit.room != away)
-                unit.moveTo(away.controller, {visualizePathStyle: {stroke: '#ff00ff'}});
             //unload: controller
-            else if (unit.upgradeController(away.controller))
-                unit.moveTo(away.controller, {visualizePathStyle: {stroke: '#ff00ff'}});
+            if (unit.upgradeController(unit.room.controller))
+                unit.moveTo(unit.room.controller);
         }
-        else if (home.storage.store.energy > reserve){
-            //return to home room
-            if (unit.room != home)
-                unit.moveTo(home.controller, {visualizePathStyle: {stroke: '#ff00ff'}});
-            //fetch: vault (respect limit)
-            else if (unit.withdraw(home.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                unit.moveTo(home.storage, {visualizePathStyle: {stroke: '#ff00ff'}});
-        }
+        else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE)
+            //fetch: sources
+            unit.moveTo(sources[0]);
     }
 };

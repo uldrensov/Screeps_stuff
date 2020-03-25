@@ -189,10 +189,10 @@ module.exports = {
                     }
                     break;
                 case 'specialist':
-                    specialist.run(unit, Game.flags['Protodermis']);
+                    specialist.run(unit, Game.flags['GOGO'], Game.flags['GOGO2']);
                     break;
                 case 'saviour':
-                    saviour.run(unit, SD.nexus_id[0], SD.nexus_id[2], SD.vault_reserve_min);
+                    saviour.run(unit, Game.flags['GOGO'], Game.flags['GOGO2']);
                     break;
                 case 'emissary':
                     //emissary.run(unit, Game.flags['']);

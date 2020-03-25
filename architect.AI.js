@@ -33,7 +33,7 @@ module.exports = {
                 if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
                     unit.moveTo(hotspot);
             }
-            else{
+            else if (unit.memory.fetching){
                 //fetch: vault (respect limit)
                 if (unit.room.storage != undefined && unit.room.storage.store.energy > reserve){
                     if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)

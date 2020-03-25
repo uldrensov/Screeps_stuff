@@ -29,6 +29,7 @@ module.exports = {
         if (Memory.ancientAssimilator_MAX == undefined){Memory.ancientAssimilator_MAX =             [];}
         if (Memory.visionary_MAX == undefined){Memory.visionary_MAX =                               [];}
         if (Memory.specialist_MAX == undefined){Memory.specialist_MAX =                             [];}
+        if (Memory.saviour_MAX == undefined){Memory.saviour_MAX =                                   [];}
         if (Memory.emissary_MAX == undefined){Memory.emissary_MAX =                                 [];}
         if (Memory.darktemplar_MAX == undefined){Memory.darktemplar_MAX =                           [];}
         if (Memory.vaultAlert_EN == undefined){Memory.vaultAlert_EN =                               [];}
@@ -62,6 +63,7 @@ module.exports = {
             if (Memory.ancientAssimilator_MAX[i] == undefined){Memory.ancientAssimilator_MAX[i] =   0;}
             if (Memory.visionary_MAX[i] == undefined){Memory.visionary_MAX[i] =                     0;}
             if (Memory.specialist_MAX[i] == undefined){Memory.specialist_MAX[i] =                   0;}
+            if (Memory.saviour_MAX[i] == undefined){Memory.saviour_MAX[i] =                         0;}
             if (Memory.emissary_MAX[i] == undefined){Memory.emissary_MAX[i] =                       0;}
             if (Memory.darktemplar_MAX[i] == undefined){Memory.darktemplar_MAX[i] =                 0;}
             if (Memory.vaultAlert_EN[i] == undefined){Memory.vaultAlert_EN[i] =                     false;}
@@ -70,7 +72,6 @@ module.exports = {
         }
         
         //globals...
-        if (Memory.saviour_MAX == undefined){Memory.saviour_MAX =                                   0;}
         if (Memory.hallucination_MAX == undefined){Memory.hallucination_MAX =                       0;}
         if (Memory.hightemplar_MAX == undefined){Memory.hightemplar_MAX =                           0;}
         if (Memory.zealot_MAX == undefined){Memory.zealot_MAX =                                     0;}
