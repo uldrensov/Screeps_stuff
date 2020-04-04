@@ -38,7 +38,7 @@ module.exports = {
             });
         }
         
-        //outputs: extension (non-full), nexi (non-full)
+        //outputs: extension (non-full), nexi (non-full), power nexus (non-full)
         var pylon = unit.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
@@ -48,6 +48,13 @@ module.exports = {
             unit.memory.local_nexi = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_SPAWN && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0 && structure.name != nexus.name;
+                }
+            });
+        }
+        if (unit.memory.powernex == undefined){
+            unit.memory.powernex = unit.room.find(FIND_STRUCTURES, {
+                filter: structure => {
+                    return structure.structureType == STRUCTURE_POWER_SPAWN && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                 }
             });
         }
@@ -96,6 +103,12 @@ module.exports = {
                     var getLocalNex = Game.getObjectById(unit.memory.local_nexi[0].id);
                     if (unit.transfer(getLocalNex, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(getLocalNex);
+                }
+                //unload: power nexus
+                else if (unit.memory.powernex.length){
+                    var getPowerNex = Game.getObjectById(unit.memory.powernex[0].id);
+                    if (unit.transfer(getPowerNex, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(getPowerNex);
                 }
                 //unload: vault<energy>
                 else if (unit.room.storage != undefined){

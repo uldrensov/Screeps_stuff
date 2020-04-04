@@ -8,13 +8,13 @@ module.exports = {
     run: function(room_num){
         
         //arg validation
-        if (Memory.SPAWNCYCLE__minerals[room_num] == undefined)
+        if (Memory.mineral_type[room_num] == undefined)
             return 'INVALID ROOM NUMBER';
         
         //init
         var GE = Game.getObjectById(SD.nexus_id[room_num]).room.terminal;
         if (GE == null) return 'ERROR: ROOM DOES NOT CONTAIN A TERMINAL';
-        var minType = Memory.SPAWNCYCLE__minerals[room_num].mineralType;
+        var minType = Memory.mineral_type[room_num].mineralType;
         if (GE.store.getUsedCapacity() == 0) return 'ERROR: TERMINAL IS EMPTY';
         if (GE.store.getUsedCapacity(RESOURCE_ENERGY) == 0) return 'ERROR: TERMINAL TRANSMISSION FUEL DEPLETED';
         if (GE.store.getUsedCapacity(minType) == 0) return 'ERROR: TERMINAL MERCHANDISE DEPLETED';

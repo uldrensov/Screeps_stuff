@@ -8,7 +8,7 @@ module.exports = {
     run: function(room_num){
         
         //arg validation
-        if (room_num < 0 || room_num >= SD.nexus_id.length) return 'INVALID ROOM NUMBER';
+        if (room_num < 0 || room_num >= SD.spawner_id.length) return 'INVALID ROOM NUMBER';
         
         //memory validation
         if
@@ -18,13 +18,11 @@ module.exports = {
         Memory.orbitalDrone_MAX[room_num] ==    undefined || Memory.bloodhunter_MAX[room_num] ==    undefined || Memory.enforcer_MAX[room_num] ==       undefined || Memory.purifier_MAX[room_num] ==           undefined ||
         Memory.acolyte_MAX[room_num] ==         undefined || Memory.acolyte2_MAX[room_num] ==       undefined || Memory.adherent_MAX[room_num] ==       undefined || Memory.nullAdherent_MAX[room_num] ==       undefined ||
         Memory.supplicant_MAX[room_num] ==      undefined || Memory.nullSupplicant_MAX[room_num] == undefined || Memory.ancientDrone_MAX[room_num] ==   undefined || Memory.ancientAssimilator_MAX[room_num] == undefined ||
-        Memory.specialist_MAX ==                undefined || Memory.saviour_MAX ==                  undefined)
-        {
+        Memory.specialist_MAX ==                undefined || Memory.saviour_MAX ==                  undefined || Memory.mineral_type[room_num] ==       undefined)
             return 'ERROR: Memory validation failed';
-        }
         
         
-        var nexus = Game.getObjectById(SD.nexus_id[room_num]);
+        var nexus = Game.getObjectById(SD.spawner_id[room_num][0]);
         
         
         //census...
@@ -200,9 +198,14 @@ module.exports = {
         
         //state of the room
         console.log('<<<--Room status-->>>');
-        console.log('Controller EXP: ' + control_perc + '% -> ' + nexus.room.controller.progress + '/' + nexus.room.controller.progressTotal);
+        if (nexus.room.controller.level < 8)                                                        console.log('Controller EXP: ' + control_perc + '% -> ' + nexus.room.controller.progress + '/' + nexus.room.controller.progressTotal);
+        else                                                                                        console.log('Controller EXP: MAX');
         console.log('Spawning energy: ' + ext_energy + ' extended, ' + nexus.store.getUsedCapacity(RESOURCE_ENERGY) + ' main');
-        if (nexus.room.storage != undefined)                                                        console.log('Vault energy: ' + nexus.room.storage.store.getUsedCapacity(RESOURCE_ENERGY));
+        if (nexus.room.storage != undefined){                                                       console.log('Vault contents: ' + nexus.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) + ' [energy]; ' +
+                                                                                                        nexus.room.storage.store.getUsedCapacity(Memory.mineral_type[room_num].mineralType) + ' [' + Memory.mineral_type[room_num].mineralType + ']');
+                                                                                                    console.log('Vault space remaining: ' + nexus.room.storage.store.getFreeCapacity());}
+        if (nexus.room.terminal != undefined)                                                       console.log('Terminal contents: ' + nexus.room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) + ' [energy]; ' +
+                                                                                                        nexus.room.terminal.store.getUsedCapacity(Memory.mineral_type[room_num].mineralType) + ' [' + Memory.mineral_type[room_num].mineralType + ']');
         if (canisters.length)                                                                       console.log('Total canister energy: ' + can_energy);
         console.log('Total dropped energy: ' + scrap_energy);
         console.log('Weakest structure: ' + weakstruct_perc + '% -> ' + weakest_struct);
