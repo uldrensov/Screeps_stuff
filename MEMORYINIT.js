@@ -36,6 +36,7 @@ module.exports = {
         if (Memory.evac_timer == undefined){Memory.evac_timer =                                     [];}
         if (Memory.viable_prey == undefined){Memory.viable_prey =                                   [];}
         if (Memory.mineral_type == undefined){Memory.mineral_type =                                 [];}
+        if (Memory.powernex_id == undefined){Memory.powernex_id =                                   [];}
         
         //room-specifics...
         for (let i=0; i<roomcount; i++){

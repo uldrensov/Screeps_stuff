@@ -23,6 +23,8 @@ module.exports = {
     
         //execute the auto-spawn and unit AI assignment routines for each room
         for (let k=0; k<SD.roomcount; k++){
+            //emergency bypass
+            if (nexi[k] == null) continue;
         
             //count unit population by role
             emergencyDrone_gang[k] =        _.filter(Game.creeps, creep => creep.memory.role == 'emergencyDrone'        && creep.room == nexi[k].room);
@@ -154,6 +156,7 @@ module.exports = {
             //determine a viable spawner
             var openNexus = Game.getObjectById(SD.spawner_id[k][0]);
             for (let i=0; i<SD.spawner_id[k].length; i++){
+                if (Game.getObjectById(SD.spawner_id[k][i]) == null) continue;
                 if (Game.getObjectById(SD.spawner_id[k][i]).spawning == null){
                     openNexus = Game.getObjectById(SD.spawner_id[k][i]);
                     break;

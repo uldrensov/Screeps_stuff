@@ -1,11 +1,27 @@
 //executable script: spawns a treasurer unit (if applicable), and writes a command into its memory
-    //require('TERMINALTRANSFER.exe').run(2,RESOURCE_ENERGY,100000,true,true)
+    //require('TERMINALTRANSFER.exe').run(3,RESOURCE_ENERGY,100000,'NA',true,true)
+    //require('TERMINALTRANSFER.exe').run(0,RESOURCE_POWER,100,'P',true,true)
     
 var SD = require('SOFTDATA');
 
 
 module.exports = {
-    run: function(room_num, o_type, o_amt, dir, autokill){
+    run: function(room_num, o_type, o_amt, spec, dir, autokill){
+        
+        //validation
+        var dest_toString;
+        switch (spec){
+            case 'NA':
+                dest_toString = 'terminal';
+                break;
+            case 'P':
+                if (!dir) return 'ERROR: POWER SPAWN WITHDRAW ACTION NOT SUPPORTED';
+                dest_toString = 'power nexus';
+                break;
+            default:
+                return 'INVALID DESTINATION';
+        }
+        
         
         //determine a viable spawner
         var openNexus = Game.getObjectById(SD.spawner_id[room_num][0]);
@@ -29,7 +45,7 @@ module.exports = {
                     
         //if one doesn't exist, spawn one and issue order parameters at spawn
         if (!treasurer){
-            var spawnResult = openNexus.spawnCreep(SD.treas_body, 'Treasurer-' + Game.time % SD.time_offset, {memory: {role: 'treasurer', order_type: o_type, order_amt: o_amt, dir: dir, task_progress: 0, autokill: autokill}});
+            var spawnResult = openNexus.spawnCreep(SD.treas_body, 'Treasurer-' + Game.time % SD.time_offset, {memory: {role: 'treasurer', order_type:o_type, order_amt:o_amt, dir:dir, spec_dest:spec, task_progress:0, autokill:autokill}});
             if (spawnResult == OK)
                 console.log('Room #' + room_num + ': Treasurer-' + Game.time % SD.time_offset + ' spawning.');
             else return 'NEXUS ERROR: ' + spawnResult;
@@ -39,11 +55,13 @@ module.exports = {
             unit.memory.order_type = o_type;
             unit.memory.order_amt = o_amt;
             unit.memory.dir = dir;
+            unit.memory.spec_dest = spec;
             unit.memory.task_progress = 0;
             unit.memory.autokill = autokill;
         }
         
         var dir_toString = dir? 'loading':'unloading';
-        return '--ISSUING COMMAND: ROOM #' + room_num + ' ' + dir_toString + ' ' + o_amt + ' [' + o_type + ']--';
+        var to_fro = dir? 'to':'from';
+        return '--ISSUING COMMAND: ROOM #' + room_num + ' ' + dir_toString + ' ' + o_amt + ' [' + o_type + '] ' + to_fro + ' ' + dest_toString;
     }
 };

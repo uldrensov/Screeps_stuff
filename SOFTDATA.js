@@ -3,7 +3,7 @@
 module.exports = {
     
     //numbers
-    roomcount:              6,
+    roomcount:              7,
     time_offset:            100000,
     fixation_override:      .25, //probes will break fixation upon spotting an absolute % gap this wide
     canister_bias:          300, //can force canister-fetching units to prefer one by default, until this wide of a disparity is detected
@@ -14,18 +14,19 @@ module.exports = {
     
     
     //object IDs
-    nexus_id:               ['5e2d15a9e152154167131760', '5e5b6eabb5c443745759aa65', '5e466c796fffaf84254b19ed', '5e54f87a1db3d7858ff87a0b', '5e6350bb6270f3464c31ca11', '5e75a394559337ceeb8f12a3'],
+    nexus_id:               ['5e2d15a9e152154167131760', '5e5b6eabb5c443745759aa65', '5e466c796fffaf84254b19ed', '5e54f87a1db3d7858ff87a0b', '5e6350bb6270f3464c31ca11', 'NULL', '5e8dd3d7091b31014a7522c4'],
     spawner_id:             [['5e2d15a9e152154167131760', '5e4df021084d7dbe916b582f', '5e7bf9b86a409344525bd6e8'],
                             ['5e5b6eabb5c443745759aa65', '5e75ee1de7028884f4b334e9'],
                             ['5e466c796fffaf84254b19ed', '5e5c5789da4b319e561048c5', '5e805b94b2bbc8e35e8fda32'],
                             ['5e54f87a1db3d7858ff87a0b', '5e6eb58342d74fc7e693d717'],
                             ['5e6350bb6270f3464c31ca11', '5e79f323a0252257ea1548cc'],
-                            ['5e75a394559337ceeb8f12a3']],
+                            ['NULL', 'NULL'],
+                            ['5e8dd3d7091b31014a7522c4']],
 
-    source1_id:             ['5bbcae989099fc012e639476', '5bbcae819099fc012e639303', '5bbcae989099fc012e63947e', '5bbcae809099fc012e6392f4', '5bbcae809099fc012e6392fc', '5bbcaec09099fc012e639822'],
-    source2_id:             ['5bbcae989099fc012e639475', '5bbcae819099fc012e639304', '5bbcae989099fc012e639480', '5bbcae809099fc012e6392f6', '5bbcae809099fc012e6392fd', '5bbcaec09099fc012e639821'],
-    canister1_id:           ['5e30677977034e78c09bdc43', '5e5b806d74988df745a4b854', '5e46d3baed5fa02c73c87173', '5e5507eea3d520c61a772d62', '5e633eec0fb27ea4b9057705', '5e75f19c4e1b5b08ca1a75a0'], //corresponds to source1
-    canister2_id:           ['5e354b518c0dfc0f7b8dc1d0', '5e5c5f2b27cac98f038eed99', '5e466fb08bfc04c165b13edb', '5e561baebcb7d67abec5f433', '5e634359c5abbb02df5ba123', '5e75aa94472d2a278d6fa06f'], //corresponds to source2
+    source1_id:             ['5bbcae989099fc012e639476', '5bbcae819099fc012e639303', '5bbcae989099fc012e63947e', '5bbcae809099fc012e6392f4', '5bbcae809099fc012e6392fc', '5bbcaec09099fc012e639822', '5bbcaea69099fc012e639606'],
+    source2_id:             ['5bbcae989099fc012e639475', '5bbcae819099fc012e639304', '5bbcae989099fc012e639480', '5bbcae809099fc012e6392f6', '5bbcae809099fc012e6392fd', '5bbcaec09099fc012e639821', '5bbcaea69099fc012e639607'],
+    canister1_id:           ['5e30677977034e78c09bdc43', '5e5b806d74988df745a4b854', '5e46d3baed5fa02c73c87173', '5e5507eea3d520c61a772d62', '5e633eec0fb27ea4b9057705', '5e75f19c4e1b5b08ca1a75a0', '5e8dc130586f870dab1ad8f0'], //for source1
+    canister2_id:           ['5e354b518c0dfc0f7b8dc1d0', '5e5c5f2b27cac98f038eed99', '5e466fb08bfc04c165b13edb', '5e561baebcb7d67abec5f433', '5e634359c5abbb02df5ba123', '5e75aa94472d2a278d6fa06f', '5e8dc2604541e5ab90ab1bb3'], //for source2
     mineralcanister_id:     ['5e3ca0a32f38f39b095da816', '5e5c909be1a1395885e81156', '5e4f6a0761106b557aa66abe', '5e5b5b1c403d152c992428c4', '5e6399727e402f275b8831ee', '5e76b38b49abdb425a7e8a1a'],
 
     reserveflag:            [Game.flags['Core1'], 'NULL', Game.flags['Core3'], Game.flags['Core4'], Game.flags['Core5']], //rally point for remote room reservation
@@ -34,7 +35,7 @@ module.exports = {
     remotesource_id:        ['5bbcae809099fc012e6392ee', 'NULL', '5bbcaea69099fc012e63960e', '5bbcae809099fc012e6392f1', '5bbcae809099fc012e6392f9'],
     remotecanister_id:      ['5e6586c57abdad3e01ad88f7', 'NULL', '5e490bf22a3d564b0565c52d', '5e716359fa9ac914fed34e30', '5e7014edbb478ab96f6ca1e4'], //drop-mining containers (o.assimilator)
 
-    tower_id:               ['5e76a9799b9279cd3b8d5c7d', '5e5c992bb655c985f872fdd1', '5e473a110058163253b64554', '5e6dedb3b2181dab6255bd37', '5e6870951e5e3b20f7b8c5e5', '5e79820711f4737f4bed3b7f'], //remote mining team retreats towards this
+    tower_id:               ['5e76a9799b9279cd3b8d5c7d', '5e5c992bb655c985f872fdd1', '5e473a110058163253b64554', '5e6dedb3b2181dab6255bd37', '5e6870951e5e3b20f7b8c5e5', '5e76c1bc7e17fe2a086ed2e0'], //remote mining team retreats towards this
                 
     warpRX_id:              ['5e34d2403561285c52aba5b2', '5e5fde06e4c9ff32dfb1a4d1', '5e4a79f221466ebb4fcc858b', '5e5b2064a981827aa51b60e7', '5e686d03c5ef3b7a6e6f21b7', '5e7ab9ef1bed4aaf8cd51ae2'], //receiver link (adherent)
     warpTX_id:              [['5e437e083561285674b0989c','5e34d803221670187690e4d7'],
@@ -54,15 +55,17 @@ module.exports = {
                             [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                            [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]],
-                            //cost: 1500, 1200, 1500, 1200, 1200, 1200
+                            [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+                            [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE]],
+                            //cost: 1500, 1200, 1500, 1200, 1200, 1200, 600
     assim_body:             [[WORK,WORK,WORK,WORK,WORK, MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK, MOVE],
                             [WORK,WORK,WORK,WORK,WORK, MOVE],
                             [WORK,WORK,WORK,WORK,WORK, MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK, MOVE],
+                            [WORK,WORK,WORK,WORK,WORK, MOVE],
                             [WORK,WORK,WORK,WORK,WORK, MOVE]],
-                            //cost: 650, 550, 550, 650, 550, 550
+                            //cost: 650, 550, 550, 650, 550, 550, 550
     energ_body:             [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE],
                             //cost: 750
     sacrif_body:            [[],
@@ -70,12 +73,14 @@ module.exports = {
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                            [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]],
+                            [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+                            []],
                             //cost: NULL, 1200, 1200, 1800, 1800, 1200
     acoly_body:             [[WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE],
                             [],
                             [WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE],
+                            [],
                             [],
                             []],
                             //cost: 850, 1050, NULL, 1050, NULL
@@ -86,20 +91,23 @@ module.exports = {
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE],
-                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE]],
+                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE],
+                            []],
                             //cost: 2000, 2000, 2000, 1850, 2000, 2000
     probe_body:             [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                            [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]],
-                            //cost: 2050, 1200, 1600, 1200, 1200, 1200
+                            [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+                            [WORK, CARRY,CARRY, MOVE,MOVE]],
+                            //cost: 2050, 1200, 1600, 1200, 1200, 1200, 300
     recal_body:             [[CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE],
                             [CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE],
                             [CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE],
                             [CLAIM,MOVE, CLAIM,MOVE],
                             [CLAIM,MOVE, CLAIM,MOVE],
+                            [],
                             []],
                             //cost: 2600, 1950, 1950, 1300, 1300
     oassim_body:            [WORK,WORK,WORK,WORK,WORK, CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],

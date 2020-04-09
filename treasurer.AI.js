@@ -1,4 +1,4 @@
-//TREASURER: loads or unloads between terminal and vault, on a per-order/command basis
+//TREASURER: loads or unloads to/from the vault, on a per-order/command basis
 //white trail ("carrier")
 
 module.exports = {
@@ -14,14 +14,28 @@ module.exports = {
                 unit.memory.done = false;
                 
             //action...
-            if (unit.memory.task_progress != unit.memory.order_amt){
+            if (unit.memory.task_progress < unit.memory.order_amt){
                 
                 //determine transfer direction (true => load terminal; false => unload terminal)
                 var input;
                 var output;
                 if (unit.memory.dir){
                     input = nexus.room.storage;
-                    output = nexus.room.terminal;
+                    switch (unit.memory.spec_dest){
+                        case 'NA':
+                            output = nexus.room.terminal;
+                            break;
+                        case 'P':
+                            if (unit.memory.powernex == undefined){
+                                unit.memory.powernex = unit.room.find(FIND_STRUCTURES, {
+                                    filter: structure => {
+                                        return structure.structureType == STRUCTURE_POWER_SPAWN;
+                                    }
+                                });
+                            }
+                            output = Game.getObjectById(unit.memory.powernex[0].id);
+                            break;
+                    }
                 }
                 else{
                     input = nexus.room.terminal;
@@ -51,8 +65,11 @@ module.exports = {
                 unit.memory.done = true;
                 console.log('*********************');
                 console.log('ORDER COMPLETE (ROOM #' + home_index + ')');
+                if (unit.memory.autokill){
+                    unit.memory.killswitch = true;
+                    console.log('RECYCLING UNIT...');
+                }
                 console.log('*********************');
-                if (unit.memory.autokill) unit.memory.killswitch = true;
             }
         }
         //built-in economic killswitch

@@ -46,6 +46,9 @@ module.exports = {
         
         
         for (let k=0; k<nexi.length; k++){
+            //emergency bypass
+            if (nexi[k] == null) continue;
+            
             //room-locked units
             for (var name in Game.creeps){
                 var unit = Game.creeps[name];

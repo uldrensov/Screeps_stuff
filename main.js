@@ -44,6 +44,9 @@ module.exports.loop = function(){
     
     //email alerts for vault energy conservation
     for (let i=0; i<SD.roomcount; i++){
+        //emergency bypass
+        if (nexi[i] == null) continue;
+        
         if (nexi[i].room.storage == undefined) continue;
         
         //enable alert for a room when its vault rises past 15% of the minimum threshold
@@ -66,4 +69,28 @@ module.exports.loop = function(){
     
     //run unit AI scripts
     UNITDRIVE.run();
+    
+    //process power
+    if (Game.time % 5 == 0){
+        var powernex;
+        for (let i=0; i<SD.nexus_id.length; i++){
+            //emergency bypass
+            if (nexi[i] == null) continue;
+            
+            powernex = nexi[i].room.find(FIND_STRUCTURES, {
+                filter: structure => {
+                    return structure.structureType == STRUCTURE_POWER_SPAWN;
+                }
+            });
+            Memory.powernex_id[i] = powernex.length? powernex[0].id:'NULL';
+        }
+    }
+    var getPowerNex;
+    for (let i=0; i<SD.nexus_id.length; i++){
+        getPowerNex = Game.getObjectById(Memory.powernex_id[i]);
+        if (getPowerNex != null){
+            if (getPowerNex.store.getUsedCapacity(RESOURCE_POWER) > 0 && getPowerNex.store.getUsedCapacity(RESOURCE_ENERGY) >= 50)
+                getPowerNex.processPower();
+        }
+    }
 }
