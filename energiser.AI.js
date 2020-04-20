@@ -2,10 +2,10 @@
 //blue trail ("maintainer")
 
 module.exports = {
-    run: function(unit){
+    run: function(unit, std_interval){
         
         //inputs: containers (non-empty)
-        if (unit.memory.canisters == undefined || Game.time % 10 == 0){
+        if (unit.memory.canisters == undefined || Game.time % std_interval == 0){
             unit.memory.canisters = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
@@ -14,7 +14,7 @@ module.exports = {
         }
         
         //outputs: towers (non-full)
-        if (unit.memory.towers == undefined || Game.time % 10 == 0){
+        if (unit.memory.towers == undefined || Game.time % std_interval == 0){
             unit.memory.towers = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return (structure.structureType == STRUCTURE_TOWER) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
@@ -37,9 +37,10 @@ module.exports = {
         if (!unit.memory.fetching){
             if (unit.memory.towers.length){
                 var lowest_tower = Game.getObjectById(unit.memory.towers[0].id);
+                var getTower;
                 for (let i=0; i<unit.memory.towers.length; i++){
-                    var getTower = Game.getObjectById(unit.memory.towers[i].id);
-                    if (getLowestTower == null) continue;
+                    getTower = Game.getObjectById(unit.memory.towers[i].id);
+                    if (getTower == null) continue;
                     try{
                         if (getTower.store[RESOURCE_ENERGY] < lowest_tower.store[RESOURCE_ENERGY])
                             lowest_tower = getTower;

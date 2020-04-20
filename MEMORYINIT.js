@@ -3,7 +3,8 @@
 module.exports = {
     run: function(roomcount){
         
-        //init arrays for room-specifics...
+    //init arrays for room-specifics...
+        //unit population maxima
         if (Memory.sacrificer_MAX == undefined){Memory.sacrificer_MAX =                             [];}
         if (Memory.architect_MAX == undefined){Memory.architect_MAX =                               [];}
         if (Memory.phaseArchitect_MAX == undefined){Memory.phaseArchitect_MAX =                     [];}
@@ -32,10 +33,19 @@ module.exports = {
         if (Memory.saviour_MAX == undefined){Memory.saviour_MAX =                                   [];}
         if (Memory.emissary_MAX == undefined){Memory.emissary_MAX =                                 [];}
         if (Memory.darktemplar_MAX == undefined){Memory.darktemplar_MAX =                           [];}
-        if (Memory.vaultAlert_EN == undefined){Memory.vaultAlert_EN =                               [];}
+        //towers
+        if (Memory.turretsByRoom == undefined){Memory.turretsByRoom =                               [];}
+        if (Memory.turretCommand == undefined){Memory.turretCommand =                               [];}
+        if (Memory.turretTarget_id == undefined){Memory.turretTarget_id =                           [];}
+        //vault
+        if (Memory.vaultAlertLO_EN == undefined){Memory.vaultAlertLO_EN =                           [];}
+        if (Memory.vaultAlertHI_EN == undefined){Memory.vaultAlertHI_EN =                           [];}
+        //remote mining
         if (Memory.evac_timer == undefined){Memory.evac_timer =                                     [];}
         if (Memory.viable_prey == undefined){Memory.viable_prey =                                   [];}
+        //misc
         if (Memory.mineral_type == undefined){Memory.mineral_type =                                 [];}
+        if (Memory.roomSpeed == undefined){Memory.roomSpeed =                                       [];}
         if (Memory.powernex_id == undefined){Memory.powernex_id =                                   [];}
         
         //room-specifics...
@@ -68,9 +78,17 @@ module.exports = {
             if (Memory.saviour_MAX[i] == undefined){Memory.saviour_MAX[i] =                         0;}
             if (Memory.emissary_MAX[i] == undefined){Memory.emissary_MAX[i] =                       0;}
             if (Memory.darktemplar_MAX[i] == undefined){Memory.darktemplar_MAX[i] =                 0;}
-            if (Memory.vaultAlert_EN[i] == undefined){Memory.vaultAlert_EN[i] =                     false;}
+            
+            if (Memory.turretCommand[i] == undefined){Memory.turretCommand[i] =                     'IDLE';}
+            if (Memory.turretTarget_id[i] == undefined){Memory.turretTarget_id[i] =                 'NULL';}
+            
+            if (Memory.vaultAlertLO_EN[i] == undefined){Memory.vaultAlertLO_EN[i] =                 false;}
+            if (Memory.vaultAlertHI_EN[i] == undefined){Memory.vaultAlertHI_EN[i] =                 false;}
+            
             if (Memory.evac_timer[i] == undefined){Memory.evac_timer[i] =                           0;}
             if (Memory.viable_prey[i] == undefined){Memory.viable_prey[i] =                         false;}
+            
+            if (Memory.roomSpeed[i] == undefined){Memory.roomSpeed[i] =                             1;}
         }
         
         //globals...
@@ -80,5 +98,6 @@ module.exports = {
         if (Memory.wall_threshold == undefined){Memory.wall_threshold =                             50000;}
         if (Memory.rampart_threshold == undefined){Memory.rampart_threshold =                       100000;}
         if (Memory.construction_mode == undefined){Memory.construction_mode =                       false;}
+        if (Memory.autosell_EN == undefined){Memory.autosell_EN =                                   false;}
     }
 };

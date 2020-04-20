@@ -54,6 +54,7 @@ module.exports = {
         
         console.log('SOLD ' + tradeAmount + ' [' + minType + '] FOR ' + bestOffer.price + ' EACH (+' + (tradeAmount*bestOffer.price).toFixed(3) + ' CREDITS)');
         console.log('TRANSMISSION TAX: ' + tax + ' (' + (100*tax/tradeAmount).toFixed(1) + '% rate)');
-        return 'TRANSACTION SUCCESSFUL (ROOM #' + room_num + ')';
+        console.log('TRANSACTION SUCCESSFUL (ROOM #' + room_num + ')');
+        return OK;
     }
 };

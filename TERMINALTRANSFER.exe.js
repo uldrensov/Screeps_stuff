@@ -26,6 +26,8 @@ module.exports = {
         //determine a viable spawner
         var openNexus = Game.getObjectById(SD.spawner_id[room_num][0]);
         for (let i=0; i<SD.spawner_id[room_num].length; i++){
+            //emergency bypass
+            if (Game.getObjectById(SD.spawner_id[room_num][i]) == null) continue;
             if (Game.getObjectById(SD.spawner_id[room_num][i]).spawning == null){
                 openNexus = Game.getObjectById(SD.spawner_id[room_num][i]);
                 break;

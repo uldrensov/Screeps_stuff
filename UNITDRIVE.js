@@ -1,6 +1,6 @@
 //function: drives each unit based on their assigned AI role
 
-var SD = require('SOFTDATA');
+var SD =                    require('SOFTDATA');
 
 var emergencyDrone =        require('emergencyDrone.AI');
 var sacrificer =            require('sacrificer.AI');
@@ -58,7 +58,8 @@ module.exports = {
                             emergencyDrone.run(unit, SD.nexus_id[k]);
                             break;
                         case 'drone':
-                            drone.run(unit, SD.nexus_id[k], SD.en_ignore_lim);
+                            if (Game.time % Memory.roomSpeed[k] == 0)
+                                drone.run(unit, SD.nexus_id[k], SD.en_ignore_lim, SD.std_interval);
                             break;
                         case 'assimilator':
                             assimilator.run(unit, SD.source1_id[k], SD.canister1_id[k]);
@@ -67,7 +68,7 @@ module.exports = {
                             assimilator.run(unit, SD.source2_id[k], SD.canister2_id[k]);
                             break;
                         case 'energiser':
-                            energiser.run(unit);
+                            energiser.run(unit, SD.std_interval);
                             break;
                         case 'retrieverDrone':
                             retrieverDrone.run(unit, SD.nexus_id[k], SD.en_ignore_lim);
@@ -88,48 +89,40 @@ module.exports = {
                             nullAdherent.run(unit, SD.adher_tile_id[k], SD.warpRX_id[k], SD.warpTX_id[k]);
                             break;
                         case 'supplicant':
-                            supplicant.run(unit, SD.vault_reserve_min);
+                            supplicant.run(unit, SD.vault_boundary);
                             break;
                         case 'nullSupplicant':
                             nullSupplicant.run(unit, SD.warpTX_id[k]);
                             break;
                         case 'probe':
-                            probe.run(unit, SD.fixation_override, SD.en_ignore_lim, SD.vault_reserve_min);
+                            probe.run(unit, SD.fixation_override, SD.en_ignore_lim, SD.vault_boundary);
                             break;
                         case 'ancientDrone':
-                            ancientDrone.run(unit, SD.mineralcanister_id[k]);
+                            if (Game.time % Memory.roomSpeed[k]*3 == 0)
+                                ancientDrone.run(unit, SD.mineralcanister_id[k]);
                             break;
                         case 'ancientAssimilator':
-                            ancientAssimilator.run(unit, SD.mineralcanister_id[k]);
+                            if (Game.time % Memory.roomSpeed[k]*3 == 0)
+                                ancientAssimilator.run(unit, SD.mineralcanister_id[k]);
                             break;
                         case 'architect':
-                            architect.run(unit, nexi[k], SD.canister_bias, SD.vault_reserve_min);
+                            if (Game.time % Memory.roomSpeed[k] == 0)
+                                architect.run(unit, nexi[k], SD.canister_bias, SD.vault_boundary);
                             break;
                         case 'phaseArchitect':
-                            phaseArchitect.run(unit, nexi[k], SD.canister_bias, k);
+                            if (Game.time % Memory.roomSpeed[k] == 0)
+                                phaseArchitect.run(unit, nexi[k], SD.canister_bias, k);
                             break;
                         case 'treasurer':
-                            treasurer.run(unit, SD.nexus_id[k], k);
+                            if (Game.time % Memory.roomSpeed[k] == 0)
+                                treasurer.run(unit, SD.nexus_id[k], k);
                             break;
                     }
                 }
             }
-            
-            //towers
-            if (Memory.UNITDRIVE__local_towers == undefined) Memory.UNITDRIVE__local_towers = [];
-            if (Memory.UNITDRIVE__local_towers[k] == undefined || Game.time % 10 == 0){
-                Memory.UNITDRIVE__local_towers[k] = nexi[k].room.find(FIND_STRUCTURES, {
-                    filter: structure => {
-                        return structure.structureType == STRUCTURE_TOWER;
-                    }
-                });
-            }
-            for (let i=0; i<Memory.UNITDRIVE__local_towers[k].length; i++){
-                khaydarinmonolith.run(Memory.UNITDRIVE__local_towers[k][i].id, SD.tower_reserve_ratio, k);
-            }
         }
     
-    
+        
         //cross-room units
         for (var name in Game.creeps){
             var unit = Game.creeps[name];

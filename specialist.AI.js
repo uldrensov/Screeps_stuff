@@ -35,7 +35,7 @@ module.exports = {
         });
         var remains = unit.room.find(FIND_RUINS, {
             filter: RoomObject => {
-                return RoomObject.store.getUsedCapacity() > 0;
+                return RoomObject.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
             }
         });
         

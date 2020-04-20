@@ -2,20 +2,20 @@
 //white trail ("carrier")
 
 module.exports = {
-    run: function(unit, nexus_id, ignore_lim){
+    run: function(unit, nexus_id, ignore_lim, std_interval){
         
         var nexus = Game.getObjectById(nexus_id);
         
         
         //inputs: containers (ample), pickups<energy> (ample), pickups<mineral>, tombstones (non-empty), ruins (non-empty)
-        if (unit.memory.canisters == undefined || Game.time % 10 == 0){
+        if (unit.memory.canisters == undefined || Game.time % std_interval == 0){
             unit.memory.canisters = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
                 }
             });
         }
-        if (unit.memory.scraps == undefined || Game.time % 10 == 0){
+        if (unit.memory.scraps == undefined || Game.time % std_interval == 0){
             unit.memory.scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
                 filter: resource => {
                     return (resource.resourceType == RESOURCE_ENERGY && resource.amount > ignore_lim) ||
@@ -23,14 +23,14 @@ module.exports = {
                 }
             });
         }
-        if (unit.memory.tombs == undefined || Game.time % 10 == 0){
+        if (unit.memory.tombs == undefined || Game.time % std_interval == 0){
             unit.memory.tombs = unit.room.find(FIND_TOMBSTONES, {
                 filter: RoomObject => {
                     return RoomObject.store.getUsedCapacity() > 0;
                 }
             });
         }
-        if (unit.memory.remains == undefined || Game.time % 10 == 0){
+        if (unit.memory.remains == undefined || Game.time % std_interval == 0){
             unit.memory.remains = unit.room.find(FIND_RUINS, {
                 filter: RoomObject => {
                     return RoomObject.store.getUsedCapacity() > 0;
@@ -44,7 +44,7 @@ module.exports = {
                 return structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         });
-        if (unit.memory.local_nexi == undefined || Game.time % 10 == 0){
+        if (unit.memory.local_nexi == undefined || Game.time % std_interval == 0){
             unit.memory.local_nexi = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_SPAWN && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0 && structure.name != nexus.name;
@@ -65,7 +65,7 @@ module.exports = {
         if (unit.memory.fetching && unit.store.getFreeCapacity() == 0)
             unit.memory.fetching = false;
         //if carry amt depletes while unloading, switch to fetching
-        if (!unit.memory.fetching && unit.store[RESOURCE_ENERGY] == 0)
+        if (!unit.memory.fetching && unit.store.getUsedCapacity() == 0)
             unit.memory.fetching = true;
 
         
@@ -77,7 +77,7 @@ module.exports = {
             
             //determine if mineral pickups are present (index 1 to skip energy)
             for (let i=1; i<RESOURCES_ALL.length; i++){
-                if (unit.store.getUsedCapacity(RESOURCES_ALL[i]) != 0){
+                if (unit.store.getUsedCapacity(RESOURCES_ALL[i]) > 0){
                     treasure_held = true;
                     treasure_to_deposit = RESOURCES_ALL[i];
                     break;
@@ -118,12 +118,47 @@ module.exports = {
             }
         }
         else{
-            //fetch: ruins
+            var treasure_to_withdraw = RESOURCE_ENERGY;
+            
+            //fetch: ruins<minerals>, ruins<energy> (fullest)
             if (unit.memory.remains.length){
+                var richest_remains = unit.memory.remains[0];
+                var treasure_found_r = false;
+                var getRemains;
+                
+                //search each ruin for any minerals (index 1 to skip energy)
                 for (let i=0; i<unit.memory.remains.length; i++){
-                    var getRemains = Game.getObjectById(unit.memory.remains[i].id);
+                    getRemains = Game.getObjectById(unit.memory.remains[i].id);
                     if (getRemains == null) continue;
-                    if (unit.withdraw(getRemains, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                    for (let j=1; j<RESOURCES_ALL.length; j++){
+                        if (getRemains.store.getUsedCapacity(RESOURCES_ALL[j]) > 0){
+                            treasure_found_r = true;
+                            richest_remains = getRemains;
+                            treasure_to_withdraw = RESOURCES_ALL[j];
+                            break;
+                        }
+                    }
+                    if (treasure_found_r) break;
+                }
+                
+                //if no minerals found, or if no vault exists to deposit them in, re-run the search with respect to energy
+                if (!treasure_found_r || unit.room.storage == null){
+                    for (let i=0; i<unit.memory.remains.length; i++){
+                        getRemains = Game.getObjectById(unit.memory.remains[i].id);
+                        if (getRemains == null) continue;
+                        try{
+                            if (getRemains.store.getUsedCapacity(RESOURCE_ENERGY) > Game.getObjectById(richest_remains.id).store.getUsedCapacity(RESOURCE_ENERGY))
+                                richest_remains = getRemains;
+                        }
+                        catch{ //candidate compares against null
+                            richest_remains = getRemains;
+                        }
+                    }
+                }
+                
+                var getRichestRemains = Game.getObjectById(richest_remains.id);
+                if (getRichestRemains != null){
+                    if (unit.withdraw(getRemains, treasure_to_withdraw) == ERR_NOT_IN_RANGE)
                         unit.moveTo(getRemains);
                 }
             }
@@ -131,7 +166,6 @@ module.exports = {
             else if (unit.memory.tombs.length){
                 var richest_tomb = unit.memory.tombs[0];
                 var treasure_found_t = false;
-                var treasure_to_withdraw = RESOURCE_ENERGY;
                 var getTomb;
                 
                 //search each tombstone for any minerals (index 1 to skip energy)
@@ -139,7 +173,7 @@ module.exports = {
                     getTomb = Game.getObjectById(unit.memory.tombs[i].id);
                     if (getTomb == null) continue;
                     for (let j=1; j<RESOURCES_ALL.length; j++){
-                        if (getTomb.store.getUsedCapacity(RESOURCES_ALL[j]) != 0){
+                        if (getTomb.store.getUsedCapacity(RESOURCES_ALL[j]) > 0){
                             treasure_found_t = true;
                             richest_tomb = getTomb;
                             treasure_to_withdraw = RESOURCES_ALL[j];
@@ -149,8 +183,8 @@ module.exports = {
                     if (treasure_found_t) break;
                 }
                 
-                //if no minerals found, re-run the search with respect to energy
-                if (!treasure_found_t){
+                //if no minerals found, or if no vault exists to deposit them in, re-run the search with respect to energy
+                if (!treasure_found_t || unit.room.storage == null){
                     for (let i=0; i<unit.memory.tombs.length; i++){
                         getTomb = Game.getObjectById(unit.memory.tombs[i].id);
                         if (getTomb == null) continue;
@@ -158,7 +192,7 @@ module.exports = {
                             if (getTomb.store.getUsedCapacity(RESOURCE_ENERGY) > Game.getObjectById(richest_tomb.id).store.getUsedCapacity(RESOURCE_ENERGY))
                                 richest_tomb = getTomb;
                         }
-                        catch{
+                        catch{ //candidate compares against null
                             richest_tomb = getTomb;
                         }
                     }

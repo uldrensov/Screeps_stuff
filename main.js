@@ -2,11 +2,13 @@ var SD =                    require('SOFTDATA');
 var MEMORYINIT =            require('MEMORYINIT');
 var SPAWNCYCLE =            require('SPAWNCYCLE');
 var UNITDRIVE =             require('UNITDRIVE');
+var TOWERDRIVE =            require('TOWERDRIVE');
+var ECONDRIVE =             require('ECONDRIVE');
 
 
 module.exports.loop = function(){
     
-    if (Game.time % 5 == 0)
+    if (Game.time % SD.std_interval == 0)
         MEMORYINIT.run(SD.roomcount);
     
     var nexi = [];
@@ -42,55 +44,17 @@ module.exports.loop = function(){
         }
     }
     
-    //email alerts for vault energy conservation
-    for (let i=0; i<SD.roomcount; i++){
-        //emergency bypass
-        if (nexi[i] == null) continue;
-        
-        if (nexi[i].room.storage == undefined) continue;
-        
-        //enable alert for a room when its vault rises past 15% of the minimum threshold
-        if ((nexi[i].room.storage.store.energy > SD.vault_reserve_min * 1.15) && !Memory.vaultAlert_EN[i])
-            Memory.vaultAlert_EN[i] = true;
-        //disable further alerts from a room when it raises one
-        else if (nexi[i].room.storage.store.energy < SD.vault_reserve_min && Memory.vaultAlert_EN[i]){
-            console.log('------------------------------');
-            console.log('Vault #' + i + ' has entered conservation mode.');
-            console.log('------------------------------');
-            Game.notify('Vault #' + i + ' has entered conservation mode.',0);
-            Memory.vaultAlert_EN[i] = false;
-        }
-    }
     
+    //run economy automation script
+    ECONDRIVE.run();
     
     //run spawning algorithm
-    if (Game.time % 5 == 0)
+    if (Game.time % SD.std_interval == 0)
         SPAWNCYCLE.run();
+    
+    //run tower AI script
+    TOWERDRIVE.run();
     
     //run unit AI scripts
     UNITDRIVE.run();
-    
-    //process power
-    if (Game.time % 5 == 0){
-        var powernex;
-        for (let i=0; i<SD.nexus_id.length; i++){
-            //emergency bypass
-            if (nexi[i] == null) continue;
-            
-            powernex = nexi[i].room.find(FIND_STRUCTURES, {
-                filter: structure => {
-                    return structure.structureType == STRUCTURE_POWER_SPAWN;
-                }
-            });
-            Memory.powernex_id[i] = powernex.length? powernex[0].id:'NULL';
-        }
-    }
-    var getPowerNex;
-    for (let i=0; i<SD.nexus_id.length; i++){
-        getPowerNex = Game.getObjectById(Memory.powernex_id[i]);
-        if (getPowerNex != null){
-            if (getPowerNex.store.getUsedCapacity(RESOURCE_POWER) > 0 && getPowerNex.store.getUsedCapacity(RESOURCE_ENERGY) >= 50)
-                getPowerNex.processPower();
-        }
-    }
 }
