@@ -6,6 +6,8 @@
 * MEMORYINIT.js initialises global memory
 * SPAWNCYCLE.js is called in main, and is responsible for spawning/replacing units until the quota is met
 * UNITDRIVE.js is called in main, and is responsible for running each unit type's respective AI script using the proper parameters
+* TOWERDRIVE.js is called in main, and is responsible for controlling defensive towers in each room
+* ECONDRIVE.js is called in main, and is responsible for automating a number of economic functions in each suitable room
 
 ### .AI files:
 --Each .AI file corresponds to a single unit role--
@@ -30,7 +32,17 @@
 TBD
 
 ### Adding new rooms:
-TBD
+* In SOFTDATA.js, increase the [roomcount] property by 1
+* Modify the object ID arrays by adding new data pertaining to the newly annexed room
+* Expand each of the unit body part 2D-arrays by 1 element, and populate each with the desired role-based body part configurations
 
 ### Maintenance:
-TBD
+* Unit spawns, deaths, and other important events are recorded to the console; check it from time to time
+* To increase/decrease the population quota for certain roles (in a certain room), modify the appropriate [role_MAX] variable in global memory
+* More coming soon...
+
+### Notifications:
+--Email notifications are enabled for the following:
+* Armed enemy unit spotted in a room containing defensive towers
+* Contents within a vault are about to overflow (surplus)
+* Energy capacity within a vault is about to run out (shortage)
