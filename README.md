@@ -7,7 +7,7 @@
 * SPAWNCYCLE.js is called in main, and is responsible for spawning/replacing units until the quota is met
 * UNITDRIVE.js is called in main, and is responsible for running each unit type's respective AI script using the proper parameters
 * TOWERDRIVE.js is called in main, and is responsible for controlling defensive towers in each room
-* ECONDRIVE.js is called in main, and is responsible for automating a number of economic functions in each suitable room
+* ECONDRIVE.js is called in main, and is responsible for automating certain economic actions in each (suitable) room
 
 ### .AI files:
 --Each .AI file corresponds to a single unit role--
