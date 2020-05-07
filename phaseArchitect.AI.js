@@ -21,9 +21,9 @@ module.exports = {
             //self-killswitch routine
             if (!hotspot_scan.length){
                 Memory.phaseArchitect_MAX[home_index] = -1;
-                console.log('*********************');
+                console.log('<<----------------------------');
                 console.log('PHASE CONSTRUCTION COMPLETE (ROOM #' + home_index + ')');
-                console.log('*********************');
+                console.log('---------------------------->>');
                 unit.memory.killswitch = true;
             }
             else var hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);

@@ -44,6 +44,37 @@ module.exports.loop = function(){
         }
     }
     
+    //room (dis)repair management
+    if (Game.time % SD.std_interval == 0){
+        var roomStructs_sub50;
+        var roomStructs_sub75;
+        for (let i=0; i<nexi.length; i++){
+            if (Memory.probe_MAX[i] != 0){
+                roomStructs_sub50 = nexi[i].room.find(FIND_STRUCTURES, {
+                    filter: structure => {
+                        return ((structure.hits < structure.hitsMax*.5 && structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART) ||
+                        (structure.hits < Memory.wall_threshold*.5 && structure.structureType == STRUCTURE_WALL) ||
+                        (structure.hits < Memory.rampart_threshold*.5 && structure.structureType == STRUCTURE_RAMPART));
+                    }
+                });
+                roomStructs_sub75 = nexi[i].room.find(FIND_STRUCTURES, {
+                    filter: structure => {
+                        return ((structure.hits < structure.hitsMax*.75 && structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART) ||
+                        (structure.hits < Memory.wall_threshold*.75 && structure.structureType == STRUCTURE_WALL) ||
+                        (structure.hits < Memory.rampart_threshold*.75 && structure.structureType == STRUCTURE_RAMPART));
+                    }
+                });
+                
+                if (roomStructs_sub50.length && Memory.probe_MAX[i] < 0) Memory.probe_MAX[i] = 1; //if probes are dormant but sub-50 structures exist, enable them
+                if (!roomStructs_sub75.length && Memory.probe_MAX[i] > 0) Memory.probe_MAX[i] = -1; //if probes are active but no more sub-75 structures exist, disable them
+                
+                //clear
+                roomStructs_sub50 = undefined;
+                roomStructs_sub75 = undefined;
+            }
+        }
+    }
+    
     
     //run economy automation script
     ECONDRIVE.run();

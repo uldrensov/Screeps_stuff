@@ -97,7 +97,7 @@ module.exports = {
         if (Memory.zealot_MAX == undefined){Memory.zealot_MAX =                                     0;}
         if (Memory.wall_threshold == undefined){Memory.wall_threshold =                             50000;}
         if (Memory.rampart_threshold == undefined){Memory.rampart_threshold =                       100000;}
-        if (Memory.construction_mode == undefined){Memory.construction_mode =                       false;}
-        if (Memory.autosell_EN == undefined){Memory.autosell_EN =                                   false;}
+        if (Memory.construction_mode == undefined){Memory.construction_mode =                       false;}         //enable to stop towers from repairing and healing (prevents energy waste in certain scenarios)
+        if (Memory.autosell_EN == undefined){Memory.autosell_EN =                                   false;}         //enable to allow terminals to automatically sell minerals
     }
 };
