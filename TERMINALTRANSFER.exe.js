@@ -18,6 +18,11 @@ module.exports = {
                 if (!dir) return 'ERROR: POWER SPAWN WITHDRAW ACTION NOT SUPPORTED';
                 dest_toString = 'power nexus';
                 break;
+            case 'NUK':
+                if (!dir) return 'ERROR: NUKER WITHDRAW ACTION NOT SUPPORTED';
+                if (o_type != RESOURCE_ENERGY && o_type != RESOURCE_GHODIUM) return 'ERROR: NUKER ONLY SUPPORTS ENERGY AND GHODIUM';
+                dest_toString = 'nuker';
+                break;
             default:
                 return 'INVALID DESTINATION';
         }

@@ -26,7 +26,7 @@ module.exports = {
                             ['5e90c0cd92ec7d74fd3827c3', '5eabb37a93280a9fc1876024'],
                             ['5e8dd3d7091b31014a7522c4', '5ea77b681dcfd3c31fc39d13'],
                             ['5e98a3db9380fa0e2c29de45', '5eb07120d16bc27e7999c068'],
-                            ['5eb185e5dcb707b974d36545']],
+                            ['5eb185e5dcb707b974d36545', '5ece0f6e40e96ffde9f7e7e0']],
 
     source1_id:             ['5bbcae989099fc012e639476', '5bbcae819099fc012e639303', '5bbcae989099fc012e63947e', '5bbcae809099fc012e6392f4', '5bbcae809099fc012e6392fc', '5bbcae369099fc012e638941', '5bbcaea69099fc012e639606',
                             '5bbcae289099fc012e6387ba', '5bbcae0c9099fc012e6385c0'],
@@ -48,7 +48,7 @@ module.exports = {
     tower_id:               ['5e76a9799b9279cd3b8d5c7d', '5e5c992bb655c985f872fdd1', '5ea4d90bcdd80c534a3abc8e', '5e6dedb3b2181dab6255bd37', '5eacde6466154c86cb8dbf5a', '5e76c1bc7e17fe2a086ed2e0'], //remote mining team retreats towards this
                 
     warpRX_id:              ['5e34d2403561285c52aba5b2', '5e5fde06e4c9ff32dfb1a4d1', '5e4a79f221466ebb4fcc858b', '5e5b2064a981827aa51b60e7', '5e686d03c5ef3b7a6e6f21b7', '5e964440cccec473624b299a', '5e927256a01077492a319dcf',
-                            '5e9e3355f6752e15d441a1b8'], //rx link (adherent)
+                            '5e9e3355f6752e15d441a1b8', '5eb898877270c26532be96c3'], //rx link (adherent)
     warpTX_id:              [['5e437e083561285674b0989c','5e34d803221670187690e4d7'],
                             ['5e601a514f07353e676e5376'],
                             ['5e4a844a035927629b09d4a3'],
@@ -56,9 +56,15 @@ module.exports = {
                             ['5e687dae79654f271243ddc4'],
                             ['5e964bf152b012a966941064'],
                             ['NULL', '5e92789e45cd497f9ff85b44'],
-                            ['NULL', '5e9e48317e29d56b7b6eca8a']], //tx link (acolyte)
+                            ['NULL', '5e9e48317e29d56b7b6eca8a'],
+                            ['5eb80e2ff96388fd8ad681dc']], //tx link (acolyte)
     adher_tile_id:          ['5e2ec350d41b0bd406dfd71b', '5e5dab190fb27e9efd036585', '5e4a7ac80f2d8f5302547cc6', '5e55f3ea976d8d949fbe40ce', '5e686ad59a55357c46e65029', '5e96417857cc2c376dc3c22f', '5e926ffb3dfe155ca3cc501b',
-                            '5e9e3113a8c647e32b811d14'],
+                            '5e9e3113a8c647e32b811d14', '5eb7daf4a7d7c88810f4afc6'],
+    
+    
+    //special usernames
+    allies:                 ['Hellbuck'],
+    notif_blacklist:        ['Invader','Patch'],
     
     
     //body parts by role
@@ -72,8 +78,8 @@ module.exports = {
                             [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                            [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE]],
-                            //cost: 1500, 1200, 1500, 1200, 1200, 1200, 1200, 1200, 600
+                            [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]],
+                            //cost: 1500, 1200, 1500, 1200, 1200, 1200, 1200, 1200, 1200
     assim_body:             [[WORK,WORK,WORK,WORK,WORK, MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK, MOVE],
                             [WORK,WORK,WORK,WORK,WORK, MOVE],
@@ -102,8 +108,8 @@ module.exports = {
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                            []],
-                            //cost: NULL, 1200, 1200, 1800, 1800, 1200, 1200, 1200
+                            [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]],
+                            //cost: NULL, 1200, 1200, 1800, 1800, 1200, 1200, 1200, 1200
     acoly_body:             [[WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE],
                             [],
@@ -122,10 +128,10 @@ module.exports = {
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE],
-                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE],
-                            []],
-                            //cost: 2000, 2000, 2000, 1850, 2000, 1850, 1400, 1850
+                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE],
+                            [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE]],
+                            //cost: 2000, 2000, 2000, 1850, 2000, 1850, 1850, 1850, 2000
     probe_body:             [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
@@ -134,8 +140,8 @@ module.exports = {
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                            [WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE]],
-                            //cost: 2050, 1200, 1600, 1200, 1200, 1200, 1200, 1200, 800
+                            [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]],
+                            //cost: 2050, 1200, 1600, 1200, 1200, 1200, 1200, 1200, 1200
     recal_body:             [[CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE],
                             [CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE],
                             [CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE],
@@ -182,8 +188,9 @@ module.exports = {
                             [WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                            []],
-                            //cost: 2300, 1600, 3000, 2300, 1600, 1200, 1200
+                            [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
+                            [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]],
+                            //cost: 2300, 1600, 3000, 2300, 1600, 1200, 1200, 1200, 1200
     phasarc_body:           [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
@@ -192,8 +199,8 @@ module.exports = {
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
-                            []],
-                            //cost: 1800, 1300, 1300, 1300, 1300, 1200, 1200, 1200
+                            [WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE]],
+                            //cost: 1800, 1300, 1300, 1300, 1300, 1200, 1200, 1200, 1200
     visio_body:             [CLAIM, MOVE,MOVE,MOVE,MOVE],
                             //cost: 800
     speci_body:             [[WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK,WORK, CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,

@@ -35,6 +35,16 @@ module.exports = {
                             }
                             output = Game.getObjectById(unit.memory.powernex[0].id);
                             break;
+                        case 'NUK':
+                            if (unit.memory.kimmyJ == undefined){
+                                unit.memory.kimmyJ = unit.room.find(FIND_STRUCTURES, {
+                                    filter: structure => {
+                                        return structure.structureType == STRUCTURE_NUKER;
+                                    }
+                                });
+                            }
+                            output = Game.getObjectById(unit.memory.kimmyJ[0].id);
+                            break;
                     }
                 }
                 else{
