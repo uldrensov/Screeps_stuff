@@ -24,7 +24,9 @@
 ### .exe files:
 --These files are designed as tools to be manually executed through the console--
 * STATUSREPORT.exe.js writes a summary report to console output of any chosen room
+* STATUSREPORT_E.exe.js writes a condensed summary report about the Storage/Terminal contents of every room
 * TERMINALTRANSFER.exe.js spawns in a 'Treasurer' unit to carry materials (any amount, any type) between Storage and Terminal for a chosen room
+* CIRCULATE.exe.js transfers good between owned terminals
 * TRANSACTION.exe.js attempts to sell a room's minerals (any amount) through the in-game market, one trade offer at a time
 
 # Usage:
