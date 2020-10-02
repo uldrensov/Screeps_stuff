@@ -48,8 +48,6 @@ module.exports = {
     
         //load terminals with outbound cargo
         if (Game.time % SD.autoload_interval == 0 && Memory.autoload_EN == true){
-            let vault;
-            let term;
             let terminalLoadResult = false;
             console.log('<<-----AUTOLOAD SUMMARY-------');
             for (let i=0; i<SD.nexus_id.length; i++){
@@ -57,24 +55,25 @@ module.exports = {
                 if (nexi[i] == null) continue;
                 
                 //check for vault/terminal existence
-                vault = nexi[i].room.storage;
-                term = nexi[i].room.terminal;
+                let vault = nexi[i].room.storage;
+                let term = nexi[i].room.terminal;
                 if (!vault || !term) continue;
                 
-                //load the terminal if at least 100000 free space exists
-                if (term.store.getFreeCapacity() >= 100000){
-                    let en_min_ratio = term.store.getUsedCapacity(RESOURCE_ENERGY) / term.store.getUsedCapacity(Memory.mineral_type[i].mineralType);
+                //load the terminal if there is sufficient free space for cargo
+                if (term.store.getFreeCapacity() >= SD.cargo_size){
+                    let minType = Memory.mineral_type[i].mineralType;
+                    let en_min_ratio = term.store.getUsedCapacity(RESOURCE_ENERGY) / term.store.getUsedCapacity(minType);
                     
                     //if terminal's energy-to-mineral ratio is insufficient, and vault's energy content is plentiful, then load energy
-                    if (en_min_ratio < .5 && vault.store.getUsedCapacity(RESOURCE_ENERGY) >= 200000){
-                        require('TERMINALTRANSFER.exe').run(i,'energy',100000,'NA',true,true);
+                    if (en_min_ratio < .5 && vault.store.getUsedCapacity(RESOURCE_ENERGY) >= SD.cargo_size + SD.vault_boundary){
+                        require('TERMINALTRANSFER.exe').run(i,'energy',SD.cargo_size,'NA',true,true);
                         //console.log('LOADING ENERGY IN ROOM #' + i);
                         terminalLoadResult = true;
                     }
                     //if terminal's energy-to-mineral ratio is sufficient, and vault's mineral content is plentiful, then load minerals
-                    else if (en_min_ratio >= .5 && vault.store.getUsedCapacity(Memory.mineral_type[i].mineralType) >= 100000){
-                        require('TERMINALTRANSFER.exe').run(i,Memory.mineral_type[i].mineralType,100000,'NA',true,true);
-                        //console.log('LOADING [' + Memory.mineral_type[i].mineralType + '] IN ROOM #' + i);
+                    else if (en_min_ratio >= .5 && vault.store.getUsedCapacity(minType) >= SD.cargo_size){
+                        require('TERMINALTRANSFER.exe').run(i,minType,SD.cargo_size,'NA',true,true);
+                        //console.log('LOADING [' + minType + '] IN ROOM #' + i);
                         terminalLoadResult = true;
                     }
                 }
@@ -85,7 +84,7 @@ module.exports = {
         
         //export terminal contents
         if (Game.time % SD.autosell_interval == 0 && Memory.autosell_EN == true){
-            var transactionResult = false;
+            let transactionResult = false;
             console.log('<<-----AUTOSELL SUMMARY-------');
             for (let i=0; i<SD.nexus_id.length; i++){
                 //emergency bypass
@@ -115,9 +114,8 @@ module.exports = {
                 Memory.powernex_id[i] = powernex.length? powernex[0].id:'NULL';
             }
         }
-        var getPowerNex;
         for (let i=0; i<SD.nexus_id.length; i++){
-            getPowerNex = Game.getObjectById(Memory.powernex_id[i]);
+            let getPowerNex = Game.getObjectById(Memory.powernex_id[i]);
             if (getPowerNex != null){
                 if (getPowerNex.store.getUsedCapacity(RESOURCE_POWER) > 0 && getPowerNex.store.getUsedCapacity(RESOURCE_ENERGY) >= 50)
                     getPowerNex.processPower();

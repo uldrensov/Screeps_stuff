@@ -15,6 +15,7 @@ module.exports = {
     autosell_interval:      500, //tick interval for automatic terminal exports
     autoload_interval:      2500, //tick interval for automatic terminal loading (should be well over 2000; e.g. unit TTL)
     price_tolerance:        .95, //autosell minerals no cheaper than a minimum percentage of the avg price
+    cargo_size:             100000, //outbound "crate" size for trade terminal autoloading
     
     
     //important object IDs
