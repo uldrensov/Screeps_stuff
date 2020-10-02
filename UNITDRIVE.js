@@ -86,7 +86,7 @@ module.exports = {
                             adherent.run(unit, SD.adher_tile_id[k], SD.warpRX_id[k]);
                             break;
                         case 'nullAdherent':
-                            nullAdherent.run(unit, SD.adher_tile_id[k], SD.warpRX_id[k], SD.warpTX_id[k]);
+                            nullAdherent.run(unit, SD.adher_tile_id[k], SD.warpRX_id[k], SD.warpTX_id[k], SD.vault_boundary);
                             break;
                         case 'supplicant':
                             supplicant.run(unit, SD.vault_boundary);

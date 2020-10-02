@@ -27,7 +27,7 @@ module.exports = {
         if (!nexi[dest].room.terminal) return 'ERROR: No terminal present at -dest-';
         
         
-        nexi[src].room.terminal.send(rsrc_type, amt, nexi[dest].room.name);
-        return 'ACTION SUCCESSFUL';
+        var circResult = nexi[src].room.terminal.send(rsrc_type, amt, nexi[dest].room.name);
+        return (circResult == 0? 'ACTION SUCCESSFUL':circResult);
     }
 };

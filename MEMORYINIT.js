@@ -99,5 +99,6 @@ module.exports = {
         if (Memory.rampart_threshold == undefined){Memory.rampart_threshold =                       100000;}
         if (Memory.construction_mode == undefined){Memory.construction_mode =                       false;}         //enable to stop towers from repairing and healing (prevents energy waste in certain scenarios)
         if (Memory.autosell_EN == undefined){Memory.autosell_EN =                                   false;}         //enable to allow terminals to automatically sell minerals
+        if (Memory.autoload_EN == undefined){Memory.autoload_EN =                                   false;}         //enable to allow auto-spawning treasurers to load terminals with outbound cargo
     }
 };

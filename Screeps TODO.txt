@@ -1,10 +1,12 @@
 BUGS:
-	phase archit prematurely ends
+	phase archit prematurely ends (occasionally happens)
 	energiser should go for emptier turrets instead of pocket healing a full one
 	spawn failure code -3
 
 TODO frontlog:
-	email on low bucket?
+	git init (put this file inside)
+	commit suicide (or simply freeze up) if code user is not hellbuck
+	periodically create CPU consumption rate logs
 	let edrone algo wait for spawner to charge to 300 before calcing
 	dont pass roomnum as an arg, but store it in mem and use it to access SD directly instead of using a for loop to pass proper args
 	relieve dependence on SD by adding find() calls to units instead of passing ID args
@@ -12,26 +14,25 @@ TODO frontlog:
 	kill edrone when he is no longer needed
 		-requires detection of drones/assims/available energy
 	dynamically choose drone size when its time to replace it (middle gnd between waiting for edrone and trying to spawn a big one)
-	reduce dependence on repetitive find() calls (globalise check interval? currently 10)
+	reduce dependence on repetitive find() calls (globalise check interval?)
 	purifiers should contest cores that are taken (e.g. controller subducts and core is still not dead)
 	stop remote workers from spawning if the ctrl belongs to invader (currently coded but not working; orbassim line 41)
-	[DEFENCE] think about how tower should behave in general
-	[SOFTLOCK] before calling a softlock, drones should deposit pocket energy if there are no more assims/energy on the map
-	[SOFTLOCK] take into acc the drone's ignore lim and their current pocket energy when calcing room energy?
+	think about how tower should behave in general
+	before determining a softlock, drones should deposit pocket energy if there are no more assims/energy on the map
+	take into acc the drone's ignore lim and their current pocket energy when calcing room energy?
 	war probe + drone = doesnt go beyond walls; only bare essentials for base maintenance
 		//war mode: disables pickups and tombs for those who can see it
 	
 TODO backlog:
-	[QOL] more status report info (remote room info, wall/rampart distinction, invader/core alert)
+	more status report info (remote room info, wall/rampart distinction, invader/core alert)
 	modify treasurer to work w labs/factories too
 	treasurer withdraw/deposit RESOURCES_ALL
 	dont let new things spawn when one briefly leaves room (expand everything as crossroom in unitdrive?)
 	work-part / thief detection in remotes?
-	[MAINTENANCE] decouple hardcodes from unitdrive (and from argpasses?)
-	[MAINTENANCE] energy source / nexus / ctrller vars could be merged
-	[MAINTENANCE] git init (put this file inside), readme
-	[MAINTENANCE] trek to standby vs. rally at flag
-	[QOL] localnexi energy count distinction in statusreport
+	decouple hardcodes from unitdrive (and from argpasses?)
+	energy source / nexus / ctrller vars could be merged
+	trek to standby vs. rally at flag
+	localnexi energy count distinction in statusreport
 	
 Look up:
 	-

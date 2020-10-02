@@ -1,5 +1,5 @@
 //executable script: spawns a treasurer unit (if applicable), and writes a command into its memory
-    //require('TERMINALTRANSFER.exe').run(3,RESOURCE_ENERGY,100000,'NA',true,true)
+    //require('TERMINALTRANSFER.exe').run(3,'energy',100000,'NA',true,true)
     //require('TERMINALTRANSFER.exe').run(0,RESOURCE_POWER,100,'P',true,true)
     
 var SD = require('SOFTDATA');

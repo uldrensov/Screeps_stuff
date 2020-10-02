@@ -13,6 +13,8 @@ module.exports = {
     vault_boundary:         100000, //all units except (e)drones, energisers, and phase architects will avoid vaults containing less than this
     std_interval:           15, //tick interval for CPU-heavy actions
     autosell_interval:      500, //tick interval for automatic terminal exports
+    autoload_interval:      2500, //tick interval for automatic terminal loading (should be well over 2000; e.g. unit TTL)
+    price_tolerance:        .95, //autosell minerals no cheaper than a minimum percentage of the avg price
     
     
     //important object IDs
@@ -23,10 +25,10 @@ module.exports = {
                             ['5e466c796fffaf84254b19ed', '5ea4f5011fb03a61e06049c6', '5e805b94b2bbc8e35e8fda32'],
                             ['5ea53129e72edb5e91141913', '5ea4ff8c247bb0997354b396', '5e9509a6a5c89eb2af0a52cb'],
                             ['5e6350bb6270f3464c31ca11', '5e79f323a0252257ea1548cc', '5ead3d1fb38b7db6ee2bd4b5'],
-                            ['5e90c0cd92ec7d74fd3827c3', '5eabb37a93280a9fc1876024'],
-                            ['5e8dd3d7091b31014a7522c4', '5ea77b681dcfd3c31fc39d13'],
-                            ['5e98a3db9380fa0e2c29de45', '5eb07120d16bc27e7999c068'],
-                            ['5eb185e5dcb707b974d36545', '5ece0f6e40e96ffde9f7e7e0']],
+                            ['5e90c0cd92ec7d74fd3827c3', '5eabb37a93280a9fc1876024', '5ed5ac727d101f14026a09f8'],
+                            ['5e8dd3d7091b31014a7522c4', '5ea77b681dcfd3c31fc39d13', '5ed80f702ef36940af6cd8d6'],
+                            ['5e98a3db9380fa0e2c29de45', '5eb07120d16bc27e7999c068', '5ed8bb292e9a2885791c1512'],
+                            ['5eb185e5dcb707b974d36545', '5ece0f6e40e96ffde9f7e7e0', '5ef9731afa0da07a6980654a']],
 
     source1_id:             ['5bbcae989099fc012e639476', '5bbcae819099fc012e639303', '5bbcae989099fc012e63947e', '5bbcae809099fc012e6392f4', '5bbcae809099fc012e6392fc', '5bbcae369099fc012e638941', '5bbcaea69099fc012e639606',
                             '5bbcae289099fc012e6387ba', '5bbcae0c9099fc012e6385c0'],

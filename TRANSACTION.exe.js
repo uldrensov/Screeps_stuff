@@ -36,7 +36,7 @@ module.exports = {
             if (clientele[i].price > bestOffer.price && clientele[i].amount > 0)
                 bestOffer = clientele[i];
         }
-        if (bestOffer.price < streetPrice * .95) return 'NO SUITABLE OFFERS WITHIN DESIRED PRICE RANGE...TRY AGAIN LATER';
+        if (bestOffer.price < streetPrice * SD.price_tolerance) return 'NO SUITABLE OFFERS WITHIN DESIRED PRICE RANGE...TRY AGAIN LATER';
         
         //make the transaction
         var tradeAmount = bestOffer.amount < GE.store.getUsedCapacity(minType) ? bestOffer.amount : GE.store.getUsedCapacity(minType);
@@ -52,7 +52,7 @@ module.exports = {
         }
         if (transaction != OK) return transaction;
         
-        console.log('SOLD ' + tradeAmount + ' [' + minType + '] FOR ' + bestOffer.price + ' EACH (+' + (tradeAmount*bestOffer.price).toFixed(3) + ' CREDITS)');
+        console.log('*SOLD ' + tradeAmount + ' [' + minType + '] FOR ' + bestOffer.price + ' EACH (+' + (tradeAmount*bestOffer.price).toFixed(3) + ' CREDITS)');
         console.log('TRANSMISSION TAX: ' + tax + ' (' + (100*tax/tradeAmount).toFixed(1) + '% rate)');
         console.log('TRANSACTION SUCCESSFUL (ROOM #' + room_num + ')');
         return OK;
