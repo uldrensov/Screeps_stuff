@@ -4,7 +4,7 @@ If you are a complete stranger to Screeps, and are just here to casually check t
 ## INTRO:
 Because the whole point of playing Screeps is to learn and to have a fun outlet for programming, I've elected to make my personal codebase open-source. This repository serves to document and demonstrate my own methodology for playing Screeps, for which there are thousands of different possible ways to have a crack at. Here I will assume that the reader is already familiar with how to play the game (at least, at a basic level), and it is my hope that this reader might learn something from my code which may spark new/interesting ideas for his/her own implementation.
 ### What my code does well:
-* Runs at least 9 rooms simultaneously (assuming at least ~6 creeps per room) without straining the 20 CPU limit
+* Runs at least 9 rooms simultaneously (assuming at least ~6 units per room) without straining the 20 CPU limit
 * Automatically responds to threats encountered during remote mining (fleeing, counter-attacking, reclaiming, etc.)
 * Includes scripts that alleviate the stress of macromanaging economy (status reports, transferring resources)
 ### What it does poorly:
