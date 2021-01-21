@@ -27,7 +27,16 @@ module.exports = {
         if (!nexi[dest].room.terminal) return 'ERROR: No terminal present at -dest-';
         
         
-        var circResult = nexi[src].room.terminal.send(rsrc_type, amt, nexi[dest].room.name);
-        return (circResult == 0? 'ACTION SUCCESSFUL':circResult);
+        let circResult = nexi[src].room.terminal.send(rsrc_type, amt, nexi[dest].room.name);
+        switch (circResult){
+            case 0:
+                return 'ACTION SUCCESSFUL';
+            case -6:
+                return 'ERROR: CANNOT AFFORD THIS ACTION';
+            case -11:
+                return 'COOLING DOWN...PLEASE WAIT'
+            default:
+                return circResult;
+        }
     }
 };

@@ -47,6 +47,7 @@ module.exports = {
         if (Memory.mineral_type == undefined){Memory.mineral_type =                                 [];}
         if (Memory.roomSpeed == undefined){Memory.roomSpeed =                                       [];}
         if (Memory.powernex_id == undefined){Memory.powernex_id =                                   [];}
+        if (Memory.autovent_EN == undefined){Memory.autovent_EN =                                   [];}
         
         //room-specifics...
         for (let i=0; i<roomcount; i++){
@@ -89,6 +90,7 @@ module.exports = {
             if (Memory.viable_prey[i] == undefined){Memory.viable_prey[i] =                         false;}
             
             if (Memory.roomSpeed[i] == undefined){Memory.roomSpeed[i] =                             1;}
+            if (Memory.autovent_EN[i] == undefined){Memory.autovent_EN[i] =                         false}
         }
         
         //globals...

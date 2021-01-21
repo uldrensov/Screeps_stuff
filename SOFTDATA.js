@@ -5,16 +5,16 @@ module.exports = {
     //numbers
     roomcount:              9,
     time_offset:            100000, //used for unit naming
-    fixation_override:      .25, //probes will break fixation upon spotting an absolute % gap this wide
-    canister_bias:          300, //can force canister-fetching units to prefer one by default, until this wide of a disparity is detected
-    en_ignore_lim:          100, //drones/sacrificers/probes will ignore containers/pickups containing less energy than this
-    cleanup_thresh:         2000, //retriever drones arrive upon detecting this much uncollected energy on the ground, and stop at a quarter of this value
-    tower_reserve_ratio:    .5, //towers will reserve this percentage of their energy for attacking
+    fixation_override:      .25,    //probes will break fixation upon spotting an absolute % gap this wide
+    canister_bias:          300,    //can force canister-fetching units to prefer one by default, until this wide of a disparity is detected
+    en_ignore_lim:          100,    //drones/sacrificers/probes will ignore containers/pickups containing less energy than this
+    cleanup_thresh:         2000,   //retriever drones arrive upon detecting this much uncollected energy on the ground, and stop at a quarter of this value
+    tower_reserve_ratio:    .5,     //towers will reserve this percentage of their energy for attacking
     vault_boundary:         100000, //all units except (e)drones, energisers, and phase architects will avoid vaults containing less than this
-    std_interval:           15, //tick interval for CPU-heavy actions
-    autosell_interval:      500, //tick interval for automatic terminal exports
-    autoload_interval:      2500, //tick interval for automatic terminal loading (should be well over 2000; e.g. unit TTL)
-    price_tolerance:        .95, //autosell minerals no cheaper than a minimum percentage of the avg price
+    std_interval:           15,     //tick interval for CPU-heavy actions
+    autosell_interval:      500,    //tick interval for automatic terminal exports
+    autoload_interval:      2500,   //tick interval for automatic terminal loading (should be well over 2000; e.g. unit TTL)
+    price_tolerance:        .95,    //autosell minerals no cheaper than a minimum percentage of the avg price
     cargo_size:             100000, //outbound "crate" size for trade terminal autoloading
     
     

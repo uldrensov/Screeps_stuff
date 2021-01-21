@@ -52,7 +52,7 @@ module.exports = {
                     
         //if one doesn't exist, spawn one and issue order parameters at spawn
         if (!treasurer){
-            var spawnResult = openNexus.spawnCreep(SD.treas_body, 'Treasurer-' + Game.time % SD.time_offset, {memory: {role: 'treasurer', order_type:o_type, order_amt:o_amt, dir:dir, spec_dest:spec, task_progress:0, autokill:autokill}});
+            let spawnResult = openNexus.spawnCreep(SD.treas_body, 'Treasurer-' + Game.time % SD.time_offset, {memory: {role: 'treasurer', order_type:o_type, order_amt:o_amt, dir:dir, spec_dest:spec, task_progress:0, autokill:autokill}});
             if (spawnResult == OK)
                 console.log('Room #' + room_num + ': Treasurer-' + Game.time % SD.time_offset + ' spawning.');
             else return 'NEXUS ERROR: ' + spawnResult;
@@ -67,8 +67,8 @@ module.exports = {
             unit.memory.autokill = autokill;
         }
         
-        var dir_toString = dir? 'loading':'unloading';
-        var to_fro = dir? 'to':'from';
+        let dir_toString = dir? 'loading':'unloading';
+        let to_fro = dir? 'to':'from';
         return '--ISSUING COMMAND: ROOM #' + room_num + ' ' + dir_toString + ' ' + o_amt + ' [' + o_type + '] ' + to_fro + ' ' + dest_toString;
     }
 };

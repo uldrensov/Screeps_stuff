@@ -46,8 +46,8 @@ module.exports.loop = function(){
     
     //room (dis)repair management
     if (Game.time % SD.std_interval == 0){
-        var roomStructs_sub50;
-        var roomStructs_sub75;
+        let roomStructs_sub50;
+        let roomStructs_sub75;
         for (let i=0; i<nexi.length; i++){
             if (Memory.probe_MAX[i] != 0){
                 roomStructs_sub50 = nexi[i].room.find(FIND_STRUCTURES, {

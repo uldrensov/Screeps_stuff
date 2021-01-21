@@ -2,6 +2,7 @@
 
 var SD =                    require('SOFTDATA');
 var TRANSACTION =           require('TRANSACTION.exe');
+var ENERGYVENT =            require('ENERGYVENT.exe');
 
 
 module.exports = {
@@ -89,7 +90,7 @@ module.exports = {
             for (let i=0; i<SD.nexus_id.length; i++){
                 //emergency bypass
                 if (nexi[i] == null) continue;
-            
+                
                 if (nexi[i].room.terminal != undefined){
                     if (nexi[i].room.terminal.store.getUsedCapacity(Memory.mineral_type[i].mineralType) > 0)
                         if (TRANSACTION.run(i) == OK) transactionResult = true;
@@ -98,7 +99,26 @@ module.exports = {
             if (!transactionResult) console.log('[NO TRANSACTIONS]');
             console.log('---------------------------->>');
         }
-    
+        
+        //export excess energy
+        if (Game.time % SD.autosell_interval == 0){
+            let ventResult = false;
+            console.log('<<-----AUTOVENT SUMMARY-------');
+            for (let i=0; i<SD.nexus_id.length; i++){
+                if (Memory.autovent_EN[i] == true){
+                    //emergency bypass
+                    if (nexi[i] == null) continue;
+                    
+                    if (nexi[i].room.terminal != undefined){
+                        if (nexi[i].room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
+                            if (ENERGYVENT.run(i) == OK) transactionResult = true;
+                    }
+                }
+            }
+            if (!transactionResult) console.log('[NO VENTING PERFORMED]');
+            console.log('---------------------------->>');
+        }
+        
         //process power
         if (Game.time % SD.std_interval == 0){
             var powernex;
