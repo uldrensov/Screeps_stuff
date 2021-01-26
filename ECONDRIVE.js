@@ -111,11 +111,11 @@ module.exports = {
                     
                     if (nexi[i].room.terminal != undefined){
                         if (nexi[i].room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
-                            if (ENERGYVENT.run(i) == OK) transactionResult = true;
+                            if (ENERGYVENT.run(i) == OK) ventResult = true;
                     }
                 }
             }
-            if (!transactionResult) console.log('[NO VENTING PERFORMED]');
+            if (!ventResult) console.log('[NO VENTING PERFORMED]');
             console.log('---------------------------->>');
         }
         
