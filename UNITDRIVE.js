@@ -33,25 +33,24 @@ var darktemplar =           require('darktemplar.AI');
 var hallucination =         require('hallucination.AI');
 var hightemplar =           require('hightemplar.AI');
 var zealot =                require('zealot.AI');
-var khaydarinmonolith =     require('khaydarinmonolith.AI');
+//var khaydarinmonolith =     require('khaydarinmonolith.AI');
 
 
 module.exports = {
     run: function(){
         
-        var nexi = [];
+        let nexi = [];
         for (let i=0; i<SD.nexus_id.length; i++){
             nexi[i] = Game.getObjectById(SD.nexus_id[i]);
         }
         
         
         for (let k=0; k<nexi.length; k++){
-            //emergency bypass
-            if (nexi[k] == null) continue;
+            if (nexi[k] == null) continue; //emergency bypass
             
             //room-locked units
-            for (var name in Game.creeps){
-                var unit = Game.creeps[name];
+            for (let name in Game.creeps){
+                let unit = Game.creeps[name];
                 if (unit.room == nexi[k].room){
                     switch (unit.memory.role){
                         case 'emergencyDrone':
@@ -124,8 +123,8 @@ module.exports = {
     
         
         //cross-room units
-        for (var name in Game.creeps){
-            var unit = Game.creeps[name];
+        for (let name in Game.creeps){
+            let unit = Game.creeps[name];
             switch (unit.memory.role){
                 case 'recalibrator':
                     //determine homeroom to call AI script using appropriate args

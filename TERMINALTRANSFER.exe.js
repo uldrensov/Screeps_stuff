@@ -10,7 +10,7 @@ module.exports = {
     run: function(room_num, o_type, o_amt, spec, dir, autokill){
         
         //validation
-        var dest_toString;
+        let dest_toString;
         switch (spec){
             case 'NA':
                 dest_toString = 'terminal';
@@ -30,10 +30,9 @@ module.exports = {
         
         
         //determine a viable spawner
-        var openNexus = Game.getObjectById(SD.spawner_id[room_num][0]);
+        let openNexus = Game.getObjectById(SD.spawner_id[room_num][0]);
         for (let i=0; i<SD.spawner_id[room_num].length; i++){
-            //emergency bypass
-            if (Game.getObjectById(SD.spawner_id[room_num][i]) == null) continue;
+            if (Game.getObjectById(SD.spawner_id[room_num][i]) == null) continue; //emergency bypass
             if (Game.getObjectById(SD.spawner_id[room_num][i]).spawning == null){
                 openNexus = Game.getObjectById(SD.spawner_id[room_num][i]);
                 break;
@@ -42,8 +41,8 @@ module.exports = {
         
         
         //determine if a treasurer already exists in the specified room
-        var treasurer = false;
-        for (var name in Game.creeps){
+        let treasurer = false;
+        for (let name in Game.creeps){
             var unit = Game.creeps[name];
             if (unit.room == openNexus.room && unit.memory.role == 'treasurer'){
                 treasurer = unit;

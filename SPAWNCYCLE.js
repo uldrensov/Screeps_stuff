@@ -6,25 +6,24 @@ var SD = require('SOFTDATA');
 module.exports = {
     run: function(){
         
-        var nexi = [];
+        let nexi = [];
         for (let i=0; i<SD.nexus_id.length; i++){
             nexi[i] = Game.getObjectById(SD.nexus_id[i]);
         }
         
         
         //for storing population count in each room
-        var emergencyDrone_gang = [];   var sacrificer_gang = [];       var architect_gang = [];    var phaseArchitect_gang = [];   var probe_gang = [];            var assimilator_gang = [];
-        var assimilator2_gang = [];     var drone_gang = [];            var energiser_gang = [];    var retrieverDrone_gang = [];   var recalibrator_gang = [];     var orbitalAssimilator_gang = [];
-        var orbitalDrone_gang = [];     var bloodhunter_gang = [];      var enforcer_gang = [];     var purifier_gang = [];         var acolyte_gang = [];          var acolyte2_gang = [];
-        var adherent_gang = [];         var nullAdherent_gang = [];     var supplicant_gang = [];   var nullSupplicant_gang = [];   var ancientDrone_gang = [];     var ancientAssimilator_gang = [];
-        var visionary_gang = [];        var specialist_gang = [];       var saviour_gang = [];      var emissary_gang = [];         var darktemplar_gang = [];      var hallucination_gang;
-        var hightemplar_gang;           var zealot_gang;
+        let emergencyDrone_gang = [];   let sacrificer_gang = [];       let architect_gang = [];    let phaseArchitect_gang = [];   let probe_gang = [];            let assimilator_gang = [];
+        let assimilator2_gang = [];     let drone_gang = [];            let energiser_gang = [];    let retrieverDrone_gang = [];   let recalibrator_gang = [];     let orbitalAssimilator_gang = [];
+        let orbitalDrone_gang = [];     let bloodhunter_gang = [];      let enforcer_gang = [];     let purifier_gang = [];         let acolyte_gang = [];          let acolyte2_gang = [];
+        let adherent_gang = [];         let nullAdherent_gang = [];     let supplicant_gang = [];   let nullSupplicant_gang = [];   let ancientDrone_gang = [];     let ancientAssimilator_gang = [];
+        let visionary_gang = [];        let specialist_gang = [];       let saviour_gang = [];      let emissary_gang = [];         let darktemplar_gang = [];      let hallucination_gang;
+        let hightemplar_gang;           let zealot_gang;
     
     
         //execute the auto-spawn and unit AI assignment routines for each room
-        for (let k=0; k<SD.roomcount; k++){
-            //emergency bypass
-            if (nexi[k] == null) continue;
+        for (let k=0; k<SD.nexus_id.length; k++){
+            if (nexi[k] == null) continue; //emergency bypass
         
             //count unit population by role
             emergencyDrone_gang[k] =        _.filter(Game.creeps, creep => creep.memory.role == 'emergencyDrone'        && creep.room == nexi[k].room);
@@ -87,19 +86,19 @@ module.exports = {
             }
             
             //for edrone spawn, calculate the room's drone/assimilator/acolyte prices
-            var drone_price = 1;
+            let drone_price = 1;
             for (let i=0; i<SD.drone_body[k].length; i++){
                 if (SD.drone_body[k][i] == CARRY || SD.drone_body[k][i] == MOVE)
                     drone_price += 50;
             }
-            var assim_price = 0;
+            let assim_price = 0;
             for (let i=0; i<SD.assim_body[k].length; i++){
                 if (SD.assim_body[k][i] == WORK)
                     assim_price += 100;
                 else if (SD.drone_body[k][i] == MOVE)
                     assim_price += 50;
             }
-            var acoly_price = 0;
+            let acoly_price = 0;
             for (let i=0; i<SD.acoly_body[k].length; i++){
                 if (SD.acoly_body[k][i] == WORK)
                     assim_price += 100;
@@ -116,17 +115,17 @@ module.exports = {
                     }
                 });
             }
-            var canister_energy = 0;
+            let canister_energy = 0;
             for (let i=0; i<Memory.SPAWNCYCLE__local_canisters[k].length; i++){
                 canister_energy += Game.getObjectById(Memory.SPAWNCYCLE__local_canisters[k][i].id).store.energy;
             }
-            var vault_energy = 0;
+            let vault_energy = 0;
             if (nexi[k].room.storage != undefined)
                 vault_energy = nexi[k].room.storage.store.energy;
-            var accessible_energy = nexi[k].room.energyAvailable + canister_energy + vault_energy;
+            let accessible_energy = nexi[k].room.energyAvailable + canister_energy + vault_energy;
             
             //for recalibrator spawn condition, calculate that room's recalibrator's CLAIM "strength"
-            var claim_strength = 0;
+            let claim_strength = 0;
             for (let i=0; i<SD.recal_body[k].length; i++){
                 if (SD.recal_body[k][i] == CLAIM)
                     claim_strength++;
@@ -142,8 +141,8 @@ module.exports = {
                     }
                 });
             }
-            var total_dropped_energy = 0;
-            var scrap;
+            let total_dropped_energy = 0;
+            let scrap;
             for (let i=0; i<Memory.SPAWNCYCLE__scraps[k].length; i++){
                 scrap = Game.getObjectById(Memory.SPAWNCYCLE__scraps[k][i].id);
                 if (scrap == null) continue;
@@ -154,7 +153,7 @@ module.exports = {
             
             
             //determine a viable spawner
-            var openNexus = Game.getObjectById(SD.spawner_id[k][0]);
+            let openNexus = Game.getObjectById(SD.spawner_id[k][0]);
             for (let i=0; i<SD.spawner_id[k].length; i++){
                 if (Game.getObjectById(SD.spawner_id[k][i]) == null) continue;
                 if (Game.getObjectById(SD.spawner_id[k][i]).spawning == null){
@@ -162,7 +161,7 @@ module.exports = {
                     break;
                 }
             }
-            var spawnResult;
+            let spawnResult;
             
             
         //spawning emergency units...
@@ -308,7 +307,7 @@ module.exports = {
                     //alternatively, the wait is bypassed if the current recalibrator headcount is sufficient in the first place
                     case (Game.getObjectById(SD.remotectrl_id[k]) != undefined || recalibrator_gang[k].length >= Memory.recalibrator_MAX[k]):
                 
-                        var take_branch = false; //if the following try-catch 'branch' is not taken for whatever reason, assert this flag
+                        let take_branch = false; //if the following try-catch 'branch' is not taken for whatever reason, assert this flag
                 
                         //recalibrators: if remote mining is viable
                         //NOTE: this try-catch exists since the outside check can still pass / be stepped into without checking if the remote controller is defined

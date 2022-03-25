@@ -6,17 +6,15 @@ var SD = require('SOFTDATA');
 module.exports = {
     run: function(){
         
-        var nexi = [];
+        let nexi = [];
         for (let i=0; i<SD.nexus_id.length; i++){
             nexi[i] = Game.getObjectById(SD.nexus_id[i]);
         }
         
         
         //per room: locate all towers, select an action and target, then execute for each tower
-        for (let k=0; k<SD.roomcount; k++){
-            
-            //emergency bypass
-            if (nexi[k] == null) continue;
+        for (let k=0; k<SD.nexus_id.length; k++){
+            if (nexi[k] == null) continue; //emergency bypass
             
             //reset previous action/target
             Memory.turretCommand[k] = 'IDLE';
@@ -36,9 +34,9 @@ module.exports = {
             
             
             //outputs: enemies, my units (injured), structures (damaged)
-            var threat = false;
-            var enemy = nexi[k].room.find(FIND_HOSTILE_CREEPS);
-            var hallpass;
+            let threat = false;
+            let enemy = nexi[k].room.find(FIND_HOSTILE_CREEPS);
+            let hallpass;
             if (enemy.length){
                 //assess threat level
 assess:         for (let i=0; i<enemy.length; i++){
@@ -59,16 +57,16 @@ assess:         for (let i=0; i<enemy.length; i++){
                     }
                 }
             }
-            var injured_units;
-            var repairStructs;
-            var repairRamparts;
+            let injured_units;
+            let repairStructs;
+            let repairRamparts;
         
 
             //determine action/target by priority...
             //unload: enemies
             if (threat){
                 Memory.turretCommand[k] = 'FIRE';
-                var notif = true;
+                let notif = true;
                 for (let l=0; l<SD.notif_blacklist.length; l++){
                     if (Game.getObjectById(Memory.turretTarget_id[k]).owner.username == SD.notif_blacklist[l]){
                         notif = false;
@@ -119,7 +117,7 @@ assess:         for (let i=0; i<enemy.length; i++){
             
             
             //execute
-            var turret;
+            let turret;
             for (let q=0; q<Memory.turretsByRoom[k].length; q++){
                 turret = Game.getObjectById(Memory.turretsByRoom[k][q].id);
                 switch (Memory.turretCommand[k]){

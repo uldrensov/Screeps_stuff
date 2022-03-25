@@ -7,17 +7,16 @@ var SD = require('SOFTDATA');
 module.exports = {
     run: function(){
         
-        var nexus;
-        var vault;
-        var term;
-        var mineral;
+        let nexus;
+        let vault;
+        let term;
+        let mineral;
         
         for (let i=0; i<SD.nexus_id.length; i++){
             
             nexus = Game.getObjectById(SD.nexus_id[i]);
             
-            //emergency bypass
-            if (!nexus) continue;
+            if (!nexus) continue; //emergency bypass
             
             vault = nexus.room.storage;
             mineral = Memory.mineral_type[i].mineralType;
@@ -32,8 +31,7 @@ module.exports = {
             
             nexus = Game.getObjectById(SD.nexus_id[j]);
             
-            //emergency bypass
-            if (!nexus) continue;
+            if (!nexus) continue; //emergency bypass
             
             term = nexus.room.terminal;
             mineral = Memory.mineral_type[j].mineralType;
