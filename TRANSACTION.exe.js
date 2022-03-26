@@ -9,52 +9,65 @@ module.exports = {
         
         //arg validation
         if (Memory.mineral_type[room_num] == undefined)
-            return 'INVALID ROOM NUMBER';
+            return 'TRANSACTION:: INVALID ROOM NUMBER';
         
-        //init
-        var GE = Game.getObjectById(SD.nexus_id[room_num]).room.terminal;
-        if (GE == null) return 'ERROR: ROOM DOES NOT CONTAIN A TERMINAL';
-        var minType = Memory.mineral_type[room_num].mineralType;
-        if (GE.store.getUsedCapacity() == 0) return 'ERROR: TERMINAL IS EMPTY';
-        if (GE.store.getUsedCapacity(RESOURCE_ENERGY) == 0) return 'ERROR: TERMINAL TRANSMISSION FUEL DEPLETED';
-        if (GE.store.getUsedCapacity(minType) == 0) return 'ERROR: TERMINAL MERCHANDISE DEPLETED';
-        var hist = Game.market.getHistory(minType);
-        var clientele = Game.market.getAllOrders({type: ORDER_BUY, resourceType: minType});
-        if (!clientele.length) return 'MARKET IS EMPTY...TRY AGAIN LATER';
+        //variable init and additional validation
+        let GE = Game.getObjectById(SD.nexus_id[room_num]).room.terminal;
+        if (GE == null)
+            return 'TRANSACTION:: ROOM IS MISSING A TERMINAL';
+        let minType = Memory.mineral_type[room_num].mineralType;
+        if (GE.store.getUsedCapacity() == 0)
+            return 'TRANSACTION:: TERMINAL IS EMPTY';
+        if (GE.store.getUsedCapacity(RESOURCE_ENERGY) == 0)
+            return 'TRANSACTION:: TERMINAL TRANSMISSION FUEL DEPLETED';
+        if (GE.store.getUsedCapacity(minType) == 0)
+            return 'TRANSACTION:: TERMINAL MERCHANDISE DEPLETED';
+        let hist = Game.market.getHistory(minType);
+        let clientele = Game.market.getAllOrders({type: ORDER_BUY, resourceType: minType});
+        if (!clientele.length)
+            return 'TRANSACTION:: MARKET IS EMPTY...TRY AGAIN LATER';
         
         
         //calculate average street price
-        var streetPrice = 0;
+        let streetPrice = 0;
         for (let i=0; i<hist.length; i++){
             streetPrice += hist[i].avgPrice;
         }
         streetPrice /= hist.length;
         
         //find the best offer within price range
-        var bestOffer = clientele[0];
+        let bestOffer = clientele[0];
         for (let i=0; i<clientele.length; i++){
             if (clientele[i].price > bestOffer.price && clientele[i].amount > 0)
                 bestOffer = clientele[i];
         }
-        if (bestOffer.price < streetPrice * SD.price_tolerance) return 'NO SUITABLE OFFERS WITHIN DESIRED PRICE RANGE...TRY AGAIN LATER';
+        if (bestOffer.price < streetPrice * SD.price_tolerance)
+            return 'TRANSACTION:: NO SUITABLE OFFERS WITHIN DESIRED PRICE RANGE...TRY AGAIN LATER';
         
+
         //make the transaction
-        var tradeAmount = bestOffer.amount < GE.store.getUsedCapacity(minType) ? bestOffer.amount : GE.store.getUsedCapacity(minType);
-        var tax = Game.market.calcTransactionCost(tradeAmount, bestOffer.roomName, GE.room.name);
-        var transaction = Game.market.deal(bestOffer.id, tradeAmount, GE.room.name);
+        let tradeAmount = bestOffer.amount < GE.store.getUsedCapacity(minType) ? bestOffer.amount : GE.store.getUsedCapacity(minType);
+        let tax = Game.market.calcTransactionCost(tradeAmount, bestOffer.roomName, GE.room.name);
+        let transaction = Game.market.deal(bestOffer.id, tradeAmount, GE.room.name);
         
-        if (transaction == ERR_NOT_ENOUGH_ENERGY) return 'INSUFFICIENT RESOURCES...OFFER REQUIRES ' + tradeAmount + ' [' + minType + '] AND ' + tax + ' TRANSMISSION ENERGY';
-        if (transaction == ERR_TIRED) return 'COOLING DOWN...PLEASE WAIT';
+        if (transaction == ERR_NOT_ENOUGH_ENERGY)
+            return 'TRANSACTION:: INSUFFICIENT RESOURCES...OFFER REQUIRES ' + tradeAmount + ' [' + minType + '] AND ' + tax + ' TRANSMISSION ENERGY';
+        if (transaction == ERR_TIRED)
+            return 'TRANSACTION:: TERMINAL COOLING DOWN...PLEASE WAIT BEFORE SELLING AGAIN';
         if (transaction == ERR_INVALID_ARGS){
-            console.log('BUGSPLAT...');
-            console.log(tradeAmount);
-            transaction = Game.market.deal(bestOffer.id, 1, GE.room.name);
+            console.log('TRANSACTION:: BUGSPLAT: CANNOT EXECUTE TRADE DEAL...GENERATING ERROR CODE ');
+            console.log('TRANSACTION:: ORIGINAL INTENDED TRADE AMT: ' + tradeAmount);
+            transaction = Game.market.deal(bestOffer.id, 1, GE.room.name); //attempt a test transaction for debug purposes
         }
-        if (transaction != OK) return transaction;
         
-        console.log('*SOLD ' + tradeAmount + ' [' + minType + '] FOR ' + bestOffer.price + ' EACH (+' + (tradeAmount*bestOffer.price).toFixed(3) + ' CREDITS)');
-        console.log('TRANSMISSION TAX: ' + tax + ' (' + (100*tax/tradeAmount).toFixed(1) + '% rate)');
-        console.log('TRANSACTION SUCCESSFUL (ROOM #' + room_num + ')');
+        if (transaction != OK)
+            return 'TRANSACTION:: OPERATION FAILED WITH MARKET ERROR CODE ' + transaction;
+        
+
+        //return confirmation of success
+        console.log('TRANSACTION:: *SOLD ' + tradeAmount + ' [' + minType + '] FOR ' + bestOffer.price + ' EACH (' + (tradeAmount*bestOffer.price).toFixed(3) + ' CREDITS GAINED)');
+        console.log('TRANSACTION:: TRANSMISSION TAX: ' + tax + ' (' + (100*tax/tradeAmount).toFixed(1) + '% rate)');
+        console.log('TRANSACTION:: TRANSACTION SUCCESSFUL (ROOM #' + room_num + ')');
         return OK;
     }
 };

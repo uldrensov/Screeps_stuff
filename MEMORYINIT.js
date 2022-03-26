@@ -1,4 +1,4 @@
-//function: initialises global variables in memory
+//function: automatically initialises and populates all necessary contents of global memory
 
 module.exports = {
     run: function(roomcount){

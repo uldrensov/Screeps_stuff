@@ -45,8 +45,8 @@ module.exports = {
         }
         
         
-        for (let k=0; k<nexi.length; k++){
-            if (nexi[k] == null) continue; //emergency bypass
+        for (let k=0; k<SD.nexus_id.length; k++){
+            if (nexi[k] == null) continue; //error: if nexus fails to retrieve, skip the room
             
             //room-locked units
             for (let name in Game.creeps){
@@ -128,7 +128,7 @@ module.exports = {
             switch (unit.memory.role){
                 case 'recalibrator':
                     //determine homeroom to call AI script using appropriate args
-                    for (let i=0; i<nexi.length; i++){
+                    for (let i=0; i<SD.nexus_id.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
                             recalibrator.run(unit, SD.nexus_id[i], SD.reserveflag[i], SD.tower_id[i], i);
                             break;
@@ -136,7 +136,7 @@ module.exports = {
                     }
                     break;
                 case 'orbitalAssimilator':
-                    for (let i=0; i<nexi.length; i++){
+                    for (let i=0; i<SD.nexus_id.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
                             orbitalAssimilator.run(unit, SD.nexus_id[i], SD.remotesource_id[i], SD.remoteflag[i], SD.remotecanister_id[i], SD.tower_id[i], i);
                             break;
@@ -144,7 +144,7 @@ module.exports = {
                     }
                     break;
                 case 'orbitalDrone':
-                    for (let i=0; i<nexi.length; i++){
+                    for (let i=0; i<SD.nexus_id.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
                             orbitalDrone.run(unit, SD.nexus_id[i], SD.remotecanister_id[i], SD.reserveflag[i], SD.en_ignore_lim, SD.tower_id[i], i);
                             break;
@@ -152,7 +152,7 @@ module.exports = {
                     }
                     break;
                 case 'bloodhunter':
-                    for (let i=0; i<nexi.length; i++){
+                    for (let i=0; i<SD.nexus_id.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
                             bloodhunter.run(unit, SD.nexus_id[i], SD.remoteflag[i], i);
                             break;
@@ -160,7 +160,7 @@ module.exports = {
                     }
                     break;
                 case 'enforcer':
-                    for (let i=0; i<nexi.length; i++){
+                    for (let i=0; i<SD.nexus_id.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
                             enforcer.run(unit, SD.nexus_id[i], SD.remoteflag[i], i);
                             break;
@@ -168,7 +168,7 @@ module.exports = {
                     }
                     break;
                 case 'purifier':
-                    for (let i=0; i<nexi.length; i++){
+                    for (let i=0; i<SD.nexus_id.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
                             purifier.run(unit, SD.nexus_id[i], SD.remoteflag[i], i);
                             break;
@@ -176,7 +176,7 @@ module.exports = {
                     }
                     break;
                 case 'visionary':
-                    for (let i=0; i<nexi.length; i++){
+                    for (let i=0; i<SD.nexus_id.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
                             visionary.run(unit, Game.flags['GOGO'], i);
                             break;
@@ -193,7 +193,7 @@ module.exports = {
                     //emissary.run(unit, Game.flags['']);
                     break;
                 case 'darktemplar':
-                    for (let i=0; i<nexi.length; i++){
+                    for (let i=0; i<SD.nexus_id.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
                             darktemplar.run(unit, SD.nexus_id[i], Game.flags['Terrans']);
                             break;

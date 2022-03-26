@@ -1,4 +1,4 @@
-//library: contains all manually-reconfigurable and server-specific variables
+//library: contains global variables designed to be manually reconfigurable on the fly
 
 module.exports = {
     
@@ -24,7 +24,7 @@ module.exports = {
     //important object IDs
     nexus_id:               ['5e2d15a9e152154167131760',    '5e5b6eabb5c443745759aa65', '5e466c796fffaf84254b19ed',
                             '5ea53129e72edb5e91141913',     '5e6350bb6270f3464c31ca11', '5e90c0cd92ec7d74fd3827c3',
-                            '5e8dd3d7091b31014a7522c4',     '6233d2a158b8e2395538037e', '6233b63fcc72041c278123c9'],
+                            '5e8dd3d7091b31014a7522c4',     '6233d2a158b8e2395538037e', '6233b63fcc72041c278123c9'],    //"main" spawner of the room
     spawner_id:             [['5e2d15a9e152154167131760',   '5ea77d6ef821ec768995de0b', '5ea7bbacb80d8d894c640f28'],
                             ['5e5b6eabb5c443745759aa65',    '5ea4ff3b00950bc79df78600', '5ea4d1417316480d645e5896'],
                             ['5e466c796fffaf84254b19ed',    '5ea4f5011fb03a61e06049c6', '5e805b94b2bbc8e35e8fda32'],

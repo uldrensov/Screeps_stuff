@@ -21,7 +21,7 @@ module.exports.loop = function(){
     for (let name in Memory.creeps){
         if (!Game.creeps[name]){
             delete Memory.creeps[name];
-            //console.log(name + ' has expired.');
+            //console.log(MAIN:: name + ' has expired.');
         }
     }
     
@@ -50,9 +50,9 @@ module.exports.loop = function(){
         let roomStructs_sub50;
         let roomStructs_sub75;
 
-        for (let i=0; i<nexi.length; i++){
+        for (let i=0; i<SD.nexus_id.length; i++){
             if (Memory.probe_MAX[i] != 0){
-                if (nexi[i] == null)    continue; //emergency bypass
+                if (nexi[i] == null)    continue; //error: if nexus fails to retrieve, skip the room
                 
                 roomStructs_sub50 = nexi[i].room.find(FIND_STRUCTURES, {
                     filter: structure => {
@@ -71,10 +71,6 @@ module.exports.loop = function(){
                 
                 if (roomStructs_sub50.length)           Memory.probe_MAX[i] = 1; //enable probe spawn if there are structures below 50%
                 if (!roomStructs_sub75.length)          Memory.probe_MAX[i] = -1; //disable probe spawn if all structures are above 75%
-                
-                //clear vars
-                roomStructs_sub50 = undefined;
-                roomStructs_sub75 = undefined;
             }
         }
     }

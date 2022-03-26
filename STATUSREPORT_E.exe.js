@@ -16,7 +16,7 @@ module.exports = {
             
             nexus = Game.getObjectById(SD.nexus_id[i]);
             
-            if (!nexus) continue; //emergency bypass
+            if (!nexus) continue; //error: if nexus fails to retrieve, skip the room
             
             vault = nexus.room.storage;
             mineral = Memory.mineral_type[i].mineralType;
@@ -31,7 +31,7 @@ module.exports = {
             
             nexus = Game.getObjectById(SD.nexus_id[j]);
             
-            if (!nexus) continue; //emergency bypass
+            if (!nexus) continue; //error: if nexus fails to retrieve, skip the room
             
             term = nexus.room.terminal;
             mineral = Memory.mineral_type[j].mineralType;

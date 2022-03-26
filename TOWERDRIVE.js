@@ -14,7 +14,7 @@ module.exports = {
         
         //per room: locate all towers, select an action and target, then execute for each tower
         for (let k=0; k<SD.nexus_id.length; k++){
-            if (nexi[k] == null) continue; //emergency bypass
+            if (nexi[k] == null) continue; //error: if nexus fails to retrieve, skip the room
             
             //reset previous action/target
             Memory.turretCommand[k] = 'IDLE';
