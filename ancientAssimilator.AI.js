@@ -8,7 +8,7 @@ module.exports = {
         
         
         if (canister != null){
-            //inputs: mineral source
+            //INPUTS: mineral source
             var mineral_src = unit.room.find(FIND_MINERALS);
         
         

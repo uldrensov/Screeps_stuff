@@ -10,16 +10,20 @@ module.exports = {
         var lowbound = 50;
         
         
-        //inputs: energy sources, containers (ample), pickups (ample), tombstones (non-empty)
+        //INPUTS: energy sources, containers (ample), pickups (ample), tombstones (non-empty)
         var sources = unit.room.find(FIND_SOURCES);
         var canisters = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
-                return structure.structureType == STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > lowbound;
+                return structure.structureType == STRUCTURE_CONTAINER
+                    &&
+                    structure.store.getUsedCapacity(RESOURCE_ENERGY) > lowbound;
             }
         });
         var scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
             filter: resource => {
-                return resource.amount > lowbound && resource.resourceType == RESOURCE_ENERGY;
+                return resource.amount > lowbound
+                    &&
+                    resource.resourceType == RESOURCE_ENERGY;
             }
         });
         var tombs = unit.room.find(FIND_TOMBSTONES, {
@@ -28,10 +32,12 @@ module.exports = {
             }
         });
         
-        //outputs: extension (non-full)
+        //OUTPUTS: extension (non-full)
         var pylon = unit.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: structure => {
-                return structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                return structure.structureType == STRUCTURE_EXTENSION
+                    &&
+                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         });
         
@@ -47,12 +53,12 @@ module.exports = {
         
         //behaviour execution...
         if (!unit.memory.fetching){
-            //unload: extension
+            //UNLOAD: extension
             if (pylon){
                 if (unit.transfer(pylon, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(pylon);
             }
-            //unload: nexus
+            //UNLOAD: nexus
             else if (unit.transfer(nexus, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                 unit.moveTo(nexus);
         }

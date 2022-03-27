@@ -6,7 +6,7 @@ module.exports = {
         
         canister = Game.getObjectById(canister_id);
         
-        //inputs: energy source
+        //INPUTS: energy source
         src = Game.getObjectById(src_id);
         
         

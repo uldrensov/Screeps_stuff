@@ -9,7 +9,7 @@ module.exports = {
         var obelisk = Game.getObjectById(unit.memory.ctrl_id);
         
         
-        //inputs: energy sources, containers (ample)
+        //INPUTS: energy sources, containers (ample)
         var sources = obelisk.room.find(FIND_SOURCES);
         var canisters = obelisk.room.find(FIND_STRUCTURES, {
             filter: structure => {
@@ -30,7 +30,7 @@ module.exports = {
         
         //behaviour execution...
         if (!unit.memory.fetching){
-            //unload: controller
+            //UNLOAD: controller
             if (unit.upgradeController(obelisk) == ERR_NOT_IN_RANGE)
                 unit.moveTo(obelisk);
         }

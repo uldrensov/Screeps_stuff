@@ -8,10 +8,10 @@ module.exports = {
         var canister = Game.getObjectById(canister_id);
         
         
-        //inputs: energy source
+        //INPUTS: energy source
         var src = Game.getObjectById(src_id);
         
-        //outputs: link
+        //OUTPUTS: link
         var warpTX = Game.getObjectById(warpTX_id);
         
         
@@ -29,7 +29,7 @@ module.exports = {
         if (warpTX.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
             warpTX.transferEnergy(warpRX, warpTX.store[RESOURCE_ENERGY]);
         
-        //unload: link
+        //UNLOAD: link
         if (!unit.memory.fetching){
             //attempt to deposit new payload; if RX is full, overflow-mine into the container
             if (unit.transfer(warpTX, RESOURCE_ENERGY) == ERR_FULL)

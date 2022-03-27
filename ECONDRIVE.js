@@ -17,8 +17,8 @@ module.exports = {
         //email alerts for vault status
         for (let i=0; i<SD.nexus_id.length; i++){
             //bypasses
-            if (nexi[i] == null)                    continue;
-            if (nexi[i].room.storage == undefined)  continue;
+            if (nexi[i] == null)                    continue; //error: if nexus fails to retrieve, skip the room
+            if (nexi[i].room.storage == undefined)  continue; //error: if the vault is missing, skip the room
         
             //LO...
             //enable (unlatch) the potential for LO alert when a room's vault energy is over the "floor" by 50% of the absolute threshold value
@@ -49,7 +49,7 @@ module.exports = {
     
 
         //load terminals with outbound cargo
-        if (Game.time % SD.autoload_interval == 0 && Memory.autoload_EN == true){
+        if (Game.time % SD.autoload_interval == 0 && SD.autoload_EN == true){
             let terminalLoadResult = false;
             console.log('ECONDRIVE:: <<-----AUTOLOAD SUMMARY-------');
 
@@ -59,6 +59,7 @@ module.exports = {
                 //check for vault/terminal existence
                 let vault = nexi[i].room.storage;
                 let term = nexi[i].room.terminal;
+
                 if (!vault || !term)                continue;
                 
                 //load the terminal if there is sufficient free space for cargo
@@ -82,11 +83,12 @@ module.exports = {
             }
             if (!terminalLoadResult)
                 console.log('ECONDRIVE:: [NO TERMINALS LOADED]');
+
             console.log('ECONDRIVE:: ---------------------------->>');
         }
         
         //export terminal contents
-        if (Game.time % SD.autosell_interval == 0 && Memory.autosell_EN == true){
+        if (Game.time % SD.autosell_interval == 0 && SD.autosell_EN == true){
             let transactionResult = false;
             console.log('ECONDRIVE:: <<-----AUTOSELL SUMMARY-------');
 
@@ -101,6 +103,7 @@ module.exports = {
             }
             if (!transactionResult)
                 console.log('ECONDRIVE:: [NO TRANSACTIONS]');
+
             console.log('ECONDRIVE:: ---------------------------->>');
         }
         
@@ -122,6 +125,7 @@ module.exports = {
             }
             if (!ventResult)
                 console.log('ECONDRIVE:: [NO VENTING PERFORMED]');
+
             console.log('ECONDRIVE:: ---------------------------->>');
         }
         
@@ -129,6 +133,11 @@ module.exports = {
         //process power
         let getPowerNex;
         for (let i=0; i<SD.nexus_id.length; i++){
+            if (nexi[i] == null)                    continue; //error: if nexus fails to retrieve, skip the room
+
+            //ignore rooms under level requirement for power nexus
+            if (nexi[i].room.controller.level < 8)  continue;
+
             getPowerNex = Game.getObjectById(Memory.powernex_id[i]);
             
             //if powernex exists, proceed
@@ -138,8 +147,6 @@ module.exports = {
             }
             //if no powernex exists, search for one periodically
             else if(Game.time % SD.std_interval == 0){
-                if (nexi[i] == null)                continue; //error: if nexus fails to retrieve, skip the room
-
                 let powernex = nexi[i].room.find(FIND_STRUCTURES, {
                     filter: structure => {
                         return structure.structureType == STRUCTURE_POWER_SPAWN;
@@ -152,7 +159,7 @@ module.exports = {
         //produce cosmetics currency
         if (Game.cpu.bucket == 10000){
             Game.cpu.generatePixel();
-            console.log("ECONDRIVE:: -------------------PIXEL GENERATED-------------------");
+            console.log('ECONDRIVE:: -------------------PIXEL GENERATED-------------------');
         }
     }
 };

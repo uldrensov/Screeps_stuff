@@ -33,7 +33,6 @@ var darktemplar =           require('darktemplar.AI');
 var hallucination =         require('hallucination.AI');
 var hightemplar =           require('hightemplar.AI');
 var zealot =                require('zealot.AI');
-//var khaydarinmonolith =     require('khaydarinmonolith.AI');
 
 
 module.exports = {
@@ -46,17 +45,18 @@ module.exports = {
         
         
         for (let k=0; k<SD.nexus_id.length; k++){
-            if (nexi[k] == null) continue; //error: if nexus fails to retrieve, skip the room
+            if (nexi[k] == null)    continue; //error: if nexus fails to retrieve, skip the room
             
             //room-locked units
             for (let name in Game.creeps){
                 let unit = Game.creeps[name];
+                
                 if (unit.room == nexi[k].room){
                     switch (unit.memory.role){
                         case 'emergencyDrone':
                             emergencyDrone.run(unit, SD.nexus_id[k]);
                             break;
-                        case 'drone':
+                        case 'drone': //slow unit
                             if (Game.time % Memory.roomSpeed[k] == 0)
                                 drone.run(unit, SD.nexus_id[k], SD.en_ignore_lim, SD.std_interval);
                             break;
@@ -96,23 +96,23 @@ module.exports = {
                         case 'probe':
                             probe.run(unit, SD.fixation_override, SD.en_ignore_lim, SD.vault_boundary);
                             break;
-                        case 'ancientDrone':
+                        case 'ancientDrone': //very slow unit
                             if (Game.time % Memory.roomSpeed[k]*3 == 0)
                                 ancientDrone.run(unit, SD.mineralcanister_id[k]);
                             break;
-                        case 'ancientAssimilator':
+                        case 'ancientAssimilator': //very slow unit
                             if (Game.time % Memory.roomSpeed[k]*3 == 0)
                                 ancientAssimilator.run(unit, SD.mineralcanister_id[k]);
                             break;
-                        case 'architect':
+                        case 'architect': //slow unit
                             if (Game.time % Memory.roomSpeed[k] == 0)
                                 architect.run(unit, nexi[k], SD.canister_bias, SD.vault_boundary);
                             break;
-                        case 'phaseArchitect':
+                        case 'phaseArchitect': //slow unit
                             if (Game.time % Memory.roomSpeed[k] == 0)
                                 phaseArchitect.run(unit, nexi[k], SD.canister_bias, k);
                             break;
-                        case 'treasurer':
+                        case 'treasurer': //slow unit
                             if (Game.time % Memory.roomSpeed[k] == 0)
                                 treasurer.run(unit, SD.nexus_id[k], k);
                             break;
@@ -125,6 +125,7 @@ module.exports = {
         //cross-room units
         for (let name in Game.creeps){
             let unit = Game.creeps[name];
+            
             switch (unit.memory.role){
                 case 'recalibrator':
                     //determine homeroom to call AI script using appropriate args
@@ -178,16 +179,16 @@ module.exports = {
                 case 'visionary':
                     for (let i=0; i<SD.nexus_id.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
-                            visionary.run(unit, Game.flags['GOGO'], i);
+                            visionary.run(unit, Game.flags['GOGO'], i); //TODO: save flag name to SD or Memory instead of hardcoding
                             break;
                         }
                     }
                     break;
                 case 'specialist':
-                    specialist.run(unit, Game.flags['GOGO'], Game.flags['GOGO2']);
+                    specialist.run(unit, Game.flags['GOGO'], Game.flags['GOGO2']); //TODO: see above
                     break;
                 case 'saviour':
-                    saviour.run(unit, Game.flags['GOGO'], Game.flags['GOGO2']);
+                    saviour.run(unit, Game.flags['GOGO'], Game.flags['GOGO2']); //TODO: see above
                     break;
                 case 'emissary':
                     //emissary.run(unit, Game.flags['']);

@@ -7,7 +7,7 @@ module.exports = {
         var mineral_type = unit.room.find(FIND_MINERALS)[0].mineralType;
         
         
-        //inputs: container
+        //INPUTS: container
         var canister = Game.getObjectById(canister_id);
         
             
@@ -21,7 +21,7 @@ module.exports = {
             
             
         //behaviour execution...
-        //unload: vault
+        //UNLOAD: vault
         if (!unit.memory.fetching){
             if (unit.transfer(unit.room.storage, mineral_type) == ERR_NOT_IN_RANGE)
                 unit.moveTo(unit.room.storage);

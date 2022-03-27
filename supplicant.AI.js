@@ -14,7 +14,7 @@ module.exports = {
 
         
         //state behaviour...
-        //unload: controller
+        //UNLOAD: controller
         if (!unit.memory.fetching){
             if (unit.upgradeController(unit.room.controller) == ERR_NOT_IN_RANGE)
                 unit.moveTo(unit.room.controller);

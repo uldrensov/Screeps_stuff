@@ -4,7 +4,7 @@
 module.exports = {
     run: function(unit, override_threshold, ignore_lim, reserve){
         
-        //inputs: energy sources, containers (ample)
+        //INPUTS: energy sources, containers (ample)
         var sources = unit.room.find(FIND_SOURCES);
         var canisters = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
@@ -12,7 +12,7 @@ module.exports = {
             }
         });
         
-        //outputs: structures (non-full/threshold)
+        //OUTPUTS: structures (non-full/threshold)
         var repairTargets = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return ((structure.hits < structure.hitsMax && structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART) ||
@@ -32,7 +32,7 @@ module.exports = {
 
         
         //behaviour execution...
-        //unload: structure (weakest %; fixation)
+        //UNLOAD: structure (weakest %; fixation)
         if (!unit.memory.fetching && repairTargets.length){
             
             //find the weakest structure in terms of %

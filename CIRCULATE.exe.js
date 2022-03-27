@@ -8,13 +8,13 @@ module.exports = {
     run: function(src, dest, rsrc_type, amt){
         
         //room validation
-        if (src < 0 || src >= SD.nexus_id.length) return 'ERROR: Invalid -src- argument';
-        if (dest < 0 || dest >= SD.nexus_id.length) return 'ERROR: Invalid -dest- argument';
+        if (src < 0 || src >= SD.nexus_id.length)   return 'CIRCULATE:: INVALID -SRC- ARGUMENT';
+        if (dest < 0 || dest >= SD.nexus_id.length) return 'CIRCULATE:: INVALID -DEST- ARGUMENT';
         
         //resource type validation
         for (let i=0; i<RESOURCES_ALL.length; i++){
-            if (rsrc_type == RESOURCES_ALL[i]) break;
-            else if (i == RESOURCES_ALL.length-1) return 'ERROR: Invalid resource type';
+            if (rsrc_type == RESOURCES_ALL[i])      break;
+            else if (i == RESOURCES_ALL.length-1)   return 'CIRCULATE:: INVALID RESOURCE TYPE';
         }
         
         var nexi = [];
@@ -23,20 +23,23 @@ module.exports = {
         }
         
         //terminal validation
-        if (!nexi[src].room.terminal) return 'ERROR: No terminal present at -src-';
-        if (!nexi[dest].room.terminal) return 'ERROR: No terminal present at -dest-';
+        if (!nexi[src].room.terminal)               return 'CIRCULATE:: NO TERMINAL PRESENT IN -SRC- ROOM';
+        if (!nexi[dest].room.terminal)              return 'CIRCULATE:: NO TERMINAL PRESENT IN -DEST- ROOM';
         
         
+        //execute
         let circResult = nexi[src].room.terminal.send(rsrc_type, amt, nexi[dest].room.name);
+
+        //return confirmation of success, or failure error message
         switch (circResult){
             case 0:
-                return 'ACTION SUCCESSFUL';
+                return 'CIRCULATE:: ACTION SUCCESSFUL';
             case -6:
-                return 'ERROR: CANNOT AFFORD THIS ACTION';
+                return 'CIRCULATE:: CANNOT AFFORD THIS ACTION';
             case -11:
-                return 'COOLING DOWN...PLEASE WAIT'
+                return 'CIRCULATE:: TERMINAL COOLING DOWN...PLEASE WAIT BEFORE TRANSFERRING RESOURCES AGAIN'
             default:
-                return circResult;
+                return 'CIRCULATE:: OPERATION FAILED WITH TERMINAL ERROR CODE ' + circResult;
         }
     }
 };

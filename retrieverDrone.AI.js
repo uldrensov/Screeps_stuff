@@ -8,7 +8,7 @@ module.exports = {
         
         
         if (!unit.memory.killswitch){
-            //inputs: pickups<energy> (ample)
+            //INPUTS: pickups<energy> (ample)
             if (unit.memory.scraps == undefined || Game.time % 10 == 0){
                 unit.memory.scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
                     filter: resource => {
@@ -30,7 +30,7 @@ module.exports = {
         
             //behaviour execution...
             if (!unit.memory.fetching){
-                //unload: vault<energy>
+                //UNLOAD: vault<energy>
                 if (unit.room.storage != undefined){
                     if (unit.transfer(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(unit.room.storage);

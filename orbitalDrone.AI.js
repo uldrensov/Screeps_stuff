@@ -15,10 +15,10 @@ module.exports = {
         if (!unit.memory.killswitch){
             //no enemies present
             if (Memory.evac_timer[home_index] == 0){
-                //inputs: container
+                //INPUTS: container
                 var canister = Game.getObjectById(canister_id);
                 
-                //outputs: container/link/vault
+                //OUTPUTS: container/link/vault
                 var dropoff = Game.getObjectById(unit.memory.dropoff_id);
             
             
@@ -40,10 +40,10 @@ module.exports = {
                         unit.moveTo(dropoff);
                     }
                     else{
-                        //unload: vault (if container/link is designated, but full)
+                        //UNLOAD: vault (if container/link is designated, but full)
                         if (dropoff.store.getFreeCapacity(RESOURCE_ENERGY) == 0 && unit.room.storage != undefined)
                             unit.moveTo(unit.room.storage);
-                        //unload: container/link/vault
+                        //UNLOAD: container/link/vault
                         else if (unit.transfer(dropoff, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                             unit.moveTo(dropoff);
                     }
@@ -136,10 +136,12 @@ module.exports = {
                     
                         //fetch from inputs
                         if (i_threats == 0 && p_threats == 0){
-                            //inputs: pickups, tombstones (non-empty)
+                            //INPUTS: pickups, tombstones (non-empty)
                             var scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
                                 filter: resource => {
-                                    return resource.resourceType == RESOURCE_ENERGY && resource.amount > ignore_lim;
+                                    return resource.resourceType == RESOURCE_ENERGY
+                                        &&
+                                        resource.amount > ignore_lim;
                                 }
                             });
                             var tombs = unit.room.find(FIND_TOMBSTONES, {

@@ -5,16 +5,17 @@ module.exports = {
     run: function(unit, nexus, bias, home_index){
         
         if (!unit.memory.killswitch){
-            //inputs: energy sources, containers (non-empty)
+            //INPUTS: energy sources, containers (non-empty)
             var sources = unit.room.find(FIND_SOURCES);
             var canisters = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
-                    return structure.structureType == STRUCTURE_CONTAINER &&
-                    structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+                    return structure.structureType == STRUCTURE_CONTAINER
+                        &&
+                        structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
                 }
             });
             
-            //outputs: construction hotspot
+            //OUTPUTS: construction hotspot
             var hotspot_scan = unit.room.find(FIND_CONSTRUCTION_SITES);
             
             
@@ -39,7 +40,7 @@ module.exports = {
                 
                 
             //behaviour execution...
-            //unload: construction hotspot (nearest)
+            //UNLOAD: construction hotspot (nearest)
             if (!unit.memory.fetching && hotspot){
                 if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
                     unit.moveTo(hotspot);

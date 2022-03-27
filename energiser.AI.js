@@ -4,7 +4,7 @@
 module.exports = {
     run: function(unit, std_interval){
         
-        //inputs: containers (non-empty)
+        //INPUTS: containers (non-empty)
         if (unit.memory.canisters == undefined || Game.time % std_interval == 0){
             unit.memory.canisters = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
@@ -13,7 +13,7 @@ module.exports = {
             });
         }
         
-        //outputs: towers (non-full)
+        //OUTPUTS: towers (non-full)
         if (unit.memory.towers == undefined || Game.time % std_interval == 0){
             unit.memory.towers = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
@@ -33,7 +33,7 @@ module.exports = {
 
         
         //behaviour execution...
-        //unload: towers (most drained)
+        //UNLOAD: towers (most drained)
         if (!unit.memory.fetching){
             if (unit.memory.towers.length){
                 var lowest_tower = Game.getObjectById(unit.memory.towers[0].id);

@@ -54,7 +54,7 @@ module.exports = {
                 
         //behaviour execution...
         if (!unit.memory.fetching && hotspot){
-            //unload: construction hotspot
+            //UNLOAD: construction hotspot
             if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
                 unit.moveTo(hotspot);
         }

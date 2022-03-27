@@ -8,9 +8,18 @@ var ECONDRIVE =             require('ECONDRIVE');
 
 module.exports.loop = function(){
     
-    if (Game.time % SD.std_interval == 0)
+    //memory initialisation
+    if (Memory.init_true == undefined)
+        Memory.init_true = false;
+
+    //run memory init periodically to ensure new rooms have initialised data
+    //if this is the first time the software is run, call MEMORYINIT immediately
+    if (Game.time % SD.std_interval == 0 || !Memory.init_true){
         MEMORYINIT.run(SD.nexus_id.length);
+        Memory.init_true = true;
+    }
     
+
     let nexi = [];
     for (let i=0; i<SD.nexus_id.length; i++){
         nexi[i] = Game.getObjectById(SD.nexus_id[i]);
@@ -30,6 +39,7 @@ module.exports.loop = function(){
         //high alert: count down the timer, disable remote worker spawns, and enable blood hunter spawn (if necessary)
         if (Memory.evac_timer[i] > 0){
             Memory.evac_timer[i]--;
+
             if (Memory.recalibrator_MAX[i] > 0)         Memory.recalibrator_MAX[i] =        -1;
             if (Memory.orbitalAssimilator_MAX[i] > 0)   Memory.orbitalAssimilator_MAX[i] =  -1;
             if (Memory.orbitalDrone_MAX[i] > 0)         Memory.orbitalDrone_MAX[i] =        -1;
@@ -40,12 +50,13 @@ module.exports.loop = function(){
             if (Memory.recalibrator_MAX[i] < 0)         Memory.recalibrator_MAX[i] =        1;
             if (Memory.orbitalAssimilator_MAX[i] < 0)   Memory.orbitalAssimilator_MAX[i] =  1;
             if (Memory.orbitalDrone_MAX[i] < 0)         Memory.orbitalDrone_MAX[i] =        1;
+
             Memory.bloodhunter_MAX[i] = -1;
             Memory.viable_prey[i] = false;
         }
     }
     
-    //probe spawn management
+    //(periodic) probe spawn management
     if (Game.time % SD.std_interval == 0){
         let roomStructs_sub50;
         let roomStructs_sub75;
@@ -56,15 +67,19 @@ module.exports.loop = function(){
                 
                 roomStructs_sub50 = nexi[i].room.find(FIND_STRUCTURES, {
                     filter: structure => {
-                        return ((structure.hits < structure.hitsMax*.5          && structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART) ||
-                                (structure.hits < Memory.wall_threshold*.5      && structure.structureType == STRUCTURE_WALL) ||
+                        return ((structure.hits < structure.hitsMax*.5          && structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART)
+                                ||
+                                (structure.hits < Memory.wall_threshold*.5      && structure.structureType == STRUCTURE_WALL)
+                                ||
                                 (structure.hits < Memory.rampart_threshold*.5   && structure.structureType == STRUCTURE_RAMPART));
                     }
                 });
                 roomStructs_sub75 = nexi[i].room.find(FIND_STRUCTURES, {
                     filter: structure => {
-                        return ((structure.hits < structure.hitsMax*.75         && structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART) ||
-                                (structure.hits < Memory.wall_threshold*.75     && structure.structureType == STRUCTURE_WALL) ||
+                        return ((structure.hits < structure.hitsMax*.75         && structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART)
+                                ||
+                                (structure.hits < Memory.wall_threshold*.75     && structure.structureType == STRUCTURE_WALL)
+                                ||
                                 (structure.hits < Memory.rampart_threshold*.75  && structure.structureType == STRUCTURE_RAMPART));
                     }
                 });
@@ -79,7 +94,7 @@ module.exports.loop = function(){
     //run economy automation script
     ECONDRIVE.run();
     
-    //run spawning algorithm
+    //run spawning algorithm (periodically)
     if (Game.time % SD.std_interval == 0)
         SPAWNCYCLE.run();
     

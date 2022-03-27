@@ -41,7 +41,7 @@ module.exports = {
         
         //behaviour execution...
         if (!unit.memory.fetching){
-            //unload: controller
+            //UNLOAD: controller
             if (unit.upgradeController(unit.room.controller))
                 unit.moveTo(unit.room.controller);
         }

@@ -7,7 +7,7 @@ module.exports = {
         var tile = Game.getObjectById(tile_id);
         
         
-        //inputs: link
+        //INPUTS: link
         var warpRX = Game.getObjectById(warpRX_id);
         
         
@@ -19,7 +19,7 @@ module.exports = {
             //fetch: link
             if (unit.store.getFreeCapacity(RESOURCE_ENERGY) != 0) //if unit is not fully loaded
                 unit.withdraw(warpRX, RESOURCE_ENERGY);
-            //unload: vault
+            //UNLOAD: vault
             else if (unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0) //only when unit is fully loaded
                 unit.transfer(unit.room.storage, RESOURCE_ENERGY)
         }

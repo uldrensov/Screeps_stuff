@@ -10,10 +10,10 @@ module.exports = {
         if (!unit.memory.killswitch){
             //no enemies present
             if (Memory.evac_timer[home_index] == 0){
-                //inputs: source
+                //INPUTS: source
                 var src = Game.getObjectById(src_id);
             
-                //outputs: containers (damaged)
+                //OUTPUTS: containers (damaged)
                 var dmg_canister = Game.getObjectById(canister_id);
             
             
@@ -115,7 +115,7 @@ module.exports = {
                 
                     //fetching and repairing
                     if (i_threats == 0 && p_threats == 0){
-                        //unload: containers (2-state)
+                        //UNLOAD: containers (2-state)
                         if (dmg_canister){
                             if (unit.memory.able && dmg_canister.hits < dmg_canister.hitsMax){
                                 if (!unit.pos.isEqualTo(dmg_canister.pos))

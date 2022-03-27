@@ -7,7 +7,7 @@ module.exports = {
         var nexus = Game.getObjectById(nexus_id);
         
         
-        //inputs: containers (ample), pickups<energy> (ample), pickups<mineral>, tombstones (non-empty), ruins (non-empty)
+        //INPUTS: containers (ample), pickups<energy> (ample), pickups<mineral>, tombstones (non-empty), ruins (non-empty)
         if (unit.memory.canisters == undefined || Game.time % std_interval == 0){
             unit.memory.canisters = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
@@ -38,7 +38,7 @@ module.exports = {
             });
         }
         
-        //outputs: extension (non-full), nexi (non-full), power nexus (non-full)
+        //OUTPUTS: extension (non-full), nexi (non-full), power nexus (non-full)
         var pylon = unit.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
@@ -71,7 +71,7 @@ module.exports = {
         
         //behaviour execution...
         if (!unit.memory.fetching){
-            //unload: vault<minerals>
+            //UNLOAD: vault<minerals>
             var treasure_held = false;
             var treasure_to_deposit;
             
@@ -88,29 +88,29 @@ module.exports = {
                     unit.moveTo(unit.room.storage);
             }
             else{
-                //unload: extension
+                //UNLOAD: extension
                 if (pylon){
                     if (unit.transfer(pylon, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(pylon);
                 }
-                //unload: main nexus
+                //UNLOAD: main nexus
                 else if (nexus.store.getFreeCapacity(RESOURCE_ENERGY) != 0){
                     if (unit.transfer(nexus, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(nexus);
                 }
-                //unload: local nexi
+                //UNLOAD: local nexi
                 else if (unit.memory.local_nexi.length){
                     var getLocalNex = Game.getObjectById(unit.memory.local_nexi[0].id);
                     if (unit.transfer(getLocalNex, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(getLocalNex);
                 }
-                //unload: power nexus
+                //UNLOAD: power nexus
                 else if (unit.memory.powernex.length){
                     var getPowerNex = Game.getObjectById(unit.memory.powernex[0].id);
                     if (unit.transfer(getPowerNex, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(getPowerNex);
                 }
-                //unload: vault<energy>
+                //UNLOAD: vault<energy>
                 else if (unit.room.storage != undefined){
                     if (unit.transfer(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(unit.room.storage);

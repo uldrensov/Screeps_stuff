@@ -4,7 +4,7 @@
 module.exports = {
     run: function(unit, warpRX0_id){
         
-        //inputs: link
+        //INPUTS: link
         var warpRX0 = Game.getObjectById(warpRX0_id);
         
         
@@ -18,7 +18,7 @@ module.exports = {
 
         
         //behaviour execution...
-        //unload: controller
+        //UNLOAD: controller
         if (!unit.memory.fetching){
             if (unit.upgradeController(unit.room.controller) == ERR_NOT_IN_RANGE)
                 unit.moveTo(unit.room.controller);
