@@ -46,7 +46,6 @@ Anyone is welcome to clone this repository and run it themselves. But of course,
 ### Setup: ###
 TBD
 ### Adding new rooms: ###
-* In SOFTDATA.js, increase the [roomcount] property by 1
 * Modify the object ID arrays by adding new data pertaining to the newly annexed room
 * Expand each of the unit body-part 2D-arrays by 1 element, and populate them with the desired role-based body part configurations
 ### Maintenance: ###
