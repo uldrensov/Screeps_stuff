@@ -22,9 +22,9 @@ module.exports = {
             //self-killswitch routine
             if (!hotspot_scan.length){
                 Memory.phaseArchitect_MAX[home_index] = -1;
-                console.log('<<----------------------------');
-                console.log('PHASE CONSTRUCTION COMPLETE (ROOM #' + home_index + ')');
-                console.log('---------------------------->>');
+                console.log('phaseArchitect.AI:: <<----------------------------');
+                console.log('phaseArchitect.AI:: PHASE CONSTRUCTION COMPLETE (ROOM #' + home_index + ')');
+                console.log('phaseArchitect.AI:: ---------------------------->>');
                 unit.memory.killswitch = true;
             }
             else var hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
@@ -62,6 +62,7 @@ module.exports = {
                 }
             }
         }
+        
         //built-in economic killswitch
         else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
             unit.moveTo(nexus);

@@ -97,27 +97,27 @@ module.exports = {
                         
                             //decide how to handle threats
                             if (i_threats > 0 || p_threats > 0){
-                                console.log('------------------------------');
+                                console.log('orbitalDrone.AI:: ------------------------------');
                             
                                 //case: enemy player(s)
                                 if (p_threats > 0){
-                                    console.log('>>>EVACUATING SECTOR #' + home_index + '...' + p_name + ' INBOUND<<<');
+                                    console.log('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + home_index + '...' + p_name + ' INBOUND<<<');
                                     Memory.evac_timer[home_index] = 500;
                                 }
                                 //case: 1 invader
                                 else if (i_threats == 1){
-                                    console.log('>>>EVACUATING SECTOR #' + home_index + '...INVADER INBOUND<<<');
+                                    console.log('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER INBOUND<<<');
                                     Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
                                     Memory.viable_prey[home_index] = true;
                                 }
                                 //case: multiple invaders
                                 else if (i_threats > 1){
-                                    console.log('>>>EVACUATING SECTOR #' + home_index + '...INVADER HORDE INBOUND<<<');
+                                    console.log('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER HORDE INBOUND<<<');
                                     Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
                                     unit.memory.killswitch = true;
                                 }
                             
-                                console.log('------------------------------');
+                                console.log('orbitalDrone.AI:: ------------------------------');
                             }
                         }
                         //watch for hostile cores
@@ -128,10 +128,10 @@ module.exports = {
                         });
                         if (invadercores.length && Memory.enforcer_MAX[home_index] < 0){
                             Memory.enforcer_MAX[home_index] = 1;
-                            //Game.notify('>>>LOCKING SECTOR #' + home_index + '...CORE SIGHTED<<<',0);
-                            console.log('------------------------------');
-                            console.log('>>>LOCKING SECTOR #' + home_index + '...CORE SIGHTED<<<');
-                            console.log('------------------------------');
+                            //Game.notify('orbitalDrone.AI:: >>>LOCKING SECTOR #' + home_index + '...CORE SIGHTED<<<',0);
+                            console.log('orbitalDrone.AI:: ------------------------------');
+                            console.log('orbitalDrone.AI:: >>>LOCKING SECTOR #' + home_index + '...CORE SIGHTED<<<');
+                            console.log('orbitalDrone.AI:: ------------------------------');
                         }
                     
                         //fetch from inputs
@@ -174,6 +174,7 @@ module.exports = {
                 unit.memory.in_place = false;
             }
         }
+
         //built-in economic killswitch
         else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
             unit.moveTo(nexus);

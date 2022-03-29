@@ -49,8 +49,8 @@ module.exports = {
             
             
             //2.
-            //OUTPUTS: hostiles -> my units (injured) -> my structures (damaged)
 
+            //OUTPUTS: hostiles -> my units (injured) -> my structures (damaged)
             //reset previous action/target
             Memory.turretCommand[k] = 'IDLE';
             Memory.turretTarget_id[k] = 'NULL';

@@ -215,7 +215,7 @@ module.exports = {
                                                                                                     console.log('STATUSREPORT::');
         
         //state of the room report
-        console.log('<<<--Room status-->>>');
+        console.log('STATUSREPORT:: <<<--Room status-->>>');
         if (nexus.room.controller.level < 8)                                                        console.log('STATUSREPORT:: Controller EXP: ' + control_perc + '% -> ' + nexus.room.controller.progress + '/' + nexus.room.controller.progressTotal);
         else                                                                                        console.log('STATUSREPORT:: Controller EXP: MAX');
                                                                                                     console.log('STATUSREPORT:: Spawning energy: ' + ext_energy + ' extended, ' + nexus.store.getUsedCapacity(RESOURCE_ENERGY) + ' main');

@@ -18,6 +18,7 @@ module.exports = {
             //one-way room pathing
             if (unit.memory.home == unit.room.name)
                 unit.moveTo(bloodscent);
+                
             //secure the room
             else{
                 var bloodmark = unit.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
@@ -31,14 +32,15 @@ module.exports = {
                 else if (Memory.evac_timer[home_index] > 0){
                     Memory.evac_timer[home_index] = 0;
                     unit.memory.killswitch = true;
-                    console.log('------------------------------');
-                    console.log('SECTOR #' + home_index + ': HOSTILES ELIMINATED');
-                    console.log('------------------------------');
+                    console.log('bloodhunter.AI:: ------------------------------');
+                    console.log('bloodhunter.AI:: SECTOR #' + home_index + ': HOSTILES ELIMINATED');
+                    console.log('bloodhunter.AI:: ------------------------------');
                 }
                 //edge case: false alarm
                 else unit.memory.killswitch = true;
             }
         }
+
         //built-in economic killswitch
         else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
             unit.moveTo(nexus);

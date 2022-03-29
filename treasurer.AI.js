@@ -1,31 +1,34 @@
-//TREASURER: loads or unloads to/from the vault, on a per-order/command basis
+//TREASURER: carries items between the vault and the terminal/powernex/nuker, on a per-order/command basis
 //white trail ("carrier")
 
 module.exports = {
     run: function(unit, nexus_id, home_index){
         
-        var nexus = Game.getObjectById(nexus_id);
+        let nexus = Game.getObjectById(nexus_id);
         
         
         if (!unit.memory.killswitch){
-            
             //clear this flag for every new command issued
             if (unit.memory.task_progress == 0)
                 unit.memory.done = false;
                 
-            //action...
+            //determine inputs and outputs
             if (unit.memory.task_progress < unit.memory.order_amt){
-                
-                //determine transfer direction (true => load terminal; false => unload terminal)
-                var input;
-                var output;
+                //[false] transfer direction (unload terminal into vault)
+                let input = nexus.room.terminal;
+                let output = nexus.room.storage;
+
+                //[true] transfer direction (load terminal/powernex/nuker from vault)
                 if (unit.memory.dir){
                     input = nexus.room.storage;
+
                     switch (unit.memory.spec_dest){
                         case 'NA':
                             output = nexus.room.terminal;
                             break;
+
                         case 'P':
+                            //memorise the powernex id
                             if (unit.memory.powernex == undefined){
                                 unit.memory.powernex = unit.room.find(FIND_STRUCTURES, {
                                     filter: structure => {
@@ -35,7 +38,9 @@ module.exports = {
                             }
                             output = Game.getObjectById(unit.memory.powernex[0].id);
                             break;
+
                         case 'NUK':
+                            //memorise the nuker id
                             if (unit.memory.kimmyJ == undefined){
                                 unit.memory.kimmyJ = unit.room.find(FIND_STRUCTURES, {
                                     filter: structure => {
@@ -45,43 +50,53 @@ module.exports = {
                             }
                             output = Game.getObjectById(unit.memory.kimmyJ[0].id);
                             break;
+
+                        default:
+                            break;
                     }
                 }
-                else{
-                    input = nexus.room.terminal;
-                    output = nexus.room.storage;
-                }
                 
+
+                let finaltrip = false;
+
                 //fetch
-                var input_remainder = false;
-                if (unit.store.getFreeCapacity(unit.memory.order_type) != 0){ //if unit is not fully loaded
-                    if (input.store.getUsedCapacity(unit.memory.order_type) == 0) //but there is no more to load
-                        input_remainder = true;
+                if (unit.store.getFreeCapacity(unit.memory.order_type) > 0){ //if unit is not fully loaded...
+                    if (input.store.getUsedCapacity(unit.memory.order_type) == 0) //...but there is no more for the unit to withdraw: switch to unload mode
+                        finaltrip = true;
                     else if (unit.withdraw(input, unit.memory.order_type) == ERR_NOT_IN_RANGE)
                         unit.moveTo(input);
                 }
+
                 //unload
-                if (unit.store.getFreeCapacity(unit.memory.order_type) == 0 || input_remainder){ //only when unit is fully loaded
-                    var unload_result = unit.transfer(output, unit.memory.order_type);
+                if (unit.store.getFreeCapacity(unit.memory.order_type) == 0 || finaltrip){ //if unit is fully loaded, or if carrying its final load
+                    let most_recent_load = unit.store.getUsedCapacity(unit.memory.order_type);
+                    let unload_result = unit.transfer(output, unit.memory.order_type);
+
                     if (unload_result == ERR_NOT_IN_RANGE)
                         unit.moveTo(output);
-                    //record work done to memery
+
+                    //record work done to memory
                     else if (unload_result == OK)
-                        unit.memory.task_progress += unit.store.getUsedCapacity(unit.memory.order_type);
+                        unit.memory.task_progress += most_recent_load;
                 }
             }
+
             //task complete notification
             else if (!unit.memory.done){
                 unit.memory.done = true;
-                console.log('*********************');
-                console.log('ORDER COMPLETE (ROOM #' + home_index + ')');
+                console.log('treasurer.AI:: *********************');
+                console.log('treasurer.AI:: ORDER COMPLETE (ROOM #' + home_index + ')');
+
+                //killswitch message
                 if (unit.memory.autokill){
                     unit.memory.killswitch = true;
-                    console.log('RECYCLING UNIT...');
+                    console.log('treasurer.AI:: RECYCLING UNIT...');
                 }
-                console.log('*********************');
+
+                console.log('treasurer.AI:: *********************');
             }
         }
+
         //built-in economic killswitch
         else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
             unit.moveTo(nexus);

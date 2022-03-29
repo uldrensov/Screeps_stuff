@@ -20,22 +20,15 @@ module.exports = {
             case 'P':
                 if (!dir)
                     return 'TERMINALTRANSFER:: POWER SPAWN WITHDRAW ACTION NOT SUPPORTED IN THIS SOFTWARE VERSION';
-
                 dest_toString = 'power nexus';
                 break;
 
             case 'NUK':
                 if (!dir)
                     return 'TERMINALTRANSFER:: NUKER WITHDRAW ACTION NOT SUPPORTED';
-
                 if (o_type != RESOURCE_ENERGY && o_type != RESOURCE_GHODIUM)
                     return 'TERMINALTRANSFER:: NUKER ONLY SUPPORTS ENERGY AND GHODIUM INPUTS';
-
                 dest_toString = 'nuker';
-                break;
-
-            case 'LAB':
-                    return 'TERMINALTRANSFER:: FEATURE COMING SOON...'; //TODO
                 break;
 
             default:

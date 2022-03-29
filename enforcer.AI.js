@@ -34,27 +34,28 @@ module.exports = {
                         if (unit.room.controller.reservation.username == 'Invader')
                             Memory.purifier_MAX[home_index] = 1;
                         else{
-                            //Game.notify('>>>SECTOR #' + home_index + ' RESTORED: CORE DESTROYED<<<',0);
-                            console.log('------------------------------');
-                            console.log('>>>SECTOR #' + home_index + ' RESTORED: CORE DESTROYED<<<');
-                            console.log('------------------------------');
-                            if (Memory.recalibrator_MAX[home_index] < 0) Memory.recalibrator_MAX[home_index] = 1;
-                            if (Memory.orbitalAssimilator_MAX[home_index] < 0) Memory.orbitalAssimilator_MAX[home_index] = 1;
-                            if (Memory.orbitalDrone_MAX[home_index] < 0) Memory.orbitalDrone_MAX[home_index] = 1;
+                            //Game.notify('enforcer.AI:: >>>SECTOR #' + home_index + ' RESTORED: CORE DESTROYED<<<',0);
+                            console.log('enforcer.AI:: ------------------------------');
+                            console.log('enforcer.AI:: >>>SECTOR #' + home_index + ' RESTORED: CORE DESTROYED<<<');
+                            console.log('enforcer.AI:: ------------------------------');
+                            if (Memory.recalibrator_MAX[home_index] < 0)        Memory.recalibrator_MAX[home_index] = 1;
+                            if (Memory.orbitalAssimilator_MAX[home_index] < 0)  Memory.orbitalAssimilator_MAX[home_index] = 1;
+                            if (Memory.orbitalDrone_MAX[home_index] < 0)        Memory.orbitalDrone_MAX[home_index] = 1;
                         }
                     }
                     else{
-                        //Game.notify('>>>SECTOR #' + home_index + ' RESTORED: CORE DESTROYED<<<',0);
-                        console.log('------------------------------');
-                        console.log('>>>SECTOR #' + home_index + ' RESTORED: CORE DESTROYED<<<');
-                        console.log('------------------------------');
-                        if (Memory.recalibrator_MAX[home_index] < 0) Memory.recalibrator_MAX[home_index] = 1;
-                        if (Memory.orbitalAssimilator_MAX[home_index] < 0) Memory.orbitalAssimilator_MAX[home_index] = 1;
-                        if (Memory.orbitalDrone_MAX[home_index] < 0) Memory.orbitalDrone_MAX[home_index] = 1;
+                        //Game.notify('enforcer.AI:: >>>SECTOR #' + home_index + ' RESTORED: CORE DESTROYED<<<',0);
+                        console.log('enforcer.AI:: ------------------------------');
+                        console.log('enforcer.AI:: >>>SECTOR #' + home_index + ' RESTORED: CORE DESTROYED<<<');
+                        console.log('enforcer.AI:: ------------------------------');
+                        if (Memory.recalibrator_MAX[home_index] < 0)            Memory.recalibrator_MAX[home_index] = 1;
+                        if (Memory.orbitalAssimilator_MAX[home_index] < 0)      Memory.orbitalAssimilator_MAX[home_index] = 1;
+                        if (Memory.orbitalDrone_MAX[home_index] < 0)            Memory.orbitalDrone_MAX[home_index] = 1;
                     }
                 }
             }
         }
+        
         //built-in economic killswitch
         else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
             unit.moveTo(nexus);
