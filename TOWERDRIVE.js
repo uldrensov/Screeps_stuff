@@ -59,44 +59,76 @@ module.exports = {
             let foreigner = nexi[k].room.find(FIND_HOSTILE_CREEPS);
 
             if (foreigner.length){
-                let threat = false;
+                let threatvalues = [];
+                let threatvalue;
+                let hallpass;
 
+                //calculate each foreigner's threat level based on body part composition
                 for (let i=0; i<foreigner.length; i++){
-                    //do not mark allies as hostiles
+                    threatvalue = 0;
+                    hallpass = false;
+
+                    //skip calculation of threat value if the foreigner is an ally
                     for (let z=0; z<SD.allies.length; z++){
                         if (foreigner[i].owner.username == SD.allies[z])
-                            continue;
+                            hallpass = true;
+                            break;
                     }
                     
-                    //UNLOAD: hostiles
-                    //foreigner is determined hostile if it contains combative/disruptive body parts
-                    for (let j=0; j<foreigner[i].body.length; j++){
-                        if (foreigner[i].body[j]['type'] == ATTACK  || foreigner[i].body[j]['type'] == RANGED_ATTACK ||
-                            foreigner[i].body[j]['type'] == HEAL    || foreigner[i].body[j]['type'] == WORK){
-
-                            threat = true;
-                            Memory.turretCommand[k] = 'FIRE';
-                            Memory.turretTarget_id[k] = foreigner[i].id; //mark unit as hostile (no specific priority given if multiple hostiles exist)
-
-                            //send notifications upon detection of hostiles
-                            let notif = true;
-
-                            for (let l=0; l<SD.notif_blacklist.length; l++){
-                                if (Game.getObjectById(Memory.turretTarget_id[k]).owner.username == SD.notif_blacklist[l]){
-                                    notif = false; //suppress notifications for certain individuals
+                    //calculation
+                    if (!hallpass){
+                        for (let j=0; j<foreigner[i].body.length; j++){
+                            switch (foreigner[i].body[j]['type']){
+                                case HEAL:
+                                    threatvalue += 250;
                                     break;
-                                }
+                                case ATTACK:
+                                    threatvalue += 150;
+                                    break;
+                                case RANGED_ATTACK:
+                                    threatvalue += 100;
+                                    break;
+                                case WORK:
+                                    threatvalue += 50;
+                                    break;
+                                default:
+                                    break;
                             }
-                            if (notif)
-                                Game.notify('TOWERDRIVE:: ' + Game.getObjectById(Memory.turretTarget_id[k]).owner.username + ' DETECTED IN ROOM #' + k,30);
-
-                            break;
                         }
                     }
 
-                    //hostile detected
-                    if (threat)
-                        break;
+                    //register each threat value to a indexed hit-list
+                    threatvalues[i] = threatvalue;
+                }
+
+                //determine which foreigner poses the greatest threat
+                let highest_threat_val = threatvalues[0];
+                let highest_threat_ind = 0;
+
+                for (let x=1; x<threatvalues.length; x++){
+                    if (threatvalues[x] > highest_threat_val){
+                        highest_threat_val = threatvalues[x];
+                        highest_threat_ind = x;
+                    }
+                }
+
+                //UNLOAD: hostiles
+                if (highest_threat_val > 0){
+                    //enemy locked on
+                    Memory.turretCommand[k] = 'FIRE';
+                    Memory.turretTarget_id[k] = foreigner[highest_threat_ind].id;
+
+                    let notif = true;
+
+                    //send notifications upon detection of hostiles
+                    for (let l=0; l<SD.notif_blacklist.length; l++){
+                        if (Game.getObjectById(Memory.turretTarget_id[k]).owner.username == SD.notif_blacklist[l]){
+                            notif = false; //suppress notifications for certain individuals
+                            break;
+                        }
+                    }
+                    if (notif)
+                        Game.notify('TOWERDRIVE:: ' + Game.getObjectById(Memory.turretTarget_id[k]).owner.username + ' DETECTED IN ROOM #' + k,30);
                 }
             }
 
