@@ -5,14 +5,14 @@
 module.exports = {
     run: function(unit, standby_1){
         
-        //trek to the standby point once
-        if (!unit.memory.in_place)
+        //rally to the flag location first
+        if (!unit.memory.rallied)
             unit.moveTo(standby_1, {visualizePathStyle: {stroke: '#00ffff'}});
         if (unit.pos.isEqualTo(standby_1.pos))
-            unit.memory.in_place = true;
+            unit.memory.rallied = true;
 
         
-        if (unit.memory.in_place){
+        if (unit.memory.rallied){
             //trample all hostile construction sites
             var shrines = unit.pos.findClosestByRange(FIND_HOSTILE_CONSTRUCTION_SITES, {
                 filter: RoomObject => {
@@ -22,7 +22,7 @@ module.exports = {
             if (shrines)
                 unit.moveTo(shrines, {visualizePathStyle: {stroke: '#00ffff'}});
             //return to flag when there are no more sites to trample
-            //else unit.memory.in_place = false;
+            //else unit.memory.rallied = false;
         }
     }
 };

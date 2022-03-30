@@ -26,7 +26,7 @@ module.exports = {
                 //if carry amt reaches full while fetching, switch to unloading
                 if (unit.memory.fetching && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
                     unit.memory.fetching = false;
-                    unit.memory.in_place = false;
+                    unit.memory.rallied = false;
                 }
                 //if carry amt depletes while unloading, switch to fetching
                 if (!unit.memory.fetching && unit.store[RESOURCE_ENERGY] == 0)
@@ -50,10 +50,10 @@ module.exports = {
                 }
                 else{
                     //rally at flag first
-                    if (!unit.memory.in_place){
+                    if (!unit.memory.rallied){
                         if (!unit.pos.isEqualTo(remote_flag.pos))
                             unit.moveTo(remote_flag);
-                        else unit.memory.in_place = true;
+                        else unit.memory.rallied = true;
                     }
                     //if the reservation is lost, cut off remote worker spawns and self-killswitch
                     else{
@@ -171,7 +171,7 @@ module.exports = {
             //enemies detected
             else{
                 unit.moveTo(Game.getObjectById(flee_point));
-                unit.memory.in_place = false;
+                unit.memory.rallied = false;
             }
         }
 

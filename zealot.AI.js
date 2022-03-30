@@ -4,14 +4,14 @@
 module.exports = {
     run: function(unit, standby_flag, target_flag){
         
-        //trek to the standby point once
-        if (!unit.memory.in_place)
+        //rally to the flag location first
+        if (!unit.memory.rallied)
             unit.moveTo(standby_flag, {visualizePathStyle: {stroke: '#ff0000'}});
         if (unit.pos.isEqualTo(standby_flag.pos))
-            unit.memory.in_place = true;
+            unit.memory.rallied = true;
 
         
-        if (unit.memory.in_place){
+        if (unit.memory.rallied){
             //commit the tank unit's ID to memory (once) when both units are in the same room
             if (unit.memory.tank_id == undefined){
                 var tank = _.filter(Game.creeps, creep => creep.memory.role == 'hallucination');

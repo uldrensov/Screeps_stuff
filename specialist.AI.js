@@ -7,16 +7,16 @@ module.exports = {
         //travelling...
         //trek to the first checkpoint
         if (unit.pos.isEqualTo(standby_flag.pos))
-            unit.memory.in_place = true;
-        if (!unit.memory.in_place){
+            unit.memory.rallied = true;
+        if (!unit.memory.rallied){
             unit.moveTo(standby_flag, {visualizePathStyle: {stroke: '#00ff00'}});
             return;
         }
         
         //second checkpoint
         if (unit.pos.isEqualTo(standby_flag2.pos))
-            unit.memory.in_place2 = true;
-        if (!unit.memory.in_place2){
+            unit.memory.rallied2 = true;
+        if (!unit.memory.rallied2){
             unit.moveTo(standby_flag2, {visualizePathStyle: {stroke: '#00ff00'}});
             return;
         }

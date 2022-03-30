@@ -8,15 +8,15 @@ module.exports = {
         
         
         if (!unit.memory.killswitch){
-            //trek to the standby point once
-            if (!unit.memory.in_place)
+            //rally to the flag location first
+            if (!unit.memory.rallied)
                 unit.moveTo(standby_flag, {visualizePathStyle: {stroke: '#ff0000'}});
             if (unit.pos.isEqualTo(standby_flag.pos))
-                unit.memory.in_place = true;
+                unit.memory.rallied = true;
                 
                 
             //destroy everything in sight
-            if (unit.memory.in_place){
+            if (unit.memory.rallied){
                 //acquire targets
                 var hatchery = unit.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
                     filter: structure => {

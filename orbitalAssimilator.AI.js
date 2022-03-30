@@ -29,10 +29,10 @@ module.exports = {
 
             
                 //rally at flag first
-                if (!unit.memory.in_place){
+                if (!unit.memory.rallied){
                     if (!unit.pos.isEqualTo(remote_flag.pos))
                         unit.moveTo(remote_flag);
-                    else unit.memory.in_place = true;
+                    else unit.memory.rallied = true;
                 }
                 //if the reservation is lost, cut off remote worker spawns and self-killswitch
                 else{
@@ -136,7 +136,7 @@ module.exports = {
             //enemies detected
             else{
                 unit.moveTo(Game.getObjectById(flee_point));
-                unit.memory.in_place = false;
+                unit.memory.rallied = false;
             }
         }
 

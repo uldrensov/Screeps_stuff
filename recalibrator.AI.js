@@ -4,113 +4,136 @@
 module.exports = {
     run: function(unit, nexus_id, standby_flag, flee_point, home_index){
         
-        var nexus = Game.getObjectById(nexus_id);
+        let nexus = Game.getObjectById(nexus_id);
         
         
+        //proceed if there is no suicide order
         if (!unit.memory.killswitch){
-            //no enemies present
+            //proceed if the evacuation alarm is not raised
             if (Memory.evac_timer[home_index] == 0){
-                //trek to the standby point once
-                if (!unit.memory.in_place)
-                    unit.moveTo(standby_flag);
-                if (unit.pos.isEqualTo(standby_flag.pos))
-                    unit.memory.in_place = true;
+                //STAGE 1 START: rally to the flag location first
+                if (!unit.memory.rallied)                   unit.moveTo(standby_flag);
+                if (unit.pos.isEqualTo(standby_flag.pos))   unit.memory.rallied = true;
                 
-                //actions while outbound
-                if (unit.memory.in_place){
-                    //if the reservation is lost, cut off remote worker spawns and self-killswitch
-                    var take_branch = false;
+
+                //STAGE 1 END: proceed when rally is complete
+                if (unit.memory.rallied){
+                    let reservation_lost = true;
+
+                    //STAGE 2 START: check room reservation status, and respond appropriately
                     try{
-                        if (unit.room.controller.reservation.username == 'Invader'){
-                            Memory.recalibrator_MAX[home_index] = -1;
+                        //controlled by invader: cut off remote worker spawns and self-killswitch
+                        if (unit.room.controller.reservation.username == 'Invader'){ //this can throw an error if the room is neutral
+                            Memory.recalibrator_MAX[home_index] =       -1;
                             Memory.orbitalAssimilator_MAX[home_index] = -1;
-                            Memory.orbitalDrone_MAX[home_index] = -1;
-                            unit.memory.killswitch = true;
+                            Memory.orbitalDrone_MAX[home_index] =       -1;
+                            
+                            unit.memory.killswitch = true; //reasoning: unit will likely not survive long enough to see the controller's liberation
                         }
-                        else take_branch = true;
+                        //controlled by player: all clear
+                        else reservation_lost = false;
+
+                        //TODO: what if the reservation is lost to another player?
                     }
                     catch{
-                        take_branch = true;
+                        //controlled by nobody: all clear
+                        reservation_lost = false;
                     }
-                
-                    if (take_branch){
-                        //watch for invaders/intruders
-                        var i_threats = 0;
-                        var p_threats = 0;
-                        var p_name = '[NULL]';
-                        var enemy = unit.room.find(FIND_HOSTILE_CREEPS);
-                        if (enemy.length){
-                            //assess threat level
-                            for (let i=0; i<enemy.length; i++){
+
+
+                    //STAGE 2 END: proceed if room reservation is intact
+                    if (!reservation_lost){
+                        let i_threats = 0;
+                        let p_threats = 0;
+                        let p_name = '[NULL]';
+
+                        let foreigner = unit.room.find(FIND_HOSTILE_CREEPS);
+
+                        //STAGE 3 START: check any foreigners present in the room, and respond appropriately
+                        if (foreigner.length){
+                            //determine if there are threats among them
+                            for (let i=0; i<foreigner.length; i++){
                                 //if invader, automatically assume threat (don't check body parts)
-                                if (enemy[i].owner.username == 'Invader'){
+                                if (foreigner[i].owner.username == 'Invader'){
                                     i_threats++;
                                     continue;
                                 }
-                                //if player, inspect body parts and verify threat level
-                                for (let j=0; j<enemy[i].body.length; j++){
-                                    if (enemy[i].body[j]['type'] == ATTACK || enemy[i].body[j]['type'] == RANGED_ATTACK){
+                                //if player, inspect body parts to confirm threat
+                                for (let j=0; j<foreigner[i].body.length; j++){
+                                    if (foreigner[i].body[j]['type'] == ATTACK || foreigner[i].body[j]['type'] == RANGED_ATTACK){
                                         p_threats++;
-                                        p_name = enemy.owner.username;
+                                        p_name = foreigner.owner.username;
                                         break;
                                     }
                                 }
                             }
                         
-                            //decide how to handle threats
+                            //respond to player/invader threats
                             if (i_threats > 0 || p_threats > 0){
                                 console.log('recalibrator.AI:: ------------------------------');
                         
-                                //case: enemy player(s)
+                                //enemy player(s) detected: evacuate for a short time
                                 if (p_threats > 0){
                                     console.log('recalibrator.AI:: >>>EVACUATING SECTOR #' + home_index + '...' + p_name + ' INBOUND<<<');
-                                    Memory.evac_timer[home_index] = 500;
+                                    Memory.evac_timer[home_index] = 500; //in hopes that the player will leave soon
                                 }
-                                //case: 1 invader
+                                //1 invader detected: evacuate and call blood hunter
                                 else if (i_threats == 1){
                                     console.log('recalibrator.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER INBOUND<<<');
+                                    console.log('recalibrator.AI:: >>>SIGNALLING BLOOD HUNTER<<<');
+
                                     Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
-                                    Memory.viable_prey[home_index] = true;
+                                    Memory.viable_prey[home_index] = true; //triggers blood hunter spawn
                                 }
-                                //case: multiple invaders
+                                //multiple invaders detected: evacuate and suicide
                                 else if (i_threats > 1){
                                     console.log('recalibrator.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER HORDE INBOUND<<<');
+                                    console.log('recalibrator.AI:: >>>RECYCLING EVACUATED UNITS<<<');
+
                                     Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
-                                    unit.memory.killswitch = true;
+                                    unit.memory.killswitch = true; //reasoning: unit will likely not outlive the threat
                                 }
                             
                                 console.log('recalibrator.AI:: ------------------------------');
                             }
                         }
-                        //watch for hostile cores
-                        var invadercores = unit.room.find(FIND_HOSTILE_STRUCTURES, {
+
+
+                        //STAGE 3 END: proceed if no threats detected
+                        let invadercores = unit.room.find(FIND_HOSTILE_STRUCTURES, {
                             filter: structure => {
                                 return structure.structureType == STRUCTURE_INVADER_CORE;
                             }
                         });
+
+                        //STAGE 4. watch for hostile cores
                         if (invadercores.length && Memory.enforcer_MAX[home_index] < 0){
+                            //Game.notify('recalibrator.AI:: >>>SIGNALLING ENFORCER TO SECTOR #' + home_index + '...CORE SIGHTED<<<',0);
+
+                            console.log('recalibrator.AI:: ------------------------------');
+                            console.log('recalibrator.AI:: >>>SIGNALLING ENFORCER TO SECTOR #' + home_index + '...CORE SIGHTED<<<');
+                            console.log('recalibrator.AI:: ------------------------------');
+
                             Memory.enforcer_MAX[home_index] = 1;
-                            //Game.notify('recalibrator.AI:: >>>LOCKING SECTOR #' + home_index + '...CORE SIGHTED<<<',0);
-                            console.log('recalibrator.AI:: ------------------------------');
-                            console.log('recalibrator.AI:: >>>LOCKING SECTOR #' + home_index + '...CORE SIGHTED<<<');
-                            console.log('recalibrator.AI:: ------------------------------');
                         }
+
                 
-                        //reserve the controller
-                        if (i_threats == 0 && p_threats == 0){
-                            if (unit.reserveController(unit.room.controller) == ERR_NOT_IN_RANGE)
-                                unit.moveTo(unit.room.controller);
-                        }
+                        //STAGE 5. finally, reserve the controller
+                        if (unit.reserveController(unit.room.controller) == ERR_NOT_IN_RANGE)
+                            unit.moveTo(unit.room.controller);
                     }
                 }
             }
-            //enemies detected
+
+
+            //evacuation alarm raised
             else{
                 unit.moveTo(Game.getObjectById(flee_point));
-                unit.memory.in_place = false;
+                unit.memory.rallied = false;
             }
         }
         
+
         //built-in economic killswitch
         else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
             unit.moveTo(nexus);

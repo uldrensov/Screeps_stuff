@@ -4,13 +4,15 @@
 module.exports = {
     run: function(unit, nexus_id, bloodscent, home_index){
         
-        var nexus = Game.getObjectById(nexus_id);
+        let nexus = Game.getObjectById(nexus_id);
         
         
         //salvage unit and elevate threat level if too much damage is taken
         if (unit.hits < unit.hitsMax*.25){
+            Memory.viable_prey[home_index] = false; //returns bloodhunters to dormant state, despite the ticking evac timer
             unit.memory.killswitch = true;
-            Memory.viable_prey[home_index] = false;
+            
+            //TODO: blood hunter unsuccessful status in global memory
         }
         
         
@@ -19,27 +21,30 @@ module.exports = {
             if (unit.memory.home == unit.room.name)
                 unit.moveTo(bloodscent);
                 
-            //secure the room
+
+            //pathing complete
             else{
-                var bloodmark = unit.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+                let bloodmark = unit.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
             
-                //kill invader
+                //attempt to kill the invader
                 if (bloodmark){
                     if (unit.attack(bloodmark) == ERR_NOT_IN_RANGE)
                         unit.moveTo(bloodmark);
                 }
-                //force-reset evac timer, then self-killswitch
-                else if (Memory.evac_timer[home_index] > 0){
-                    Memory.evac_timer[home_index] = 0;
-                    unit.memory.killswitch = true;
+
+                //when invader is slain...
+                else{
                     console.log('bloodhunter.AI:: ------------------------------');
                     console.log('bloodhunter.AI:: SECTOR #' + home_index + ': HOSTILES ELIMINATED');
                     console.log('bloodhunter.AI:: ------------------------------');
+
+                    //self-killswitch and reset the evac timer early
+                    Memory.evac_timer[home_index] = 0; //main.js will return bloodhunters to dormant state
+                    unit.memory.killswitch = true;
                 }
-                //edge case: false alarm
-                else unit.memory.killswitch = true;
             }
         }
+
 
         //built-in economic killswitch
         else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
