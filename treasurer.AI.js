@@ -7,6 +7,7 @@ module.exports = {
         let nexus = Game.getObjectById(nexus_id);
         
         
+        //proceed if there is no suicide order
         if (!unit.memory.killswitch){
             //clear this flag for every new command issued
             if (unit.memory.task_progress == 0)

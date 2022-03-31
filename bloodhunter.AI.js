@@ -9,15 +9,15 @@ module.exports = {
         
         //salvage unit and elevate threat level if too much damage is taken
         if (unit.hits < unit.hitsMax*.25){
-            Memory.viable_prey[home_index] = false; //returns bloodhunters to dormant state, despite the ticking evac timer
-            unit.memory.killswitch = true;
-            
-            //TODO: blood hunter unsuccessful status in global memory
+            Memory.viable_prey[home_index] =            false; //returns bloodhunters to dormant state, in spite of the active evac timer
+            Memory.bloodhunter_casualty[home_index] =   true;
+            unit.memory.killswitch =                    true;
         }
         
         
+        //proceed if there is no suicide order
         if (!unit.memory.killswitch){
-            //one-way room pathing
+            //simple cross-room navigation
             if (unit.memory.home == unit.room.name)
                 unit.moveTo(bloodscent);
                 
@@ -34,12 +34,14 @@ module.exports = {
 
                 //when invader is slain...
                 else{
+                    //Game.notify('bloodhunter.AI:: SECTOR #' + home_index + ': HOSTILES ELIMINATED',0);
+
                     console.log('bloodhunter.AI:: ------------------------------');
                     console.log('bloodhunter.AI:: SECTOR #' + home_index + ': HOSTILES ELIMINATED');
                     console.log('bloodhunter.AI:: ------------------------------');
 
                     //self-killswitch and reset the evac timer early
-                    Memory.evac_timer[home_index] = 0; //main.js will return bloodhunters to dormant state
+                    Memory.evac_timer[home_index] = 0; //triggers blood hunter dormancy
                     unit.memory.killswitch = true;
                 }
             }

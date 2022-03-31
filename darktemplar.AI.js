@@ -7,6 +7,7 @@ module.exports = {
         var nexus = Game.getObjectById(nexus_id);
         
         
+        //proceed if there is no suicide order
         if (!unit.memory.killswitch){
             //rally to the flag location first
             if (!unit.memory.rallied)

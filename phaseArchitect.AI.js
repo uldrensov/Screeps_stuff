@@ -4,6 +4,7 @@
 module.exports = {
     run: function(unit, nexus, bias, home_index){
         
+        //proceed if there is no suicide order
         if (!unit.memory.killswitch){
             //INPUTS: energy sources, containers (non-empty)
             var sources = unit.room.find(FIND_SOURCES);

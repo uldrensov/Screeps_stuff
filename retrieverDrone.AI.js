@@ -7,6 +7,7 @@ module.exports = {
         var nexus = Game.getObjectById(nexus_id);
         
         
+        //proceed if there is no suicide order
         if (!unit.memory.killswitch){
             //INPUTS: pickups<energy> (ample)
             if (unit.memory.scraps == undefined || Game.time % 10 == 0){

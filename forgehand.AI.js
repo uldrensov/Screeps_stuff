@@ -48,6 +48,7 @@ module.exports = {
         
         //both labs are empty and primed for loading
         else{
+            //proceed if there is no suicide order
             if (!unit.memory.killswitch){
                 //determine inputs and outputs
                 if (unit.memory.task1_progress < unit.memory.order1_amt){

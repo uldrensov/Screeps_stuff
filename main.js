@@ -44,23 +44,26 @@ module.exports.loop = function(){
     
     //remote mining security response
     for (let i=0; i<SD.nexus_id.length; i++){
-        //high alert: count down the timer, disable remote worker spawns, and enable blood hunter spawn (if necessary)
+        //high alert: count down the timer, disable remote worker spawns, and enable blood hunter spawn (if prey is killable)
         if (Memory.evac_timer[i] > 0){
             Memory.evac_timer[i]--;
 
             if (Memory.recalibrator_MAX[i] > 0)         Memory.recalibrator_MAX[i] =        -1;
             if (Memory.orbitalAssimilator_MAX[i] > 0)   Memory.orbitalAssimilator_MAX[i] =  -1;
             if (Memory.orbitalDrone_MAX[i] > 0)         Memory.orbitalDrone_MAX[i] =        -1;
+
             if (Memory.viable_prey[i] == true)          Memory.bloodhunter_MAX[i] =         1;
+            else                                        Memory.bloodhunter_MAX[i] =         -1;
         }
-        //no alert: clear prey flag, re-enable remote worker spawns, and disable blood hunter spawn
+        //no alert: clear prey flag, re-enable remote worker spawns, disable blood hunter spawn, and reset bloodhunter flags
         else{
             if (Memory.recalibrator_MAX[i] < 0)         Memory.recalibrator_MAX[i] =        1;
             if (Memory.orbitalAssimilator_MAX[i] < 0)   Memory.orbitalAssimilator_MAX[i] =  1;
             if (Memory.orbitalDrone_MAX[i] < 0)         Memory.orbitalDrone_MAX[i] =        1;
 
-            Memory.bloodhunter_MAX[i] = -1;
-            Memory.viable_prey[i] = false;
+            Memory.bloodhunter_MAX[i] =         -1;
+            Memory.viable_prey[i] =             false;
+            Memory.bloodhunter_casualty[i] =    false;
         }
     }
     

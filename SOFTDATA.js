@@ -77,7 +77,7 @@ module.exports = {
     remotecanister_id:      ['5e6586c57abdad3e01ad88f7',    'NULL',                     '5e490bf22a3d564b0565c52d',
                             '5e716359fa9ac914fed34e30',     '5e7014edbb478ab96f6ca1e4'], //-->                          //drop-mining containers (o.assimilator)
 
-    //towers
+    //specific towers
     tower_id:               ['5e76a9799b9279cd3b8d5c7d',    '5e5c992bb655c985f872fdd1', '5ea4d90bcdd80c534a3abc8e',
                             '5e6dedb3b2181dab6255bd37',     '5eacde6466154c86cb8dbf5a', '5e76c1bc7e17fe2a086ed2e0'],    //remote mining team retreats towards this
                 

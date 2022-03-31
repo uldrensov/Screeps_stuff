@@ -163,7 +163,7 @@ module.exports = {
                 case 'enforcer':
                     for (let i=0; i<SD.nexus_id.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
-                            enforcer.run(unit, SD.nexus_id[i], SD.remoteflag[i], i);
+                            enforcer.run(unit, SD.nexus_id[i], SD.remoteflag[i], SD.tower_id[i], i);
                             break;
                         }
                     }
@@ -171,7 +171,7 @@ module.exports = {
                 case 'purifier':
                     for (let i=0; i<SD.nexus_id.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
-                            purifier.run(unit, SD.nexus_id[i], SD.remoteflag[i], i);
+                            purifier.run(unit, SD.nexus_id[i], SD.remoteflag[i], SD.tower_id[i], i);
                             break;
                         }
                     }

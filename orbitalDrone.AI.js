@@ -2,24 +2,27 @@
 //yellow trail ("traveller")
 
 module.exports = {
-    run: function(unit, nexus_id, canister_id, remote_flag, ignore_lim, flee_point, home_index){
+    run: function(unit, nexus_id, canister_id, standby_flag, ignore_lim, flee_point, home_index){
         
-        var nexus = Game.getObjectById(nexus_id);
+        let nexus = Game.getObjectById(nexus_id);
+
         if (unit.memory.dropoff_id == undefined){
             if (Game.getObjectById(nexus_id).room.storage != undefined)
                 unit.memory.dropoff_id = Game.getObjectById(nexus_id).room.storage.id;
-            else return 'UNIT ERROR: ' + unit.name + ' REQUIRES A HOME VAULT';
+            else
+                return 'orbitalDroneAI:: UNIT ERROR: ' + unit.name + ' REQUIRES A HOME VAULT';
         }
         
         
+        //proceed if there is no suicide order
         if (!unit.memory.killswitch){
-            //no enemies present
+            //proceed if the evacuation alarm is not raised
             if (Memory.evac_timer[home_index] == 0){
                 //INPUTS: container
-                var canister = Game.getObjectById(canister_id);
+                let canister = Game.getObjectById(canister_id);
                 
                 //OUTPUTS: container/link/vault
-                var dropoff = Game.getObjectById(unit.memory.dropoff_id);
+                let dropoff = Game.getObjectById(unit.memory.dropoff_id);
             
             
                 //2-state fetch/unload FSM...
@@ -33,6 +36,10 @@ module.exports = {
                     unit.memory.fetching = true;
 
             
+
+
+
+                    
                 //behaviour execution...
                 if (!unit.memory.fetching){
                     //navigate to homeroom
@@ -51,8 +58,8 @@ module.exports = {
                 else{
                     //rally at flag first
                     if (!unit.memory.rallied){
-                        if (!unit.pos.isEqualTo(remote_flag.pos))
-                            unit.moveTo(remote_flag);
+                        if (!unit.pos.isEqualTo(standby_flag.pos))
+                            unit.moveTo(standby_flag);
                         else unit.memory.rallied = true;
                     }
                     //if the reservation is lost, cut off remote worker spawns and self-killswitch
@@ -134,46 +141,52 @@ module.exports = {
                             console.log('orbitalDrone.AI:: ------------------------------');
                         }
                     
+
+
+
+
+
                         //fetch from inputs
-                        if (i_threats == 0 && p_threats == 0){
-                            //INPUTS: pickups, tombstones (non-empty)
-                            var scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
-                                filter: resource => {
-                                    return resource.resourceType == RESOURCE_ENERGY
-                                        &&
-                                        resource.amount > ignore_lim;
-                                }
-                            });
-                            var tombs = unit.room.find(FIND_TOMBSTONES, {
-                                filter: RoomObject => {
-                                    return RoomObject.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
-                                }
-                            });
+                        //INPUTS: pickups, tombstones (non-empty)
+                        let scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
+                            filter: resource => {
+                                return resource.resourceType == RESOURCE_ENERGY
+                                    &&
+                                    resource.amount > ignore_lim;
+                            }
+                        });
+                        let tombs = unit.room.find(FIND_TOMBSTONES, {
+                            filter: RoomObject => {
+                                return RoomObject.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+                            }
+                        });
                 
                 
-                            //fetch: pickups<energy>
-                            if (scraps.length){
-                                if (unit.pickup(scraps[0]) == ERR_NOT_IN_RANGE)
-                                    unit.moveTo(scraps[0]);
-                            }
-                            //fetch: tombstones<energy>
-                            else if (tombs.length){
-                                if (unit.withdraw(tombs[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                                    unit.moveTo(tombs[0]);
-                            }
-                            //fetch: container
-                            else if (unit.withdraw(canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                                unit.moveTo(canister);
+                        //fetch: pickups<energy>
+                        if (scraps.length){
+                            if (unit.pickup(scraps[0]) == ERR_NOT_IN_RANGE)
+                                unit.moveTo(scraps[0]);
                         }
+                        //fetch: tombstones<energy>
+                        else if (tombs.length){
+                            if (unit.withdraw(tombs[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                                unit.moveTo(tombs[0]);
+                        }
+                        //fetch: container
+                        else if (unit.withdraw(canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                            unit.moveTo(canister);
                     }
                 }
             }
-            //enemies detected
+
+
+            //evacuation alarm raised
             else{
                 unit.moveTo(Game.getObjectById(flee_point));
                 unit.memory.rallied = false;
             }
         }
+
 
         //built-in economic killswitch
         else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)

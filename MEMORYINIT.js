@@ -46,6 +46,7 @@ module.exports = {
         //remote mining
         if (Memory.evac_timer == undefined)                     Memory.evac_timer =                        [];            //do not modify manually
         if (Memory.viable_prey == undefined)                    Memory.viable_prey =                       [];            //do not modify manually
+        if (Memory.bloodhunter_casualty == undefined)           Memory.bloodhunter_casualty =              [];            //do not modify manually
 
         //misc
         if (Memory.mineral_type == undefined)                   Memory.mineral_type =                      [];            //do not modify manually
@@ -93,6 +94,7 @@ module.exports = {
             
             if (Memory.evac_timer[i] == undefined)              Memory.evac_timer[i] =                     0;             //do not modify manually
             if (Memory.viable_prey[i] == undefined)             Memory.viable_prey[i] =                    false;         //do not modify manually
+            if (Memory.bloodhunter_casualty[i] == undefined)   Memory.bloodhunter_casualty[i] =            false;         //do not modify manually
             
             if (Memory.roomSpeed[i] == undefined)               Memory.roomSpeed[i] =                      1;             //TODO: move to SOFTDATA
             if (Memory.autovent_EN[i] == undefined)             Memory.autovent_EN[i] =                    false;         //TODO: move to SOFTDATA

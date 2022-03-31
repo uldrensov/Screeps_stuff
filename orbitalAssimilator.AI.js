@@ -2,143 +2,192 @@
 //yellow trail ("traveller")
 
 module.exports = {
-    run: function(unit, nexus_id, src_id, remote_flag, canister_id, flee_point, home_index){
+    run: function(unit, nexus_id, src_id, standby_flag, canister_id, flee_point, home_index){
         
-        var nexus = Game.getObjectById(nexus_id);
+        let nexus = Game.getObjectById(nexus_id);
         
         
+        //proceed if there is no suicide order
         if (!unit.memory.killswitch){
-            //no enemies present
+            //proceed if the evacuation alarm is not raised
             if (Memory.evac_timer[home_index] == 0){
                 //INPUTS: source
-                var src = Game.getObjectById(src_id);
+                let src = Game.getObjectById(src_id);
             
                 //OUTPUTS: containers (damaged)
-                var dmg_canister = Game.getObjectById(canister_id);
+                let canister = Game.getObjectById(canister_id);
             
             
-                //two-states...
-                if (unit.memory.able == undefined)
-                    unit.memory.able = false;
-                //if energy is over half, unit may repair
+                //remote canister maintenance...
+                if (unit.memory.repairmode == undefined)
+                    unit.memory.repairmode = false; //init
+                //if carried energy is over half, unit may repair
                 if (unit.store[RESOURCE_ENERGY] > unit.store.getCapacity()/2)
-                    unit.memory.able = true;
-                //if energy depletes to 0, unit may cease repairs
+                    unit.memory.repairmode = true;
+                //if carried energy depletes to 0, unit may cease repairs
                 else if (unit.store[RESOURCE_ENERGY] == 0)
-                    unit.memory.able = false;
+                    unit.memory.repairmode = false;
 
             
-                //rally at flag first
-                if (!unit.memory.rallied){
-                    if (!unit.pos.isEqualTo(remote_flag.pos))
-                        unit.moveTo(remote_flag);
-                    else unit.memory.rallied = true;
-                }
-                //if the reservation is lost, cut off remote worker spawns and self-killswitch
-                else{
-                    var take_branch = false;
-                    try{
-                        if (unit.room.controller.reservation.username == 'Invader'){
-                            Memory.recalibrator_MAX[home_index] = -1;
-                            Memory.orbitalAssimilator_MAX[home_index] = -1;
-                            Memory.orbitalDrone_MAX[home_index] = -1;
-                            unit.memory.killswitch = true;
-                        }
-                        else take_branch = true;
-                    }
-                    catch{
-                        take_branch = true;
-                    }
-                }
-                if (take_branch){
-                    //watch for invaders/intruders
-                    var i_threats = 0;
-                    var p_threats = 0;
-                    var p_name = '[NULL]';
-                    var enemy = unit.room.find(FIND_HOSTILE_CREEPS);
-                    if (enemy.length){
-                        //assess threat level
-                        for (let i=0; i<enemy.length; i++){
+                //STAGE 1 START: rally to the flag location first
+                if (!unit.memory.rallied)                   unit.moveTo(standby_flag);
+                if (unit.pos.isEqualTo(standby_flag.pos))   unit.memory.rallied = true;
+                
+
+                //STAGE 1 END: proceed when rally is complete
+                if (unit.memory.rallied){
+                    let i_threats = 0;
+                    let p_threats = 0;
+                    let p_name = '[NULL]';
+
+                    let foreigner = unit.room.find(FIND_HOSTILE_CREEPS);
+
+                    //STAGE 2 START: check any foreigners present in the room, and respond appropriately
+                    if (foreigner.length){
+                        //determine if there are threats among them
+                        for (let i=0; i<foreigner.length; i++){
                             //if invader, automatically assume threat (don't check body parts)
-                            if (enemy[i].owner.username == 'Invader'){
+                            if (foreigner[i].owner.username == 'Invader'){
                                 i_threats++;
                                 continue;
                             }
-                            //if player, inspect body parts and verify threat level
-                            for (let j=0; j<enemy[i].body.length; j++){
-                                if (enemy[i].body[j]['type'] == ATTACK || enemy[i].body[j]['type'] == RANGED_ATTACK){
+                            //if player, inspect body parts to confirm threat
+                            for (let j=0; j<foreigner[i].body.length; j++){
+                                if (foreigner[i].body[j]['type'] == ATTACK || foreigner[i].body[j]['type'] == RANGED_ATTACK ||
+                                    foreigner[i].body[j]['type'] == CLAIM){
+
                                     p_threats++;
-                                    p_name = enemy.owner.username;
+                                    p_name = foreigner.owner.username;
                                     break;
                                 }
                             }
                         }
                     
-                        //decide how to handle threats
+                        //respond to player/invader threats
                         if (i_threats > 0 || p_threats > 0){
                             console.log('orbitalAssimilator.AI:: ------------------------------');
-                        
-                            //case: enemy player(s)
+                    
+                            //enemy player(s) detected: evacuate and call a blood hunter
                             if (p_threats > 0){
+                                //Game.notify('orbitalAssimilator.AI:: >>>EVACUATING SECTOR #' + home_index + '...' + p_name + ' INBOUND<<<',0);
+
                                 console.log('orbitalAssimilator.AI:: >>>EVACUATING SECTOR #' + home_index + '...' + p_name + ' INBOUND<<<');
-                                Memory.evac_timer[home_index] = 500;
+                                console.log('orbitalAssimilator.AI:: >>>SIGNALLING BLOOD HUNTER<<<');
+
+                                Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
+                                Memory.viable_prey[home_index] = true; //triggers blood hunter spawn
                             }
-                            //case: 1 invader
+                            //lone invader detected: evacuate and call blood hunter
                             else if (i_threats == 1){
+                                //Game.notify('orbitalAssimilator.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER INBOUND<<<',0);
+
                                 console.log('orbitalAssimilator.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER INBOUND<<<');
+                                console.log('orbitalAssimilator.AI:: >>>SIGNALLING BLOOD HUNTER<<<');
+
                                 Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
-                                Memory.viable_prey[home_index] = true;
+                                Memory.viable_prey[home_index] = true; //triggers blood hunter spawn
                             }
-                            //case: multiple invaders
+                            //multiple invaders detected: evacuate and suicide
                             else if (i_threats > 1){
+                                //Game.notify('orbitalAssimilator.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER HORDE INBOUND<<<',0);
+
                                 console.log('orbitalAssimilator.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER HORDE INBOUND<<<');
+                                console.log('orbitalAssimilator.AI:: >>>RECYCLING EVACUATED UNITS<<<');
+
                                 Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
-                                unit.memory.killswitch = true;
+                                unit.memory.killswitch = true; //reasoning: unit will likely not outlive the threat
                             }
-                            
+                        
                             console.log('orbitalAssimilator.AI:: ------------------------------');
                         }
                     }
-                    //watch for hostile cores
-                    var invadercores = unit.room.find(FIND_HOSTILE_STRUCTURES, {
-                        filter: structure => {
-                            return structure.structureType == STRUCTURE_INVADER_CORE;
-                        }
-                    });
-                    if (invadercores.length && Memory.enforcer_MAX[home_index] < 0){
-                        Memory.enforcer_MAX[home_index] = 1;
-                        //Game.notify('orbitalAssimilator.AI:: >>>LOCKING SECTOR #' + home_index + '...CORE SIGHTED<<<',0);
-                        console.log('orbitalAssimilator.AI:: ------------------------------');
-                        console.log('orbitalAssimilator.AI:: >>>LOCKING SECTOR #' + home_index + '...CORE SIGHTED<<<');
-                        console.log('orbitalAssimilator.AI:: ------------------------------');
-                    }
-                
-                    //fetching and repairing
-                    if (i_threats == 0 && p_threats == 0){
-                        //UNLOAD: containers (2-state)
-                        if (dmg_canister){
-                            if (unit.memory.able && dmg_canister.hits < dmg_canister.hitsMax){
-                                if (!unit.pos.isEqualTo(dmg_canister.pos))
-                                    unit.moveTo(dmg_canister);
-                                else unit.repair(dmg_canister);
+
+
+                    //STAGE 2 END: proceed if no threats detected
+                    else{
+                        let invadercores = unit.room.find(FIND_HOSTILE_STRUCTURES, {
+                            filter: structure => {
+                                return structure.structureType == STRUCTURE_INVADER_CORE;
                             }
+                        });
+
+                        //STAGE 3A. watch for hostile cores
+                        if (invadercores.length && Memory.enforcer_MAX[home_index] < 0){
+                            //Game.notify('orbitalAssimilator.AI:: >>>SIGNALLING ENFORCER TO SECTOR #' + home_index + '...CORE SIGHTED<<<',0);
+
+                            console.log('orbitalAssimilator.AI:: ------------------------------');
+                            console.log('orbitalAssimilator.AI:: >>>SIGNALLING ENFORCER TO SECTOR #' + home_index + '...CORE SIGHTED<<<');
+                            console.log('orbitalAssimilator.AI:: ------------------------------');
+
+                            Memory.enforcer_MAX[home_index] = 1;
+                        }
+
+
+                        let reservation_lost = false;
+
+                        //STAGE 3B START: check room reservation status, and respond appropriately
+                        try{
+                            //controlled by hostiles: cut off remote worker spawns, call in a purifier, and self-killswitch
+                            if (unit.room.controller.reservation.username != unit.owner.username){
+                                //Game.notify('orbitalAssimilator.AI:: >>>SIGNALLING PURIFIER TO SECTOR #' + home_index + '...CONTROLLER HAS FALLEN TO HOSTILE FORCES<<<',0);
+
+                                console.log('orbitalAssimilator.AI:: ------------------------------');
+                                console.log('orbitalAssimilator.AI:: >>>SIGNALLING PURIFIER TO SECTOR #' + home_index + '...CONTROLLER HAS FALLEN TO HOSTILE FORCES<<<');
+                                console.log('orbitalAssimilator.AI:: ------------------------------');
+
+                                reservation_lost = true;
+
+                                Memory.recalibrator_MAX[home_index] =       -1;
+                                Memory.orbitalAssimilator_MAX[home_index] = -1;
+                                Memory.orbitalDrone_MAX[home_index] =       -1;
+
+                                Memory.purifier_MAX[home_index] =           1;
+                            
+                                unit.memory.killswitch = true; //reasoning: unit will likely not survive long enough to see the controller's purification
+                            }
+                        }
+                        catch{
+                            //this happens if the room is controlled by nobody
+                        }
+
+
+                        //STAGE 3B END: proceed if room reservation is intact
+                        if (!reservation_lost){
+                            //STAGE 4. UNLOAD: containers (2-state)
+                            if (canister){
+                                //repairing
+                                if (unit.memory.repairmode && canister.hits < canister.hitsMax){
+                                    if (!unit.pos.isEqualTo(canister.pos))
+                                        unit.moveTo(canister);
+                                    else
+                                        unit.repair(canister);
+                                }
+                                //fetching (with container)
+                                else if (unit.harvest(src) == ERR_NOT_IN_RANGE)
+                                    //fetch: sources
+                                    unit.moveTo(src);
+                            }
+                            //fetching (without container)
                             else if (unit.harvest(src) == ERR_NOT_IN_RANGE)
                                 //fetch: sources
                                 unit.moveTo(src);
                         }
-                        //fetch regardless of container's presence
-                        else if (unit.harvest(src) == ERR_NOT_IN_RANGE)
-                            //fetch: sources
-                            unit.moveTo(src);
                     }
                 }
             }
-            //enemies detected
+
+
+            //evacuation alarm raised
             else{
                 unit.moveTo(Game.getObjectById(flee_point));
                 unit.memory.rallied = false;
+
+                //if the blood hunter falls in battle, self-killswitch instead of waiting around pointlessly
+                if (Memory.bloodhunter_casualty[home_index] == true)
+                    unit.memory.killswitch = true;
             }
         }
+            
 
         //built-in economic killswitch
         else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
