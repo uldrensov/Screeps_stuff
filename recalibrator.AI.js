@@ -47,6 +47,7 @@ module.exports = {
                     
                         //respond to player/invader threats
                         if (i_threats > 0 || p_threats > 0){
+                            Memory.lastSeenEnemy_time[home_index] = Game.time;
                             console.log('recalibrator.AI:: ------------------------------');
                     
                             //enemy player(s) detected: evacuate and call a blood hunter
@@ -56,6 +57,7 @@ module.exports = {
                                 console.log('recalibrator.AI:: >>>EVACUATING SECTOR #' + home_index + '...' + p_name + ' INBOUND<<<');
                                 console.log('recalibrator.AI:: >>>SIGNALLING BLOOD HUNTER<<<');
 
+                                Memory.lastSeenEnemy_name[home_index] = p_name;
                                 Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
                                 Memory.viable_prey[home_index] = true; //triggers blood hunter spawn
                             }
@@ -66,6 +68,7 @@ module.exports = {
                                 console.log('recalibrator.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER INBOUND<<<');
                                 console.log('recalibrator.AI:: >>>SIGNALLING BLOOD HUNTER<<<');
 
+                                Memory.lastSeenEnemy_name[home_index] = 'INVADER';
                                 Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
                                 Memory.viable_prey[home_index] = true; //triggers blood hunter spawn
                             }
@@ -76,6 +79,7 @@ module.exports = {
                                 console.log('recalibrator.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER HORDE INBOUND<<<');
                                 console.log('recalibrator.AI:: >>>RECYCLING EVACUATED UNITS<<<');
 
+                                Memory.lastSeenEnemy_name[home_index] = 'INVADER';
                                 Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
                                 unit.memory.killswitch = true; //reasoning: unit will likely not outlive the threat
                             }
@@ -101,6 +105,7 @@ module.exports = {
                             console.log('recalibrator.AI:: >>>SIGNALLING ENFORCER TO SECTOR #' + home_index + '...CORE SIGHTED<<<');
                             console.log('recalibrator.AI:: ------------------------------');
 
+                            Memory.lastSeenCore_time = Game.time;
                             Memory.enforcer_MAX[home_index] = 1;
                         }
 
@@ -117,7 +122,8 @@ module.exports = {
                                 console.log('recalibrator.AI:: >>>SIGNALLING PURIFIER TO SECTOR #' + home_index + '...CONTROLLER HAS FALLEN TO HOSTILE FORCES<<<');
                                 console.log('recalibrator.AI:: ------------------------------');
 
-                                reservation_lost = true;
+                                Memory.lastReserveLoss_time[home_index] =   Game.time;
+                                reservation_lost =                          true;
 
                                 Memory.recalibrator_MAX[home_index] =       -1;
                                 Memory.orbitalAssimilator_MAX[home_index] = -1;
@@ -125,7 +131,7 @@ module.exports = {
 
                                 Memory.purifier_MAX[home_index] =           1;
                             
-                                unit.memory.killswitch = true; //reasoning: unit will likely not survive long enough to see the controller's purification
+                                unit.memory.killswitch =                    true; //reasoning: unit will likely not survive long enough to see the controller's purification
                             }
                         }
                         catch{

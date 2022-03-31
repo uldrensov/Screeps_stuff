@@ -47,6 +47,10 @@ module.exports = {
         if (Memory.evac_timer == undefined)                     Memory.evac_timer =                        [];            //do not modify manually
         if (Memory.viable_prey == undefined)                    Memory.viable_prey =                       [];            //do not modify manually
         if (Memory.bloodhunter_casualty == undefined)           Memory.bloodhunter_casualty =              [];            //do not modify manually
+        if (Memory.lastSeenEnemy_name == undefined)             Memory.lastSeenEnemy_name =                [];            //do not modify manually
+        if (Memory.lastSeenEnemy_time == undefined)             Memory.lastSeenEnemy_time =                [];            //do not modify manuall
+        if (Memory.lastSeenCore_time == undefined)              Memory.lastSeenCore_time =                 [];            //do not modify manually
+        if (Memory.lastReserveLoss_time == undefined)           Memory.lastReserveLoss_time =              [];            //do not modify manually
 
         //misc
         if (Memory.mineral_type == undefined)                   Memory.mineral_type =                      [];            //do not modify manually
@@ -94,7 +98,11 @@ module.exports = {
             
             if (Memory.evac_timer[i] == undefined)              Memory.evac_timer[i] =                     0;             //do not modify manually
             if (Memory.viable_prey[i] == undefined)             Memory.viable_prey[i] =                    false;         //do not modify manually
-            if (Memory.bloodhunter_casualty[i] == undefined)   Memory.bloodhunter_casualty[i] =            false;         //do not modify manually
+            if (Memory.bloodhunter_casualty[i] == undefined)    Memory.bloodhunter_casualty[i] =           false;         //do not modify manually
+            if (Memory.lastSeenEnemy_name[i] == undefined)      Memory.lastSeenEnemy_name[i] =             'NULL';        //do not modify manually
+            if (Memory.lastSeenEnemy_time[i] == undefined)      Memory.lastSeenEnemy_time[i] =             Game.time;     //do not modify manually
+            if (Memory.lastSeenCore_time[i] == undefined)       Memory.lastSeenCore_time[i] =              Game.time;     //do not modify manually
+            if (Memory.lastReserveLoss_time[i] == undefined)    Memory.lastReserveLoss_time[i] =           Game.time;     //do not modify manually
             
             if (Memory.roomSpeed[i] == undefined)               Memory.roomSpeed[i] =                      1;             //TODO: move to SOFTDATA
             if (Memory.autovent_EN[i] == undefined)             Memory.autovent_EN[i] =                    false;         //TODO: move to SOFTDATA

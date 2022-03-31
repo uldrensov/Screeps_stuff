@@ -47,6 +47,7 @@ module.exports = {
                     
                         //respond to player/invader threats
                         if (i_threats > 0 || p_threats > 0){
+                            Memory.lastSeenEnemy_time[home_index] = Game.time;
                             console.log('purifier.AI:: ------------------------------');
                     
                             //enemy player(s) detected: evacuate and call a blood hunter
@@ -56,6 +57,7 @@ module.exports = {
                                 console.log('purifier.AI:: >>>EVACUATING SECTOR #' + home_index + '...' + p_name + ' INBOUND<<<');
                                 console.log('purifier.AI:: >>>SIGNALLING BLOOD HUNTER<<<');
 
+                                Memory.lastSeenEnemy_name[home_index] = p_name;
                                 Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
                                 Memory.viable_prey[home_index] = true; //triggers blood hunter spawn
                             }
@@ -66,6 +68,7 @@ module.exports = {
                                 console.log('purifier.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER INBOUND<<<');
                                 console.log('purifier.AI:: >>>SIGNALLING BLOOD HUNTER<<<');
 
+                                Memory.lastSeenEnemy_name[home_index] = 'INVADER';
                                 Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
                                 Memory.viable_prey[home_index] = true; //triggers blood hunter spawn
                             }
@@ -76,6 +79,7 @@ module.exports = {
                                 console.log('purifier.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER HORDE INBOUND<<<');
                                 console.log('purifier.AI:: >>>RECYCLING EVACUATED UNITS<<<');
 
+                                Memory.lastSeenEnemy_name[home_index] = 'INVADER';
                                 Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
                                 unit.memory.killswitch = true; //reasoning: unit will likely not outlive the threat
                             }

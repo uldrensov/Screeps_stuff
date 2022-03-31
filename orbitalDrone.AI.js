@@ -9,8 +9,10 @@ module.exports = {
         if (unit.memory.dropoff_id == undefined){
             if (Game.getObjectById(nexus_id).room.storage != undefined)
                 unit.memory.dropoff_id = Game.getObjectById(nexus_id).room.storage.id;
-            else
+            else{
+                unit.memory.killswitch = true;
                 return 'orbitalDroneAI:: UNIT ERROR: ' + unit.name + ' REQUIRES A HOME VAULT';
+            }
         }
         
         
@@ -35,10 +37,6 @@ module.exports = {
                 if (!unit.memory.fetching && unit.store[RESOURCE_ENERGY] == 0)
                     unit.memory.fetching = true;
 
-            
-
-
-
                     
                 //behaviour execution...
                 if (!unit.memory.fetching){
@@ -55,6 +53,18 @@ module.exports = {
                             unit.moveTo(dropoff);
                     }
                 }
+
+
+
+
+
+
+
+
+
+
+
+
                 else{
                     //rally at flag first
                     if (!unit.memory.rallied){
@@ -141,6 +151,11 @@ module.exports = {
                             console.log('orbitalDrone.AI:: ------------------------------');
                         }
                     
+
+
+
+
+
 
 
 
