@@ -1,15 +1,15 @@
 //executable script: attempts to sell minerals from a room's terminal
 //optionally, can also be called automatically by ECONDRIVE.js
-    //require('TRANSACTION.exe').run(0)
+    //require('TRANSACTION.exe').run(0,'Z')
 
 var SD = require('SOFTDATA');
 
 
 module.exports = {
-    run: function(room_num){
+    run: function(room_num, resource_type){
         
         //arg validation
-        if (Memory.mineral_type[room_num] == undefined)
+        if (Game.getObjectById(SD.nexus_id[room_num]) == undefined)
             return 'TRANSACTION:: INVALID ROOM NUMBER';
         
         //variable init and additional validation
@@ -24,13 +24,11 @@ module.exports = {
         if (GE.store.getUsedCapacity(RESOURCE_ENERGY) == 0)
             return 'TRANSACTION:: TERMINAL TRANSMISSION FUEL DEPLETED';
 
-        let minType = Memory.mineral_type[room_num].mineralType;
-
-        if (GE.store.getUsedCapacity(minType) == 0)
+        if (GE.store.getUsedCapacity(resource_type) == 0)
             return 'TRANSACTION:: TERMINAL MERCHANDISE DEPLETED';
 
-        let hist = Game.market.getHistory(minType);
-        let clientele = Game.market.getAllOrders({type: ORDER_BUY, resourceType: minType});
+        let hist = Game.market.getHistory(resource_type);
+        let clientele = Game.market.getAllOrders({type: ORDER_BUY, resourceType: resource_type});
 
         if (!clientele.length)
             return 'TRANSACTION:: MARKET IS EMPTY...TRY AGAIN LATER';
@@ -56,12 +54,12 @@ module.exports = {
         
 
         //make the transaction
-        let tradeAmount = bestOffer.amount < GE.store.getUsedCapacity(minType) ? bestOffer.amount : GE.store.getUsedCapacity(minType);
+        let tradeAmount = bestOffer.amount < GE.store.getUsedCapacity(resource_type) ? bestOffer.amount : GE.store.getUsedCapacity(resource_type);
         let tax = Game.market.calcTransactionCost(tradeAmount, bestOffer.roomName, GE.room.name);
         let transaction = Game.market.deal(bestOffer.id, tradeAmount, GE.room.name);
         
         if (transaction == ERR_NOT_ENOUGH_ENERGY)
-            return 'TRANSACTION:: INSUFFICIENT RESOURCES...OFFER REQUIRES ' + tradeAmount + ' [' + minType + '] AND ' + tax + ' TRANSMISSION ENERGY';
+            return 'TRANSACTION:: INSUFFICIENT RESOURCES...OFFER REQUIRES ' + tradeAmount + ' [' + resource_type + '] AND ' + tax + ' TRANSMISSION ENERGY';
 
         if (transaction == ERR_TIRED)
             return 'TRANSACTION:: TERMINAL COOLING DOWN...PLEASE WAIT BEFORE SELLING AGAIN';
@@ -77,7 +75,7 @@ module.exports = {
         
 
         //return confirmation of success
-        console.log('TRANSACTION:: *SOLD ' + tradeAmount + ' [' + minType + '] FOR ' + bestOffer.price + ' EACH (' + (tradeAmount*bestOffer.price).toFixed(3) + ' CREDITS GAINED)');
+        console.log('TRANSACTION:: *SOLD ' + tradeAmount + ' [' + resource_type + '] FOR ' + bestOffer.price + ' EACH (' + (tradeAmount*bestOffer.price).toFixed(3) + ' CREDITS GAINED)');
         console.log('TRANSACTION:: TRANSMISSION TAX: ' + tax + ' (' + (100*tax/tradeAmount).toFixed(1) + '% rate)');
         console.log('TRANSACTION:: TRANSACTION SUCCESSFUL (ROOM #' + room_num + ')');
         return OK;

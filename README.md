@@ -8,7 +8,6 @@ Because the whole point of playing Screeps is to learn and to have a fun outlet 
 ### What it does poorly: ###
 * Does very little in terms of starting and nurturing newly-annexed rooms (a lot of manual decision-making is required)
 * Aggressive/militant combat
-* Defensive towers are not "smart" enough to choose targets wisely
 
 Anyone is welcome to clone this repository and run it themselves. But of course, if your goal is to simply copy-paste a working repository into your own account as a substitute for playing the game legitimately, let it be known that there are better and more user-friendly "prepackaged" codebases out there, so I'm honoured if you're choosing to copy mine in spite of that (no hard feelings).
 

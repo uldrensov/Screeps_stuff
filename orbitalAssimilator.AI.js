@@ -123,7 +123,7 @@ module.exports = {
                             console.log('orbitalAssimilator.AI:: >>>SIGNALLING ENFORCER TO SECTOR #' + home_index + '...CORE SIGHTED<<<');
                             console.log('orbitalAssimilator.AI:: ------------------------------');
 
-                            Memory.lastSeenCore_time = Game.time;
+                            Memory.lastSeenCore_time[home_index] = Game.time;
                             Memory.enforcer_MAX[home_index] = 1;
                         }
 

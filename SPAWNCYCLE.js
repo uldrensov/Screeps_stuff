@@ -175,10 +175,14 @@ module.exports = {
             
         //spawning emergency units...
             //emergency drone: if drones go extinct, or if both assimilators and acolytes go extinct without leaving behind enough canister/vault energy for either
-            if (((drone_gang[k].length == 0 && openNexus.room.energyAvailable < drone_price) ||
-            ((assimilator_gang[k].length == 0 && assimilator2_gang[k].length == 0 && acolyte_gang[k].length == 0 && acolyte2_gang[k].length == 0) &&
-            (accessible_energy < assim_price[k] || accessible_energy < acoly_price[k])))
-            && emergencyDrone_gang[k].length == 0){
+            if (((drone_gang[k].length == 0 && openNexus.room.energyAvailable < drone_price)
+                ||
+                ((assimilator_gang[k].length == 0 && assimilator2_gang[k].length == 0 && acolyte_gang[k].length == 0 && acolyte2_gang[k].length == 0)
+                &&
+                (accessible_energy < assim_price[k] || accessible_energy < acoly_price[k])))
+                &&
+                emergencyDrone_gang[k].length == 0){
+
                 spawnResult = openNexus.spawnCreep(SD.edrone_body, 'EmergencyDrone-' + Game.time % SD.time_offset, {memory: {role: 'emergencyDrone'}});
                 if (spawnResult == OK){
                     console.log('SPAWNCYCLE:: Room #' + k + ': >>>EmergencyDrone-' + Game.time % SD.time_offset + ' spawning.<<<');

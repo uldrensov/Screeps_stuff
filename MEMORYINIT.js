@@ -73,9 +73,9 @@ module.exports = {
             if (Memory.recalibrator_MAX[i] == undefined)        Memory.recalibrator_MAX[i] =               0;
             if (Memory.orbitalAssimilator_MAX[i] == undefined)  Memory.orbitalAssimilator_MAX[i] =         0;
             if (Memory.orbitalDrone_MAX[i] == undefined)        Memory.orbitalDrone_MAX[i] =               0;
-            if (Memory.bloodhunter_MAX[i] == undefined)         Memory.bloodhunter_MAX[i] =                0;
-            if (Memory.enforcer_MAX[i] == undefined)            Memory.enforcer_MAX[i] =                   0;
-            if (Memory.purifier_MAX[i] == undefined)            Memory.purifier_MAX[i] =                   0;
+            if (Memory.bloodhunter_MAX[i] == undefined)         Memory.bloodhunter_MAX[i] =                -1;            //do not modify manually
+            if (Memory.enforcer_MAX[i] == undefined)            Memory.enforcer_MAX[i] =                   -1;            //do not modify manually
+            if (Memory.purifier_MAX[i] == undefined)            Memory.purifier_MAX[i] =                   -1;            //do not modify manually
             if (Memory.acolyte_MAX[i] == undefined)             Memory.acolyte_MAX[i] =                    0;
                 if (Memory.acolyte2_MAX[i] == undefined)        Memory.acolyte2_MAX[i] =                   0;
             if (Memory.adherent_MAX[i] == undefined)            Memory.adherent_MAX[i] =                   0;

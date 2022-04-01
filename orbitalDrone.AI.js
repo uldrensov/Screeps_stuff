@@ -1,17 +1,17 @@
-//ORBITAL DRONE: relays energy from ORBITAL ASSIMILATOR to a container/link/vault
+//ORBITAL DRONE: relays energy from ORBITAL ASSIMILATOR to a vault
 //yellow trail ("traveller")
 
 module.exports = {
     run: function(unit, nexus_id, canister_id, standby_flag, ignore_lim, flee_point, home_index){
         
-        let nexus = Game.getObjectById(nexus_id);
+        const nexus = Game.getObjectById(nexus_id);
 
         if (unit.memory.dropoff_id == undefined){
             if (Game.getObjectById(nexus_id).room.storage != undefined)
                 unit.memory.dropoff_id = Game.getObjectById(nexus_id).room.storage.id;
             else{
                 unit.memory.killswitch = true;
-                return 'orbitalDroneAI:: UNIT ERROR: ' + unit.name + ' REQUIRES A HOME VAULT';
+                return 'orbitalDroneAI:: UNIT ERROR: ' + unit.name + ' REQUIRES A HOME VAULT IN ROOM #' + home_index;
             }
         }
         
@@ -21,10 +21,10 @@ module.exports = {
             //proceed if the evacuation alarm is not raised
             if (Memory.evac_timer[home_index] == 0){
                 //INPUTS: container
-                let canister = Game.getObjectById(canister_id);
+                const canister = Game.getObjectById(canister_id);
                 
-                //OUTPUTS: container/link/vault
-                let dropoff = Game.getObjectById(unit.memory.dropoff_id);
+                //OUTPUTS: vault
+                const dropoff = Game.getObjectById(unit.memory.dropoff_id);
             
             
                 //2-state fetch/unload FSM...
@@ -38,7 +38,7 @@ module.exports = {
                     unit.memory.fetching = true;
 
                     
-                //behaviour execution...
+                //performing actions at home room...
                 if (!unit.memory.fetching){
                     //navigate to homeroom
                     if (unit.room.name != unit.memory.home){
@@ -55,142 +55,170 @@ module.exports = {
                 }
 
 
-
-
-
-
-
-
-
-
-
-
+                //performing actions at remote site...
                 else{
-                    //rally at flag first
-                    if (!unit.memory.rallied){
-                        if (!unit.pos.isEqualTo(standby_flag.pos))
-                            unit.moveTo(standby_flag);
-                        else unit.memory.rallied = true;
-                    }
-                    //if the reservation is lost, cut off remote worker spawns and self-killswitch
-                    else{
-                        var take_branch = false;
-                        try{
-                            if (unit.room.controller.reservation.username == 'Invader'){
-                                Memory.recalibrator_MAX[home_index] = -1;
-                                Memory.orbitalAssimilator_MAX[home_index] = -1;
-                                Memory.orbitalDrone_MAX[home_index] = -1;
-                                unit.memory.killswitch = true;
-                            }
-                            else take_branch = true;
-                        }
-                        catch{
-                            take_branch = true;
-                        }
-                    }
-                    if (take_branch){
-                        //watch for invaders/intruders
-                        var i_threats = 0;
-                        var p_threats = 0;
-                        var p_name = '[NULL]';
-                        var enemy = unit.room.find(FIND_HOSTILE_CREEPS);
-                        if (enemy.length){
-                            //assess threat level
-                            for (let i=0; i<enemy.length; i++){
+                    //STAGE 1 START: rally to the flag location first
+                    if (!unit.memory.rallied)                   unit.moveTo(standby_flag);
+                    if (unit.pos.isEqualTo(standby_flag.pos))   unit.memory.rallied = true;
+                
+
+                    //STAGE 1 END: proceed when rally is complete
+                    if (unit.memory.rallied){
+                        let i_threats = 0;
+                        let p_threats = 0;
+                        let p_name = '[NULL]';
+
+                        const foreigner = unit.room.find(FIND_HOSTILE_CREEPS);
+
+                        //STAGE 2 START: check any foreigners present in the room, and respond appropriately
+                        if (foreigner.length){
+                            //determine if there are threats among them
+                            for (let i=0; i<foreigner.length; i++){
                                 //if invader, automatically assume threat (don't check body parts)
-                                if (enemy[i].owner.username == 'Invader'){
+                                if (foreigner[i].owner.username == 'Invader'){
                                     i_threats++;
                                     continue;
                                 }
-                                //if player, inspect body parts and verify threat level
-                                for (let j=0; j<enemy[i].body.length; j++){
-                                    if (enemy[i].body[j]['type'] == ATTACK || enemy[i].body[j]['type'] == RANGED_ATTACK){
+                                //if player, inspect body parts to confirm threat
+                                for (let j=0; j<foreigner[i].body.length; j++){
+                                    if (foreigner[i].body[j]['type'] == ATTACK || foreigner[i].body[j]['type'] == RANGED_ATTACK ||
+                                        foreigner[i].body[j]['type'] == CLAIM){
+
                                         p_threats++;
-                                        p_name = enemy.owner.username;
+                                        p_name = foreigner.owner.username;
                                         break;
                                     }
                                 }
                             }
-                        
-                            //decide how to handle threats
-                            if (i_threats > 0 || p_threats > 0){
-                                console.log('orbitalDrone.AI:: ------------------------------');
-                            
-                                //case: enemy player(s)
-                                if (p_threats > 0){
-                                    console.log('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + home_index + '...' + p_name + ' INBOUND<<<');
-                                    Memory.evac_timer[home_index] = 500;
-                                }
-                                //case: 1 invader
-                                else if (i_threats == 1){
-                                    console.log('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER INBOUND<<<');
-                                    Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
-                                    Memory.viable_prey[home_index] = true;
-                                }
-                                //case: multiple invaders
-                                else if (i_threats > 1){
-                                    console.log('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER HORDE INBOUND<<<');
-                                    Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
-                                    unit.memory.killswitch = true;
-                                }
-                            
-                                console.log('orbitalDrone.AI:: ------------------------------');
-                            }
-                        }
-                        //watch for hostile cores
-                        var invadercores = unit.room.find(FIND_HOSTILE_STRUCTURES, {
-                            filter: structure => {
-                                return structure.structureType == STRUCTURE_INVADER_CORE;
-                            }
-                        });
-                        if (invadercores.length && Memory.enforcer_MAX[home_index] < 0){
-                            Memory.enforcer_MAX[home_index] = 1;
-                            //Game.notify('orbitalDrone.AI:: >>>LOCKING SECTOR #' + home_index + '...CORE SIGHTED<<<',0);
-                            console.log('orbitalDrone.AI:: ------------------------------');
-                            console.log('orbitalDrone.AI:: >>>LOCKING SECTOR #' + home_index + '...CORE SIGHTED<<<');
-                            console.log('orbitalDrone.AI:: ------------------------------');
-                        }
                     
+                            //respond to player/invader threats
+                            if (i_threats > 0 || p_threats > 0){
+                                Memory.lastSeenEnemy_time[home_index] = Game.time;
+                                console.log('orbitalDrone.AI:: ------------------------------');
+                    
+                                //enemy player(s) detected: evacuate and call a blood hunter
+                                if (p_threats > 0){
+                                    //Game.notify('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + home_index + '...' + p_name + ' INBOUND<<<',0);
 
+                                    console.log('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + home_index + '...' + p_name + ' INBOUND<<<');
+                                    console.log('orbitalDrone.AI:: >>>SIGNALLING BLOOD HUNTER<<<');
 
+                                    Memory.lastSeenEnemy_name[home_index] = p_name;
+                                    Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
+                                    Memory.viable_prey[home_index] = true; //triggers blood hunter spawn
+                                }
+                                //lone invader detected: evacuate and call blood hunter
+                                else if (i_threats == 1){
+                                    //Game.notify('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER INBOUND<<<',0);
 
+                                    console.log('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER INBOUND<<<');
+                                    console.log('orbitalDrone.AI:: >>>SIGNALLING BLOOD HUNTER<<<');
 
+                                    Memory.lastSeenEnemy_name[home_index] = 'INVADER';
+                                    Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
+                                    Memory.viable_prey[home_index] = true; //triggers blood hunter spawn
+                                }
+                                //multiple invaders detected: evacuate and suicide
+                                else if (i_threats > 1){
+                                    //Game.notify('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER HORDE INBOUND<<<',0);
 
+                                    console.log('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER HORDE INBOUND<<<');
+                                    console.log('orbitalDrone.AI:: >>>RECYCLING EVACUATED UNITS<<<');
 
-
-
-
-
-                        //fetch from inputs
-                        //INPUTS: pickups, tombstones (non-empty)
-                        let scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
-                            filter: resource => {
-                                return resource.resourceType == RESOURCE_ENERGY
-                                    &&
-                                    resource.amount > ignore_lim;
+                                    Memory.lastSeenEnemy_name[home_index] = 'INVADER';
+                                    Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
+                                    unit.memory.killswitch = true; //reasoning: unit will likely not outlive the threat
+                                }
+                        
+                                console.log('orbitalDrone.AI:: ------------------------------');
                             }
-                        });
-                        let tombs = unit.room.find(FIND_TOMBSTONES, {
-                            filter: RoomObject => {
-                                return RoomObject.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+                        }
+
+
+                        //STAGE 2 END: proceed if no threats detected
+                        else{
+                            const invadercores = unit.room.find(FIND_HOSTILE_STRUCTURES, {
+                                filter: structure => {
+                                    return structure.structureType == STRUCTURE_INVADER_CORE;
+                                }
+                            });
+
+                            //STAGE 3A. watch for hostile cores
+                            if (invadercores.length && Memory.enforcer_MAX[home_index] < 0){
+                                //Game.notify('orbitalDrone.AI:: >>>SIGNALLING ENFORCER TO SECTOR #' + home_index + '...CORE SIGHTED<<<',0);
+
+                                console.log('orbitalDrone.AI:: ------------------------------');
+                                console.log('orbitalDrone.AI:: >>>SIGNALLING ENFORCER TO SECTOR #' + home_index + '...CORE SIGHTED<<<');
+                                console.log('orbitalDrone.AI:: ------------------------------');
+
+                                Memory.lastSeenCore_time[home_index] = Game.time;
+                                Memory.enforcer_MAX[home_index] = 1;
                             }
-                        });
+
+
+                            let reservation_lost = false;
+
+                            //STAGE 3B START: check room reservation status, and respond appropriately
+                            try{
+                                //controlled by hostiles: cut off remote worker spawns, call in a purifier, and self-killswitch
+                                if (unit.room.controller.reservation.username != unit.owner.username){
+                                    //Game.notify('orbitalDrone.AI:: >>>SIGNALLING PURIFIER TO SECTOR #' + home_index + '...CONTROLLER HAS FALLEN TO HOSTILE FORCES<<<',0);
+
+                                    console.log('orbitalDrone.AI:: ------------------------------');
+                                    console.log('orbitalDrone.AI:: >>>SIGNALLING PURIFIER TO SECTOR #' + home_index + '...CONTROLLER HAS FALLEN TO HOSTILE FORCES<<<');
+                                    console.log('orbitalDrone.AI:: ------------------------------');
+
+                                    Memory.lastReserveLoss_time[home_index] =   Game.time;
+                                    reservation_lost =                          true;
+
+                                    Memory.recalibrator_MAX[home_index] =       -1;
+                                    Memory.orbitalAssimilator_MAX[home_index] = -1;
+                                    Memory.orbitalDrone_MAX[home_index] =       -1;
+
+                                    Memory.purifier_MAX[home_index] =           1;
+                            
+                                    unit.memory.killswitch =                    true; //reasoning: unit will likely not survive long enough to see the controller's purification
+                                }
+                            }
+                            catch{
+                                //this happens if the room is controlled by nobody
+                            }
+
+
+                            //STAGE 3B END: proceed if room reservation is intact
+                            if (!reservation_lost){
+                                //STAGE 4. fetch from inputs
+
+                                //INPUTS: pickups, tombstones (non-empty)
+                                const scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
+                                    filter: resource => {
+                                        return resource.resourceType == RESOURCE_ENERGY
+                                            &&
+                                            resource.amount > ignore_lim;
+                                    }
+                                });
+                                const tombs = unit.room.find(FIND_TOMBSTONES, {
+                                    filter: RoomObject => {
+                                        return RoomObject.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+                                    }
+                                });
                 
-                
-                        //fetch: pickups<energy>
-                        if (scraps.length){
-                            if (unit.pickup(scraps[0]) == ERR_NOT_IN_RANGE)
-                                unit.moveTo(scraps[0]);
+                                //fetch: pickups<energy>
+                                if (scraps.length){
+                                    if (unit.pickup(scraps[0]) == ERR_NOT_IN_RANGE)
+                                        unit.moveTo(scraps[0]);
+                                }
+                                //fetch: tombstones<energy>
+                                else if (tombs.length){
+                                    if (unit.withdraw(tombs[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                                        unit.moveTo(tombs[0]);
+                                }
+                                //fetch: container
+                                else if (unit.withdraw(canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                                    unit.moveTo(canister);
+                            }
                         }
-                        //fetch: tombstones<energy>
-                        else if (tombs.length){
-                            if (unit.withdraw(tombs[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                                unit.moveTo(tombs[0]);
-                        }
-                        //fetch: container
-                        else if (unit.withdraw(canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                            unit.moveTo(canister);
-                    }
+                    } 
                 }
             }
 

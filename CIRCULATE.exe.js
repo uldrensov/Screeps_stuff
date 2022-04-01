@@ -17,7 +17,7 @@ module.exports = {
             else if (i == RESOURCES_ALL.length-1)   return 'CIRCULATE:: INVALID RESOURCE TYPE';
         }
         
-        var nexi = [];
+        let nexi = [];
         for (let i=0; i<SD.nexus_id.length; i++){
             nexi[i] = Game.getObjectById(SD.nexus_id[i]);
         }

@@ -16,10 +16,6 @@
             
             //summary 1: room existence, danger level, summoned recovery units
             for (let i=0; i<SD.nexus_id.length; i++){
-                nexus = Game.getObjectById(SD.nexus_id[i]);
-                
-                if (!nexus)         continue; //error: if nexus fails to retrieve, skip the room
-                
                 remote_exists =     (Memory.orbitalAssimilator_MAX[i] != 0)     ? true          : false;
                 danger_level =      (Memory.evac_timer[i] > 0)                  ? 'HIGH'        : 'LOW';
                 bloodhunt_status =  (danger_level == 'LOW')                     ? 'DORMANT'     : (Memory.bloodhunter_casualty[i] == true)   ? 'DEFEATED'   : 'PROWLING';
@@ -33,12 +29,8 @@
             
             console.log('STATUSREPORT_R::');
             
-            //summary 2:
+            //summary 2: time passed since last incidents observed
             for (let j=0; j<SD.nexus_id.length; j++){
-                nexus = Game.getObjectById(SD.nexus_id[j]);
-                
-                if (!nexus)         continue; //error: if nexus fails to retrieve, skip the room
-
                 remote_exists =     (Memory.orbitalAssimilator_MAX[j] != 0)     ? true          : false;
 
                 if (remote_exists)

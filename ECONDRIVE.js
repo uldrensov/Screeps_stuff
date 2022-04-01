@@ -50,6 +50,7 @@ module.exports = {
 
         //load terminals with outbound cargo
         if (Game.time % SD.autoload_interval == 0 && SD.autoload_EN == true){
+            let resource_type;
             let terminalLoadResult = false;
             console.log('ECONDRIVE:: <<-----AUTOLOAD SUMMARY-------');
 
@@ -64,8 +65,17 @@ module.exports = {
                 
                 //load the terminal if there is sufficient free space for cargo
                 if (term.store.getFreeCapacity() >= SD.cargo_size){
-                    let minType = Memory.mineral_type[i].mineralType;
-                    let en_min_ratio = term.store.getUsedCapacity(RESOURCE_ENERGY) / term.store.getUsedCapacity(minType);
+                    //select a sellable resource that meets the cargo size
+                    for (let x=0; x<SD.sellable_products[i].length; x++){
+                        if (vault.store.getUsedCapacity(SD.sellable_products[i][x]) > SD.cargo_size){
+                            resource_type = SD.sellable_products[i][x];
+                            break;
+                        }
+                    }
+                    //do nothing for the current room if no suitable resource is found
+                    if (resource_type == undefined) continue;
+
+                    let en_min_ratio = term.store.getUsedCapacity(RESOURCE_ENERGY) / term.store.getUsedCapacity(resource_type);
                     
                     //if terminal's energy-to-mineral ratio is insufficient, and vault has enough energy to *spare*, then load energy required for transaction
                     if (en_min_ratio < .5 && vault.store.getUsedCapacity(RESOURCE_ENERGY) >= SD.cargo_size + SD.vault_boundary){
@@ -73,10 +83,10 @@ module.exports = {
                         //console.log('ECONDRIVE:: AUTOLOADING ENERGY IN ROOM #' + i);
                         terminalLoadResult = true;
                     }
-                    //if terminal's energy-to-mineral ratio is sufficient, and vault contains enough minerals to sell, then load minerals
-                    else if (en_min_ratio >= .5 && vault.store.getUsedCapacity(minType) >= SD.cargo_size){
-                        require('TERMINALTRANSFER.exe').run(i,minType,SD.cargo_size,'NA',true,true);
-                        //console.log('ECONDRIVE:: AUTOLOADING [' + minType + '] IN ROOM #' + i);
+                    //if terminal's energy-to-mineral ratio is sufficient, then load minerals
+                    else if (en_min_ratio >= .5){
+                        require('TERMINALTRANSFER.exe').run(i,resource_type,SD.cargo_size,'NA',true,true);
+                        //console.log('ECONDRIVE:: AUTOLOADING [' + resource_type + '] IN ROOM #' + i);
                         terminalLoadResult = true;
                     }
                 }
@@ -87,8 +97,10 @@ module.exports = {
             console.log('ECONDRIVE:: ---------------------------->>');
         }
         
+
         //export terminal contents
         if (Game.time % SD.autosell_interval == 0 && SD.autosell_EN == true){
+            let resource_type;
             let transactionResult = false;
             console.log('ECONDRIVE:: <<-----AUTOSELL SUMMARY-------');
 
@@ -96,8 +108,16 @@ module.exports = {
                 if (nexi[i] == null)                continue; //error: if nexus fails to retrieve, skip the room
                 
                 if (nexi[i].room.terminal != undefined){
-                    if (nexi[i].room.terminal.store.getUsedCapacity(Memory.mineral_type[i].mineralType) > 0)
-                        if (TRANSACTION.run(i) == OK)
+                    //select a sellable resource
+                    for (let x=0; x<SD.sellable_products[i].length; x++){
+                        if (nexi[i].room.terminal.store.getUsedCapacity(SD.sellable_products[i][x]) > 0){
+                            resource_type = SD.sellable_products[i][x];
+                            break;
+                        }
+                    }
+                    
+                    if (resource_type != undefined)
+                        if (TRANSACTION.run(i,resource_type) == OK)
                             transactionResult = true;
                 }
             }
@@ -107,6 +127,7 @@ module.exports = {
             console.log('ECONDRIVE:: ---------------------------->>');
         }
         
+
         //export excess energy
         if (Game.time % SD.autosell_interval == 0){
             let ventResult = false;
@@ -155,6 +176,7 @@ module.exports = {
                 Memory.powernex_id[i] = powernex.length ? powernex[0].id : 'NULL';
             }
         }
+        
         
         //produce cosmetics currency
         if (Game.cpu.bucket == 10000){

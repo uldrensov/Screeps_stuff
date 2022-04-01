@@ -2,7 +2,7 @@
 
 module.exports = {
     
-    //numbers
+    //numbers...
     //general-purpose time values
     time_offset:            100000,     //used for unit naming
     std_interval:           15,         //tick interval for CPU-heavy actions
@@ -33,7 +33,7 @@ module.exports = {
     cleanup_thresh:         2000,       //retriever drones arrive upon detecting this much uncollected energy on the ground, and stop at a quarter of this value
     
     
-    //important hardcoded object IDs
+    //important hardcoded object IDs...
     //spawners
     nexus_id:               ['5e2d15a9e152154167131760',    '5e5b6eabb5c443745759aa65', '5e466c796fffaf84254b19ed',
                             '5ea53129e72edb5e91141913',     '000000000000000000000000', '5e90c0cd92ec7d74fd3827c3',
@@ -136,17 +136,29 @@ module.exports = {
                             '000000000000000000000000',     '000000000000000000000000', '000000000000000000000000',
                             '000000000000000000000000',     '000000000000000000000000']],
     
-    
-    //special usernames
+
+    //autosell-authorised products...
+    sellable_products:      [['Z', 'GO'],
+                            ['O'],
+                            ['K', 'GO'],
+                            ['X', 'GO'],
+                            [],
+                            ['X'],
+                            ['O'],
+                            ['L'],
+                            ['L']],
+
+
+    //special usernames...
     allies:                 ['Hellbuck'],
     notif_blacklist:        ['Invader','Patch'],
 
 
-    //misc
+    //misc...
     tag:                    'Welcome to my rice fields, MF!',
     
     
-    //body parts by role
+    //body parts by role...
     edrone_body:            [WORK, CARRY,CARRY, MOVE,MOVE],
                             //cost: 300
     drone_body:             [[CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
