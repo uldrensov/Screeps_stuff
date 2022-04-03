@@ -78,6 +78,7 @@ module.exports = {
         console.log('ENERGYVENT:: *SOLD ' + finalTradeAmount + ' [' + 'energy' + '] FOR ' + bestOffer.price + ' EACH (+' + (finalTradeAmount*bestOffer.price).toFixed(3) + ' CREDITS)');
         console.log('ENERGYVENT:: TRANSMISSION TAX: ' + tax + ' (' + (100*tax/finalTradeAmount).toFixed(1) + '% rate)');
         console.log('ENERGYVENT:: TRANSACTION SUCCESSFUL (ROOM #' + room_num + ')');
+        
         return OK;
     }
 };

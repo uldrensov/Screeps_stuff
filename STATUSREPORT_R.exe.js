@@ -12,6 +12,10 @@
             let bloodhunt_status;
             let enforc_active;
             let purif_active;
+
+            let ticksago_enemy;
+            let ticksago_core;
+            let ticksago_resLost;
             
             
             //summary 1: room existence, danger level, summoned recovery units
@@ -23,7 +27,8 @@
                 purif_active =      (danger_level == 'HIGH')                    ? 'RETREATING'  : (Memory.purifier_MAX[i] > 0)               ? 'SIEGING'    : 'DORMANT';
                 
                 if (remote_exists)
-                    console.log('STATUSREPORT_R:: Site #' + i + '|      DANGER: ' + danger_level + '       BLOOD HUNTER: ' + bloodhunt_status +
+                    console.log('STATUSREPORT_R:: Site #' + i +
+                        '|      DANGER: ' + danger_level + '       BLOOD HUNTER: ' + bloodhunt_status +
                         '       ENFORCER: ' + enforc_active + '       PURIFIER: ' + purif_active);
             }
             
@@ -32,15 +37,18 @@
             //summary 2: time passed since last incidents observed
             for (let j=0; j<SD.nexus_id.length; j++){
                 remote_exists =     (Memory.orbitalAssimilator_MAX[j] != 0)     ? true          : false;
+                ticksago_enemy =    isNaN(Memory.lastSeenEnemy_time[j])         ? '∞'           : (Game.time - Memory.lastSeenEnemy_time[j]);
+                ticksago_core =     isNaN(Memory.lastSeenCore_time[j])          ? '∞'           : (Game.time - Memory.lastSeenCore_time[j]);
+                ticksago_resLost =  isNaN(Memory.lastReserveLoss_time[j])       ? '∞'           : (Game.time - Memory.lastReserveLoss_time[j]);
 
                 if (remote_exists)
                     console.log('STATUSREPORT_R:: Site #' + j + '|      LAST ENEMY SEEN: ' + Memory.lastSeenEnemy_name[j] + ', ' +
-                        (Game.time - Memory.lastSeenEnemy_time[j]) + ' ticks ago        LAST CORE SEEN: ' +
-                        (Game.time - Memory.lastSeenCore_time[j]) + ' ticks ago        LAST RESERVATION LOSS: ' + 
-                        (Game.time - Memory.lastReserveLoss_time[j]) + ' ticks ago');
+                        ticksago_enemy + ' ticks ago        LAST CORE SEEN: ' +
+                        ticksago_core + ' ticks ago        LAST RESERVATION LOSS: ' + 
+                        ticksago_resLost + ' ticks ago');
             }
             
     
-            return 'STATUSREPORT_R:: *****END OF REPORT*****';
+            return 'STATUSREPORT_R:: ***** END *****';
         }
     };

@@ -52,11 +52,15 @@ module.exports = {
         if (Memory.lastSeenCore_time == undefined)              Memory.lastSeenCore_time =                 [];            //do not modify manually
         if (Memory.lastReserveLoss_time == undefined)           Memory.lastReserveLoss_time =              [];            //do not modify manually
 
+        //economy automation
+        if (Memory.autoload_EN == undefined)                    Memory.autoload_EN =                       [];
+        if (Memory.autosell_EN == undefined)                    Memory.autosell_EN =                       [];
+        if (Memory.autovent_EN == undefined)                    Memory.autovent_EN =                       [];
+
         //misc
         if (Memory.mineral_type == undefined)                   Memory.mineral_type =                      [];            //do not modify manually
-        if (Memory.roomSpeed == undefined)                      Memory.roomSpeed =                         [];            //TODO: move to SOFTDATA
+        if (Memory.roomSpeed == undefined)                      Memory.roomSpeed =                         [];
         if (Memory.powernex_id == undefined)                    Memory.powernex_id =                       [];            //do not modify manually
-        if (Memory.autovent_EN == undefined)                    Memory.autovent_EN =                       [];            //TODO: move to SOFTDATA
         
 
         //init (populate) room-specific data...
@@ -100,12 +104,15 @@ module.exports = {
             if (Memory.viable_prey[i] == undefined)             Memory.viable_prey[i] =                    false;         //do not modify manually
             if (Memory.bloodhunter_casualty[i] == undefined)    Memory.bloodhunter_casualty[i] =           false;         //do not modify manually
             if (Memory.lastSeenEnemy_name[i] == undefined)      Memory.lastSeenEnemy_name[i] =             'NULL';        //do not modify manually
-            if (Memory.lastSeenEnemy_time[i] == undefined)      Memory.lastSeenEnemy_time[i] =             Game.time;     //do not modify manually
-            if (Memory.lastSeenCore_time[i] == undefined)       Memory.lastSeenCore_time[i] =              Game.time;     //do not modify manually
-            if (Memory.lastReserveLoss_time[i] == undefined)    Memory.lastReserveLoss_time[i] =           Game.time;     //do not modify manually
+            if (Memory.lastSeenEnemy_time[i] == undefined)      Memory.lastSeenEnemy_time[i] =             'NEVER';       //do not modify manually
+            if (Memory.lastSeenCore_time[i] == undefined)       Memory.lastSeenCore_time[i] =              'NEVER';       //do not modify manually
+            if (Memory.lastReserveLoss_time[i] == undefined)    Memory.lastReserveLoss_time[i] =           'NEVER';       //do not modify manually
             
-            if (Memory.roomSpeed[i] == undefined)               Memory.roomSpeed[i] =                      1;             //TODO: move to SOFTDATA
-            if (Memory.autovent_EN[i] == undefined)             Memory.autovent_EN[i] =                    false;         //TODO: move to SOFTDATA
+            if (Memory.autoload_EN[i] == undefined)             Memory.autoload_EN[i] =                    false;
+            if (Memory.autosell_EN[i] == undefined)             Memory.autosell_EN[i] =                    false;
+            if (Memory.autovent_EN[i] == undefined)             Memory.autovent_EN[i] =                    false;
+
+            if (Memory.roomSpeed[i] == undefined)               Memory.roomSpeed[i] =                      1;
         }
         
 
@@ -115,6 +122,6 @@ module.exports = {
         if (Memory.zealot_MAX == undefined)                     Memory.zealot_MAX =                        0;             //this unit role is currently unimplemented
         if (Memory.wall_threshold == undefined)                 Memory.wall_threshold =                    50000;         //TODO: move to SOFTDATA
         if (Memory.rampart_threshold == undefined)              Memory.rampart_threshold =                 100000;        //TODO: move to SOFTDATA
-        if (Memory.construction_mode == undefined)              Memory.construction_mode =                 false;         //TODO: move to SOFTDATA
+        if (Memory.construction_mode == undefined)              Memory.construction_mode =                 false;         //TODO: make this per-room
     }
 };

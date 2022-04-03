@@ -1,6 +1,7 @@
 //function: automates economic functions (vault monitor, market transactions, power procession, pixel generation)
 
 var SD =                    require('SOFTDATA');
+var TERMINALTRANSFER =      require('TERMINALTRANSFER.exe');
 var TRANSACTION =           require('TRANSACTION.exe');
 var ENERGYVENT =            require('ENERGYVENT.exe');
 
@@ -47,107 +48,171 @@ module.exports = {
             }
         }
     
-
+        
         //load terminals with outbound cargo
-        if (Game.time % SD.autoload_interval == 0 && SD.autoload_EN == true){
+        if (Game.time % SD.autoload_interval == 0){
             let resource_type;
-            let terminalLoadResult = false;
-            console.log('ECONDRIVE:: <<-----AUTOLOAD SUMMARY-------');
+            let printFlag = true; //helper var for printing the header only once, and the footer only if the header prints
+            let loadPerformed = false;
+            let autoload_return;
+
+            let vault;
+            let term;
+
+            let en_min_ratio;
+
 
             for (let i=0; i<SD.nexus_id.length; i++){
-                if (nexi[i] == null)                continue; //error: if nexus fails to retrieve, skip the room
+                if (Memory.autoload_EN[i] == true){    
+                    if (nexi[i] == null)                continue; //error: if nexus fails to retrieve, skip the room
                 
-                //check for vault/terminal existence
-                let vault = nexi[i].room.storage;
-                let term = nexi[i].room.terminal;
+                    //check for vault/terminal existence
+                    vault = nexi[i].room.storage;
+                    term = nexi[i].room.terminal;
 
-                if (!vault || !term)                continue;
+                    if (!vault || !term)                continue;
+
+
+                    //print header if at least one room's autoload is enabled
+                    if (printFlag){
+                        console.log('ECONDRIVE:: <<-----AUTOLOAD SUMMARY-------');
+                        printFlag = false;
+                    }
                 
-                //load the terminal if there is sufficient free space for cargo
-                if (term.store.getFreeCapacity() >= SD.cargo_size){
-                    //select a sellable resource that meets the cargo size
-                    for (let x=0; x<SD.sellable_products[i].length; x++){
-                        if (vault.store.getUsedCapacity(SD.sellable_products[i][x]) > SD.cargo_size){
-                            resource_type = SD.sellable_products[i][x];
-                            break;
+                    //load the terminal if there is sufficient free space for cargo
+                    if (term.store.getFreeCapacity() >= SD.cargo_size){
+                        //select a sellable resource that meets the cargo size
+                        for (let x=0; x<SD.sellable_products[i].length; x++){
+                            if (vault.store.getUsedCapacity(SD.sellable_products[i][x]) >= SD.cargo_size){
+                                resource_type = SD.sellable_products[i][x];
+                                break;
+                            }
                         }
-                    }
-                    //do nothing for the current room if no suitable resource is found
-                    if (resource_type == undefined) continue;
+                        //do nothing for the current room if no suitable resource is found
+                        if (resource_type == undefined) continue;
 
-                    let en_min_ratio = term.store.getUsedCapacity(RESOURCE_ENERGY) / term.store.getUsedCapacity(resource_type);
+
+                        en_min_ratio = term.store.getUsedCapacity(RESOURCE_ENERGY) / term.store.getUsedCapacity(resource_type);
                     
-                    //if terminal's energy-to-mineral ratio is insufficient, and vault has enough energy to *spare*, then load energy required for transaction
-                    if (en_min_ratio < .5 && vault.store.getUsedCapacity(RESOURCE_ENERGY) >= SD.cargo_size + SD.vault_boundary){
-                        require('TERMINALTRANSFER.exe').run(i,'energy',SD.cargo_size,'NA',true,true);
-                        //console.log('ECONDRIVE:: AUTOLOADING ENERGY IN ROOM #' + i);
-                        terminalLoadResult = true;
-                    }
-                    //if terminal's energy-to-mineral ratio is sufficient, then load minerals
-                    else if (en_min_ratio >= .5){
-                        require('TERMINALTRANSFER.exe').run(i,resource_type,SD.cargo_size,'NA',true,true);
-                        //console.log('ECONDRIVE:: AUTOLOADING [' + resource_type + '] IN ROOM #' + i);
-                        terminalLoadResult = true;
+                        //if terminal's energy-to-mineral ratio is insufficient, and vault has enough energy to *spare*, then load energy required for transaction
+                        if (en_min_ratio < .5
+                            &&
+                            vault.store.getUsedCapacity(RESOURCE_ENERGY) >= SD.cargo_size + SD.vault_boundary){
+
+                            autoload_return = TERMINALTRANSFER.run(i,'energy',SD.cargo_size,'NA',true,true);
+
+                            if (autoload_return == OK)
+                                loadPerformed = true;
+                            else
+                                console.log('ECONDRIVE:: AUTOLOAD FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autoload_return + ']');
+                        }
+                        //if terminal's energy-to-mineral ratio is sufficient, then load minerals
+                        else if (en_min_ratio >= .5){
+                            autoload_return = TERMINALTRANSFER.run(i,resource_type,SD.cargo_size,'NA',true,true);
+                            
+                            if (autoload_return == OK)
+                                loadPerformed = true;
+                            else
+                                console.log('ECONDRIVE:: AUTOLOAD FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autoload_return + ']');
+                        }
                     }
                 }
             }
-            if (!terminalLoadResult)
-                console.log('ECONDRIVE:: [NO TERMINALS LOADED]');
 
-            console.log('ECONDRIVE:: ---------------------------->>');
-        }
-        
-
-        //export terminal contents
-        if (Game.time % SD.autosell_interval == 0 && SD.autosell_EN == true){
-            let resource_type;
-            let transactionResult = false;
-            console.log('ECONDRIVE:: <<-----AUTOSELL SUMMARY-------');
-
-            for (let i=0; i<SD.nexus_id.length; i++){
-                if (nexi[i] == null)                continue; //error: if nexus fails to retrieve, skip the room
-                
-                if (nexi[i].room.terminal != undefined){
-                    //select a sellable resource
-                    for (let x=0; x<SD.sellable_products[i].length; x++){
-                        if (nexi[i].room.terminal.store.getUsedCapacity(SD.sellable_products[i][x]) > 0){
-                            resource_type = SD.sellable_products[i][x];
-                            break;
-                        }
-                    }
-                    
-                    if (resource_type != undefined)
-                        if (TRANSACTION.run(i,resource_type) == OK)
-                            transactionResult = true;
-                }
+            //print footer only if the header printed
+            if (!printFlag){
+                if (!loadPerformed)
+                    console.log('ECONDRIVE:: [NO TERMINALS LOADED]');
+                console.log('ECONDRIVE:: ---------------------------->>');
             }
-            if (!transactionResult)
-                console.log('ECONDRIVE:: [NO TRANSACTIONS]');
-
-            console.log('ECONDRIVE:: ---------------------------->>');
         }
         
-
-        //export excess energy
+        
+        //export terminal minerals
         if (Game.time % SD.autosell_interval == 0){
-            let ventResult = false;
-            console.log('ECONDRIVE:: <<-----AUTOVENT SUMMARY-------');
+            let resource_type;
+            let printFlag = true; //helper var for printing the header only once, and the footer only if the header prints
+            let transactionPerformed = false;
+            let autosell_return;
+
+            
+            for (let i=0; i<SD.nexus_id.length; i++){
+                if (Memory.autosell_EN[i] == true){
+                    if (nexi[i] == null)                continue; //error: if nexus fails to retrieve, skip the room
+
+                    //print header if at least one room's autosell is enabled
+                    if (printFlag){
+                        console.log('ECONDRIVE:: <<-----AUTOSELL SUMMARY-------');
+                        printFlag = false;
+                    }
+                
+                    if (nexi[i].room.terminal != undefined){
+                        //select a sellable resource (no specific priority given)
+                        for (let x=0; x<SD.sellable_products[i].length; x++){
+                            if (nexi[i].room.terminal.store.getUsedCapacity(SD.sellable_products[i][x]) > 0){
+                                resource_type = SD.sellable_products[i][x];
+                                break;
+                            }
+                        }
+
+                        //sell attempt
+                        if (resource_type != undefined){
+                            autosell_return = TRANSACTION.run(i,resource_type);
+
+                            if (autosell_return == OK)
+                                transactionPerformed = true;
+                            else
+                                console.log('ECONDRIVE:: AUTOSELL FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autosell_return + ']');
+                        }
+                    }
+                }
+            }
+
+            //print footer only if the header printed
+            if (!printFlag){
+                if (!transactionPerformed)
+                    console.log('ECONDRIVE:: [NO TRANSACTIONS]');
+                console.log('ECONDRIVE:: ---------------------------->>');
+            }
+        }
+        
+        
+        //export excess terminal energy
+        if (Game.time % SD.autosell_interval == 0){
+            let printFlag = true; //helper var for printing the header only once, and the footer only if the header prints
+            let ventPerformed = false;
+            let autovent_return;
+
 
             for (let i=0; i<SD.nexus_id.length; i++){
                 if (Memory.autovent_EN[i] == true){
                     if (nexi[i] == null)            continue; //error: if nexus fails to retrieve, skip the room
                     
-                    if (nexi[i].room.terminal != undefined){
-                        if (nexi[i].room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
-                            if (ENERGYVENT.run(i) == OK)
-                                ventResult = true;
+                    //print header if at least one autovent is enabled
+                    if (printFlag){
+                        console.log('ECONDRIVE:: <<-----AUTOVENT SUMMARY-------');
+                        printFlag = false;
                     }
+
+                    //vent attempt
+                    if (nexi[i].room.terminal != undefined)
+                        if (nexi[i].room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) > 0){
+                            autovent_return = ENERGYVENT.run(i);
+
+                            if (autovent_return == OK)
+                                ventPerformed = true;
+                            else
+                                console.log('ECONDRIVE:: AUTOVENT FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autovent_return + ']');
+                        }
                 }
             }
-            if (!ventResult)
-                console.log('ECONDRIVE:: [NO VENTING PERFORMED]');
 
-            console.log('ECONDRIVE:: ---------------------------->>');
+            //print footer only if the header printed
+            if (!printFlag){
+                if (!ventPerformed)
+                    console.log('ECONDRIVE:: [NO VENTING PERFORMED]');
+                console.log('ECONDRIVE:: ---------------------------->>');
+            }
         }
         
 
@@ -159,11 +224,15 @@ module.exports = {
             //ignore rooms under level requirement for power nexus
             if (nexi[i].room.controller.level < 8)  continue;
 
+
             getPowerNex = Game.getObjectById(Memory.powernex_id[i]);
             
             //if powernex exists, proceed
             if (getPowerNex != null){
-                if (getPowerNex.store.getUsedCapacity(RESOURCE_POWER) > 0 && getPowerNex.store.getUsedCapacity(RESOURCE_ENERGY) >= 50)
+                if (getPowerNex.store.getUsedCapacity(RESOURCE_POWER) > 0
+                    &&
+                    getPowerNex.store.getUsedCapacity(RESOURCE_ENERGY) >= 50)
+
                     getPowerNex.processPower();
             }
             //if no powernex exists, search for one periodically

@@ -6,7 +6,6 @@ module.exports = {
     //general-purpose time values
     time_offset:            100000,     //used for unit naming
     std_interval:           15,         //tick interval for CPU-heavy actions
-    room_speed:             [],         //per room, causes certain CPU-heavy units to slow down
 
     //construction thresholds
     wall_threshold:         500000,     //de facto "max hp" for walls
@@ -14,17 +13,14 @@ module.exports = {
     construction_mode:      false,      //enabling this will stop towers from repairing structures; useful for situational energy conservation
 
     //economy automation values
-    price_tolerance:        .85,        //autosell minerals no cheaper than a minimum percentage of the avg price
+    price_tolerance:        .85,        //avoids selling minerals below a minimum percentage of the avg price
     cargo_size:             100000,     //outbound "crate" size for trade terminal autoloading
-    autovent_EN:            [],         //per room, automates terminal sales (energy)
-    autosell_EN:            false,      //automates terminal sales (minerals)
-    autoload_EN:            false,      //automates the spawning of treasurers that load excess minerals into terminals
-    autosell_interval:      200,        //tick interval for automatic terminal sales
-    autoload_interval:      2500,       //tick interval for automatic terminal loading (should be well over 2000; e.g. unit TTL)
+    autoload_interval:      800,        //tick interval for automatic terminal loading (should exceed # of ticks required for a treasurer to finish an order)
+    autosell_interval:      200,        //tick interval for automatic terminal sales (both mineral sales and energy sales)
 
     //energy management
     tower_reserve_ratio:    .5,         //towers will reserve this percentage of their energy for attacking
-    vault_boundary:         100000,     //all units except (e)drones, energisers, and phase architects will avoid vaults containing less than this
+    vault_boundary:         100000,     //all units except (e)drones, energisers, and phase architects will avoid withdrawing from vaults containing less than this
 
     //unit role-specific values
     fixation_override:      .25,        //probes will break fixation upon spotting an absolute % gap this wide
