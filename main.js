@@ -26,18 +26,10 @@ module.exports.loop = function(){
     }
     
     
-    let room_of_origin;
-
     //garbage collect the names of expired units
     for (let name in Memory.creeps){
         if (!Game.creeps[name]){
-            //TODO: add room # to every unit's memory; then delete this if-block
-            if (Memory.creeps[name].home_index == undefined)
-                room_of_origin = '_';
-            else
-                room_of_origin = Memory.creeps[name].home_index;
-
-            console.log('MAIN:: Room #' + room_of_origin + ': ' + name + ' has expired.');
+            console.log('MAIN:: ' + name + ' has expired.');
             delete Memory.creeps[name];
         }
     }

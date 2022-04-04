@@ -179,7 +179,7 @@ module.exports = {
                 case 'visionary':
                     for (let i=0; i<SD.nexus_id.length; i++){
                         if (unit.memory.home == nexi[i].room.name){
-                            visionary.run(unit, Game.flags['GOGO'], i); //TODO: save flag name to SD or Memory instead of hardcoding
+                            visionary.run(unit, Game.flags['GOGO']); //TODO: save flag name to SD or Memory instead of hardcoding
                             break;
                         }
                     }

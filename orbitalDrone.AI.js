@@ -85,7 +85,7 @@ module.exports = {
                                         foreigner[i].body[j]['type'] == CLAIM){
 
                                         p_threats++;
-                                        p_name = foreigner.owner.username;
+                                        p_name = foreigner[i].owner.username;
                                         break;
                                     }
                                 }

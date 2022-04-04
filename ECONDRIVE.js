@@ -81,6 +81,8 @@ module.exports = {
                 
                     //load the terminal if there is sufficient free space for cargo
                     if (term.store.getFreeCapacity() >= SD.cargo_size){
+                        resource_type = undefined;
+
                         //select a sellable resource that meets the cargo size
                         for (let x=0; x<SD.sellable_products[i].length; x++){
                             if (vault.store.getUsedCapacity(SD.sellable_products[i][x]) >= SD.cargo_size){
@@ -99,7 +101,7 @@ module.exports = {
                             &&
                             vault.store.getUsedCapacity(RESOURCE_ENERGY) >= SD.cargo_size + SD.vault_boundary){
 
-                            autoload_return = TERMINALTRANSFER.run(i,'energy',SD.cargo_size,'NA',true,true);
+                            autoload_return = TERMINALTRANSFER.run(i,'energy',SD.cargo_size,'TRM',true,true);
 
                             if (autoload_return == OK)
                                 loadPerformed = true;
@@ -108,7 +110,7 @@ module.exports = {
                         }
                         //if terminal's energy-to-mineral ratio is sufficient, then load minerals
                         else if (en_min_ratio >= .5){
-                            autoload_return = TERMINALTRANSFER.run(i,resource_type,SD.cargo_size,'NA',true,true);
+                            autoload_return = TERMINALTRANSFER.run(i,resource_type,SD.cargo_size,'TRM',true,true);
                             
                             if (autoload_return == OK)
                                 loadPerformed = true;
@@ -130,11 +132,11 @@ module.exports = {
         
         //export terminal minerals
         if (Game.time % SD.autosell_interval == 0){
-            let resource_type;
             let printFlag = true; //helper var for printing the header only once, and the footer only if the header prints
+            let transactionPerformed_inRoom;
             let transactionPerformed = false;
             let autosell_return;
-
+            
             
             for (let i=0; i<SD.nexus_id.length; i++){
                 if (Memory.autosell_EN[i] == true){
@@ -145,24 +147,27 @@ module.exports = {
                         console.log('ECONDRIVE:: <<-----AUTOSELL SUMMARY-------');
                         printFlag = false;
                     }
-                
+                    
                     if (nexi[i].room.terminal != undefined){
-                        //select a sellable resource (no specific priority given)
+                        transactionPerformed_inRoom = false;
+                        
+                        //select a sellable resource (no specific priority order) and attempt to sell
                         for (let x=0; x<SD.sellable_products[i].length; x++){
                             if (nexi[i].room.terminal.store.getUsedCapacity(SD.sellable_products[i][x]) > 0){
-                                resource_type = SD.sellable_products[i][x];
-                                break;
+                                autosell_return = TRANSACTION.run(i,SD.sellable_products[i][x]);
+
+                                //upon successful sell, move on to the next room
+                                if (autosell_return == OK){
+                                    transactionPerformed_inRoom = true;
+                                    transactionPerformed = true;
+                                    break;
+                                }
                             }
                         }
 
-                        //sell attempt
-                        if (resource_type != undefined){
-                            autosell_return = TRANSACTION.run(i,resource_type);
-
-                            if (autosell_return == OK)
-                                transactionPerformed = true;
-                            else
-                                console.log('ECONDRIVE:: AUTOSELL FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autosell_return + ']');
+                        //if no sellable resources
+                        if (!transactionPerformed_inRoom){
+                            console.log('ECONDRIVE:: AUTOSELL FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autosell_return + ']');
                         }
                     }
                 }
