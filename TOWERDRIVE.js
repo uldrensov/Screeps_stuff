@@ -92,7 +92,6 @@ module.exports = {
                                     threatvalue += 50;
                                     break;
                                 default:
-                                    break;
                             }
                         }
                     }
@@ -203,6 +202,10 @@ module.exports = {
                         if (!Memory.construction_mode && turret.store[RESOURCE_ENERGY] > turret.store.getCapacity(RESOURCE_ENERGY) * SD.tower_reserve_ratio)
                             turret.repair(Game.getObjectById(Memory.turretTarget_id[k]));
                         break;
+                    case 'IDLE':
+                        break;
+                    default:
+                        console.log("TOWERDRIVE:: INVALID COMMAND");
                 }
             }
         }

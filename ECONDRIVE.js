@@ -53,7 +53,6 @@ module.exports = {
         if (Game.time % SD.autoload_interval == 0){
             let resource_type;
             let printFlag = true; //helper var for printing the header only once, and the footer only if the header prints
-            let loadPerformed = false;
             let autoload_return;
 
             let vault;
@@ -103,18 +102,14 @@ module.exports = {
 
                             autoload_return = TERMINALTRANSFER.run(i,'energy',SD.cargo_size,'TRM',true,true);
 
-                            if (autoload_return == OK)
-                                loadPerformed = true;
-                            else
+                            if (autoload_return != OK)
                                 console.log('ECONDRIVE:: AUTOLOAD FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autoload_return + ']');
                         }
                         //if terminal's energy-to-mineral ratio is sufficient, then load minerals
                         else if (en_min_ratio >= .5){
                             autoload_return = TERMINALTRANSFER.run(i,resource_type,SD.cargo_size,'TRM',true,true);
                             
-                            if (autoload_return == OK)
-                                loadPerformed = true;
-                            else
+                            if (autoload_return != OK)
                                 console.log('ECONDRIVE:: AUTOLOAD FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autoload_return + ']');
                         }
                     }
@@ -122,11 +117,8 @@ module.exports = {
             }
 
             //print footer only if the header printed
-            if (!printFlag){
-                if (!loadPerformed)
-                    console.log('ECONDRIVE:: [NO TERMINALS LOADED]');
+            if (!printFlag)
                 console.log('ECONDRIVE:: ---------------------------->>');
-            }
         }
         
         
@@ -134,7 +126,6 @@ module.exports = {
         if (Game.time % SD.autosell_interval == 0){
             let printFlag = true; //helper var for printing the header only once, and the footer only if the header prints
             let transactionPerformed_inRoom;
-            let transactionPerformed = false;
             let autosell_return;
             
             
@@ -159,33 +150,27 @@ module.exports = {
                                 //upon successful sell, move on to the next room
                                 if (autosell_return == OK){
                                     transactionPerformed_inRoom = true;
-                                    transactionPerformed = true;
                                     break;
                                 }
                             }
                         }
 
                         //if no sellable resources
-                        if (!transactionPerformed_inRoom){
+                        if (!transactionPerformed_inRoom)
                             console.log('ECONDRIVE:: AUTOSELL FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autosell_return + ']');
-                        }
                     }
                 }
             }
 
             //print footer only if the header printed
-            if (!printFlag){
-                if (!transactionPerformed)
-                    console.log('ECONDRIVE:: [NO TRANSACTIONS]');
+            if (!printFlag)
                 console.log('ECONDRIVE:: ---------------------------->>');
-            }
         }
         
         
         //export excess terminal energy
         if (Game.time % SD.autosell_interval == 0){
             let printFlag = true; //helper var for printing the header only once, and the footer only if the header prints
-            let ventPerformed = false;
             let autovent_return;
 
 
@@ -204,20 +189,15 @@ module.exports = {
                         if (nexi[i].room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) > 0){
                             autovent_return = ENERGYVENT.run(i);
 
-                            if (autovent_return == OK)
-                                ventPerformed = true;
-                            else
+                            if (autovent_return != OK)
                                 console.log('ECONDRIVE:: AUTOVENT FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autovent_return + ']');
                         }
                 }
             }
 
             //print footer only if the header printed
-            if (!printFlag){
-                if (!ventPerformed)
-                    console.log('ECONDRIVE:: [NO VENTING PERFORMED]');
+            if (!printFlag)
                 console.log('ECONDRIVE:: ---------------------------->>');
-            }
         }
         
 

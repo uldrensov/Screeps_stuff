@@ -24,11 +24,11 @@ module.exports = {
                     input = nexus.room.storage;
 
                     switch (unit.memory.spec_dest){
-                        case 'NA':
+                        case 'TRM':
                             output = nexus.room.terminal;
                             break;
 
-                        case 'P':
+                        case 'PWR':
                             //memorise the powernex id
                             if (unit.memory.powernex == undefined){
                                 unit.memory.powernex = unit.room.find(FIND_STRUCTURES, {
@@ -53,7 +53,7 @@ module.exports = {
                             break;
 
                         default:
-                            break;
+                            console.log(unit.name + ':: INVALID DESTINATION');
                     }
                 }
                 

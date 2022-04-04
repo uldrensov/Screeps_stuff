@@ -5,15 +5,15 @@ module.exports = {
     run: function(unit, override_threshold, ignore_lim, reserve){
         
         //INPUTS: energy sources, containers (ample)
-        var sources = unit.room.find(FIND_SOURCES);
-        var canisters = unit.room.find(FIND_STRUCTURES, {
+        let sources = unit.room.find(FIND_SOURCES);
+        let canisters = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
             }
         });
         
         //OUTPUTS: structures (non-full/threshold)
-        var repairTargets = unit.room.find(FIND_STRUCTURES, {
+        let repairTargets = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return ((structure.hits < structure.hitsMax && structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART) ||
                 (structure.hits < Memory.wall_threshold && structure.structureType == STRUCTURE_WALL) ||

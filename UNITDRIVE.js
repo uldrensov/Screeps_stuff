@@ -116,6 +116,7 @@ module.exports = {
                             if (Game.time % Memory.roomSpeed[k] == 0)
                                 treasurer.run(unit, SD.nexus_id[k], k);
                             break;
+                        default:
                     }
                 }
             }
@@ -210,6 +211,7 @@ module.exports = {
                 case 'zealot':
                     //zealot.run(unit, Game.flags[''], Game.flags['']);
                     break;
+                default:
             }
         }
     }
