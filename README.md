@@ -1,59 +1,67 @@
 ## READ FIRST: ##
-Because the whole point of playing Screeps is to learn and to have a fun outlet for programming, I've elected to make my personal codebase open-source. This repository serves to document and demonstrate my own methodology for playing Screeps, for which there are thousands of different possible ways to have a crack at. Here I will assume that the reader is already familiar with how to play the game (at least, at a basic level), and it is my hope that this reader might learn something from my code which may spark new/interesting ideas for his/her own implementation.
+Because the whole point of playing Screeps is to learn and to have a fun outlet for programming, I've elected to make my personal codebase open-source. This repository serves to document and demonstrate my own methodology for playing Screeps, for which there are thousands of different possible ways to take a crack at. Here I will assume that the reader is already familiar with how to play the game (at least, at a basic level). It is therefore my hope that the reader may learn something from my personal method(s) of approach, possibly sparking new ideas for their own implementation.
 
 ### What my code does well: ###
-* Runs at least 9 rooms simultaneously (assuming at least ~6 creeps per room) without straining the 20 CPU limit
-* Automatically responds to threats encountered during remote mining (fleeing, counter-attacking, reclaiming, etc.)
-* Includes scripts that alleviate the stress of macromanaging economy (status reports, transferring resources)
+* Features over 20 unique unit roles that synergise with each other, in the effort of maintaining a network of multiple max-level rooms
+* Automatically responds to threats encountered inside and outside of home territory, most notably during long-distance mining (fleeing, counter-attacking, reclaiming, etc.)
+* Includes scripts that alleviate the stress of macromanaging economy (detailed status reports, automated market transactions, etc.)
 ### What it does poorly: ###
-* Does very little in terms of starting and nurturing newly-annexed rooms (a lot of manual decision-making is required)
-* Aggressive/militant combat
+* Running more than 6-7 rooms without straining the 20 CPU/tick limit
+* Proactive combat
+* Mining high-risk resources like POWER
 
-Anyone is welcome to clone this repository and run it themselves. But of course, if your goal is to simply copy-paste a working repository into your own account as a substitute for playing the game legitimately, let it be known that there are better and more user-friendly "prepackaged" codebases out there, so I'm honoured if you're choosing to copy mine in spite of that (no hard feelings).
+Anyone is welcome to clone this repository and run it themselves for demonstration purposes. In contrast, if your goal is to simply copy-paste a functioning codebase into your own account as a substitute for playing the game legitimately, let it be known that there are better and more streamlined "prepackaged" codebases out there. Copy at your own risk.
 
 ## Overview of files: ##
 ### Core files: ###
 --These are files without .AI or .exe in their name--
 
-* main.js is called once per game tick; it acts as an infinite while-loop
-* SOFTDATA.js is a library containing various constants, parameters, and essential object IDs; this should be uniquely configured according to the user's needs and preferences [e.g. using my version here will NOT work in your unique situation]
-* MEMORYINIT.js initialises global memory
-* SPAWNCYCLE.js is called in main, and is responsible for spawning/replacing units until the quota is met
+* main.js is called once per game tick; as the name implies, this is the main script that runs on repeat
+* SOFTDATA.js is a library containing various constants, parameters, and essential object IDs; this should be uniquely configured according to the user's needs and preferences [e.g. using my file with my personal settings will break your game]
+* MEMORYINIT.js initialises global memory, and is periodically looped to maintain configuration standards in case of corruption
+* SPAWNCYCLE.js is called in main, and is responsible for spawning all units to meet the needs of the population quota
 * UNITDRIVE.js is called in main, and is responsible for running each unit type's respective AI script using the proper parameters
-* TOWERDRIVE.js is called in main, and is responsible for controlling defensive towers in each room
-* ECONDRIVE.js is called in main, and is responsible for automating certain economic actions in each (suitable) room
+* TOWERDRIVE.js is called in main, and is responsible for controlling defensive Towers in each room
+* ECONDRIVE.js is called in main, and is responsible for automating economic actions in rooms that have certain settings enabled
 ### .AI files: ###
 --Each .AI file corresponds to a single unit role--
---For simplicity's sake, I will only describe the bare essentials here--
+--For simplicity's sake, I will only describe a few--
 
-* Drone: Supplies spawners and extensions with energy
-* Assimilator: Mines energy and dumps it into nearby container for other units to retrieve at their convenience
-* Energiser: Supplies towers with energy
-* Sacrificer: Supplies the room's controller with energy
-* Probe: Consumes energy to repair decaying structures
-* Architect: Consumes energy to build new structures
-* Visionary: Paths into a new room and annexes it into the colony
+* Drone: Supplies Spawners, Extensions, and the Storage with Energy
+* Assimilator: Mines Energy and dumps it into nearby Container
+* Energiser: Supplies Towers with Energy
+* Sacrificer: Supplies the room's Controller with Energy
+* Probe: Consumes Energy to repair decaying Structures
+* Architect: Consumes Energy to build new Structures
+* Visionary: Paths into a new room and annexes it
+* Specialist: Self-sufficient construction unit designed to travel distances and perform orders in wild territory
+* Orbital drone: Intelligent unit armed with various sensors and alarm permissions. Carries Energy home from a long-distance mining site.
+* Blood hunter: Appears in response to a raised alarm, and attempts to purge whatever threat caused it
 ### .exe files: ###
---These files are designed as tools to be manually executed through the console--
+--These files are designed as tools which can be manually executed through the console--
 
-* STATUSREPORT.exe.js writes a summary report to console output of any chosen room
+* STATUSREPORT.exe.js writes a detailed summary report about a single chosen room
 * STATUSREPORT_E.exe.js writes a condensed summary report about the Storage/Terminal contents of every room
-* TERMINALTRANSFER.exe.js spawns in a 'Treasurer' unit to carry materials (any amount, any type) between Storage and Terminal for a chosen room
-* CIRCULATE.exe.js transfers goods between owned terminals
-* TRANSACTION.exe.js attempts to sell a room's minerals (any amount) through the in-game market, one trade offer at a time
+* STATUSREPORT_R.exe.js writes a summary report about every long-distance mining site, including time trackers for recently detected threats
+* TERMINALTRANSFER.exe.js spawns in a 'Treasurer' unit to carry items (any amount, any type) between Storage and Terminal/Power Spawn/Nuker in a single chosen room
+* CIRCULATE.exe.js transfers goods (any amount, any type) between two chosen rooms via Terminal
+* TRANSACTION.exe.js uses the Terminal of a chosen room to sell Minerals (any amount, any type) through the in-game market
+* ENERGYVENT.exe.js uses the Terminal of a chosen room to sell Energy (any amount) through the in-game market
 ## Usage: ##
 ### Setup: ###
-TBD
+More info coming soon...
 ### Adding new rooms: ###
 * Modify the object ID arrays by adding new data pertaining to the newly annexed room
 * Expand each of the unit body-part 2D-arrays by 1 element, and populate them with the desired role-based body part configurations
+* More info coming soon...
 ### Maintenance: ###
 * Unit spawns, deaths, and other important events are recorded to the console; check it from time to time
 * To increase/decrease the population quota for certain roles (in a certain room), modify the appropriate [role_MAX] variable in global memory
-* More coming soon...
+* More info coming soon...
 ### Notifications: ###
---Email notifications are enabled for the following:
+--Email notifications can be enabled for the following:
 
-* Armed enemy unit spotted in a room containing defensive towers
-* Contents within a vault are about to overflow (surplus)
-* Energy capacity within a vault is about to run out (shortage)
+* Armed enemy unit spotted in a room containing defensive Towers
+* Contents within a Storage are about to overflow (surplus)
+* Energy capacity within a Storage is about to run out (shortage)
+* Threat sightings in long-distance mining sites

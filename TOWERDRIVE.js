@@ -91,6 +91,8 @@ module.exports = {
                                 case WORK:
                                     threatvalue += 50;
                                     break;
+                                case CLAIM:
+                                    threatvalue += 10;
                                 default:
                             }
                         }

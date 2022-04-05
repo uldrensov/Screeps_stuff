@@ -125,7 +125,6 @@ module.exports = {
         //export terminal minerals
         if (Game.time % SD.autosell_interval == 0){
             let printFlag = true; //helper var for printing the header only once, and the footer only if the header prints
-            let transactionPerformed_inRoom;
             let autosell_return;
             
             
@@ -140,7 +139,7 @@ module.exports = {
                     }
                     
                     if (nexi[i].room.terminal != undefined){
-                        transactionPerformed_inRoom = false;
+                        autosell_return = undefined;
                         
                         //select a sellable resource (no specific priority order) and attempt to sell
                         for (let x=0; x<SD.sellable_products[i].length; x++){
@@ -148,16 +147,15 @@ module.exports = {
                                 autosell_return = TRANSACTION.run(i,SD.sellable_products[i][x]);
 
                                 //upon successful sell, move on to the next room
-                                if (autosell_return == OK){
-                                    transactionPerformed_inRoom = true;
+                                if (autosell_return == OK)
                                     break;
-                                }
                             }
                         }
 
-                        //if no sellable resources
-                        if (!transactionPerformed_inRoom)
-                            console.log('ECONDRIVE:: AUTOSELL FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autosell_return + ']');
+                        //if sellable resources exist, but all failed to sell, output the error of the very last attempt
+                        if (autosell_return != undefined)
+                            if (autosell_return != OK)
+                                console.log('ECONDRIVE:: AUTOSELL FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autosell_return + ']');
                     }
                 }
             }
@@ -234,8 +232,8 @@ module.exports = {
         
         //produce cosmetics currency
         if (Game.cpu.bucket == 10000){
-            Game.cpu.generatePixel();
-            console.log('ECONDRIVE:: -------------------PIXEL GENERATED-------------------');
+            if (Game.cpu.generatePixel() == OK)
+                console.log('ECONDRIVE:: -------------------PIXEL GENERATED-------------------');
         }
     }
 };
