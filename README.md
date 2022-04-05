@@ -8,7 +8,7 @@ Because the whole point of playing Screeps is to learn and to have a fun outlet 
 ### What it does poorly: ###
 * Running more than 6-7 rooms without straining the 20 CPU/tick limit
 * Proactive combat
-* Mining high-risk resources like POWER
+* Mining high-risk resources like Power
 
 Anyone is welcome to clone this repository and run it themselves for demonstration purposes. In contrast, if your goal is to simply copy-paste a functioning codebase into your own account as a substitute for playing the game legitimately, let it be known that there are better and more streamlined "prepackaged" codebases out there. Copy at your own risk.
 
