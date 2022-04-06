@@ -2,8 +2,11 @@
 //green trail ("builder")
 
 module.exports = {
-    run: function(unit, nexus, bias, home_index){
+    run: function(unit, nexus_id, bias){
         
+        let nexus = Game.getObjectById(nexus_id);
+
+
         //proceed if there is no suicide order
         if (!unit.memory.killswitch){
             //INPUTS: energy sources, containers (non-empty)
@@ -22,9 +25,9 @@ module.exports = {
             
             //self-killswitch routine
             if (!hotspot_scan.length){
-                Memory.phaseArchitect_MAX[home_index] = -1;
+                Memory.phaseArchitect_MAX[unit.memory.home_index] = -1;
                 console.log('phaseArchitect.AI:: <<----------------------------');
-                console.log('phaseArchitect.AI:: PHASE CONSTRUCTION COMPLETE (ROOM #' + home_index + ')');
+                console.log('phaseArchitect.AI:: PHASE CONSTRUCTION COMPLETE (ROOM #' + unit.memory.home_index + ')');
                 console.log('phaseArchitect.AI:: ---------------------------->>');
                 unit.memory.killswitch = true;
             }

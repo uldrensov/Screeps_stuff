@@ -27,30 +27,30 @@ module.exports = {
             if (nexi[k] == null)            continue; //error: if nexus fails to retrieve, skip the room
         
             //count unit population by role
-            emergencyDrone_gang[k] =        _.filter(Game.creeps, creep => creep.memory.role == 'emergencyDrone'        && creep.room == nexi[k].room);
-            sacrificer_gang[k] =            _.filter(Game.creeps, creep => creep.memory.role == 'sacrificer'            && creep.room == nexi[k].room);
-            architect_gang[k] =             _.filter(Game.creeps, creep => creep.memory.role == 'architect'             && creep.room == nexi[k].room);
-            phaseArchitect_gang[k] =        _.filter(Game.creeps, creep => creep.memory.role == 'phaseArchitect'        && creep.room == nexi[k].room);
-            probe_gang[k] =                 _.filter(Game.creeps, creep => creep.memory.role == 'probe'                 && creep.room == nexi[k].room);
-            assimilator_gang[k] =           _.filter(Game.creeps, creep => creep.memory.role == 'assimilator'           && creep.room == nexi[k].room);
-                assimilator2_gang[k] =      _.filter(Game.creeps, creep => creep.memory.role == 'assimilator2'          && creep.room == nexi[k].room);
-            drone_gang[k] =                 _.filter(Game.creeps, creep => creep.memory.role == 'drone'                 && creep.room == nexi[k].room);
-            energiser_gang[k] =             _.filter(Game.creeps, creep => creep.memory.role == 'energiser'             && creep.room == nexi[k].room);
-            retrieverDrone_gang[k] =        _.filter(Game.creeps, creep => creep.memory.role == 'retrieverDrone'        && creep.room == nexi[k].room);
-            recalibrator_gang[k] =          _.filter(Game.creeps, creep => creep.memory.role == 'recalibrator'          && creep.memory.home == nexi[k].room.name);
-            orbitalAssimilator_gang[k] =    _.filter(Game.creeps, creep => creep.memory.role == 'orbitalAssimilator'    && creep.memory.home == nexi[k].room.name);
-            orbitalDrone_gang[k] =          _.filter(Game.creeps, creep => creep.memory.role == 'orbitalDrone'          && creep.memory.home == nexi[k].room.name);
-            bloodhunter_gang[k] =           _.filter(Game.creeps, creep => creep.memory.role == 'bloodhunter'           && creep.memory.home == nexi[k].room.name);
-            enforcer_gang[k] =              _.filter(Game.creeps, creep => creep.memory.role == 'enforcer'              && creep.memory.home == nexi[k].room.name);
-            purifier_gang[k] =              _.filter(Game.creeps, creep => creep.memory.role == 'purifier'              && creep.memory.home == nexi[k].room.name);
-            acolyte_gang[k] =               _.filter(Game.creeps, creep => creep.memory.role == 'acolyte'               && creep.room == nexi[k].room);
-                acolyte2_gang[k] =          _.filter(Game.creeps, creep => creep.memory.role == 'acolyte2'              && creep.room == nexi[k].room);
-            adherent_gang[k] =              _.filter(Game.creeps, creep => creep.memory.role == 'adherent'              && creep.room == nexi[k].room);
-            nullAdherent_gang[k] =          _.filter(Game.creeps, creep => creep.memory.role == 'nullAdherent'          && creep.room == nexi[k].room);
-            supplicant_gang[k] =            _.filter(Game.creeps, creep => creep.memory.role == 'supplicant'            && creep.room == nexi[k].room);
-            nullSupplicant_gang[k] =        _.filter(Game.creeps, creep => creep.memory.role == 'nullSupplicant'        && creep.room == nexi[k].room);
-            ancientDrone_gang[k] =          _.filter(Game.creeps, creep => creep.memory.role == 'ancientDrone'          && creep.room == nexi[k].room);
-            ancientAssimilator_gang[k] =    _.filter(Game.creeps, creep => creep.memory.role == 'ancientAssimilator'    && creep.room == nexi[k].room);
+            emergencyDrone_gang[k] =        _.filter(Game.creeps, creep => creep.memory.role == 'emergencyDrone'        && creep.memory.home_index == k);
+            sacrificer_gang[k] =            _.filter(Game.creeps, creep => creep.memory.role == 'sacrificer'            && creep.memory.home_index == k);
+            architect_gang[k] =             _.filter(Game.creeps, creep => creep.memory.role == 'architect'             && creep.memory.home_index == k);
+            phaseArchitect_gang[k] =        _.filter(Game.creeps, creep => creep.memory.role == 'phaseArchitect'        && creep.memory.home_index == k);
+            probe_gang[k] =                 _.filter(Game.creeps, creep => creep.memory.role == 'probe'                 && creep.memory.home_index == k);
+            assimilator_gang[k] =           _.filter(Game.creeps, creep => creep.memory.role == 'assimilator'           && creep.memory.home_index == k);
+                assimilator2_gang[k] =      _.filter(Game.creeps, creep => creep.memory.role == 'assimilator2'          && creep.memory.home_index == k);
+            drone_gang[k] =                 _.filter(Game.creeps, creep => creep.memory.role == 'drone'                 && creep.memory.home_index == k);
+            energiser_gang[k] =             _.filter(Game.creeps, creep => creep.memory.role == 'energiser'             && creep.memory.home_index == k);
+            retrieverDrone_gang[k] =        _.filter(Game.creeps, creep => creep.memory.role == 'retrieverDrone'        && creep.memory.home_index == k);
+            recalibrator_gang[k] =          _.filter(Game.creeps, creep => creep.memory.role == 'recalibrator'          && creep.memory.home_index == k);
+            orbitalAssimilator_gang[k] =    _.filter(Game.creeps, creep => creep.memory.role == 'orbitalAssimilator'    && creep.memory.home_index == k);
+            orbitalDrone_gang[k] =          _.filter(Game.creeps, creep => creep.memory.role == 'orbitalDrone'          && creep.memory.home_index == k);
+            bloodhunter_gang[k] =           _.filter(Game.creeps, creep => creep.memory.role == 'bloodhunter'           && creep.memory.home_index == k);
+            enforcer_gang[k] =              _.filter(Game.creeps, creep => creep.memory.role == 'enforcer'              && creep.memory.home_index == k);
+            purifier_gang[k] =              _.filter(Game.creeps, creep => creep.memory.role == 'purifier'              && creep.memory.home_index == k);
+            acolyte_gang[k] =               _.filter(Game.creeps, creep => creep.memory.role == 'acolyte'               && creep.memory.home_index == k);
+                acolyte2_gang[k] =          _.filter(Game.creeps, creep => creep.memory.role == 'acolyte2'              && creep.memory.home_index == k);
+            adherent_gang[k] =              _.filter(Game.creeps, creep => creep.memory.role == 'adherent'              && creep.memory.home_index == k);
+            nullAdherent_gang[k] =          _.filter(Game.creeps, creep => creep.memory.role == 'nullAdherent'          && creep.memory.home_index == k);
+            supplicant_gang[k] =            _.filter(Game.creeps, creep => creep.memory.role == 'supplicant'            && creep.memory.home_index == k);
+            nullSupplicant_gang[k] =        _.filter(Game.creeps, creep => creep.memory.role == 'nullSupplicant'        && creep.memory.home_index == k);
+            ancientDrone_gang[k] =          _.filter(Game.creeps, creep => creep.memory.role == 'ancientDrone'          && creep.memory.home_index == k);
+            ancientAssimilator_gang[k] =    _.filter(Game.creeps, creep => creep.memory.role == 'ancientAssimilator'    && creep.memory.home_index == k);
             visionary_gang[k] =             _.filter(Game.creeps, creep => creep.memory.role == 'visionary');
             specialist_gang[k] =            _.filter(Game.creeps, creep => creep.memory.role == 'specialist');
             saviour_gang[k] =               _.filter(Game.creeps, creep => creep.memory.role == 'saviour');
@@ -62,24 +62,30 @@ module.exports = {
 
 
             //determine if mineral mining is possible (for ancient drone / assimilator spawns)
-            if (Memory.SPAWNCYCLE__extractor == undefined)
-                Memory.SPAWNCYCLE__extractor = [];
-            if (Memory.SPAWNCYCLE__extractor[k] == undefined || Game.time % SD.std_interval == 0){
-                Memory.SPAWNCYCLE__extractor[k] = nexi[k].room.find(FIND_STRUCTURES, {
+            if (Game.getObjectById(Memory.extractor_id[k]) == null
+                &&
+                Game.time % SD.std_interval == 0){
+
+                let extractor = nexi[k].room.find(FIND_STRUCTURES, {
                     filter: structure => {
                         return structure.structureType == STRUCTURE_EXTRACTOR;
                     }
                 });
+
+                Memory.extractor_id[k] = extractor[0].id;
             }
 
             if (Memory.mineral_type[k] == undefined)
                 Memory.mineral_type[k] = nexi[k].room.find(FIND_MINERALS)[0];
 
-            if (Memory.SPAWNCYCLE__extractor[k].length && Game.getObjectById(Memory.mineral_type[k].id).mineralAmount > 0){
+            if (Memory.extractor_id[k] != null
+                &&
+                Game.getObjectById(Memory.mineral_type[k].id).mineralAmount > 0){
+
                 Memory.ancientDrone_MAX[k] = 1;
                 Memory.ancientAssimilator_MAX[k] = 1;
             }
-            else if (Memory.SPAWNCYCLE__extractor[k].length){
+            else if (Memory.extractor_id[k] != null){
                 Memory.ancientDrone_MAX[k] = -1;
                 Memory.ancientAssimilator_MAX[k] = -1;
             }
@@ -357,7 +363,7 @@ module.exports = {
                     //orbital assimilators: if remote mining is viable
                     case (orbitalAssimilator_gang[k].length < Memory.orbitalAssimilator_MAX[k]):
                         spawnResult = openNexus.spawnCreep(SD.oassim_body, 'OrbitalAssimilator[' + k + ']-' + Game.time % SD.time_offset,
-                            {memory: {role: 'orbitalAssimilator', home: openNexus.room.name, rallied: false}});
+                            {memory: {role: 'orbitalAssimilator', rallied: false, home_index: k}});
                             
                         if (spawnResult == OK)
                             console.log('SPAWNCYCLE:: OrbitalAssimilator[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
@@ -380,12 +386,14 @@ module.exports = {
                             //NOTE: 2 separate cases are checked; both cannot be checked together (cannot get .ticksToEnd if .reservation is undefined), but only one can succeed regardless
                             if (recalibrator_gang[k].length < Memory.recalibrator_MAX[k] && (Game.getObjectById(SD.remotectrl_id[k]).reservation == undefined)){
                             //only attempt to spawn when the recalibrator's lifetime contribution to timer surplus will not overflow past the 5000 cap
-                                if (openNexus.spawnCreep(SD.recal_body[k], 'Recalibrator[' + k + ']-' + Game.time % SD.time_offset, {memory: {role: 'recalibrator', home: openNexus.room.name, rallied: false}}) == OK)
+                                if (openNexus.spawnCreep(SD.recal_body[k], 'Recalibrator[' + k + ']-' + Game.time % SD.time_offset,
+                                    {memory: {role: 'recalibrator', rallied: false, home_index: k}}) == OK)
                                     console.log('SPAWNCYCLE:: Recalibrator[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                             }
                             else if (recalibrator_gang[k].length < Memory.recalibrator_MAX[k] && (Game.getObjectById(SD.remotectrl_id[k]).reservation.ticksToEnd < 5000 - (claim_strength-1)*600)){
                                 //only attempt to spawn when the recalibrator's lifetime contribution to timer surplus will not overflow past the 5000 cap
-                                if (openNexus.spawnCreep(SD.recal_body[k], 'Recalibrator[' + k + ']-' + Game.time % SD.time_offset, {memory: {role: 'recalibrator', home: openNexus.room.name, rallied: false}}) == OK)
+                                if (openNexus.spawnCreep(SD.recal_body[k], 'Recalibrator[' + k + ']-' + Game.time % SD.time_offset,
+                                    {memory: {role: 'recalibrator', rallied: false, home_index: k}}) == OK)
                                     console.log('SPAWNCYCLE:: Recalibrator[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                             }
                             else take_branch = true;
@@ -399,7 +407,7 @@ module.exports = {
                                 //orbital drones: if remote mining is viable
                                 case (orbitalDrone_gang[k].length < Memory.orbitalDrone_MAX[k]):
                                     spawnResult = openNexus.spawnCreep(SD.odrone_body[k], 'OrbitalDrone[' + k + ']-' + Game.time % SD.time_offset,
-                                        {memory: {role: 'orbitalDrone', home: openNexus.room.name, rallied: false}});
+                                        {memory: {role: 'orbitalDrone', rallied: false, home_index: k}});
 
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: OrbitalDrone[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
@@ -410,7 +418,7 @@ module.exports = {
                                 //blood hunters: if remote mining is being disrupted by invaders
                                 case (bloodhunter_gang[k].length < Memory.bloodhunter_MAX[k]):
                                     spawnResult = openNexus.spawnCreep(SD.bloodh_body, 'Bloodhunter[' + k + ']-' + Game.time % SD.time_offset,
-                                        {memory: {role: 'bloodhunter', home: openNexus.room.name}});
+                                        {memory: {role: 'bloodhunter', home_index: k}});
 
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: Bloodhunter[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
@@ -421,7 +429,7 @@ module.exports = {
                                 //enforcers: if remote mining is being disrupted by invader cores
                                 case (enforcer_gang[k].length < Memory.enforcer_MAX[k]):
                                     spawnResult = openNexus.spawnCreep(SD.enforc_body[k], 'Enforcer[' + k + ']-' + Game.time % SD.time_offset,
-                                        {memory: {role: 'enforcer', home: openNexus.room.name}});
+                                        {memory: {role: 'enforcer', home_index: k}});
 
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: Enforcer[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
@@ -432,7 +440,7 @@ module.exports = {
                                 //purifiers: if an invader core's efforts must be undone
                                 case (purifier_gang[k].length < Memory.purifier_MAX[k]):
                                     spawnResult = openNexus.spawnCreep(SD.purif_body[k], 'Purifier[' + k + ']-' + Game.time % SD.time_offset,
-                                        {memory: {role: 'purifier', home: openNexus.room.name}});
+                                        {memory: {role: 'purifier', home_index: k}});
 
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: Purifier[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
@@ -509,7 +517,7 @@ module.exports = {
                                 //saviour: used in setting up new rooms (assists sacrificers)
                                 case (saviour_gang[k].length < Memory.saviour_MAX[k]):
                                     spawnResult = openNexus.spawnCreep(SD.speci_body[k], 'Saviour[' + k + ']-' + Game.time % SD.time_offset,
-                                        {memory: {role: 'saviour', home: openNexus.room.name, rallied: false, rallied2: false}});
+                                        {memory: {role: 'saviour', rallied: false, rallied2: false, home_index: k}});
 
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: Saviour[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
@@ -519,6 +527,7 @@ module.exports = {
             
 
             //spawning military units...
+                                /*
                                 //emissary: used situationally for scouting
                                 case (emissary_gang[k].length < Memory.emissary_MAX[k]):
                                     spawnResult = openNexus.spawnCreep(SD.emiss_body, 'Emissary[' + k + ']-' + Game.time % SD.time_offset,
@@ -533,7 +542,7 @@ module.exports = {
                                 //dark templar: used during battle
                                 case (darktemplar_gang[k].length < Memory.darktemplar_MAX[k]):
                                     spawnResult = openNexus.spawnCreep(SD.dt_body[k], 'Darktemplar[' + k + ']-' + Game.time % SD.time_offset,
-                                        {memory: {role: 'darktemplar', home: openNexus.room.name, rallied: false}});
+                                        {memory: {role: 'darktemplar', rallied: false, home_index: k}});
 
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: Darktemplar[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
@@ -573,6 +582,7 @@ module.exports = {
                                     else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                                         console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']<<<');
                                     break;
+                                */
                             }
                         }
                         break;

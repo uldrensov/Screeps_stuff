@@ -1,5 +1,6 @@
 //ZEALOT: cross-room warrior that pairs with a HALLUCINATION
 //red trail ("fighter")
+//TODO: this model is a prototype
 
 module.exports = {
     run: function(unit, standby_flag, target_flag){

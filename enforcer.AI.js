@@ -2,7 +2,7 @@
 //red trail ("fighter")
 
 module.exports = {
-    run: function(unit, nexus_id, incident, flee_point, home_index){
+    run: function(unit, nexus_id, incident, flee_point){
         
         let nexus = Game.getObjectById(nexus_id);
         
@@ -10,9 +10,9 @@ module.exports = {
         //proceed if there is no suicide order
         if (!unit.memory.killswitch){
             //proceed if the evacuation alarm is not raised
-            if (Memory.evac_timer[home_index] == 0){
+            if (Memory.evac_timer[unit.memory.home_index] == 0){
                 //STAGE 1 START: simple cross-room navigation
-                if (unit.memory.home == unit.room.name)
+                if (Game.getObjectById(nexus_id).room.name == unit.room.name)
                     unit.moveTo(incident);
 
 
@@ -47,40 +47,40 @@ module.exports = {
                     
                         //respond to player/invader threats
                         if (i_threats > 0 || p_threats > 0){
-                            Memory.lastSeenEnemy_time[home_index] = Game.time;
+                            Memory.lastSeenEnemy_time[unit.memory.home_index] = Game.time;
                             console.log('enforcer.AI:: ------------------------------');
                     
                             //enemy player(s) detected: evacuate and call a blood hunter
                             if (p_threats > 0){
-                                //Game.notify('enforcer.AI:: >>>EVACUATING SECTOR #' + home_index + '...' + p_name + ' INBOUND<<<',0);
+                                //Game.notify('enforcer.AI:: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...' + p_name + ' INBOUND<<<',0);
 
-                                console.log('enforcer.AI:: >>>EVACUATING SECTOR #' + home_index + '...' + p_name + ' INBOUND<<<');
+                                console.log('enforcer.AI:: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...' + p_name + ' INBOUND<<<');
                                 console.log('enforcer.AI:: >>>SIGNALLING BLOOD HUNTER<<<');
 
-                                Memory.lastSeenEnemy_name[home_index] = p_name;
-                                Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
-                                Memory.viable_prey[home_index] = true; //triggers blood hunter spawn
+                                Memory.lastSeenEnemy_name[unit.memory.home_index] = p_name;
+                                Memory.evac_timer[unit.memory.home_index] = CREEP_LIFE_TIME;
+                                Memory.viable_prey[unit.memory.home_index] = true; //triggers blood hunter spawn
                             }
                             //lone invader detected: evacuate and call blood hunter
                             else if (i_threats == 1){
-                                //Game.notify('enforcer.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER INBOUND<<<',0);
+                                //Game.notify('enforcer.AI:: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER INBOUND<<<',0);
 
-                                console.log('enforcer.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER INBOUND<<<');
+                                console.log('enforcer.AI:: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER INBOUND<<<');
                                 console.log('enforcer.AI:: >>>SIGNALLING BLOOD HUNTER<<<');
 
-                                Memory.lastSeenEnemy_name[home_index] = 'INVADER';
-                                Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
-                                Memory.viable_prey[home_index] = true; //triggers blood hunter spawn
+                                Memory.lastSeenEnemy_name[unit.memory.home_index] = 'INVADER';
+                                Memory.evac_timer[unit.memory.home_index] = CREEP_LIFE_TIME;
+                                Memory.viable_prey[unit.memory.home_index] = true; //triggers blood hunter spawn
                             }
                             //multiple invaders detected: evacuate and suicide
                             else if (i_threats > 1){
-                                //Game.notify('enforcer.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER HORDE INBOUND<<<',0);
+                                //Game.notify('enforcer.AI:: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER HORDE INBOUND<<<',0);
 
-                                console.log('enforcer.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER HORDE INBOUND<<<');
+                                console.log('enforcer.AI:: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER HORDE INBOUND<<<');
                                 console.log('enforcer.AI:: >>>RECYCLING EVACUATED UNITS<<<');
 
-                                Memory.lastSeenEnemy_name[home_index] = 'INVADER';
-                                Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
+                                Memory.lastSeenEnemy_name[unit.memory.home_index] = 'INVADER';
+                                Memory.evac_timer[unit.memory.home_index] = CREEP_LIFE_TIME;
                                 unit.memory.killswitch = true; //reasoning: unit will likely not outlive the threat
                             }
                         
@@ -105,14 +105,14 @@ module.exports = {
 
                         //when core is eliminated...
                         else{
-                            //Game.notify('enforcer.AI:: >>>SECTOR #' + home_index + ' RESTORED: CORE DESTROYED<<<',0);
+                            //Game.notify('enforcer.AI:: >>>SECTOR #' + unit.memory.home_index + ' RESTORED: CORE DESTROYED<<<',0);
 
                             console.log('enforcer.AI:: ------------------------------');
-                            console.log('enforcer.AI:: >>>SECTOR #' + home_index + ' RESTORED: CORE DESTROYED<<<');
+                            console.log('enforcer.AI:: >>>SECTOR #' + unit.memory.home_index + ' RESTORED: CORE DESTROYED<<<');
                             console.log('enforcer.AI:: ------------------------------');
 
                             //self-killswitch and return to dormant state
-                            Memory.enforcer_MAX[home_index] = -1;
+                            Memory.enforcer_MAX[unit.memory.home_index] = -1;
                             unit.memory.killswitch = true;
                         }
                     }
@@ -125,7 +125,7 @@ module.exports = {
                 unit.moveTo(Game.getObjectById(flee_point));
 
                 //if the blood hunter falls in battle, self-killswitch instead of waiting around pointlessly
-                if (Memory.bloodhunter_casualty[home_index] == true)
+                if (Memory.bloodhunter_casualty[unit.memory.home_index] == true)
                     unit.memory.killswitch = true;
             }
         }

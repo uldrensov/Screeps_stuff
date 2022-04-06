@@ -15,7 +15,7 @@ module.exports = {
         if (tile){
             //ensure correct position
             if (!unit.pos.isEqualTo(tile.pos))
-                unit.moveTo(tile, {visualizePathStyle: {stroke: '#ffffff'}});
+                unit.moveTo(tile);
             //remain there and work
             else{
                 //transmit when the link reaches max capacity

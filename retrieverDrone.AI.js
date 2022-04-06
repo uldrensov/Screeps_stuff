@@ -4,7 +4,7 @@
 module.exports = {
     run: function(unit, nexus_id, ignore_lim){
         
-        var nexus = Game.getObjectById(nexus_id);
+        let nexus = Game.getObjectById(nexus_id);
         
         
         //proceed if there is no suicide order

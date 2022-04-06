@@ -2,7 +2,7 @@
 //white trail ("carrier")
 
 module.exports = {
-    run: function(unit, nexus_id, home_index){
+    run: function(unit, nexus_id){
         
         let nexus = Game.getObjectById(nexus_id);
         
@@ -86,7 +86,7 @@ module.exports = {
             else if (!unit.memory.done){
                 unit.memory.done = true;
                 console.log('treasurer.AI:: *********************');
-                console.log('treasurer.AI:: ORDER COMPLETE (ROOM #' + home_index + ')');
+                console.log('treasurer.AI:: ORDER COMPLETE (ROOM #' + unit.memory.home_index + ')');
 
                 //killswitch message
                 if (unit.memory.autokill){

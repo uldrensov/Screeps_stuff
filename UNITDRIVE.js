@@ -37,153 +37,95 @@ var zealot =                require('zealot.AI');
 
 module.exports = {
     run: function(){
-        
-        let nexi = [];
-        for (let i=0; i<SD.nexus_id.length; i++){
-            nexi[i] = Game.getObjectById(SD.nexus_id[i]);
-        }
-        
-        
-        for (let k=0; k<SD.nexus_id.length; k++){
-            if (nexi[k] == null)    continue; //error: if nexus fails to retrieve, skip the room
-            
-            //room-locked units
-            for (let name in Game.creeps){
-                let unit = Game.creeps[name];
-                
-                if (unit.room == nexi[k].room){
-                    switch (unit.memory.role){
-                        case 'emergencyDrone':
-                            emergencyDrone.run(unit, SD.nexus_id[k]);
-                            break;
-                        case 'drone': //slow unit
-                            if (Game.time % Memory.roomSpeed[k] == 0)
-                                drone.run(unit, SD.nexus_id[k], SD.en_ignore_lim, SD.std_interval);
-                            break;
-                        case 'assimilator':
-                            assimilator.run(unit, SD.source1_id[k], SD.canister1_id[k]);
-                            break;
-                        case 'assimilator2':
-                            assimilator.run(unit, SD.source2_id[k], SD.canister2_id[k]);
-                            break;
-                        case 'energiser':
-                            energiser.run(unit, SD.std_interval);
-                            break;
-                        case 'retrieverDrone':
-                            retrieverDrone.run(unit, SD.nexus_id[k], SD.en_ignore_lim);
-                            break;
-                        case 'sacrificer':
-                            sacrificer.run(unit, SD.en_ignore_lim);
-                            break;
-                        case 'acolyte':
-                            acolyte.run(unit, SD.source1_id[k], SD.warpRX_id[k], SD.warpTX_id[k][0], SD.canister1_id[k]);
-                            break;
-                        case 'acolyte2':
-                            acolyte.run(unit, SD.source2_id[k], SD.warpRX_id[k], SD.warpTX_id[k][1], SD.canister2_id[k]);
-                            break;
-                        case 'adherent':
-                            adherent.run(unit, SD.adher_tile_id[k], SD.warpRX_id[k]);
-                            break;
-                        case 'nullAdherent':
-                            nullAdherent.run(unit, SD.adher_tile_id[k], SD.warpRX_id[k], SD.warpTX_id[k], SD.vault_boundary);
-                            break;
-                        case 'supplicant':
-                            supplicant.run(unit, SD.vault_boundary);
-                            break;
-                        case 'nullSupplicant':
-                            nullSupplicant.run(unit, SD.warpTX_id[k]);
-                            break;
-                        case 'probe':
-                            probe.run(unit, SD.fixation_override, SD.en_ignore_lim, SD.vault_boundary);
-                            break;
-                        case 'ancientDrone': //very slow unit
-                            if (Game.time % Memory.roomSpeed[k]*3 == 0)
-                                ancientDrone.run(unit, SD.mineralcanister_id[k]);
-                            break;
-                        case 'ancientAssimilator': //very slow unit
-                            if (Game.time % Memory.roomSpeed[k]*3 == 0)
-                                ancientAssimilator.run(unit, SD.mineralcanister_id[k]);
-                            break;
-                        case 'architect': //slow unit
-                            if (Game.time % Memory.roomSpeed[k] == 0)
-                                architect.run(unit, nexi[k], SD.canister_bias, SD.vault_boundary);
-                            break;
-                        case 'phaseArchitect': //slow unit
-                            if (Game.time % Memory.roomSpeed[k] == 0)
-                                phaseArchitect.run(unit, nexi[k], SD.canister_bias, k);
-                            break;
-                        case 'treasurer': //slow unit
-                            if (Game.time % Memory.roomSpeed[k] == 0)
-                                treasurer.run(unit, SD.nexus_id[k], k);
-                            break;
-                        default:
-                    }
-                }
-            }
-        }
-    
-        
-        //cross-room units
+
         for (let name in Game.creeps){
             let unit = Game.creeps[name];
-            
+            let j = unit.memory.home_index;
+                
             switch (unit.memory.role){
+                case 'emergencyDrone':
+                    emergencyDrone.run(unit, SD.nexus_id[j]);
+                    break;
+                case 'drone': //slow unit
+                    if (Game.time % Memory.roomSpeed[j] == 0)
+                        drone.run(unit, SD.nexus_id[j], SD.en_ignore_lim, SD.std_interval);
+                    break;
+                case 'assimilator':
+                    assimilator.run(unit, SD.source1_id[j], SD.canister1_id[j]);
+                    break;
+                case 'assimilator2':
+                    assimilator.run(unit, SD.source2_id[j], SD.canister2_id[j]);
+                    break;
+                case 'energiser':
+                    energiser.run(unit, SD.std_interval);
+                    break;
+                case 'retrieverDrone':
+                    retrieverDrone.run(unit, SD.nexus_id[j], SD.en_ignore_lim);
+                    break;
+                case 'sacrificer':
+                    sacrificer.run(unit, SD.en_ignore_lim);
+                    break;
+                case 'acolyte':
+                    acolyte.run(unit, SD.source1_id[j], SD.warpRX_id[j], SD.warpTX_id[j][0], SD.canister1_id[j]);
+                    break;
+                case 'acolyte2':
+                    acolyte.run(unit, SD.source2_id[j], SD.warpRX_id[j], SD.warpTX_id[j][1], SD.canister2_id[j]);
+                    break;
+                case 'adherent':
+                    adherent.run(unit, SD.adher_tile_id[j], SD.warpRX_id[j]);
+                    break;
+                case 'nullAdherent':
+                    nullAdherent.run(unit, SD.adher_tile_id[j], SD.warpRX_id[j], SD.warpTX_id[j], SD.vault_boundary);
+                    break;
+                case 'supplicant':
+                    supplicant.run(unit, SD.vault_boundary);
+                    break;
+                case 'nullSupplicant':
+                    nullSupplicant.run(unit, SD.warpTX_id[j]);
+                    break;
+                case 'probe':
+                    probe.run(unit, SD.fixation_override, SD.en_ignore_lim, SD.vault_boundary);
+                    break;
+                case 'ancientDrone': //very slow unit
+                    if (Game.time % Memory.roomSpeed[j]*3 == 0)
+                        ancientDrone.run(unit, SD.mineralcanister_id[j]);
+                    break;
+                case 'ancientAssimilator': //very slow unit
+                    if (Game.time % Memory.roomSpeed[j]*3 == 0)
+                        ancientAssimilator.run(unit, SD.mineralcanister_id[j]);
+                    break;
+                case 'architect': //slow unit
+                    if (Game.time % Memory.roomSpeed[j] == 0)
+                        architect.run(unit, SD.nexus_id[j], SD.canister_bias, SD.vault_boundary);
+                    break;
+                case 'phaseArchitect': //slow unit
+                    if (Game.time % Memory.roomSpeed[j] == 0)
+                        phaseArchitect.run(unit, SD.nexus_id[j], SD.canister_bias);
+                    break;
+                case 'treasurer': //slow unit
+                    if (Game.time % Memory.roomSpeed[j] == 0)
+                        treasurer.run(unit, SD.nexus_id[j]);
+                    break;
                 case 'recalibrator':
-                    //determine homeroom to call AI script using appropriate args
-                    for (let i=0; i<SD.nexus_id.length; i++){
-                        if (unit.memory.home == nexi[i].room.name){
-                            recalibrator.run(unit, SD.nexus_id[i], SD.reserveflag[i], SD.tower_id[i], i);
-                            break;
-                        }
-                    }
+                    recalibrator.run(unit, SD.nexus_id[j], SD.reserveflag[j], SD.tower_id[j]);
                     break;
                 case 'orbitalAssimilator':
-                    for (let i=0; i<SD.nexus_id.length; i++){
-                        if (unit.memory.home == nexi[i].room.name){
-                            orbitalAssimilator.run(unit, SD.nexus_id[i], SD.remotesource_id[i], SD.remoteflag[i], SD.remotecanister_id[i], SD.tower_id[i], i);
-                            break;
-                        }
-                    }
+                    orbitalAssimilator.run(unit, SD.nexus_id[j], SD.remotesource_id[j], SD.remoteflag[j], SD.remotecanister_id[j], SD.tower_id[j]);
                     break;
                 case 'orbitalDrone':
-                    for (let i=0; i<SD.nexus_id.length; i++){
-                        if (unit.memory.home == nexi[i].room.name){
-                            orbitalDrone.run(unit, SD.nexus_id[i], SD.remotecanister_id[i], SD.reserveflag[i], SD.en_ignore_lim, SD.tower_id[i], i);
-                            break;
-                        }
-                    }
+                    orbitalDrone.run(unit, SD.nexus_id[j], SD.remotecanister_id[j], SD.reserveflag[j], SD.en_ignore_lim, SD.tower_id[j]);
                     break;
                 case 'bloodhunter':
-                    for (let i=0; i<SD.nexus_id.length; i++){
-                        if (unit.memory.home == nexi[i].room.name){
-                            bloodhunter.run(unit, SD.nexus_id[i], SD.remoteflag[i], i);
-                            break;
-                        }
-                    }
+                    bloodhunter.run(unit, SD.nexus_id[j], SD.remoteflag[j]);
                     break;
                 case 'enforcer':
-                    for (let i=0; i<SD.nexus_id.length; i++){
-                        if (unit.memory.home == nexi[i].room.name){
-                            enforcer.run(unit, SD.nexus_id[i], SD.remoteflag[i], SD.tower_id[i], i);
-                            break;
-                        }
-                    }
+                    enforcer.run(unit, SD.nexus_id[j], SD.remoteflag[j], SD.tower_id[j]);
                     break;
                 case 'purifier':
-                    for (let i=0; i<SD.nexus_id.length; i++){
-                        if (unit.memory.home == nexi[i].room.name){
-                            purifier.run(unit, SD.nexus_id[i], SD.remoteflag[i], SD.tower_id[i], i);
-                            break;
-                        }
-                    }
+                    purifier.run(unit, SD.nexus_id[j], SD.remoteflag[j], SD.tower_id[j]);
                     break;
                 case 'visionary':
-                    for (let i=0; i<SD.nexus_id.length; i++){
-                        if (unit.memory.home == nexi[i].room.name){
-                            visionary.run(unit, Game.flags['GOGO']); //TODO: save flag name to SD or Memory instead of hardcoding
-                            break;
-                        }
-                    }
+                    visionary.run(unit, Game.flags['GOGO']); //TODO: save flag name to SD or Memory instead of hardcoding
                     break;
                 case 'specialist':
                     specialist.run(unit, Game.flags['GOGO'], Game.flags['GOGO2']); //TODO: see above
@@ -195,12 +137,7 @@ module.exports = {
                     //emissary.run(unit, Game.flags['']);
                     break;
                 case 'darktemplar':
-                    for (let i=0; i<SD.nexus_id.length; i++){
-                        if (unit.memory.home == nexi[i].room.name){
-                            darktemplar.run(unit, SD.nexus_id[i], Game.flags['Terrans']);
-                            break;
-                        }
-                    }
+                    //darktemplar.run(unit, SD.nexus_id[j], Game.flags['Terrans']);
                     break;
                 case 'hallucination':
                     //hallucination.run(unit, Game.flags[''], Game.flags['']);
@@ -212,6 +149,7 @@ module.exports = {
                     //zealot.run(unit, Game.flags[''], Game.flags['']);
                     break;
                 default:
+                    console.log("UNITDRIVE:: " + unit.name + " HAS INVALID ROLE");
             }
         }
     }

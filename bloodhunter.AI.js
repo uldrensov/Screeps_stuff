@@ -2,23 +2,23 @@
 //red trail ("fighter")
 
 module.exports = {
-    run: function(unit, nexus_id, bloodscent, home_index){
+    run: function(unit, nexus_id, bloodscent){
         
         let nexus = Game.getObjectById(nexus_id);
         
         
         //salvage unit and elevate threat level if too much damage is taken
         if (unit.hits < unit.hitsMax*.25){
-            Memory.viable_prey[home_index] =            false; //returns bloodhunters to dormant state, in spite of the active evac timer
-            Memory.bloodhunter_casualty[home_index] =   true;
-            unit.memory.killswitch =                    true;
+            Memory.viable_prey[unit.memory.home_index] =            false; //returns bloodhunters to dormant state, in spite of the active evac timer
+            Memory.bloodhunter_casualty[unit.memory.home_index] =   true;
+            unit.memory.killswitch =                                true;
         }
         
         
         //proceed if there is no suicide order
         if (!unit.memory.killswitch){
             //simple cross-room navigation
-            if (unit.memory.home == unit.room.name)
+            if (Game.getObjectById(nexus_id).room.name == unit.room.name)
                 unit.moveTo(bloodscent);
                 
 
@@ -33,15 +33,15 @@ module.exports = {
                 }
 
                 //when invader is slain...
-                else if (Memory.evac_timer[home_index] > 0){
-                    //Game.notify('bloodhunter.AI:: SECTOR #' + home_index + ': HOSTILES ELIMINATED',0);
+                else if (Memory.evac_timer[unit.memory.home_index] > 0){
+                    //Game.notify('bloodhunter.AI:: SECTOR #' + unit.memory.home_index + ': HOSTILES ELIMINATED',0);
 
                     console.log('bloodhunter.AI:: ------------------------------');
-                    console.log('bloodhunter.AI:: SECTOR #' + home_index + ': HOSTILES ELIMINATED');
+                    console.log('bloodhunter.AI:: SECTOR #' + unit.memory.home_index + ': HOSTILES ELIMINATED');
                     console.log('bloodhunter.AI:: ------------------------------');
 
                     //reset the evac timer early
-                    Memory.evac_timer[home_index] = 0; //triggers blood hunter dormancy
+                    Memory.evac_timer[unit.memory.home_index] = 0; //triggers blood hunter dormancy
                 }
             }
         }

@@ -1,5 +1,6 @@
 //DARK TEMPLAR: cross-room aggressive warrior designed to punish defenseless rooms
 //red trail ("fighter")
+//TODO: this model is a prototype
 
 module.exports = {
     run: function(unit, nexus_id, standby_flag){

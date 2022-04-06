@@ -27,10 +27,8 @@ module.exports = {
                 Memory.vaultAlertLO_EN[i] = true;
             //disable (latch) further alerts from a room when it raises one
             else if ((nexi[i].room.storage.store.energy < SD.vault_boundary) && Memory.vaultAlertLO_EN[i]){
-                //console.log('ECONDRIVE:: <<------------------------------');
-                //console.log('ECONDRIVE:: Vault #' + i + ' SHORTAGE');
-                //console.log('ECONDRIVE:: ------------------------------>>');
                 //Game.notify('ECONDRIVE:: Vault #' + i + ' SHORTAGE',0);
+                //console.log('ECONDRIVE:: Vault #' + i + ' SHORTAGE');
                 Memory.vaultAlertLO_EN[i] = false;
             }
         
@@ -40,10 +38,8 @@ module.exports = {
                 Memory.vaultAlertHI_EN[i] = true;
             //disable (latch) further alerts from a room when it raises one
             else if ((nexi[i].room.storage.store.getUsedCapacity() > nexi[i].room.storage.store.getCapacity() - SD.vault_boundary) && Memory.vaultAlertHI_EN[i]){
-                //console.log('ECONDRIVE:: <<------------------------------');
-                //console.log('ECONDRIVE:: Vault #' + i + ' SURPLUS');
-                //console.log('ECONDRIVE:: ------------------------------>>');
                 //Game.notify('ECONDRIVE:: Vault #' + i + ' SURPLUS',0);
+                //console.log('ECONDRIVE:: Vault #' + i + ' SURPLUS');
                 Memory.vaultAlertHI_EN[i] = false;
             }
         }
@@ -219,7 +215,7 @@ module.exports = {
                     getPowerNex.processPower();
             }
             //if no powernex exists, search for one periodically
-            else if(Game.time % SD.std_interval == 0){
+            else if (Game.time % SD.std_interval == 0){
                 let powernex = nexi[i].room.find(FIND_STRUCTURES, {
                     filter: structure => {
                         return structure.structureType == STRUCTURE_POWER_SPAWN;
@@ -232,8 +228,10 @@ module.exports = {
         
         //produce cosmetics currency
         if (Game.cpu.bucket == 10000){
-            if (Game.cpu.generatePixel() == OK)
+            if (Game.cpu.generatePixel() == OK){
+                Game.notify('ECONDRIVE:: PIXEL GENERATED');
                 console.log('ECONDRIVE:: -------------------PIXEL GENERATED-------------------');
+            }
         }
     }
 };

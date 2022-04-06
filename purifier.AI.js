@@ -2,7 +2,7 @@
 //cyan trail ("support")
 
 module.exports = {
-    run: function(unit, nexus_id, pollution, flee_point, home_index){
+    run: function(unit, nexus_id, pollution, flee_point){
         
         let nexus = Game.getObjectById(nexus_id);
         
@@ -10,9 +10,9 @@ module.exports = {
         //proceed if there is no suicide order
         if (!unit.memory.killswitch){
             //proceed if the evacuation alarm is not raised
-            if (Memory.evac_timer[home_index] == 0){
+            if (Memory.evac_timer[unit.memory.home_index] == 0){
                 //STAGE 1 START: simple cross-room navigation
-                if (unit.memory.home == unit.room.name)
+                if (Game.getObjectById(nexus_id).room.name == unit.room.name)
                     unit.moveTo(pollution);
 
 
@@ -47,40 +47,40 @@ module.exports = {
                     
                         //respond to player/invader threats
                         if (i_threats > 0 || p_threats > 0){
-                            Memory.lastSeenEnemy_time[home_index] = Game.time;
+                            Memory.lastSeenEnemy_time[unit.memory.home_index] = Game.time;
                             console.log('purifier.AI:: ------------------------------');
                     
                             //enemy player(s) detected: evacuate and call a blood hunter
                             if (p_threats > 0){
-                                //Game.notify('purifier.AI:: >>>EVACUATING SECTOR #' + home_index + '...' + p_name + ' INBOUND<<<',0);
+                                //Game.notify('purifier.AI:: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...' + p_name + ' INBOUND<<<',0);
 
-                                console.log('purifier.AI:: >>>EVACUATING SECTOR #' + home_index + '...' + p_name + ' INBOUND<<<');
+                                console.log('purifier.AI:: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...' + p_name + ' INBOUND<<<');
                                 console.log('purifier.AI:: >>>SIGNALLING BLOOD HUNTER<<<');
 
-                                Memory.lastSeenEnemy_name[home_index] = p_name;
-                                Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
-                                Memory.viable_prey[home_index] = true; //triggers blood hunter spawn
+                                Memory.lastSeenEnemy_name[unit.memory.home_index] = p_name;
+                                Memory.evac_timer[unit.memory.home_index] = CREEP_LIFE_TIME;
+                                Memory.viable_prey[unit.memory.home_index] = true; //triggers blood hunter spawn
                             }
                             //lone invader detected: evacuate and call blood hunter
                             else if (i_threats == 1){
-                                //Game.notify('purifier.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER INBOUND<<<',0);
+                                //Game.notify('purifier.AI:: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER INBOUND<<<',0);
 
-                                console.log('purifier.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER INBOUND<<<');
+                                console.log('purifier.AI:: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER INBOUND<<<');
                                 console.log('purifier.AI:: >>>SIGNALLING BLOOD HUNTER<<<');
 
-                                Memory.lastSeenEnemy_name[home_index] = 'INVADER';
-                                Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
-                                Memory.viable_prey[home_index] = true; //triggers blood hunter spawn
+                                Memory.lastSeenEnemy_name[unit.memory.home_index] = 'INVADER';
+                                Memory.evac_timer[unit.memory.home_index] = CREEP_LIFE_TIME;
+                                Memory.viable_prey[unit.memory.home_index] = true; //triggers blood hunter spawn
                             }
                             //multiple invaders detected: evacuate and suicide
                             else if (i_threats > 1){
-                                //Game.notify('purifier.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER HORDE INBOUND<<<',0);
+                                //Game.notify('purifier.AI:: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER HORDE INBOUND<<<',0);
 
-                                console.log('purifier.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER HORDE INBOUND<<<');
+                                console.log('purifier.AI:: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER HORDE INBOUND<<<');
                                 console.log('purifier.AI:: >>>RECYCLING EVACUATED UNITS<<<');
 
-                                Memory.lastSeenEnemy_name[home_index] = 'INVADER';
-                                Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
+                                Memory.lastSeenEnemy_name[unit.memory.home_index] = 'INVADER';
+                                Memory.evac_timer[unit.memory.home_index] = CREEP_LIFE_TIME;
                                 unit.memory.killswitch = true; //reasoning: unit will likely not outlive the threat
                             }
                         
@@ -98,19 +98,19 @@ module.exports = {
                         }
 
                         //re-enable remote workers only when the controller is purified, and there is no nearby invader core attempting tug-of-war with this unit
-                        else if (Memory.enforcer_MAX[home_index] < 0){
-                            //Game.notify('purifier.AI:: >>>SECTOR #' + home_index + ' RESTORED: CONTROLLER PURIFIED OF HOSTILE INFLUENCE<<<',0);
+                        else if (Memory.enforcer_MAX[unit.memory.home_index] < 0){
+                            //Game.notify('purifier.AI:: >>>SECTOR #' + unit.memory.home_index + ' RESTORED: CONTROLLER PURIFIED OF HOSTILE INFLUENCE<<<',0);
 
                             console.log('purifier.AI:: ------------------------------');
-                            console.log('purifier.AI:: >>>SECTOR #' + home_index + ' RESTORED: CONTROLLER PURIFIED OF HOSTILE INFLUENCE<<<');
+                            console.log('purifier.AI:: >>>SECTOR #' + unit.memory.home_index + ' RESTORED: CONTROLLER PURIFIED OF HOSTILE INFLUENCE<<<');
                             console.log('purifier.AI:: ------------------------------');
 
-                            if (Memory.recalibrator_MAX[home_index] < 0)        Memory.recalibrator_MAX[home_index] =       1;
-                            if (Memory.orbitalAssimilator_MAX[home_index] < 0)  Memory.orbitalAssimilator_MAX[home_index] = 1;
-                            if (Memory.orbitalDrone_MAX[home_index] < 0)        Memory.orbitalDrone_MAX[home_index] =       1;
+                            if (Memory.recalibrator_MAX[unit.memory.home_index] < 0)        Memory.recalibrator_MAX[unit.memory.home_index] =       1;
+                            if (Memory.orbitalAssimilator_MAX[unit.memory.home_index] < 0)  Memory.orbitalAssimilator_MAX[unit.memory.home_index] = 1;
+                            if (Memory.orbitalDrone_MAX[unit.memory.home_index] < 0)        Memory.orbitalDrone_MAX[unit.memory.home_index] =       1;
 
                             //self-killswitch and return to dormant state
-                            Memory.purifier_MAX[home_index] = -1;
+                            Memory.purifier_MAX[unit.memory.home_index] = -1;
                             unit.memory.killswitch = true;
                         }
                     }
@@ -123,7 +123,7 @@ module.exports = {
                 unit.moveTo(Game.getObjectById(flee_point));
 
                 //if the blood hunter falls in battle, self-killswitch instead of waiting around pointlessly
-                if (Memory.bloodhunter_casualty[home_index] == true)
+                if (Memory.bloodhunter_casualty[unit.memory.home_index] == true)
                     unit.memory.killswitch = true;
             }
         }

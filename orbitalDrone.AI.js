@@ -2,7 +2,7 @@
 //yellow trail ("traveller")
 
 module.exports = {
-    run: function(unit, nexus_id, canister_id, standby_flag, ignore_lim, flee_point, home_index){
+    run: function(unit, nexus_id, canister_id, standby_flag, ignore_lim, flee_point){
         
         const nexus = Game.getObjectById(nexus_id);
 
@@ -11,7 +11,7 @@ module.exports = {
                 unit.memory.dropoff_id = Game.getObjectById(nexus_id).room.storage.id;
             else{
                 unit.memory.killswitch = true;
-                return 'orbitalDroneAI:: UNIT ERROR: ' + unit.name + ' REQUIRES A HOME VAULT IN ROOM #' + home_index;
+                return 'orbitalDroneAI:: UNIT ERROR: ' + unit.name + ' REQUIRES A HOME VAULT IN ROOM #' + unit.memory.home_index;
             }
         }
         
@@ -19,7 +19,7 @@ module.exports = {
         //proceed if there is no suicide order
         if (!unit.memory.killswitch){
             //proceed if the evacuation alarm is not raised
-            if (Memory.evac_timer[home_index] == 0){
+            if (Memory.evac_timer[unit.memory.home_index] == 0){
                 //INPUTS: container
                 const canister = Game.getObjectById(canister_id);
                 
@@ -41,7 +41,7 @@ module.exports = {
                 //performing actions at home room...
                 if (!unit.memory.fetching){
                     //navigate to homeroom
-                    if (unit.room.name != unit.memory.home){
+                    if (unit.room.name != Game.getObjectById(nexus_id).room.name){
                         unit.moveTo(dropoff);
                     }
                     else{
@@ -93,40 +93,40 @@ module.exports = {
                     
                             //respond to player/invader threats
                             if (i_threats > 0 || p_threats > 0){
-                                Memory.lastSeenEnemy_time[home_index] = Game.time;
+                                Memory.lastSeenEnemy_time[unit.memory.home_index] = Game.time;
                                 console.log('orbitalDrone.AI:: ------------------------------');
                     
                                 //enemy player(s) detected: evacuate and call a blood hunter
                                 if (p_threats > 0){
-                                    //Game.notify('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + home_index + '...' + p_name + ' INBOUND<<<',0);
+                                    //Game.notify('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...' + p_name + ' INBOUND<<<',0);
 
-                                    console.log('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + home_index + '...' + p_name + ' INBOUND<<<');
+                                    console.log('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...' + p_name + ' INBOUND<<<');
                                     console.log('orbitalDrone.AI:: >>>SIGNALLING BLOOD HUNTER<<<');
 
-                                    Memory.lastSeenEnemy_name[home_index] = p_name;
-                                    Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
-                                    Memory.viable_prey[home_index] = true; //triggers blood hunter spawn
+                                    Memory.lastSeenEnemy_name[unit.memory.home_index] = p_name;
+                                    Memory.evac_timer[unit.memory.home_index] = CREEP_LIFE_TIME;
+                                    Memory.viable_prey[unit.memory.home_index] = true; //triggers blood hunter spawn
                                 }
                                 //lone invader detected: evacuate and call blood hunter
                                 else if (i_threats == 1){
-                                    //Game.notify('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER INBOUND<<<',0);
+                                    //Game.notify('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER INBOUND<<<',0);
 
-                                    console.log('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER INBOUND<<<');
+                                    console.log('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER INBOUND<<<');
                                     console.log('orbitalDrone.AI:: >>>SIGNALLING BLOOD HUNTER<<<');
 
-                                    Memory.lastSeenEnemy_name[home_index] = 'INVADER';
-                                    Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
-                                    Memory.viable_prey[home_index] = true; //triggers blood hunter spawn
+                                    Memory.lastSeenEnemy_name[unit.memory.home_index] = 'INVADER';
+                                    Memory.evac_timer[unit.memory.home_index] = CREEP_LIFE_TIME;
+                                    Memory.viable_prey[unit.memory.home_index] = true; //triggers blood hunter spawn
                                 }
                                 //multiple invaders detected: evacuate and suicide
                                 else if (i_threats > 1){
-                                    //Game.notify('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER HORDE INBOUND<<<',0);
+                                    //Game.notify('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER HORDE INBOUND<<<',0);
 
-                                    console.log('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + home_index + '...INVADER HORDE INBOUND<<<');
+                                    console.log('orbitalDrone.AI:: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER HORDE INBOUND<<<');
                                     console.log('orbitalDrone.AI:: >>>RECYCLING EVACUATED UNITS<<<');
 
-                                    Memory.lastSeenEnemy_name[home_index] = 'INVADER';
-                                    Memory.evac_timer[home_index] = CREEP_LIFE_TIME;
+                                    Memory.lastSeenEnemy_name[unit.memory.home_index] = 'INVADER';
+                                    Memory.evac_timer[unit.memory.home_index] = CREEP_LIFE_TIME;
                                     unit.memory.killswitch = true; //reasoning: unit will likely not outlive the threat
                                 }
                         
@@ -144,15 +144,15 @@ module.exports = {
                             });
 
                             //STAGE 3A. watch for hostile cores
-                            if (invadercores.length && Memory.enforcer_MAX[home_index] < 0){
-                                //Game.notify('orbitalDrone.AI:: >>>SIGNALLING ENFORCER TO SECTOR #' + home_index + '...CORE SIGHTED<<<',0);
+                            if (invadercores.length && Memory.enforcer_MAX[unit.memory.home_index] < 0){
+                                //Game.notify('orbitalDrone.AI:: >>>SIGNALLING ENFORCER TO SECTOR #' + unit.memory.home_index + '...CORE SIGHTED<<<',0);
 
                                 console.log('orbitalDrone.AI:: ------------------------------');
-                                console.log('orbitalDrone.AI:: >>>SIGNALLING ENFORCER TO SECTOR #' + home_index + '...CORE SIGHTED<<<');
+                                console.log('orbitalDrone.AI:: >>>SIGNALLING ENFORCER TO SECTOR #' + unit.memory.home_index + '...CORE SIGHTED<<<');
                                 console.log('orbitalDrone.AI:: ------------------------------');
 
-                                Memory.lastSeenCore_time[home_index] = Game.time;
-                                Memory.enforcer_MAX[home_index] = 1;
+                                Memory.lastSeenCore_time[unit.memory.home_index] = Game.time;
+                                Memory.enforcer_MAX[unit.memory.home_index] = 1;
                             }
 
 
@@ -162,22 +162,22 @@ module.exports = {
                             try{
                                 //controlled by hostiles: cut off remote worker spawns, call in a purifier, and self-killswitch
                                 if (unit.room.controller.reservation.username != unit.owner.username){
-                                    //Game.notify('orbitalDrone.AI:: >>>SIGNALLING PURIFIER TO SECTOR #' + home_index + '...CONTROLLER HAS FALLEN TO HOSTILE FORCES<<<',0);
+                                    //Game.notify('orbitalDrone.AI:: >>>SIGNALLING PURIFIER TO SECTOR #' + unit.memory.home_index + '...CONTROLLER HAS FALLEN TO HOSTILE FORCES<<<',0);
 
                                     console.log('orbitalDrone.AI:: ------------------------------');
-                                    console.log('orbitalDrone.AI:: >>>SIGNALLING PURIFIER TO SECTOR #' + home_index + '...CONTROLLER HAS FALLEN TO HOSTILE FORCES<<<');
+                                    console.log('orbitalDrone.AI:: >>>SIGNALLING PURIFIER TO SECTOR #' + unit.memory.home_index + '...CONTROLLER HAS FALLEN TO HOSTILE FORCES<<<');
                                     console.log('orbitalDrone.AI:: ------------------------------');
 
-                                    Memory.lastReserveLoss_time[home_index] =   Game.time;
-                                    reservation_lost =                          true;
+                                    Memory.lastReserveLoss_time[unit.memory.home_index] =   Game.time;
+                                    reservation_lost =                                      true;
 
-                                    Memory.recalibrator_MAX[home_index] =       -1;
-                                    Memory.orbitalAssimilator_MAX[home_index] = -1;
-                                    Memory.orbitalDrone_MAX[home_index] =       -1;
+                                    Memory.recalibrator_MAX[unit.memory.home_index] =       -1;
+                                    Memory.orbitalAssimilator_MAX[unit.memory.home_index] = -1;
+                                    Memory.orbitalDrone_MAX[unit.memory.home_index] =       -1;
 
-                                    Memory.purifier_MAX[home_index] =           1;
+                                    Memory.purifier_MAX[unit.memory.home_index] =           1;
                             
-                                    unit.memory.killswitch =                    true; //reasoning: unit will likely not survive long enough to see the controller's purification
+                                    unit.memory.killswitch =                                true; //reasoning: unit will likely not survive long enough to see the controller's purification
                                 }
                             }
                             catch{

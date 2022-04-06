@@ -2,8 +2,11 @@
 //green trail ("builder")
 
 module.exports = {
-    run: function(unit, nexus, bias, reserve){
+    run: function(unit, nexus_id, bias, reserve){
         
+        let nexus = Game.getObjectById(nexus_id);
+
+
         //proceed if there is no suicide order
         if (!unit.memory.killswitch){
             //INPUTS: energy sources, containers (non-empty)
