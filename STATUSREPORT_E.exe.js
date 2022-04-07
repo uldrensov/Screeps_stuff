@@ -44,6 +44,6 @@ module.exports = {
         }
         
 
-        return 'STATUSREPORT_E:: *****END OF REPORT*****';
+        return 'STATUSREPORT_E:: ***** END *****';
     }
 };

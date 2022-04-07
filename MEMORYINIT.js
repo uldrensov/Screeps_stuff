@@ -118,11 +118,19 @@ module.exports = {
         
 
         //init (allocate + populate) global data...
-        if (Memory.hallucination_MAX == undefined)              Memory.hallucination_MAX =                 0;             //role is currently unfinished/unimplemented
-        if (Memory.hightemplar_MAX == undefined)                Memory.hightemplar_MAX =                   0;             //role is currently unfinished/unimplemented
-        if (Memory.zealot_MAX == undefined)                     Memory.zealot_MAX =                        0;             //role is currently unfinished/unimplemented
+        //walls and ramparts
         if (Memory.wall_threshold == undefined)                 Memory.wall_threshold =                    50000;         //TODO: move to SOFTDATA
         if (Memory.rampart_threshold == undefined)              Memory.rampart_threshold =                 100000;        //TODO: move to SOFTDATA
         if (Memory.construction_mode == undefined)              Memory.construction_mode =                 false;         //TODO: make this per-room
+
+        //performance monitoring
+        if (Memory.dayStart_timestamp == undefined)             Memory.dayStart_timestamp =                Date.now();    //do not modify manually
+        if (Memory.cpu_log == undefined)                        Memory.cpu_log =                           [];            //do not modify manually
+        if (Memory.ticksLoggedToday == undefined)               Memory.ticksLoggedToday =                  0;             //do not modify manually
+
+        //TBD
+        if (Memory.hallucination_MAX == undefined)              Memory.hallucination_MAX =                 0;             //role is currently unfinished/unimplemented
+        if (Memory.hightemplar_MAX == undefined)                Memory.hightemplar_MAX =                   0;             //role is currently unfinished/unimplemented
+        if (Memory.zealot_MAX == undefined)                     Memory.zealot_MAX =                        0;             //role is currently unfinished/unimplemented
     }
 };

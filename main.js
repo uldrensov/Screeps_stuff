@@ -20,9 +20,24 @@ module.exports.loop = function(){
     }
     
 
-    let nexi = [];
-    for (let i=0; i<SD.nexus_id.length; i++){
-        nexi[i] = Game.getObjectById(SD.nexus_id[i]);
+    //every day, log 600 game ticks' worth of CPU usage
+    let recordTick = false;
+
+    //after 24h (~86400 seconds) from the start time, refresh it, clear the tick log, and reset the logging counter to 0
+    if (Game.time % SD.std_interval == 0){
+        if ((Date.now() - Memory.dayStart_timestamp) / 1000
+            > 86400){
+
+            Memory.dayStart_timestamp = Date.now();
+            Memory.cpu_log = [];
+            Memory.ticksLoggedToday = 0;
+        }
+    }
+
+    //allow a tick to be logged until the counter reaches 600
+    if (Memory.ticksLoggedToday < 600){
+        recordTick = true;
+        Memory.ticksLoggedToday++;
     }
     
     
@@ -71,6 +86,11 @@ module.exports.loop = function(){
         let roomStructs_sub50;
         let roomStructs_sub75;
 
+        let nexi = [];
+        for (let i=0; i<SD.nexus_id.length; i++){
+            nexi[i] = Game.getObjectById(SD.nexus_id[i]);
+        }
+
         for (let i=0; i<SD.nexus_id.length; i++){
             if (nexi[i] == null)    continue; //error: if nexus fails to retrieve, skip the room
                 
@@ -101,14 +121,45 @@ module.exports.loop = function(){
     
     //run economy automation script
     ECONDRIVE.run();
+
+    //tick log breakpoint 0
+    if (recordTick){
+        if (Memory.cpu_log[0] == undefined)
+            Memory.cpu_log[0] = [];
+        Memory.cpu_log[0][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
+    }
     
+
     //run spawning algorithm (periodically)
     if (Game.time % SD.std_interval == 0)
         SPAWNCYCLE.run();
+
+    //tick log breakpoint 1
+    if (recordTick){
+        if (Memory.cpu_log[1] == undefined)
+            Memory.cpu_log[1] = [];
+        Memory.cpu_log[1][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
+    }
     
+
     //run tower AI script
     TOWERDRIVE.run();
+
+    //tick log breakpoint 2
+    if (recordTick){
+        if (Memory.cpu_log[2] == undefined)
+            Memory.cpu_log[2] = [];
+        Memory.cpu_log[2][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
+    }
+    
     
     //run unit AI scripts
     UNITDRIVE.run();
+
+    //tick log breakpoint 3
+    if (recordTick){
+        if (Memory.cpu_log[3] == undefined)
+            Memory.cpu_log[3] = [];
+        Memory.cpu_log[3][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
+    }
 }

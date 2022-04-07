@@ -50,7 +50,7 @@ module.exports = {
                 bestOffer = clientele[i];
         }
         if (bestOffer.price < streetPrice * SD.price_tolerance)
-            return 'TRANSACTION:: NO SUITABLE OFFERS WITHIN DESIRED PRICE RANGE...TRY AGAIN LATER';
+            return 'TRANSACTION:: NO SUITABLE OFFERS FOR [' + resource_type + '] WITHIN DESIRED PRICE RANGE...TRY AGAIN LATER';
         
 
         //make the transaction

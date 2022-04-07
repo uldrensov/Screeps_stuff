@@ -231,6 +231,6 @@ module.exports = {
                                                                                                     console.log('STATUSREPORT::');
         
 
-        return 'STATUSREPORT:: *****END OF REPORT*****';
+        return 'STATUSREPORT:: ***** END *****';
     }
 };
