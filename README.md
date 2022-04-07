@@ -43,6 +43,7 @@ Anyone is welcome to clone this repository and run it themselves for demonstrati
 * STATUSREPORT.exe.js writes a detailed summary report about a single chosen room
 * STATUSREPORT_E.exe.js writes a condensed summary report about the Storage/Terminal contents of every room
 * STATUSREPORT_R.exe.js writes a summary report about every long-distance mining site, including time trackers for recently detected threats
+* STATUSREPORT_T.exe.js writes a summary report about overall CPU/tick performance data, measured at various breakpoints throughout code execution
 * TERMINALTRANSFER.exe.js spawns in a 'Treasurer' unit to carry items (any amount, any type) between Storage and Terminal/Power Spawn/Nuker in a single chosen room
 * CIRCULATE.exe.js transfers goods (any amount, any type) between two chosen rooms via Terminal
 * TRANSACTION.exe.js uses the Terminal of a chosen room to sell Minerals (any amount, any type) through the in-game market

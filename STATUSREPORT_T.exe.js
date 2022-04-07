@@ -23,6 +23,8 @@
                 console.log('STATUSREPORT_T:: BREAKPOINT ' + k + ': ' + breakpoint_avgs[k].toFixed(1) + ' CPU averaged');
             }
 
+            console.log('STATUSREPORT_T:: Results calculated using ' + Memory.ticksLoggedToday + ' samples.');
+
 
             return 'STATUSREPORT_T:: ***** END *****';
         }
