@@ -109,16 +109,16 @@ module.exports = {
                 //task complete notification
                 else if (!unit.memory.done){
                     unit.memory.done = true;
-                    console.log('treasurer.AI:: *********************');
-                    console.log('treasurer.AI:: ORDER COMPLETE (ROOM #' + home_index + ')');
+                    console.log(unit.name + ':: *********************');
+                    console.log(unit.name + ':: ORDER COMPLETE (ROOM #' + home_index + ')');
 
                     //killswitch message
                     if (unit.memory.autokill){
                         unit.memory.killswitch = true;
-                        console.log('treasurer.AI:: RECYCLING UNIT...');
+                        console.log(unit.name + ':: RECYCLING UNIT...');
                     }
 
-                    console.log('treasurer.AI:: *********************');
+                    console.log(unit.name + ':: *********************');
                 }
             }
 

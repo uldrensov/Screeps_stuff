@@ -140,7 +140,7 @@ module.exports = {
                         //select a sellable resource (no specific priority order) and attempt to sell
                         for (let x=0; x<SD.sellable_products[i].length; x++){
                             if (nexi[i].room.terminal.store.getUsedCapacity(SD.sellable_products[i][x]) > 0){
-                                autosell_return = TRANSACTION.run(i,SD.sellable_products[i][x]);
+                                autosell_return = TRANSACTION.run(i,SD.sellable_products[i][x],false);
 
                                 //upon successful sell, move on to the next room
                                 if (autosell_return == OK)
@@ -231,6 +231,7 @@ module.exports = {
             if (Game.cpu.generatePixel() == OK){
                 Game.notify('ECONDRIVE:: PIXEL GENERATED');
                 console.log('ECONDRIVE:: -------------------PIXEL GENERATED-------------------');
+                Memory.pixelGainToday++;
             }
         }
     }

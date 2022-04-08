@@ -1,12 +1,12 @@
 //executable script: attempts to sell minerals from a room's terminal
 //optionally, can also be called automatically by ECONDRIVE.js
-    //require('TRANSACTION.exe').run(0,'Z')
+    //require('TRANSACTION.exe').run(0,'Z',false)
 
 var SD = require('SOFTDATA');
 
 
 module.exports = {
-    run: function(room_num, resource_type){
+    run: function(room_num, resource_type, ignore_tolerance){
         
         //arg validation
         if (Game.getObjectById(SD.nexus_id[room_num]) == undefined)
@@ -42,15 +42,19 @@ module.exports = {
         }
         streetPrice /= hist.length;
         
-        //find the best offer within price range
+        //find the best offer (stay above minimum negotiable price, unless ignore_tolerance is true)
         let bestOffer = clientele[0];
 
         for (let i=0; i<clientele.length; i++){
             if (clientele[i].price > bestOffer.price && clientele[i].amount > 0)
                 bestOffer = clientele[i];
         }
-        if (bestOffer.price < streetPrice * SD.price_tolerance)
+        if (bestOffer.price < streetPrice * SD.price_tolerance
+            &&
+            !ignore_tolerance){
+
             return 'TRANSACTION:: NO SUITABLE OFFERS FOR [' + resource_type + '] WITHIN DESIRED PRICE RANGE...TRY AGAIN LATER';
+        }
         
 
         //make the transaction
@@ -78,6 +82,8 @@ module.exports = {
         console.log('TRANSACTION:: ROOM #' + room_num + ' SOLD ' + tradeAmount + ' [' + resource_type + '] FOR ' +
             bestOffer.price + ' EACH (' + (tradeAmount*bestOffer.price).toFixed(3) + ' CREDITS GAINED) ... TRANSMISSION TAX: ' +
             tax + ' (' + (100*tax/tradeAmount).toFixed(1) + '% tax rate)');
+
+        Memory.creditGainToday += tradeAmount*bestOffer.price;
         
         return OK;
     }

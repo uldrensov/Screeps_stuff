@@ -34,11 +34,11 @@ module.exports = {
 
                 //when invader is slain...
                 else if (Memory.evac_timer[unit.memory.home_index] > 0){
-                    //Game.notify('bloodhunter.AI:: SECTOR #' + unit.memory.home_index + ': HOSTILES ELIMINATED',0);
+                    //Game.notify(unit.name + ':: SECTOR #' + unit.memory.home_index + ': HOSTILES ELIMINATED',0);
 
-                    console.log('bloodhunter.AI:: ------------------------------');
-                    console.log('bloodhunter.AI:: SECTOR #' + unit.memory.home_index + ': HOSTILES ELIMINATED');
-                    console.log('bloodhunter.AI:: ------------------------------');
+                    console.log(unit.name + ':: ------------------------------');
+                    console.log(unit.name + ':: SECTOR #' + unit.memory.home_index + ': HOSTILES ELIMINATED');
+                    console.log(unit.name + ':: ------------------------------');
 
                     //reset the evac timer early
                     Memory.evac_timer[unit.memory.home_index] = 0; //triggers blood hunter dormancy

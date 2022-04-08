@@ -123,6 +123,10 @@ module.exports = {
         if (Memory.rampart_threshold == undefined)              Memory.rampart_threshold =                 100000;        //TODO: move to SOFTDATA
         if (Memory.construction_mode == undefined)              Memory.construction_mode =                 false;         //TODO: make this per-room
 
+        //economy monitoring
+        if (Memory.creditGainToday == undefined)                Memory.creditGainToday =                   0;             //do not modify manually
+        if (Memory.pixelGainToday == undefined)                 Memory.pixelGainToday =                    0;             //do not modify manually
+
         //performance monitoring
         if (Memory.dayStart_timestamp == undefined)             Memory.dayStart_timestamp =                Date.now();    //do not modify manually
         if (Memory.cpu_log == undefined)                        Memory.cpu_log =                           [];            //do not modify manually

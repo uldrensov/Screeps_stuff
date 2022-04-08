@@ -20,17 +20,23 @@ module.exports.loop = function(){
     }
     
 
-    //every day, log 600 game ticks' worth of CPU usage
+    //every day, log 600 game ticks' worth of CPU usage, and log any credit/pixel revenue
     let recordTick = false;
 
-    //after 24h (~86400 seconds) from the start time, refresh it, clear the tick log, and reset the logging counter to 0
+    //after 24h (~86400 seconds) from the start time, refresh it, clear the tick log, reset the logging counter to 0, and reset revenue counters
     if (Game.time % SD.std_interval == 0){
         if ((Date.now() - Memory.dayStart_timestamp) / 1000
             > 86400){
 
+            Game.notify('MAIN:: Gained ' + Memory.creditGainToday + ' credits today!');
+            Game.notify('MAIN:: Gained ' + Memory.pixelGainToday + ' pixels today!');
+
             Memory.dayStart_timestamp = Date.now();
-            Memory.cpu_log = [];
-            Memory.ticksLoggedToday = 0;
+            Memory.cpu_log =            [];
+            Memory.ticksLoggedToday =   0;
+
+            Memory.creditGainToday =    0;
+            Memory.pixelGainToday =     0;
         }
     }
 
