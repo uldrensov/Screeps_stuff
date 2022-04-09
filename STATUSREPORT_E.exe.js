@@ -23,8 +23,9 @@ module.exports = {
             mineral = Memory.mineral_type[i].mineralType;
             
             if (vault)
-                console.log('STATUSREPORT_E:: Vault #' + i + ': ' + vault.store.getUsedCapacity() + '-> ' +  vault.store.getUsedCapacity(RESOURCE_ENERGY) +
-                    ' energy, ' + vault.store.getUsedCapacity(mineral) + ' ' + mineral);
+                console.log('STATUSREPORT_E:: Vault #' + i + ': ' + vault.store.getUsedCapacity() + '-> ' +  vault.store.getUsedCapacity(RESOURCE_ENERGY) + ' energy, ' +
+                    vault.store.getUsedCapacity(mineral) + ' ' + mineral + ', ' +
+                    (vault.store.getUsedCapacity() - (vault.store.getUsedCapacity(RESOURCE_ENERGY) + vault.store.getUsedCapacity(mineral))) + ' misc.');
         }
         
         console.log('STATUSREPORT_E::');
@@ -39,8 +40,9 @@ module.exports = {
             mineral = Memory.mineral_type[j].mineralType;
             
             if (term)
-                console.log('STATUSREPORT_E:: Terminal #' + j + ': ' + term.store.getUsedCapacity() + '-> ' +  term.store.getUsedCapacity(RESOURCE_ENERGY) +
-                    ' energy, ' + term.store.getUsedCapacity(mineral) + ' ' + mineral);
+                console.log('STATUSREPORT_E:: Terminal #' + j + ': ' + term.store.getUsedCapacity() + '-> ' +  term.store.getUsedCapacity(RESOURCE_ENERGY) + ' energy, ' +
+                    term.store.getUsedCapacity(mineral) + ' ' + mineral + ', ' +
+                    (term.store.getUsedCapacity() - (term.store.getUsedCapacity(RESOURCE_ENERGY) + term.store.getUsedCapacity(mineral))) + ' misc.');
         }
         
 

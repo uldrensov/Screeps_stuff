@@ -43,7 +43,7 @@ module.exports = {
             if (clientele[i].price > bestOffer.price && clientele[i].amount > 0)
                 bestOffer = clientele[i];
         }
-        if (bestOffer.price < streetPrice * SD.price_tolerance)
+        if (bestOffer.price < streetPrice * SD.sellPrice_tolerance)
             return 'ENERGYVENT:: NO SUITABLE OFFERS WITHIN DESIRED PRICE RANGE...TRY AGAIN LATER';
         
 

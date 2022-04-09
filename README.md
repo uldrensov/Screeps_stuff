@@ -46,7 +46,7 @@ Anyone is welcome to clone this repository and run it themselves for demonstrati
 * STATUSREPORT_T.exe.js writes a summary report about overall CPU/tick performance data, measured at various breakpoints throughout code execution
 * TERMINALTRANSFER.exe.js spawns in a 'Treasurer' unit to carry items (any amount, any type) between Storage and Terminal/Power Spawn/Nuker in a single chosen room
 * CIRCULATE.exe.js transfers goods (any amount, any type) between two chosen rooms via Terminal
-* TRANSACTION.exe.js uses the Terminal of a chosen room to sell Minerals (any amount, any type) through the in-game market
+* TRANSACTION.exe.js uses the Terminal of a chosen room to buy or sell resources (any amount, any type) through the in-game market
 * ENERGYVENT.exe.js uses the Terminal of a chosen room to sell Energy (any amount) through the in-game market
 ## Usage: ##
 ### Setup: ###

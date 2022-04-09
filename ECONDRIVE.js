@@ -140,7 +140,7 @@ module.exports = {
                         //select a sellable resource (no specific priority order) and attempt to sell
                         for (let x=0; x<SD.sellable_products[i].length; x++){
                             if (nexi[i].room.terminal.store.getUsedCapacity(SD.sellable_products[i][x]) > 0){
-                                autosell_return = TRANSACTION.run(i,SD.sellable_products[i][x],false);
+                                autosell_return = TRANSACTION.run(i,SD.sellable_products[i][x],true,0,false);
 
                                 //upon successful sell, move on to the next room
                                 if (autosell_return == OK)
@@ -151,7 +151,7 @@ module.exports = {
                         //if sellable resources exist, but all failed to sell, output the error of the very last attempt
                         if (autosell_return != undefined)
                             if (autosell_return != OK)
-                                console.log('ECONDRIVE:: AUTOSELL FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autosell_return + ']');
+                                console.log('ECONDRIVE:: AUTOSELL FAILED IN ROOM #' + i + ' WITH LAST ERROR RESPONSE [' + autosell_return + ']');
                     }
                 }
             }
@@ -229,7 +229,6 @@ module.exports = {
         //produce cosmetics currency
         if (Game.cpu.bucket == 10000){
             if (Game.cpu.generatePixel() == OK){
-                Game.notify('ECONDRIVE:: PIXEL GENERATED');
                 console.log('ECONDRIVE:: -------------------PIXEL GENERATED-------------------');
                 Memory.pixelGainToday++;
             }

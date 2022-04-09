@@ -13,7 +13,8 @@ module.exports = {
     construction_mode:      false,      //enabling this will stop towers from repairing structures; useful for situational energy conservation
 
     //economy automation values
-    price_tolerance:        .85,        //avoids selling minerals below a minimum percentage of the avg price
+    sellPrice_tolerance:    0.85,       //avoids selling resources below this percentage of the avg price
+    buyPrice_tolerance:     1.10,       //avoids buying resources above this percentage of the avg price
     cargo_size:             100000,     //outbound "crate" size for trade terminal autoloading
     autoload_interval:      800,        //tick interval for automatic terminal loading (should exceed # of ticks required for a treasurer to finish an order)
     autosell_interval:      200,        //tick interval for automatic terminal sales (both mineral sales and energy sales)
