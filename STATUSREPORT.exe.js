@@ -73,6 +73,19 @@ module.exports = {
         
         
         //room state...
+        //determine total nexi energy
+        let nexi_energy = 0;
+        let Nexi = nexus.room.find(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return structure.structureType == STRUCTURE_SPAWN;
+            }
+        });
+        if (Nexi.length){
+            for (let i=0; i<Nexi.length; i++){
+                nexi_energy += Nexi[i].store.getUsedCapacity(RESOURCE_ENERGY);
+            }
+        }
+
         //determine total extension energy
         let ext_energy = 0;
         let extensions = nexus.room.find(FIND_STRUCTURES, {
@@ -163,11 +176,7 @@ module.exports = {
         
         
         //write report...
-        console.log('STATUSREPORT:: *****STATUS REPORT*****');
-        console.log('STATUSREPORT::');
-        
         //unit census report
-        console.log('STATUSREPORT:: <<<--Census-->>>');
         if (emergencyDrone_gang.length)                                                             console.log('STATUSREPORT:: Emergency drone: ACTIVE');
                                                                                                     console.log('STATUSREPORT:: Drones: ' + drone_gang.length + '/' + Memory.drone_MAX[room_num]);
         if (Memory.assimilator_MAX[room_num] > 0)                                                   console.log('STATUSREPORT:: Assimilator[I]: ' + assimilator_gang.length + '/' + Memory.assimilator_MAX[room_num]);
@@ -182,31 +191,31 @@ module.exports = {
         if (Memory.supplicant_MAX[room_num] > 0)                                                    console.log('STATUSREPORT:: Supplicants: ' + supplicant_gang.length + '/' + Memory.supplicant_MAX[room_num]);
         if (Memory.nullSupplicant_MAX[room_num] > 0)                                                console.log('STATUSREPORT:: Null supplicants: ' + nullSupplicant_gang.length + '/' + Memory.nullSupplicant_MAX[room_num]);
         if (Memory.probe_MAX[room_num] > 0 && probe_gang.length)                                    console.log('STATUSREPORT:: Probes: ' + probe_gang.length + '/' + Memory.probe_MAX[room_num]);
-            else if (Memory.probe_MAX[room_num] > 0)                                                console.log('STATUSREPORT:: Probes: AWAITING');
-            else if (Memory.probe_MAX[room_num] < 0 && probe_gang.length)                           console.log('STATUSREPORT:: Probes: STANDING');
+            else if (Memory.probe_MAX[room_num] > 0)                                                console.log('STATUSREPORT:: Probes: AWAITING SPAWN');
+            else if (Memory.probe_MAX[room_num] < 0 && probe_gang.length)                           console.log('STATUSREPORT:: Probes: ACTIVE UNTIL DEATH');
             else if (Memory.probe_MAX[room_num] < 0)                                                console.log('STATUSREPORT:: Probes: DORMANT');
         if (Memory.recalibrator_MAX[room_num] > 0 && recalibrator_gang.length)                      console.log('STATUSREPORT:: Recalibrator: ACTIVE');
-            else if (Memory.recalibrator_MAX[room_num] > 0)                                         console.log('STATUSREPORT:: Recalibrator: AWAITING');
-            else if (Memory.recalibrator_MAX[room_num] < 0 && recalibrator_gang.length)             console.log('STATUSREPORT:: Recalibrator: STANDING');
+            else if (Memory.recalibrator_MAX[room_num] > 0)                                         console.log('STATUSREPORT:: Recalibrator: AWAITING SPAWN');
+            else if (Memory.recalibrator_MAX[room_num] < 0 && recalibrator_gang.length)             console.log('STATUSREPORT:: Recalibrator: ACTIVE UNTIL DEATH');
             else if (Memory.recalibrator_MAX[room_num] < 0)                                         console.log('STATUSREPORT:: Recalibrator: WITHHELD');
         if (Memory.orbitalAssimilator_MAX[room_num] > 0)                                            console.log('STATUSREPORT:: Orbital assimilators: ' + orbitalAssimilator_gang.length + '/' + Memory.orbitalAssimilator_MAX[room_num]);
-            else if (Memory.orbitalAssimilator_MAX[room_num] < 0 && orbitalAssimilator_gang.length) console.log('STATUSREPORT:: Orbital assimilators: ' + orbitalAssimilator_gang.length + ' (STANDING)');
+            else if (Memory.orbitalAssimilator_MAX[room_num] < 0 && orbitalAssimilator_gang.length) console.log('STATUSREPORT:: Orbital assimilators: ' + orbitalAssimilator_gang.length + ' (ACTIVE UNTIL DEATH)');
             else if (Memory.orbitalAssimilator_MAX[room_num] < 0)                                   console.log('STATUSREPORT:: Orbital assimilators: DORMANT');
         if (Memory.orbitalDrone_MAX[room_num] > 0)                                                  console.log('STATUSREPORT:: Orbital drones: ' + orbitalDrone_gang.length + '/' + Memory.orbitalDrone_MAX[room_num]);
-            else if (Memory.orbitalDrone_MAX[room_num] < 0 && orbitalDrone_gang.length)             console.log('STATUSREPORT:: Orbital drones: ' + orbitalDrone_gang.length + ' (STANDING)');
+            else if (Memory.orbitalDrone_MAX[room_num] < 0 && orbitalDrone_gang.length)             console.log('STATUSREPORT:: Orbital drones: ' + orbitalDrone_gang.length + ' (ACTIVE UNTIL DEATH)');
             else if (Memory.orbitalDrone_MAX[room_num] < 0)                                         console.log('STATUSREPORT:: Orbital drones: DORMANT');
         if (Memory.bloodhunter_MAX[room_num] > 0)                                                   console.log('STATUSREPORT:: Blood hunter: ' + bloodhunter_gang.length + '/' + Memory.bloodhunter_MAX[room_num]);
-            else if (Memory.bloodhunter_MAX[room_num] < 0 && bloodhunter_gang.length)               console.log('STATUSREPORT:: Blood hunter: ' + bloodhunter_gang.length + ' (STANDING)');
+            else if (Memory.bloodhunter_MAX[room_num] < 0 && bloodhunter_gang.length)               console.log('STATUSREPORT:: Blood hunter: ' + bloodhunter_gang.length + ' (ACTIVE UNTIL DEATH)');
             else if (Memory.bloodhunter_MAX[room_num] < 0)                                          console.log('STATUSREPORT:: Blood hunter: DORMANT');
         if (Memory.enforcer_MAX[room_num] > 0)                                                      console.log('STATUSREPORT:: Enforcer: ' + enforcer_gang.length + '/' + Memory.enforcer_MAX[room_num]);
-            else if (Memory.enforcer_MAX[room_num] < 0 && enforcer_gang.length)                     console.log('STATUSREPORT:: Enforcer: ' + enforcer_gang.length + ' (STANDING)');
+            else if (Memory.enforcer_MAX[room_num] < 0 && enforcer_gang.length)                     console.log('STATUSREPORT:: Enforcer: ' + enforcer_gang.length + ' (ACTIVE UNTIL DEATH)');
             else if (Memory.enforcer_MAX[room_num] < 0)                                             console.log('STATUSREPORT:: Enforcer: DORMANT');
         if (Memory.purifier_MAX[room_num] > 0)                                                      console.log('STATUSREPORT:: Purifier: ' + purifier_gang.length + '/' + Memory.purifier_MAX[room_num]);
         if (Memory.ancientDrone_MAX[room_num] > 0)                                                  console.log('STATUSREPORT:: Ancient drone: ' + ancientDrone_gang.length + '/' + Memory.ancientDrone_MAX[room_num]);
-            else if (Memory.ancientDrone_MAX[room_num] < 0 && ancientDrone_gang.length)             console.log('STATUSREPORT:: Ancient drone: ' + ancientDrone_gang.length + ' (STANDING)');
+            else if (Memory.ancientDrone_MAX[room_num] < 0 && ancientDrone_gang.length)             console.log('STATUSREPORT:: Ancient drone: ' + ancientDrone_gang.length + ' (ACTIVE UNTIL DEATH)');
             else if (Memory.ancientDrone_MAX[room_num] < 0)                                         console.log('STATUSREPORT:: Ancient drone: DORMANT');
         if (Memory.ancientAssimilator_MAX[room_num] > 0)                                            console.log('STATUSREPORT:: Ancient assimilator: ' + ancientAssimilator_gang.length + '/' + Memory.ancientAssimilator_MAX[room_num]);
-            else if (Memory.ancientAssimilator_MAX[room_num] < 0 && ancientAssimilator_gang.length) console.log('STATUSREPORT:: Ancient assimilator: ' + ancientAssimilator_gang.length + ' (STANDING)');
+            else if (Memory.ancientAssimilator_MAX[room_num] < 0 && ancientAssimilator_gang.length) console.log('STATUSREPORT:: Ancient assimilator: ' + ancientAssimilator_gang.length + ' (ACTIVE UNTIL DEATH)');
             else if (Memory.ancientAssimilator_MAX[room_num] < 0)                                   console.log('STATUSREPORT:: Ancient assimilator: DORMANT');
         if (Memory.architect_MAX[room_num] > 0)                                                     console.log('STATUSREPORT:: Architects: ' + architect_gang.length + '/' + Memory.architect_MAX[room_num]);
         if (Memory.specialist_MAX > 0)                                                              console.log('STATUSREPORT:: Specialists: ' + specialist_gang.length + '/' + Memory.specialist_MAX);
@@ -215,20 +224,22 @@ module.exports = {
                                                                                                     console.log('STATUSREPORT::');
         
         //state of the room report
-        console.log('STATUSREPORT:: <<<--Room status-->>>');
         if (nexus.room.controller.level < 8)                                                        console.log('STATUSREPORT:: Controller EXP: ' + control_perc + '% -> ' + nexus.room.controller.progress + '/' + nexus.room.controller.progressTotal);
         else                                                                                        console.log('STATUSREPORT:: Controller EXP: MAX');
-                                                                                                    console.log('STATUSREPORT:: Spawning energy: ' + ext_energy + ' extended, ' + nexus.store.getUsedCapacity(RESOURCE_ENERGY) + ' main');
-        if (nexus.room.storage != undefined){                                                       console.log('STATUSREPORT:: Vault contents: ' + nexus.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) + ' [energy]; ' +
-                                                                                                        nexus.room.storage.store.getUsedCapacity(Memory.mineral_type[room_num].mineralType) + ' [' + Memory.mineral_type[room_num].mineralType + ']');
+                                                                                                    console.log('STATUSREPORT:: Spawning energy: ' + ext_energy + ' extended, ' + nexi_energy + ' nexi');
+        if (nexus.room.storage != undefined){                                                       console.log('STATUSREPORT:: Vault contents: ' + nexus.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) + ' energy; ' +
+                                                                                                        nexus.room.storage.store.getUsedCapacity(Memory.mineral_type[room_num].mineralType) + ' ' + Memory.mineral_type[room_num].mineralType + '; ' +
+                                                                                                        (nexus.room.storage.store.getUsedCapacity() -
+                                                                                                        (nexus.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) + nexus.room.storage.store.getUsedCapacity(Memory.mineral_type[room_num].mineralType))) + ' misc.');
                                                                                                     console.log('STATUSREPORT:: Vault space remaining: ' + nexus.room.storage.store.getFreeCapacity());}
-        if (nexus.room.terminal != undefined)                                                       console.log('STATUSREPORT:: Terminal contents: ' + nexus.room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) + ' [energy]; ' +
-                                                                                                        nexus.room.terminal.store.getUsedCapacity(Memory.mineral_type[room_num].mineralType) + ' [' + Memory.mineral_type[room_num].mineralType + ']');
+        if (nexus.room.terminal != undefined)                                                       console.log('STATUSREPORT:: Terminal contents: ' + nexus.room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) + ' energy; ' +
+                                                                                                        nexus.room.terminal.store.getUsedCapacity(Memory.mineral_type[room_num].mineralType) + ' ' + Memory.mineral_type[room_num].mineralType + '; ' +
+                                                                                                        (nexus.room.terminal.store.getUsedCapacity() -
+                                                                                                        (nexus.room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) + nexus.room.terminal.store.getUsedCapacity(Memory.mineral_type[room_num].mineralType))) + ' misc.');
         if (canisters.length)                                                                       console.log('STATUSREPORT:: Total canister energy: ' + can_energy);
                                                                                                     console.log('STATUSREPORT:: Total dropped energy: ' + scrap_energy);
                                                                                                     console.log('STATUSREPORT:: Weakest structure: ' + weakstruct_perc + '% -> ' + weakest_struct);
                                                                                                     console.log('STATUSREPORT:: Weakest wall: ' + weakwall_perc + '% -> ' + weakest_wall);
-                                                                                                    console.log('STATUSREPORT::');
         
 
         return 'STATUSREPORT:: ***** END *****';

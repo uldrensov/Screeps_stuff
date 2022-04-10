@@ -66,14 +66,13 @@ module.exports = {
                         //respond to player/invader threats
                         if (i_threats > 0 || p_threats > 0){
                             Memory.lastSeenEnemy_time[unit.memory.home_index] = Game.time;
-                            console.log(unit.name + ':: ------------------------------');
                     
                             //enemy player(s) detected: evacuate and call a blood hunter
                             if (p_threats > 0){
-                                //Game.notify(unit.name + ':: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...' + p_name + ' INBOUND<<<',0);
+                                //Game.notify(unit.name + ':: >>>>>> EVACUATING SECTOR #' + unit.memory.home_index + '...' + p_name + ' INBOUND <<<<<<');
 
-                                console.log(unit.name + ':: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...' + p_name + ' INBOUND<<<');
-                                console.log(unit.name + ':: >>>SIGNALLING BLOOD HUNTER<<<');
+                                console.log(unit.name + ':: >>>>>> EVACUATING SECTOR #' + unit.memory.home_index + '...' + p_name + ' INBOUND <<<<<<');
+                                console.log(unit.name + ':: SIGNALLING BLOOD HUNTER');
 
                                 Memory.lastSeenEnemy_name[unit.memory.home_index] = p_name;
                                 Memory.evac_timer[unit.memory.home_index] = CREEP_LIFE_TIME;
@@ -81,10 +80,10 @@ module.exports = {
                             }
                             //lone invader detected: evacuate and call blood hunter
                             else if (i_threats == 1){
-                                //Game.notify(unit.name + ':: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER INBOUND<<<',0);
+                                //Game.notify(unit.name + ':: >>>>>> EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER INBOUND <<<<<<');
 
-                                console.log(unit.name + ':: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER INBOUND<<<');
-                                console.log(unit.name + ':: >>>SIGNALLING BLOOD HUNTER<<<');
+                                console.log(unit.name + ':: >>>>>> EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER INBOUND <<<<<<');
+                                console.log(unit.name + ':: SIGNALLING BLOOD HUNTER');
 
                                 Memory.lastSeenEnemy_name[unit.memory.home_index] = 'INVADER';
                                 Memory.evac_timer[unit.memory.home_index] = CREEP_LIFE_TIME;
@@ -92,17 +91,15 @@ module.exports = {
                             }
                             //multiple invaders detected: evacuate and suicide
                             else if (i_threats > 1){
-                                //Game.notify(unit.name + ':: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER HORDE INBOUND<<<',0);
+                                //Game.notify(unit.name + ':: >>>>>> EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER HORDE INBOUND <<<<<<');
 
-                                console.log(unit.name + ':: >>>EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER HORDE INBOUND<<<');
-                                console.log(unit.name + ':: >>>RECYCLING EVACUATED UNITS<<<');
+                                console.log(unit.name + ':: >>>>>> EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER HORDE INBOUND <<<<<<');
+                                console.log(unit.name + ':: RECYCLING EVACUATED UNITS');
 
                                 Memory.lastSeenEnemy_name[unit.memory.home_index] = 'INVADER';
                                 Memory.evac_timer[unit.memory.home_index] = CREEP_LIFE_TIME;
                                 unit.memory.killswitch = true; //reasoning: unit will likely not outlive the threat
                             }
-                        
-                            console.log(unit.name + ':: ------------------------------');
                         }
                     }
 
@@ -117,11 +114,8 @@ module.exports = {
 
                         //STAGE 3A. watch for hostile cores
                         if (invadercores.length && Memory.enforcer_MAX[unit.memory.home_index] < 0){
-                            //Game.notify(unit.name + ':: >>>SIGNALLING ENFORCER TO SECTOR #' + unit.memory.home_index + '...CORE SIGHTED<<<',0);
-
-                            console.log(unit.name + ':: ------------------------------');
-                            console.log(unit.name + ':: >>>SIGNALLING ENFORCER TO SECTOR #' + unit.memory.home_index + '...CORE SIGHTED<<<');
-                            console.log(unit.name + ':: ------------------------------');
+                            //Game.notify(unit.name + ':: >>>>>> SIGNALLING ENFORCER TO SECTOR #' + unit.memory.home_index + '...CORE SIGHTED <<<<<<');
+                            console.log(unit.name + ':: >>>>>> SIGNALLING ENFORCER TO SECTOR #' + unit.memory.home_index + '...CORE SIGHTED <<<<<<');
 
                             Memory.lastSeenCore_time[unit.memory.home_index] = Game.time;
                             Memory.enforcer_MAX[unit.memory.home_index] = 1;
@@ -134,11 +128,8 @@ module.exports = {
                         try{
                             //controlled by hostiles: cut off remote worker spawns, call in a purifier, and self-killswitch
                             if (unit.room.controller.reservation.username != unit.owner.username){
-                                //Game.notify(unit.name + ':: >>>SIGNALLING PURIFIER TO SECTOR #' + unit.memory.home_index + '...CONTROLLER HAS FALLEN TO HOSTILE FORCES<<<',0);
-
-                                console.log(unit.name + ':: ------------------------------');
-                                console.log(unit.name + ':: >>>SIGNALLING PURIFIER TO SECTOR #' + unit.memory.home_index + '...CONTROLLER HAS FALLEN TO HOSTILE FORCES<<<');
-                                console.log(unit.name + ':: ------------------------------');
+                                //Game.notify(unit.name + ':: >>>>>> SIGNALLING PURIFIER TO SECTOR #' + unit.memory.home_index + '...CONTROLLER HAS FALLEN TO HOSTILE FORCES <<<<<<');
+                                console.log(unit.name + ':: >>>>>> SIGNALLING PURIFIER TO SECTOR #' + unit.memory.home_index + '...CONTROLLER HAS FALLEN TO HOSTILE FORCES <<<<<<');
 
                                 Memory.lastReserveLoss_time[unit.memory.home_index] =   Game.time;
                                 reservation_lost =                                      true;
@@ -189,7 +180,7 @@ module.exports = {
                 unit.memory.rallied = false;
 
                 //if the blood hunter falls in battle, self-killswitch instead of waiting around pointlessly
-                if (Memory.bloodhunter_casualty[unit.memory.home_index] == true)
+                if (Memory.bloodhunter_casualty[unit.memory.home_index])
                     unit.memory.killswitch = true;
             }
         }

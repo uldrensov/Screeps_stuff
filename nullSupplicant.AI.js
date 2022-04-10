@@ -5,7 +5,7 @@ module.exports = {
     run: function(unit, warpRX0_id){
         
         //INPUTS: link
-        var warpRX0 = Game.getObjectById(warpRX0_id);
+        let warpRX0 = Game.getObjectById(warpRX0_id);
         
         
         //2-state fetch/unload FSM...

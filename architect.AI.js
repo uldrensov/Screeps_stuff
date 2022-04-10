@@ -10,8 +10,8 @@ module.exports = {
         //proceed if there is no suicide order
         if (!unit.memory.killswitch){
             //INPUTS: energy sources, containers (non-empty)
-            var sources = unit.room.find(FIND_SOURCES);
-            var canisters = unit.room.find(FIND_STRUCTURES, {
+            let sources = unit.room.find(FIND_SOURCES);
+            let canisters = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_CONTAINER &&
                     structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
@@ -19,7 +19,7 @@ module.exports = {
             });
             
             //OUTPUTS: construction hotspot
-            var hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+            let hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
             
             
             //2-state fetch/unload FSM...
@@ -45,7 +45,8 @@ module.exports = {
                 }
                 //fetch: containers (fullest)
                 else if (canisters.length){
-                    var fullest_canister = canisters[0];
+                    let fullest_canister = canisters[0];
+
                     if (canisters.length == 2 && canisters[1].store.getUsedCapacity(RESOURCE_ENERGY) > canisters[0].store.getUsedCapacity(RESOURCE_ENERGY) + bias)
                         fullest_canister = canisters[1];
                     
@@ -57,6 +58,8 @@ module.exports = {
                     unit.moveTo(sources[0]);
             }
         }
+
+
         //built-in economic killswitch
         else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
             unit.moveTo(nexus);

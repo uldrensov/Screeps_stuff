@@ -4,12 +4,12 @@
 module.exports = {
     run: function(unit, canister_id){
         
-        var canister = Game.getObjectById(canister_id);
+        let canister = Game.getObjectById(canister_id);
         
         
         if (canister != null){
             //INPUTS: mineral source
-            var mineral_src = unit.room.find(FIND_MINERALS);
+            let mineral_src = unit.room.find(FIND_MINERALS);
         
         
             //continually mine from a designated source while standing on a container...

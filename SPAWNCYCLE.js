@@ -62,9 +62,7 @@ module.exports = {
 
 
             //determine if mineral mining is possible (for ancient drone / assimilator spawns)
-            if (Game.getObjectById(Memory.extractor_id[k]) == null
-                &&
-                Game.time % SD.std_interval == 0){
+            if (Game.getObjectById(Memory.extractor_id[k]) == null){
 
                 let extractor = nexi[k].room.find(FIND_STRUCTURES, {
                     filter: structure => {
@@ -115,19 +113,16 @@ module.exports = {
             }
             
             //also for edrone spawn, count up total room energy within spawn structures, canisters, and the vault
-            if (Memory.SPAWNCYCLE__local_canisters == undefined)
-                Memory.SPAWNCYCLE__local_canisters = [];
-            if (Memory.SPAWNCYCLE__local_canisters[k] == undefined || Game.time % SD.std_interval == 0){
-                Memory.SPAWNCYCLE__local_canisters[k] = nexi[k].room.find(FIND_STRUCTURES, {
-                    filter: structure => {
-                        return structure.structureType == STRUCTURE_CONTAINER;
-                    }
-                });
-            }
+            local_canisters = [];
+            local_canisters[k] = nexi[k].room.find(FIND_STRUCTURES, {
+                filter: structure => {
+                    return structure.structureType == STRUCTURE_CONTAINER;
+                }
+            });
 
             let canister_energy = 0;
-            for (let i=0; i<Memory.SPAWNCYCLE__local_canisters[k].length; i++){
-                canister_energy += Game.getObjectById(Memory.SPAWNCYCLE__local_canisters[k][i].id).store.energy;
+            for (let i=0; i<local_canisters[k].length; i++){
+                canister_energy += Game.getObjectById(local_canisters[k][i].id).store.energy;
             }
 
             let vault_energy = 0;
@@ -146,26 +141,22 @@ module.exports = {
             
 
             //for retriever drone spawn, determine how much energy is dropped on the ground
-            if (Memory.SPAWNCYCLE__scraps == undefined)
-                Memory.SPAWNCYCLE__scraps = [];
-            if (Memory.SPAWNCYCLE__scraps[k] == undefined || Game.time % SD.std_interval == 0){
-                Memory.SPAWNCYCLE__scraps[k] = nexi[k].room.find(FIND_DROPPED_RESOURCES, {
-                    filter: resource => {
-                        return (resource.resourceType == RESOURCE_ENERGY && resource.amount > SD.en_ignore_lim)
-                                ||
-                                resource.resourceType != RESOURCE_ENERGY;
-                    }
-                });
-            }
+            scraps = [];
+            scraps[k] = nexi[k].room.find(FIND_DROPPED_RESOURCES, {
+                filter: resource => {
+                    return (resource.resourceType == RESOURCE_ENERGY && resource.amount > SD.en_ignore_lim)
+                            ||
+                            resource.resourceType != RESOURCE_ENERGY;
+                }
+            });
 
             let total_dropped_energy = 0;
-            let scrap;
-
-            for (let i=0; i<Memory.SPAWNCYCLE__scraps[k].length; i++){
-                scrap = Game.getObjectById(Memory.SPAWNCYCLE__scraps[k][i].id);
-                if (scrap == null)
+            for (let i=0; i<scraps[k].length; i++){
+                //scrap can possibly cease to exist suddenly, due to decay
+                if (Game.getObjectById(scraps[k][i].id) == null)
                     continue;
-                total_dropped_energy += scrap.amount;
+
+                total_dropped_energy += Game.getObjectById(scraps[k][i].id).amount;
             }
 
             if (total_dropped_energy > SD.cleanup_thresh)
@@ -201,11 +192,11 @@ module.exports = {
                     {memory: {role: 'emergencyDrone', home_index: k}});
                     
                 if (spawnResult == OK){
-                    console.log('SPAWNCYCLE:: >>>EmergencyDrone[' + k + ']-' + Game.time % SD.time_offset + ' spawning.<<<');
-                    //Game.notify('SPAWNCYCLE:: Emergency drone deployed in room #' + k,0);
+                    console.log('SPAWNCYCLE:: >>>>>> EmergencyDrone[' + k + ']-' + Game.time % SD.time_offset + ' spawning. <<<<<<');
+                    //Game.notify('SPAWNCYCLE:: Emergency drone deployed in room #' + k);
                 }
                 else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                    console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ' (EDRONE): CODE ' + '[' + spawnResult + ']<<<');
+                    console.log('SPAWNCYCLE:: >>>>>> SPAWN FAILURE IN ' + openNexus.name + ' (EDRONE): CODE ' + '[' + spawnResult + '] <<<<<<');
             }
 
             //assimilator: shortcut-spawn these to accompany the emergency drone, if one is active
@@ -216,7 +207,7 @@ module.exports = {
                 if (spawnResult == OK)
                     console.log('SPAWNCYCLE:: Assimilator[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                 else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                    console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ' (ASSIMILATOR): CODE ' + '[' + spawnResult + ']<<<');
+                    console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ' (ASSIMILATOR): CODE ' + '[' + spawnResult + ']');
             }
         
 
@@ -231,7 +222,7 @@ module.exports = {
                         if (spawnResult == OK)
                             console.log('SPAWNCYCLE:: Drone[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                            console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ' (DRONE): CODE ' + '[' + spawnResult + ']<<<');
+                            console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ' (DRONE): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //without assimilators, there is no energy income
@@ -242,7 +233,7 @@ module.exports = {
                         if (spawnResult == OK)
                             console.log('SPAWNCYCLE:: Assimilator[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                            console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ' (ASSIMILATOR): CODE ' + '[' + spawnResult + ']<<<');
+                            console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ' (ASSIMILATOR): CODE ' + '[' + spawnResult + ']');
                         break;
                     case (assimilator2_gang[k].length < Memory.assimilator2_MAX[k]):
                         spawnResult = openNexus.spawnCreep(SD.assim_body[k], 'Assimilator_II[' + k + ']-' + Game.time % SD.time_offset,
@@ -251,7 +242,7 @@ module.exports = {
                         if (spawnResult == OK)
                             console.log('SPAWNCYCLE:: Assimilator_II[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                            console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ' (ASSIMILATOR 2): CODE ' + '[' + spawnResult + ']<<<');
+                            console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ' (ASSIMILATOR 2): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //without energisers, the room's defences are crippled
@@ -262,7 +253,7 @@ module.exports = {
                         if (spawnResult == OK)
                             console.log('SPAWNCYCLE:: Energiser[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                            console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ' (ENERGISER): CODE ' + '[' + spawnResult + ']<<<');
+                            console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ' (ENERGISER): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //without retriever drones, dropped energy is wasted
@@ -273,7 +264,7 @@ module.exports = {
                         if (spawnResult == OK)
                             console.log('SPAWNCYCLE:: RetrieverDrone[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                            console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ' (RETRIEVER DRONE): CODE ' + '[' + spawnResult + ']<<<');
+                            console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ' (RETRIEVER DRONE): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //without sacrificers, the room will level down
@@ -284,7 +275,7 @@ module.exports = {
                         if (spawnResult == OK)
                             console.log('SPAWNCYCLE:: Sacrificer[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                            console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ' (SACRIFICER): CODE ' + '[' + spawnResult + ']<<<');
+                            console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ' (SACRIFICER): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //without acolytes, links cannot transmit
@@ -295,7 +286,7 @@ module.exports = {
                         if (spawnResult == OK)
                             console.log('SPAWNCYCLE:: Acolyte[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                            console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ' (ACOLYTE): CODE ' + '[' + spawnResult + ']<<<');
+                            console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ' (ACOLYTE): CODE ' + '[' + spawnResult + ']');
                         break;
                     case (acolyte2_gang[k].length < Memory.acolyte2_MAX[k]):
                         spawnResult = openNexus.spawnCreep(SD.acoly_body[k], 'Acolyte_II[' + k + ']-' + Game.time % SD.time_offset,
@@ -304,7 +295,7 @@ module.exports = {
                         if (spawnResult == OK)
                             console.log('SPAWNCYCLE:: Acolyte_II[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                            console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ' (ACOLYTE 2): CODE ' + '[' + spawnResult + ']<<<');
+                            console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ' (ACOLYTE 2): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //without adherents, links cannot be unloaded
@@ -315,7 +306,7 @@ module.exports = {
                         if (spawnResult == OK)
                             console.log('SPAWNCYCLE:: Adherent[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                            console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ' (ADHERENT): CODE ' + '[' + spawnResult + ']<<<');
+                            console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ' (ADHERENT): CODE ' + '[' + spawnResult + ']');
                         break;
                     case (nullAdherent_gang[k].length < Memory.nullAdherent_MAX[k]):
                         spawnResult = openNexus.spawnCreep(SD.adher_body, 'NullAdherent[' + k + ']-' + Game.time % SD.time_offset,
@@ -324,7 +315,7 @@ module.exports = {
                         if (spawnResult == OK)
                             console.log('SPAWNCYCLE:: NullAdherent[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                            console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ' (NULL ADHERENT): CODE ' + '[' + spawnResult + ']<<<');
+                            console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ' (NULL ADHERENT): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //without supplicants, the room will level down (replaces sacrificers)
@@ -335,7 +326,7 @@ module.exports = {
                         if (spawnResult == OK)
                             console.log('SPAWNCYCLE:: Supplicant[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                            console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ' (SUPPLICANT): CODE ' + '[' + spawnResult + ']<<<');
+                            console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ' (SUPPLICANT): CODE ' + '[' + spawnResult + ']');
                         break;
                     case (nullSupplicant_gang[k].length < Memory.nullSupplicant_MAX[k]):
                         spawnResult = openNexus.spawnCreep(SD.suppl_body[k], 'NullSupplicant[' + k + ']-' + Game.time % SD.time_offset,
@@ -344,7 +335,7 @@ module.exports = {
                         if (spawnResult == OK)
                             console.log('SPAWNCYCLE:: NullSupplicant[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                            console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ' (NULL SUPPLICANT): CODE ' + '[' + spawnResult + ']<<<');
+                            console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ' (NULL SUPPLICANT): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //without probes, structures are not maintained
@@ -355,7 +346,7 @@ module.exports = {
                         if (spawnResult == OK)
                             console.log('SPAWNCYCLE:: Probe[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                            console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ' (PROBE): CODE ' + '[' + spawnResult + ']<<<');
+                            console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ' (PROBE): CODE ' + '[' + spawnResult + ']');
                         break;
         
 
@@ -368,7 +359,7 @@ module.exports = {
                         if (spawnResult == OK)
                             console.log('SPAWNCYCLE:: OrbitalAssimilator[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                            console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ' (ORBITAL ASSIMILATOR): CODE ' + '[' + spawnResult + ']<<<');
+                            console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ' (ORBITAL ASSIMILATOR): CODE ' + '[' + spawnResult + ']');
                         break;
             
                     //NOTE: beyond this point, recalibrators are first in line and must initially validate the existence of their remote controllers
@@ -412,7 +403,7 @@ module.exports = {
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: OrbitalDrone[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                                     else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                                        console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']<<<');
+                                        console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']');
                                     break;
 
                                 //blood hunters: if remote mining is being disrupted by invaders
@@ -423,7 +414,7 @@ module.exports = {
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: Bloodhunter[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                                     else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                                        console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']<<<');
+                                        console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']');
                                     break;
 
                                 //enforcers: if remote mining is being disrupted by invader cores
@@ -434,7 +425,7 @@ module.exports = {
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: Enforcer[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                                     else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                                        console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']<<<');
+                                        console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']');
                                     break;
 
                                 //purifiers: if an invader core's efforts must be undone
@@ -445,7 +436,7 @@ module.exports = {
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: Purifier[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                                     else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                                        console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']<<<');
+                                        console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']');
                                     break;
 
                                 //ancient drones: if minerals are available to mine
@@ -456,7 +447,7 @@ module.exports = {
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: AncientDrone[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                                     else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                                        console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']<<<');
+                                        console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']');
                                     break;
 
                                 //ancient assimilators: if minerals are available to mine
@@ -467,7 +458,7 @@ module.exports = {
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: AncientAssimilator[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                                     else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                                        console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']<<<');
+                                        console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']');
                                     break;
 
                                 //architects: if there are construction projects to finish
@@ -478,7 +469,7 @@ module.exports = {
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: Architect[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                                     else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                                        console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']<<<');
+                                        console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']');
                                     break;
                                 case (phaseArchitect_gang[k].length < Memory.phaseArchitect_MAX[k]):
                                     spawnResult = openNexus.spawnCreep(SD.phasarc_body[k], 'PhaseArchitect[' + k + ']-' + Game.time % SD.time_offset,
@@ -487,7 +478,7 @@ module.exports = {
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: PhaseArchitect[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                                     else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                                        console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']<<<');
+                                        console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']');
                                     break;
             
 
@@ -500,7 +491,7 @@ module.exports = {
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: Visionary[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                                     else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                                        console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']<<<');
+                                        console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']');
                                     break;
 
                                 //specialist: used in setting up new rooms (assists architects)
@@ -511,7 +502,7 @@ module.exports = {
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: Specialist[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                                     else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                                        console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']<<<');
+                                        console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']');
                                     break;
 
                                 //saviour: used in setting up new rooms (assists sacrificers)
@@ -522,7 +513,7 @@ module.exports = {
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: Saviour[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                                     else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                                        console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']<<<');
+                                        console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']');
                                     break;
             
 
@@ -536,7 +527,7 @@ module.exports = {
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: Emissary[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                                     else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                                        console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']<<<');
+                                        console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']');
                                     break;
 
                                 //dark templar: used during battle
@@ -547,7 +538,7 @@ module.exports = {
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: Darktemplar[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                                     else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                                        console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']<<<');
+                                        console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']');
                                     break;
 
                                 //hallucination: used during battle
@@ -558,7 +549,7 @@ module.exports = {
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: Hallucination[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                                     else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                                        console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']<<<');
+                                        console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']');
                                     break;
 
                                 //high templar: used during battle
@@ -569,7 +560,7 @@ module.exports = {
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: Hightemplar[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                                     else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                                        console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']<<<');
+                                        console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']');
                                     break;
 
                                 //zealot: used during battle
@@ -580,7 +571,7 @@ module.exports = {
                                     if (spawnResult == OK)
                                         console.log('SPAWNCYCLE:: Zealot[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                                     else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                                        console.log('SPAWNCYCLE:: >>>SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']<<<');
+                                        console.log('SPAWNCYCLE:: SPAWN FAILURE IN ' + openNexus.name + ': CODE ' + '[' + spawnResult + ']');
                                     break;
                                 */
                             }

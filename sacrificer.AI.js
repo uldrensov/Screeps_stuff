@@ -6,12 +6,12 @@ module.exports = {
         
         if (unit.memory.ctrl_id == undefined)
             unit.memory.ctrl_id = unit.room.controller.id;
-        var obelisk = Game.getObjectById(unit.memory.ctrl_id);
+        let obelisk = Game.getObjectById(unit.memory.ctrl_id);
         
         
         //INPUTS: energy sources, containers (ample)
-        var sources = obelisk.room.find(FIND_SOURCES);
-        var canisters = obelisk.room.find(FIND_STRUCTURES, {
+        let sources = obelisk.room.find(FIND_SOURCES);
+        let canisters = obelisk.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER &&
                 structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
@@ -38,7 +38,7 @@ module.exports = {
             //fetch: containers (fullest; fixation)
             if (canisters.length){
                 //determine the fullest container in play
-                var fullest_canister = canisters[0];
+                let fullest_canister = canisters[0];
                 for (let i=0; i<canisters.length; i++){
                     if (canisters[i].store.getUsedCapacity(RESOURCE_ENERGY) > fullest_canister.store.getUsedCapacity(RESOURCE_ENERGY))
                         fullest_canister = canisters[i];
@@ -52,7 +52,7 @@ module.exports = {
                     unit.memory.fixation = fullest_canister.id;
 
                 //finally, withdraw from the fixated target
-                var canister_target = Game.getObjectById(unit.memory.fixation);
+                let canister_target = Game.getObjectById(unit.memory.fixation);
                 if (unit.withdraw(canister_target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(canister_target);
             }

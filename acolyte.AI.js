@@ -4,15 +4,15 @@
 module.exports = {
     run: function(unit, src_id, warpRX_id, warpTX_id, canister_id){
         
-        var warpRX = Game.getObjectById(warpRX_id);
-        var canister = Game.getObjectById(canister_id);
+        let warpRX = Game.getObjectById(warpRX_id);
+        let canister = Game.getObjectById(canister_id);
         
         
         //INPUTS: energy source
-        var src = Game.getObjectById(src_id);
+        let src = Game.getObjectById(src_id);
         
         //OUTPUTS: link
-        var warpTX = Game.getObjectById(warpTX_id);
+        let warpTX = Game.getObjectById(warpTX_id);
         
         
         //2-state fetch/unload FSM...

@@ -22,8 +22,8 @@
             for (let i=0; i<SD.nexus_id.length; i++){
                 remote_exists =     (Memory.orbitalAssimilator_MAX[i] != 0)     ? true          : false;
                 danger_level =      (Memory.evac_timer[i] > 0)                  ? 'HIGH'        : 'LOW';
-                bloodhunt_status =  (danger_level == 'LOW')                     ? 'DORMANT'     : (Memory.bloodhunter_casualty[i] == true)   ? 'DEFEATED'   :
-                                    (Memory.viable_prey[i] == true)             ? 'PROWLING'    : 'WITHHELD';
+                bloodhunt_status =  (danger_level == 'LOW')                     ? 'DORMANT'     : (Memory.bloodhunter_casualty[i])           ? 'DEFEATED'   :
+                                    (Memory.viable_prey[i])                     ? 'PROWLING'    : 'WITHHELD';
                 enforc_active =     (danger_level == 'HIGH')                    ? 'RETREATING'  : (Memory.enforcer_MAX[i] > 0)               ? 'SIEGING'    : 'DORMANT';
                 purif_active =      (danger_level == 'HIGH')                    ? 'RETREATING'  : (Memory.purifier_MAX[i] > 0)               ? 'SIEGING'    : 'DORMANT';
                 

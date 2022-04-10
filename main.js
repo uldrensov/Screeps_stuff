@@ -8,11 +8,7 @@ var ECONDRIVE =             require('ECONDRIVE');
 
 module.exports.loop = function(){
     
-    //memory initialisation
-    if (Memory.init_true == undefined)
-        Memory.init_true = false;
-
-    //run memory init periodically to ensure new rooms have initialised data
+    //run memory init periodically to maintain configuration standards
     //if this is the first time the software is run, call MEMORYINIT immediately
     if (Game.time % SD.std_interval == 0 || !Memory.init_true){
         MEMORYINIT.run(SD.nexus_id.length);
@@ -69,7 +65,7 @@ module.exports.loop = function(){
             Memory.enforcer_MAX[i] =                                                                -1;
             Memory.purifier_MAX[i] =                                                                -1;
 
-            if (Memory.viable_prey[i] == true)                  Memory.bloodhunter_MAX[i] =          1;
+            if (Memory.viable_prey[i])                          Memory.bloodhunter_MAX[i] =          1;
             else                                                Memory.bloodhunter_MAX[i] =         -1;
         }
         //no alert: clear prey flag, re-enable remote worker spawns (unless a purifier is active), disable blood hunter spawn, and reset bloodhunter flags

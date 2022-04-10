@@ -40,8 +40,8 @@ module.exports = {
             }
             else if (unit.memory.scraps.length){
                 //fetch: pickups<energy> (fullest)
-                var chosen_scrap = unit.memory.scraps[0];
-                var getScrap;
+                let chosen_scrap = unit.memory.scraps[0];
+                let getScrap;
 
                 //find the most plentiful energy scrap
                 for (let i=0; i<unit.memory.scraps.length; i++){
@@ -56,7 +56,7 @@ module.exports = {
                     }
                 }
                 
-                var getChosenScrap = Game.getObjectById(chosen_scrap.id);
+                let getChosenScrap = Game.getObjectById(chosen_scrap.id);
                 if (getChosenScrap != null){
                     if (unit.pickup(getChosenScrap) == ERR_NOT_IN_RANGE)
                         unit.moveTo(getChosenScrap);

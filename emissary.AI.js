@@ -14,11 +14,12 @@ module.exports = {
         
         if (unit.memory.rallied){
             //trample all hostile construction sites
-            var shrines = unit.pos.findClosestByRange(FIND_HOSTILE_CONSTRUCTION_SITES, {
+            let shrines = unit.pos.findClosestByRange(FIND_HOSTILE_CONSTRUCTION_SITES, {
                 filter: RoomObject => {
                     return RoomObject.progress > 0;
                 }
             });
+            
             if (shrines)
                 unit.moveTo(shrines, {visualizePathStyle: {stroke: '#00ffff'}});
             //return to flag when there are no more sites to trample

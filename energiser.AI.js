@@ -36,8 +36,9 @@ module.exports = {
         //UNLOAD: towers (most drained)
         if (!unit.memory.fetching){
             if (unit.memory.towers.length){
-                var lowest_tower = Game.getObjectById(unit.memory.towers[0].id);
-                var getTower;
+                let lowest_tower = Game.getObjectById(unit.memory.towers[0].id);
+                let getTower;
+                
                 for (let i=0; i<unit.memory.towers.length; i++){
                     getTower = Game.getObjectById(unit.memory.towers[i].id);
                     if (getTower == null) continue;
@@ -49,13 +50,16 @@ module.exports = {
                         lowest_tower = getTower;
                     }
                 }
-                var getLowestTower = Game.getObjectById(lowest_tower.id);
+
+                let getLowestTower = Game.getObjectById(lowest_tower.id);
+
                 if (getLowestTower != null){
                     if (unit.transfer(getLowestTower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(getLowestTower);
                 }
             }
         }
+
         else{
             //fetch: vault
             if (unit.room.storage != undefined && unit.room.storage.store.energy > 0){
@@ -64,9 +68,11 @@ module.exports = {
             }
             //fetch: containers (fullest)
             else if (unit.memory.canisters.length){
-                var fullest_canister = Game.getObjectById(unit.memory.canisters[0].id);
+                let fullest_canister = Game.getObjectById(unit.memory.canisters[0].id);
+
                 for (let i=0; i<unit.memory.canisters.length; i++){
-                    var getCanister = Game.getObjectById(unit.memory.canisters[i].id);
+                    let getCanister = Game.getObjectById(unit.memory.canisters[i].id);
+
                     if (getCanister == null) continue;
                     try{
                         if (getCanister.store.getUsedCapacity(RESOURCE_ENERGY) > fullest_canister.store.getUsedCapacity(RESOURCE_ENERGY))
@@ -76,7 +82,9 @@ module.exports = {
                         fullest_canister = getCanister;
                     }
                 }
-                var getFullestCanister = Game.getObjectById(fullest_canister.id);
+
+                let getFullestCanister = Game.getObjectById(fullest_canister.id);
+
                 if (getFullestCanister != null){
                     if (unit.withdraw(getFullestCanister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(getFullestCanister);

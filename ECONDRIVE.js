@@ -27,7 +27,7 @@ module.exports = {
                 Memory.vaultAlertLO_EN[i] = true;
             //disable (latch) further alerts from a room when it raises one
             else if ((nexi[i].room.storage.store.energy < SD.vault_boundary) && Memory.vaultAlertLO_EN[i]){
-                //Game.notify('ECONDRIVE:: Vault #' + i + ' SHORTAGE',0);
+                //Game.notify('ECONDRIVE:: Vault #' + i + ' SHORTAGE');
                 //console.log('ECONDRIVE:: Vault #' + i + ' SHORTAGE');
                 Memory.vaultAlertLO_EN[i] = false;
             }
@@ -38,7 +38,7 @@ module.exports = {
                 Memory.vaultAlertHI_EN[i] = true;
             //disable (latch) further alerts from a room when it raises one
             else if ((nexi[i].room.storage.store.getUsedCapacity() > nexi[i].room.storage.store.getCapacity() - SD.vault_boundary) && Memory.vaultAlertHI_EN[i]){
-                //Game.notify('ECONDRIVE:: Vault #' + i + ' SURPLUS',0);
+                //Game.notify('ECONDRIVE:: Vault #' + i + ' SURPLUS');
                 //console.log('ECONDRIVE:: Vault #' + i + ' SURPLUS');
                 Memory.vaultAlertHI_EN[i] = false;
             }
@@ -58,7 +58,7 @@ module.exports = {
 
 
             for (let i=0; i<SD.nexus_id.length; i++){
-                if (Memory.autoload_EN[i] == true){    
+                if (Memory.autoload_EN[i]){    
                     if (nexi[i] == null)                continue; //error: if nexus fails to retrieve, skip the room
                 
                     //check for vault/terminal existence
@@ -125,7 +125,7 @@ module.exports = {
             
             
             for (let i=0; i<SD.nexus_id.length; i++){
-                if (Memory.autosell_EN[i] == true){
+                if (Memory.autosell_EN[i]){
                     if (nexi[i] == null)                continue; //error: if nexus fails to retrieve, skip the room
 
                     //print header if at least one room's autosell is enabled
@@ -169,7 +169,7 @@ module.exports = {
 
 
             for (let i=0; i<SD.nexus_id.length; i++){
-                if (Memory.autovent_EN[i] == true){
+                if (Memory.autovent_EN[i]){
                     if (nexi[i] == null)            continue; //error: if nexus fails to retrieve, skip the room
                     
                     //print header if at least one autovent is enabled
@@ -229,7 +229,7 @@ module.exports = {
         //produce cosmetics currency
         if (Game.cpu.bucket == 10000){
             if (Game.cpu.generatePixel() == OK){
-                console.log('ECONDRIVE:: -------------------PIXEL GENERATED-------------------');
+                console.log('ECONDRIVE:: PIXEL GENERATED');
                 Memory.pixelGainToday++;
             }
         }

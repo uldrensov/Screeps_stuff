@@ -4,11 +4,11 @@
 module.exports = {
     run: function(unit, tile_id, warpRX_id){
         
-        var tile = Game.getObjectById(tile_id);
+        let tile = Game.getObjectById(tile_id);
         
         
         //INPUTS: link
-        var warpRX = Game.getObjectById(warpRX_id);
+        let warpRX = Game.getObjectById(warpRX_id);
         
         
         //ensure correct position

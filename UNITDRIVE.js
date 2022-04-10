@@ -113,7 +113,7 @@ module.exports = {
                     orbitalAssimilator.run(unit, SD.nexus_id[j], SD.remotesource_id[j], SD.remoteflag[j], SD.remotecanister_id[j], SD.tower_id[j]);
                     break;
                 case 'orbitalDrone':
-                    orbitalDrone.run(unit, SD.nexus_id[j], SD.remotecanister_id[j], SD.reserveflag[j], SD.en_ignore_lim, SD.tower_id[j]);
+                    orbitalDrone.run(unit, SD.nexus_id[j], SD.remotecanister_id[j], SD.remoteflag[j], SD.en_ignore_lim, SD.tower_id[j]);
                     break;
                 case 'bloodhunter':
                     bloodhunter.run(unit, SD.nexus_id[j], SD.remoteflag[j]);

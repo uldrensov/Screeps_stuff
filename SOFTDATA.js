@@ -63,20 +63,26 @@ module.exports = {
                             '5e8f2204b9e23c1518b47557',     '623545e9a75d71823dc45a99', '6233dfbc689f74f5920da3b2'],
 
     //remote mining-related
-    reserveflag:            [Game.flags['Core1'],           'NULL',                     Game.flags['Core3'],
-                            Game.flags['Core4'],            Game.flags['Core5']], //-->                                 //rally point for remote room reservation
+    reserveflag:            [Game.flags['Core0'],           'NULL',                     Game.flags['Core2'],
+                            Game.flags['Core3'],            'NULL',                     'NULL',
+                            Game.flags['Core6'],            'NULL',                     Game.flags['Core8']],           //rally point for remote room reservation
     remoteflag:             [Game.flags['Terrazine'],       'NULL',                     Game.flags['Jorium'],
-                            Game.flags['Protodermis'],      Game.flags['Vespene']], //-->                               //rally point for remote mining
-    remotectrl_id:          ['5bbcae809099fc012e6392ef',    'NULL',                     '5bbcaea69099fc012e63960d',
-                            '5bbcae809099fc012e6392f2',     '5bbcae809099fc012e6392f8'],
-    remotesource_id:        ['5bbcae809099fc012e6392ee',    'NULL',                     '5bbcaea69099fc012e63960e',
-                            '5bbcae809099fc012e6392f1',     '5bbcae809099fc012e6392f9'],
-    remotecanister_id:      ['5e6586c57abdad3e01ad88f7',    'NULL',                     '5e490bf22a3d564b0565c52d',
-                            '5e716359fa9ac914fed34e30',     '5e7014edbb478ab96f6ca1e4'], //-->                          //drop-mining containers (o.assimilator)
+                            Game.flags['Protodermis'],      'NULL',                     'NULL',
+                            Game.flags['Vespene'],          'NULL',                     Game.flags['Hydrazine']],       //rally point for remote mining
+    remotectrl_id:          ['5bbcae809099fc012e6392ef',    '000000000000000000000000', '5bbcaea69099fc012e63960d',
+                            '5bbcae809099fc012e6392f2',     '000000000000000000000000', '000000000000000000000000',
+                            '5bbcae989099fc012e639478',     '000000000000000000000000', '5bbcadfd9099fc012e638433'],
+    remotesource_id:        ['5bbcae809099fc012e6392ee',    '000000000000000000000000', '5bbcaea69099fc012e63960e',
+                            '5bbcae809099fc012e6392f1',     '000000000000000000000000', '000000000000000000000000',
+                            '5bbcae989099fc012e639479',     '000000000000000000000000', '5bbcadfd9099fc012e638432'],
+    remotecanister_id:      ['000000000000000000000000',    '000000000000000000000000', '000000000000000000000000',
+                            '000000000000000000000000',     '000000000000000000000000', '000000000000000000000000',
+                            '000000000000000000000000',     '000000000000000000000000', '000000000000000000000000'],    //drop-mining containers (o.assimilator)
 
     //specific towers
     tower_id:               ['5e76a9799b9279cd3b8d5c7d',    '5e5c992bb655c985f872fdd1', '5ea4d90bcdd80c534a3abc8e',
-                            '5e6dedb3b2181dab6255bd37',     '5eacde6466154c86cb8dbf5a', '5e76c1bc7e17fe2a086ed2e0'],    //remote mining team retreats towards this
+                            '5e6dedb3b2181dab6255bd37',     '5eacde6466154c86cb8dbf5a', '5e76c1bc7e17fe2a086ed2e0',
+                            '5ed71c1163d51255eee5d760',     '5eafc6815ed8e62449836ce9', '623bfb3fc088bfb245421656'],    //remote mining team retreats towards this
                 
     //RX and TX link-related
     warpRX_id:              ['5e34d2403561285c52aba5b2',    '5e5fde06e4c9ff32dfb1a4d1', '5e4a79f221466ebb4fcc858b',
@@ -88,8 +94,8 @@ module.exports = {
                             ['5e6cad8c43e2d4d024ddfbb6',    '5e5b5c7d02d3761fb826bbec'],
                             ['000000000000000000000000'],
                             ['5e964bf152b012a966941064'],
-                            ['NULL',                        '5e92789e45cd497f9ff85b44'],
-                            ['NULL',                        '5e9e48317e29d56b7b6eca8a'],
+                            ['000000000000000000000000',    '5e92789e45cd497f9ff85b44'],
+                            ['000000000000000000000000',    '5e9e48317e29d56b7b6eca8a'],
                             ['5eb80e2ff96388fd8ad681dc']], //-->                                                        //tx link (acolyte)
     adher_tile_id:          ['5e2ec350d41b0bd406dfd71b',    '5e5dab190fb27e9efd036585', '5e4a7ac80f2d8f5302547cc6',
                             '5e55f3ea976d8d949fbe40ce',     '000000000000000000000000', '61306252353eb97acb79c953',
@@ -235,11 +241,11 @@ module.exports = {
                             [CLAIM,MOVE, CLAIM,MOVE, CLAIM,MOVE],
                             [CLAIM,MOVE, CLAIM,MOVE],
                             [CLAIM,MOVE, CLAIM,MOVE],
-                            [],
-                            [],
-                            [],
-                            []],
-                            //cost: 2600, 1950, 1950, 1300, 1300, NULL, NULL, NULL, NULL
+                            [CLAIM,MOVE, CLAIM,MOVE],
+                            [CLAIM,MOVE, CLAIM,MOVE],
+                            [CLAIM,MOVE, CLAIM,MOVE],
+                            [CLAIM,MOVE, CLAIM,MOVE]],
+                            //cost: 2600, 1950, 1950, 1300, 1300, 1300, 1300, 1300, 1300
     oassim_body:            [WORK,WORK,WORK,WORK,WORK, CARRY, MOVE,MOVE,MOVE,MOVE,MOVE,MOVE],
                             //cost: 850
     odrone_body:            [[CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE,
@@ -248,8 +254,12 @@ module.exports = {
                             [CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE,
                                 CARRY,MOVE, CARRY,MOVE, CARRY,MOVE],
                             [CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE],
+                            [CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE],
+                            [CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE],
+                            [CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE],
+                            [CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE],
                             [CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE, CARRY,MOVE]],
-                            //cost: 2400, 900, 2100, 1800, 1800
+                            //cost: 2400, 900, 2100, 1800, 1800, 1800, 1800, 1800, 1800
     bloodh_body:            [ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE],
                             //cost: 650
     enforc_body:            [[ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE],

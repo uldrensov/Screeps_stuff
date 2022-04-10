@@ -4,12 +4,12 @@
 module.exports = {
     run: function(unit, tile_id, warpTX0_id, warpRX0_id, reserve){
         
-        var tile = Game.getObjectById(tile_id);
-        var warpRX0 = Game.getObjectById(warpRX0_id);
+        let tile = Game.getObjectById(tile_id);
+        let warpRX0 = Game.getObjectById(warpRX0_id);
         
         
         //OUTPUTS: link
-        var warpTX0 = Game.getObjectById(warpTX0_id);
+        let warpTX0 = Game.getObjectById(warpTX0_id);
         
         
         if (tile){

@@ -6,7 +6,7 @@ Because the whole point of playing Screeps is to learn and to have a fun outlet 
 * Automatically responds to threats encountered inside and outside of home territory, most notably during long-distance mining (fleeing, counter-attacking, reclaiming, etc.)
 * Includes scripts that alleviate the stress of macromanaging economy (detailed status reports, automated market transactions, etc.)
 ### What it does poorly: ###
-* Running more than 6-7 rooms without straining the 20 CPU/tick limit
+* Running more than ~8 rooms without straining the 20 CPU/tick limit
 * Proactive combat
 * Mining high-risk resources like Power
 
@@ -55,6 +55,11 @@ More info coming soon...
 * Modify the object ID arrays by adding new data pertaining to the newly annexed room
 * Expand each of the unit body-part 2D-arrays by 1 element, and populate them with the desired role-based body part configurations
 * More info coming soon...
+### Adding new remote (long-distance) mining sites: ###
+* In SOFTDATA.js, add the desired Source ID (from the remote room) to the remotesource_id array, and the remote room's Controller ID to the remotectrl_id array
+* Place two pathing/rally flags in the remote room: one for the Source, and one for the Controller
+* In SOFTDATA.js, add these flags' names (format: Game.flags['NAME']) to the remoteflag and reserveflag arrays, respectively
+* In-game, set the orbitalAssimilator_MAX, orbitalDrone_MAX, and recalibrator_MAX arrays' nth element to 1, where n is the number of the room they shall spawn from
 ### Maintenance: ###
 * Unit spawns, deaths, and other important events are recorded to the console; check it from time to time
 * To increase/decrease the population quota for certain roles (in a certain room), modify the appropriate [role_MAX] variable in global memory
@@ -62,7 +67,8 @@ More info coming soon...
 ### Notifications: ###
 --Email notifications can be enabled for the following:
 
-* Armed enemy unit spotted in a room containing defensive Towers
+* Daily net gain/loss of credits and pixels
 * Contents within a Storage are about to overflow (surplus)
 * Energy capacity within a Storage is about to run out (shortage)
-* Threat sightings in long-distance mining sites
+* Armed enemy unit spotted in a room containing defensive Towers
+* Threat sightings and threat response updates in long-distance mining sites

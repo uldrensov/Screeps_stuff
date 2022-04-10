@@ -4,36 +4,36 @@
 module.exports = {
     run: function(unit, nexus_id){
         
-        var nexus = Game.getObjectById(nexus_id);
+        let nexus = Game.getObjectById(nexus_id);
         
         //emergency drone's reduced "ignore limit"
-        var lowbound = 50;
+        let lowbound = 50;
         
         
         //INPUTS: energy sources, containers (ample), pickups (ample), tombstones (non-empty)
-        var sources = unit.room.find(FIND_SOURCES);
-        var canisters = unit.room.find(FIND_STRUCTURES, {
+        let sources = unit.room.find(FIND_SOURCES);
+        let canisters = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER
                     &&
                     structure.store.getUsedCapacity(RESOURCE_ENERGY) > lowbound;
             }
         });
-        var scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
+        let scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
             filter: resource => {
                 return resource.amount > lowbound
                     &&
                     resource.resourceType == RESOURCE_ENERGY;
             }
         });
-        var tombs = unit.room.find(FIND_TOMBSTONES, {
+        let tombs = unit.room.find(FIND_TOMBSTONES, {
             filter: RoomObject => {
                 return RoomObject.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
             }
         });
         
         //OUTPUTS: extension (non-full)
-        var pylon = unit.pos.findClosestByPath(FIND_STRUCTURES, {
+        let pylon = unit.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_EXTENSION
                     &&
@@ -71,7 +71,8 @@ module.exports = {
             //fetch: containers (fullest; fixation)
             else if (canisters.length){
                 //determine the fullest container in play
-                var fullest_canister = canisters[0];
+                let fullest_canister = canisters[0];
+
                 for (let i=0; i<canisters.length; i++){
                     if (canisters[i].store.getUsedCapacity(RESOURCE_ENERGY) > fullest_canister.store.getUsedCapacity(RESOURCE_ENERGY))
                         fullest_canister = canisters[i];
@@ -85,14 +86,16 @@ module.exports = {
                     unit.memory.fixation = fullest_canister.id;
 
                 //finally, withdraw from the fixated target
-                var canister_target = Game.getObjectById(unit.memory.fixation);
+                let canister_target = Game.getObjectById(unit.memory.fixation);
+
                 if (unit.withdraw(canister_target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(canister_target);
             }
             //fetch: tombstones<energy> (fullest)
             else if (tombs.length){
                 //determine the fullest tomb in play
-                var richest_tomb = tombs[0];
+                let richest_tomb = tombs[0];
+
                 for (let i=0; i<tombs.length; i++){
                     if (tombs[i].store.getUsedCapacity(RESOURCE_ENERGY) > richest_tomb.store.getUsedCapacity(RESOURCE_ENERGY))
                         richest_tomb = tombs[i];
@@ -105,7 +108,8 @@ module.exports = {
             //fetch: pickups<energy> (fullest)
             else if (scraps.length){
                 //
-                var chosen_scrap = scraps[0];
+                let chosen_scrap = scraps[0];
+
                 for (let i=0; i<scraps.length; i++){
                     if (scraps[i].energy > chosen_scrap.energy)
                         chosen_scrap = scraps[i];

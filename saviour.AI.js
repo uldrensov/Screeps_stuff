@@ -23,7 +23,7 @@ module.exports = {
             
             
         //input: sources (non-empty)
-        var sources = unit.room.find(FIND_SOURCES, {
+        let sources = unit.room.find(FIND_SOURCES, {
             filter: RoomObject => {
                 return RoomObject.energy > 0;
             }

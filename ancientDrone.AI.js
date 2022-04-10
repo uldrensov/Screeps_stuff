@@ -4,11 +4,11 @@
 module.exports = {
     run: function(unit, canister_id){
         
-        var mineral_type = unit.room.find(FIND_MINERALS)[0].mineralType;
+        let mineral_type = unit.room.find(FIND_MINERALS)[0].mineralType;
         
         
         //INPUTS: container
-        var canister = Game.getObjectById(canister_id);
+        let canister = Game.getObjectById(canister_id);
         
             
         //2-state fetch/unload FSM...

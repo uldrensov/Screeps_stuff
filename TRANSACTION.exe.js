@@ -125,16 +125,16 @@ module.exports = {
         //selling to players
         if (dir){
             console.log('TRANSACTION:: ROOM #' + room_num + ' SOLD ' + tradeAmount + ' [' + resource_type + '] FOR ' +
-                bestOffer.price + ' EACH (' + (tradeAmount*bestOffer.price).toFixed(3) + ' CREDITS GAINED) ... TRANSMISSION TAX: ' +
-                tax + ' (' + (100*tax/tradeAmount).toFixed(1) + '% tax rate)');
+                bestOffer.price + ' EACH (' + (tradeAmount*bestOffer.price).toFixed(3) + ' CREDITS GAINED) ... ENERGY TAX: ' +
+                tax + ' (' + (tax/tradeAmount).toFixed(3) + ' / unit)');
 
             Memory.creditGainToday += tradeAmount*bestOffer.price;
         }
         //buying from players
         else{
             console.log('TRANSACTION:: ROOM #' + room_num + ' BOUGHT ' + tradeAmount + ' [' + resource_type + '] FOR ' +
-            bestOffer.price + ' EACH (' + (tradeAmount*bestOffer.price).toFixed(3) + ' CREDITS PAID) ... TRANSMISSION TAX: ' +
-            tax + ' (' + (100*tax/tradeAmount).toFixed(1) + '% tax rate)');
+                bestOffer.price + ' EACH (' + (tradeAmount*bestOffer.price).toFixed(3) + ' CREDITS PAID) ... ENERGY TAX: ' +
+                tax + ' (' + (tax/tradeAmount).toFixed(3) + ' / unit)');
 
             Memory.creditGainToday -= tradeAmount*bestOffer.price;
         }

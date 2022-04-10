@@ -9,6 +9,8 @@ module.exports = {
         
         //salvage unit and elevate threat level if too much damage is taken
         if (unit.hits < unit.hitsMax*.25){
+            console.log(unit.name + ':: >>>>>> GRAVE CASUALTIES SUSTAINED ... RETREATING <<<<<<');
+
             Memory.viable_prey[unit.memory.home_index] =            false; //returns bloodhunters to dormant state, in spite of the active evac timer
             Memory.bloodhunter_casualty[unit.memory.home_index] =   true;
             unit.memory.killswitch =                                true;
@@ -34,11 +36,8 @@ module.exports = {
 
                 //when invader is slain...
                 else if (Memory.evac_timer[unit.memory.home_index] > 0){
-                    //Game.notify(unit.name + ':: SECTOR #' + unit.memory.home_index + ': HOSTILES ELIMINATED',0);
-
-                    console.log(unit.name + ':: ------------------------------');
+                    //Game.notify(unit.name + ':: SECTOR #' + unit.memory.home_index + ': HOSTILES ELIMINATED');
                     console.log(unit.name + ':: SECTOR #' + unit.memory.home_index + ': HOSTILES ELIMINATED');
-                    console.log(unit.name + ':: ------------------------------');
 
                     //reset the evac timer early
                     Memory.evac_timer[unit.memory.home_index] = 0; //triggers blood hunter dormancy

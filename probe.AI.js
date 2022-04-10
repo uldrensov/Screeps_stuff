@@ -36,11 +36,12 @@ module.exports = {
         if (!unit.memory.fetching && repairTargets.length){
             
             //find the weakest structure in terms of %
-            var weakest = repairTargets[0];
+            let weakest = repairTargets[0];
             
             //init a base case: get proper maximum / threshold value before calculating %
-            var HPmax_base;
-            var base_perc;
+            let HPmax_base;
+            let base_perc;
+
             switch (weakest.structureType){
                 case STRUCTURE_WALL:
                     HPmax_base = Memory.wall_threshold;
@@ -54,8 +55,9 @@ module.exports = {
             base_perc = weakest.hits / HPmax_base;
             
             //repeat for each remaining candidate
-            var HPmax_compare;
-            var compare_perc;
+            let HPmax_compare;
+            let compare_perc;
+
             for (let i=0; i<repairTargets.length; i++){
                 switch (repairTargets[i].structureType){
                     case STRUCTURE_WALL:
@@ -85,7 +87,7 @@ module.exports = {
             }
             
             //finally, attempt to repair the fixated target until its max / threshold
-            var final_target = Game.getObjectById(unit.memory.fixation);
+            let final_target = Game.getObjectById(unit.memory.fixation);
             if (final_target.hits < unit.memory.fixation_max){
                 if (unit.repair(final_target) == ERR_NOT_IN_RANGE)
                     unit.moveTo(final_target);
@@ -93,6 +95,7 @@ module.exports = {
             //release the fixation if it reaches max
             else delete unit.memory.fixation;
         }
+
         else{
             //fetch: vault (respect limit)
             if (unit.room.storage != undefined && unit.room.storage.store.energy > reserve){
@@ -101,7 +104,8 @@ module.exports = {
             }
             //fetch: containers (fullest)
             else if (canisters.length){
-                var fullest_canister = canisters[0];
+                let fullest_canister = canisters[0];
+
                 if (canisters.length == 2 && canisters[1].store.getUsedCapacity(RESOURCE_ENERGY) > canisters[0].store.getUsedCapacity(RESOURCE_ENERGY))
                     fullest_canister = canisters[1];
                 
