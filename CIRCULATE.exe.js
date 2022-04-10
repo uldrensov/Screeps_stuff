@@ -1,5 +1,5 @@
 //executable script: transfers goods across owned terminals
-    //require('CIRCULATE.exe').run(0,8,'energy',100000)
+    //require('CIRCULATE.exe').run(0,8,RESOURCE_ENERGY,100000)
 
 var SD = require('SOFTDATA');
 

@@ -38,8 +38,18 @@ var zealot =                require('zealot.AI');
 module.exports = {
     run: function(){
 
+        //alphabetise a roster of all living units
+        let roster = [];
         for (let name in Game.creeps){
-            let unit = Game.creeps[name];
+            roster.push(name);
+        }
+        
+        roster.sort();
+
+
+        //run each unit's AI script, based on roster order
+        for (let i=0; i<roster.length; i++){
+            let unit = Game.creeps[roster[i]];
             let j = unit.memory.home_index;
                 
             switch (unit.memory.role){

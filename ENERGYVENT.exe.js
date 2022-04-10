@@ -1,5 +1,5 @@
 //executable script: attempts to sell all (presumably excess) energy from a room's terminal
-//optionally, can also be called automatically by ECONDRIVE.js
+//optionally, can also be called automatically by DRIVE_ECON.js
     //require('ENERGYVENT.exe').run(3)
 
 var SD = require('SOFTDATA');

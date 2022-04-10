@@ -128,8 +128,10 @@ module.exports = {
                             break;
                         }
                     }
-                    if (notif)
-                        Game.notify('TOWERDRIVE:: ' + Game.getObjectById(Memory.turretTarget_id[k]).owner.username + ' DETECTED IN ROOM #' + k,30);
+                    if (notif){
+                        Game.notify('DRIVE_TOWERS:: >>>>>> ' + Game.getObjectById(Memory.turretTarget_id[k]).owner.username + ' DETECTED IN ROOM #' + k + ' <<<<<<');
+                        console.log('DRIVE_TOWERS:: >>>>>> ' + Game.getObjectById(Memory.turretTarget_id[k]).owner.username + ' DETECTED IN ROOM #' + k + ' <<<<<<');
+                    }
                 }
             }
 
@@ -207,7 +209,7 @@ module.exports = {
                     case 'IDLE':
                         break;
                     default:
-                        console.log("TOWERDRIVE:: INVALID COMMAND");
+                        console.log("DRIVE_TOWERS:: INVALID COMMAND");
                 }
             }
         }

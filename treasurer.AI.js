@@ -52,6 +52,18 @@ module.exports = {
                             output = Game.getObjectById(unit.memory.kimmyJ[0].id);
                             break;
 
+                        case 'FAC':
+                            //memorise the factory id
+                            if (unit.memory.factory == undefined){
+                                unit.memory.factory = unit.room.find(FIND_STRUCTURES, {
+                                    filter: structure => {
+                                        return structure.structureType == STRUCTURE_FACTORY;
+                                    }
+                                });
+                            }
+                            output = Game.getObjectById(unit.memory.factory[0].id);
+                            break;
+
                         default:
                             console.log(unit.name + ':: INVALID DESTINATION');
                     }

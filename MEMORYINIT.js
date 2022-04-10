@@ -128,6 +128,7 @@ module.exports = {
         if (Memory.pixelGainToday == undefined)                 Memory.pixelGainToday =                    0;             //do not modify manually
 
         //performance monitoring
+        if (Memory.recordTick == undefined)                     Memory.recordTick =                        false;         //do not modify manually
         if (Memory.dayStart_timestamp == undefined)             Memory.dayStart_timestamp =                Date.now();    //do not modify manually
         if (Memory.cpu_log == undefined)                        Memory.cpu_log =                           [];            //do not modify manually
         if (Memory.ticksLoggedToday == undefined)               Memory.ticksLoggedToday =                  0;             //do not modify manually

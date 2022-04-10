@@ -1,7 +1,7 @@
 //executable script: attempts to buy or sell resources from a room's terminal
-//optionally, can also be called automatically by ECONDRIVE.js
-    //require('TRANSACTION.exe').run(0,'Z',true,0,false)
-    //require('TRANSACTION.exe').run(0,'power',false,1000,false)
+//optionally, can also be called automatically by DRIVE_ECON.js
+    //require('TRANSACTION.exe').run(0,RESOURCE_ZYNTHIUM,true,0,false)
+    //require('TRANSACTION.exe').run(0,RESOURCE_POWER,false,1000,false)
 
 var SD = require('SOFTDATA');
 

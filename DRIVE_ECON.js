@@ -27,8 +27,8 @@ module.exports = {
                 Memory.vaultAlertLO_EN[i] = true;
             //disable (latch) further alerts from a room when it raises one
             else if ((nexi[i].room.storage.store.energy < SD.vault_boundary) && Memory.vaultAlertLO_EN[i]){
-                //Game.notify('ECONDRIVE:: Vault #' + i + ' SHORTAGE');
-                //console.log('ECONDRIVE:: Vault #' + i + ' SHORTAGE');
+                //Game.notify('DRIVE_ECON:: Vault #' + i + ' SHORTAGE');
+                //console.log('DRIVE_ECON:: Vault #' + i + ' SHORTAGE');
                 Memory.vaultAlertLO_EN[i] = false;
             }
         
@@ -38,8 +38,8 @@ module.exports = {
                 Memory.vaultAlertHI_EN[i] = true;
             //disable (latch) further alerts from a room when it raises one
             else if ((nexi[i].room.storage.store.getUsedCapacity() > nexi[i].room.storage.store.getCapacity() - SD.vault_boundary) && Memory.vaultAlertHI_EN[i]){
-                //Game.notify('ECONDRIVE:: Vault #' + i + ' SURPLUS');
-                //console.log('ECONDRIVE:: Vault #' + i + ' SURPLUS');
+                //Game.notify('DRIVE_ECON:: Vault #' + i + ' SURPLUS');
+                //console.log('DRIVE_ECON:: Vault #' + i + ' SURPLUS');
                 Memory.vaultAlertHI_EN[i] = false;
             }
         }
@@ -70,7 +70,7 @@ module.exports = {
 
                     //print header if at least one room's autoload is enabled
                     if (printFlag){
-                        console.log('ECONDRIVE:: <<-----AUTOLOAD SUMMARY-------');
+                        console.log('DRIVE_ECON:: <<-----AUTOLOAD SUMMARY-------');
                         printFlag = false;
                     }
                 
@@ -96,17 +96,17 @@ module.exports = {
                             &&
                             vault.store.getUsedCapacity(RESOURCE_ENERGY) >= SD.cargo_size + SD.vault_boundary){
 
-                            autoload_return = TERMINALTRANSFER.run(i,'energy',SD.cargo_size,'TRM',true,true);
+                            autoload_return = TERMINALTRANSFER.run(i,RESOURCE_ENERGY,SD.cargo_size,'TRM',true,true);
 
                             if (autoload_return != OK)
-                                console.log('ECONDRIVE:: AUTOLOAD FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autoload_return + ']');
+                                console.log('DRIVE_ECON:: AUTOLOAD FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autoload_return + ']');
                         }
                         //if terminal's energy-to-mineral ratio is sufficient, then load minerals
                         else if (en_min_ratio >= .5){
                             autoload_return = TERMINALTRANSFER.run(i,resource_type,SD.cargo_size,'TRM',true,true);
                             
                             if (autoload_return != OK)
-                                console.log('ECONDRIVE:: AUTOLOAD FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autoload_return + ']');
+                                console.log('DRIVE_ECON:: AUTOLOAD FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autoload_return + ']');
                         }
                     }
                 }
@@ -114,7 +114,7 @@ module.exports = {
 
             //print footer only if the header printed
             if (!printFlag)
-                console.log('ECONDRIVE:: ---------------------------->>');
+                console.log('DRIVE_ECON:: ---------------------------->>');
         }
         
         
@@ -130,7 +130,7 @@ module.exports = {
 
                     //print header if at least one room's autosell is enabled
                     if (printFlag){
-                        console.log('ECONDRIVE:: <<-----AUTOSELL SUMMARY-------');
+                        console.log('DRIVE_ECON:: <<-----AUTOSELL SUMMARY-------');
                         printFlag = false;
                     }
                     
@@ -151,14 +151,14 @@ module.exports = {
                         //if sellable resources exist, but all failed to sell, output the error of the very last attempt
                         if (autosell_return != undefined)
                             if (autosell_return != OK)
-                                console.log('ECONDRIVE:: AUTOSELL FAILED IN ROOM #' + i + ' WITH LAST ERROR RESPONSE [' + autosell_return + ']');
+                                console.log('DRIVE_ECON:: AUTOSELL FAILED IN ROOM #' + i + ' WITH LAST ERROR RESPONSE [' + autosell_return + ']');
                     }
                 }
             }
 
             //print footer only if the header printed
             if (!printFlag)
-                console.log('ECONDRIVE:: ---------------------------->>');
+                console.log('DRIVE_ECON:: ---------------------------->>');
         }
         
         
@@ -174,7 +174,7 @@ module.exports = {
                     
                     //print header if at least one autovent is enabled
                     if (printFlag){
-                        console.log('ECONDRIVE:: <<-----AUTOVENT SUMMARY-------');
+                        console.log('DRIVE_ECON:: <<-----AUTOVENT SUMMARY-------');
                         printFlag = false;
                     }
 
@@ -184,14 +184,14 @@ module.exports = {
                             autovent_return = ENERGYVENT.run(i);
 
                             if (autovent_return != OK)
-                                console.log('ECONDRIVE:: AUTOVENT FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autovent_return + ']');
+                                console.log('DRIVE_ECON:: AUTOVENT FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autovent_return + ']');
                         }
                 }
             }
 
             //print footer only if the header printed
             if (!printFlag)
-                console.log('ECONDRIVE:: ---------------------------->>');
+                console.log('DRIVE_ECON:: ---------------------------->>');
         }
         
 
@@ -229,7 +229,7 @@ module.exports = {
         //produce cosmetics currency
         if (Game.cpu.bucket == 10000){
             if (Game.cpu.generatePixel() == OK){
-                console.log('ECONDRIVE:: PIXEL GENERATED');
+                console.log('DRIVE_ECON:: PIXEL GENERATED');
                 Memory.pixelGainToday++;
             }
         }

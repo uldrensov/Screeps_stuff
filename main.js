@@ -1,9 +1,9 @@
 var SD =                    require('SOFTDATA');
 var MEMORYINIT =            require('MEMORYINIT');
-var SPAWNCYCLE =            require('SPAWNCYCLE');
-var UNITDRIVE =             require('UNITDRIVE');
-var TOWERDRIVE =            require('TOWERDRIVE');
-var ECONDRIVE =             require('ECONDRIVE');
+var DRIVE_SPAWN =           require('DRIVE_SPAWN');
+var DRIVE_UNITS =           require('DRIVE_UNITS');
+var DRIVE_TOWERS =          require('DRIVE_TOWERS');
+var DRIVE_ECON =            require('DRIVE_ECON');
 
 
 module.exports.loop = function(){
@@ -17,7 +17,7 @@ module.exports.loop = function(){
     
 
     //every day, log 600 game ticks' worth of CPU usage, and log any credit/pixel revenue
-    let recordTick = false;
+    Memory.recordTick = false;
 
     //after 24h (~86400 seconds) from the start time, refresh it, clear the tick log, reset the logging counter to 0, and reset revenue counters
     if (Game.time % SD.std_interval == 0){
@@ -38,7 +38,7 @@ module.exports.loop = function(){
 
     //allow a tick to be logged until the counter reaches 600
     if (Memory.ticksLoggedToday < 600){
-        recordTick = true;
+        Memory.recordTick = true;
         Memory.ticksLoggedToday++;
     }
     
@@ -122,10 +122,10 @@ module.exports.loop = function(){
     
     
     //run economy automation script
-    ECONDRIVE.run();
+    DRIVE_ECON.run();
 
     //tick log breakpoint 0
-    if (recordTick){
+    if (Memory.recordTick){
         if (Memory.cpu_log[0] == undefined)
             Memory.cpu_log[0] = [];
         Memory.cpu_log[0][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
@@ -134,10 +134,10 @@ module.exports.loop = function(){
 
     //run spawning algorithm (periodically)
     if (Game.time % SD.std_interval == 0)
-        SPAWNCYCLE.run();
+        DRIVE_SPAWN.run();
 
     //tick log breakpoint 1
-    if (recordTick){
+    if (Memory.recordTick){
         if (Memory.cpu_log[1] == undefined)
             Memory.cpu_log[1] = [];
         Memory.cpu_log[1][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
@@ -145,10 +145,10 @@ module.exports.loop = function(){
     
 
     //run tower AI script
-    TOWERDRIVE.run();
+    DRIVE_TOWERS.run();
 
     //tick log breakpoint 2
-    if (recordTick){
+    if (Memory.recordTick){
         if (Memory.cpu_log[2] == undefined)
             Memory.cpu_log[2] = [];
         Memory.cpu_log[2][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
@@ -156,10 +156,10 @@ module.exports.loop = function(){
     
     
     //run unit AI scripts
-    UNITDRIVE.run();
+    DRIVE_UNITS.run();
 
     //tick log breakpoint 3
-    if (recordTick){
+    if (Memory.recordTick){
         if (Memory.cpu_log[3] == undefined)
             Memory.cpu_log[3] = [];
         Memory.cpu_log[3][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();

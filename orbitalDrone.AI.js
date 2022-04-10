@@ -108,9 +108,7 @@ module.exports = {
                                 }
                                 //lone invader detected: evacuate and call blood hunter
                                 else if (i_threats == 1){
-                                    //Game.notify(unit.name + ':: >>>>>> EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER INBOUND <<<<<<');
-
-                                    console.log(unit.name + ':: >>>>>> EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER INBOUND <<<<<<');
+                                    console.log(unit.name + ':: EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER INBOUND');
                                     console.log(unit.name + ':: SIGNALLING BLOOD HUNTER');
 
                                     Memory.lastSeenEnemy_name[unit.memory.home_index] = 'INVADER';

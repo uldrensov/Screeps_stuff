@@ -1,8 +1,8 @@
 //executable script: spawns a treasurer unit (if applicable), and writes a command into its memory
-//optionally, can also be called automatically by ECONDRIVE.js
-    //require('TERMINALTRANSFER.exe').run(3,'energy',100000,'TRM',true,true)
+//optionally, can also be called automatically by DRIVE_ECON.js
+    //require('TERMINALTRANSFER.exe').run(3,RESOURCE_ENERGY,100000,'TRM',true,true)
     //require('TERMINALTRANSFER.exe').run(0,RESOURCE_POWER,100,'PWR',true,true)
-    //require('TERMINALTRANSFER.exe').run(7,'energy',100000,'NUK',true,true)
+    //require('TERMINALTRANSFER.exe').run(7,RESOURCE_ENERGY,100000,'NUK',true,true)
     
 var SD = require('SOFTDATA');
 
@@ -20,7 +20,7 @@ module.exports = {
 
             case 'PWR':
                 if (!dir)
-                    return 'TERMINALTRANSFER:: POWER SPAWN WITHDRAW ACTION NOT SUPPORTED IN THIS SOFTWARE VERSION';
+                    return 'TERMINALTRANSFER:: POWER SPAWN WITHDRAW ACTION NOT SUPPORTED';
                 dest_toString = 'power nexus';
                 break;
 
@@ -30,6 +30,10 @@ module.exports = {
                 if (o_type != RESOURCE_ENERGY && o_type != RESOURCE_GHODIUM)
                     return 'TERMINALTRANSFER:: NUKER ONLY SUPPORTS ENERGY AND GHODIUM INPUTS';
                 dest_toString = 'nuker';
+                break;
+
+            case 'FAC':
+                dest_toString = 'factory';
                 break;
 
             default:
