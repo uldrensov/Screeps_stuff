@@ -5,6 +5,7 @@ Because the whole point of playing Screeps is to learn and to have a fun outlet 
 * Features over 20 unique unit roles that synergise with each other, in the effort of maintaining a network of multiple max-level rooms
 * Automatically responds to threats encountered inside and outside of home territory, most notably during long-distance mining (fleeing, counter-attacking, reclaiming, etc.)
 * Includes scripts that alleviate the stress of macromanaging economy (detailed status reports, automated market transactions, etc.)
+
 ### What it does poorly: ###
 * Running more than ~8 rooms without straining the 20 CPU/tick limit
 * Proactive combat
@@ -12,7 +13,9 @@ Because the whole point of playing Screeps is to learn and to have a fun outlet 
 
 Anyone is welcome to clone this repository and run it themselves for demonstration purposes. In contrast, if your goal is to simply copy-paste a functioning codebase into your own account as a substitute for playing the game legitimately, let it be known that there are better and more streamlined "prepackaged" codebases out there. Copy at your own risk.
 
+
 ## Overview of files: ##
+
 ### Core files: ###
 --These are files without .AI or .exe in their name--
 
@@ -23,9 +26,10 @@ Anyone is welcome to clone this repository and run it themselves for demonstrati
 * UNITDRIVE.js is called in main, and is responsible for running each unit type's respective AI script using the proper parameters
 * TOWERDRIVE.js is called in main, and is responsible for controlling defensive Towers in each room
 * ECONDRIVE.js is called in main, and is responsible for automating economic actions in rooms that have certain settings enabled
+
 ### .AI files: ###
---Each .AI file corresponds to a single unit role--
---For simplicity's sake, I will only describe a few--
+--Each .AI file corresponds to a single unit role--  
+--(For simplicity's sake, I will only describe a few)--
 
 * Drone: Supplies Spawners, Extensions, and the Storage with Energy
 * Assimilator: Mines Energy and dumps it into nearby Container
@@ -37,6 +41,7 @@ Anyone is welcome to clone this repository and run it themselves for demonstrati
 * Specialist: Self-sufficient construction unit designed to travel distances and perform orders in wild territory
 * Orbital drone: Intelligent unit armed with various sensors and alarm permissions. Carries Energy home from a long-distance mining site.
 * Blood hunter: Appears in response to a raised alarm, and attempts to purge whatever threat caused it
+
 ### .exe files: ###
 --These files are designed as tools which can be manually executed through the console--
 
@@ -48,22 +53,29 @@ Anyone is welcome to clone this repository and run it themselves for demonstrati
 * CIRCULATE.exe.js transfers goods (any amount, any type) between two chosen rooms via Terminal
 * TRANSACTION.exe.js uses the Terminal of a chosen room to buy or sell resources (any amount, any type) through the in-game market
 * ENERGYVENT.exe.js uses the Terminal of a chosen room to sell Energy (any amount) through the in-game market
+
+
 ## Usage: ##
+
 ### Setup: ###
 More info coming soon...
+
 ### Adding new rooms: ###
 * Modify the object ID arrays by adding new data pertaining to the newly annexed room
 * Expand each of the unit body-part 2D-arrays by 1 element, and populate them with the desired role-based body part configurations
 * More info coming soon...
+
 ### Adding new remote (long-distance) mining sites: ###
 * In SOFTDATA.js, add the desired Source ID (from the remote room) to the remotesource_id array, and the remote room's Controller ID to the remotectrl_id array
 * Place two pathing/rally flags in the remote room: one for the Source, and one for the Controller
 * In SOFTDATA.js, add these flags' names (format: Game.flags['NAME']) to the remoteflag and reserveflag arrays, respectively
 * In-game, set the orbitalAssimilator_MAX, orbitalDrone_MAX, and recalibrator_MAX arrays' nth element to 1, where n is the number of the room they shall spawn from
+
 ### Maintenance: ###
 * Unit spawns, deaths, and other important events are recorded to the console; check it from time to time
 * To increase/decrease the population quota for certain roles (in a certain room), modify the appropriate [role_MAX] variable in global memory
 * More info coming soon...
+
 ### Notifications: ###
 --Email notifications can be enabled for the following:
 
