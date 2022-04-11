@@ -1,6 +1,6 @@
 //function: drives each unit based on their assigned AI role
 
-var SD =                    require('SOFTDATA');
+var SD =                    require('SET_SOFTDATA');
 
 var emergencyDrone =        require('emergencyDrone.AI');
 var sacrificer =            require('sacrificer.AI');

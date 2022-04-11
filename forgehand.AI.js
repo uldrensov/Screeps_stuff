@@ -1,7 +1,7 @@
 //FORGEHAND: carries items between the vault and the labs, on a per-order/command basis
 //white trail ("carrier")
 
-var SD = require('SOFTDATA');
+var SD = require('SET_SOFTDATA');
 
 
 module.exports = {

@@ -1,5 +1,5 @@
-var SD =                    require('SOFTDATA');
-var MEMORYINIT =            require('MEMORYINIT');
+var SD =                    require('SET_SOFTDATA');
+var SET_MEMORYINIT =        require('SET_MEMORYINIT');
 var DRIVE_SPAWN =           require('DRIVE_SPAWN');
 var DRIVE_UNITS =           require('DRIVE_UNITS');
 var DRIVE_TOWERS =          require('DRIVE_TOWERS');
@@ -9,9 +9,9 @@ var DRIVE_ECON =            require('DRIVE_ECON');
 module.exports.loop = function(){
     
     //run memory init periodically to maintain configuration standards
-    //if this is the first time the software is run, call MEMORYINIT immediately
+    //if this is the first time the software is run, call SET_MEMORYINIT immediately
     if (Game.time % SD.std_interval == 0 || !Memory.init_true){
-        MEMORYINIT.run(SD.nexus_id.length);
+        SET_MEMORYINIT.run(SD.nexus_id.length);
         Memory.init_true = true;
     }
     

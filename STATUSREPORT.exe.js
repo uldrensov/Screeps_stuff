@@ -1,7 +1,7 @@
 //executable script: creates a detailed report providing details about a particular room
     //require('STATUSREPORT.exe').run(0)
 
-var SD = require('SOFTDATA');
+var SD = require('SET_SOFTDATA');
 
 
 module.exports = {

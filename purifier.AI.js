@@ -71,8 +71,6 @@ module.exports = {
                             }
                             //multiple invaders detected: evacuate and suicide
                             else if (i_threats > 1){
-                                //Game.notify(unit.name + ':: >>>>>> EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER HORDE INBOUND <<<<<<');
-
                                 console.log(unit.name + ':: >>>>>> EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER HORDE INBOUND <<<<<<');
                                 console.log(unit.name + ':: RECYCLING EVACUATED UNITS');
 
@@ -94,7 +92,6 @@ module.exports = {
 
                         //re-enable remote workers only when the controller is purified, and there is no nearby invader core attempting tug-of-war with this unit
                         else if (Memory.enforcer_MAX[unit.memory.home_index] < 0){
-                            //Game.notify(unit.name + ':: SECTOR #' + unit.memory.home_index + ' RESTORED: CONTROLLER PURIFIED OF HOSTILE INFLUENCE');
                             console.log(unit.name + ':: SECTOR #' + unit.memory.home_index + ' RESTORED: CONTROLLER PURIFIED OF HOSTILE INFLUENCE');
 
                             if (Memory.recalibrator_MAX[unit.memory.home_index] < 0)        Memory.recalibrator_MAX[unit.memory.home_index] =       1;

@@ -1,7 +1,7 @@
 //executable script: creates a compressed summary about every room's remote mining operations
     //require('STATUSREPORT_R.exe').run()
     
-    var SD = require('SOFTDATA');
+    var SD = require('SET_SOFTDATA');
     
 
     module.exports = {

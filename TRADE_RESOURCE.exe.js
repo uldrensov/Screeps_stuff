@@ -1,9 +1,9 @@
 //executable script: attempts to buy or sell resources from a room's terminal
 //optionally, can also be called automatically by DRIVE_ECON.js
-    //require('TRANSACTION.exe').run(0,RESOURCE_ZYNTHIUM,true,0,false)
-    //require('TRANSACTION.exe').run(0,RESOURCE_POWER,false,1000,false)
+    //require('TRADE_RESOURCE.exe').run(0,RESOURCE_ZYNTHIUM,true,0,false)
+    //require('TRADE_RESOURCE.exe').run(0,RESOURCE_POWER,false,1000,false)
 
-var SD = require('SOFTDATA');
+var SD = require('SET_SOFTDATA');
 
 
 module.exports = {
@@ -11,23 +11,23 @@ module.exports = {
         
         //arg validation
         if (Game.getObjectById(SD.nexus_id[room_num]) == undefined)
-            return 'TRANSACTION:: INVALID ROOM NUMBER';
+            return 'TRADE_RESOURCE:: INVALID ROOM NUMBER';
         
         //general variable init and validation
         let GE = Game.getObjectById(SD.nexus_id[room_num]).room.terminal;
 
         if (GE == null)
-            return 'TRANSACTION:: ROOM IS MISSING A TERMINAL';
+            return 'TRADE_RESOURCE:: ROOM IS MISSING A TERMINAL';
 
         if (GE.store.getUsedCapacity(RESOURCE_ENERGY) == 0)
-            return 'TRANSACTION:: TERMINAL TRANSMISSION FUEL DEPLETED';
+            return 'TRADE_RESOURCE:: TERMINAL TRANSMISSION FUEL DEPLETED';
 
         let clientele;
 
         //init market (selling to players)
         if (dir){
             if (GE.store.getUsedCapacity(resource_type) == 0)
-                return 'TRANSACTION:: TERMINAL MERCHANDISE DEPLETED';
+                return 'TRADE_RESOURCE:: TERMINAL MERCHANDISE DEPLETED';
         
             clientele = Game.market.getAllOrders({type: ORDER_BUY, resourceType: resource_type});
         }
@@ -36,7 +36,7 @@ module.exports = {
             clientele = Game.market.getAllOrders({type: ORDER_SELL, resourceType: resource_type});
 
         if (!clientele.length)
-            return 'TRANSACTION:: MARKET IS EMPTY...TRY AGAIN LATER';
+            return 'TRADE_RESOURCE:: MARKET IS EMPTY...TRY AGAIN LATER';
         
 
         //calculate average street price
@@ -66,7 +66,7 @@ module.exports = {
                 &&
                 !ignore_tolerance){
 
-                return 'TRANSACTION:: NO SUITABLE TRADES REQUESTING [' + resource_type + '] AT SUFFICIENTLY HIGH PRICES...TRY AGAIN LATER';
+                return 'TRADE_RESOURCE:: NO SUITABLE TRADES REQUESTING [' + resource_type + '] AT SUFFICIENTLY HIGH PRICES...TRY AGAIN LATER';
             }
         }
         //buying from players: find lowest price to buy from
@@ -83,7 +83,7 @@ module.exports = {
                 &&
                 !ignore_tolerance){
 
-                return 'TRANSACTION:: NO SUITABLE TRADES OFFERING [' + resource_type + '] AT SUFFICIENTLY LOW PRICES...TRY AGAIN LATER';
+                return 'TRADE_RESOURCE:: NO SUITABLE TRADES OFFERING [' + resource_type + '] AT SUFFICIENTLY LOW PRICES...TRY AGAIN LATER';
             }
         }
         
@@ -105,26 +105,26 @@ module.exports = {
         let transaction = Game.market.deal(bestOffer.id, tradeAmount, GE.room.name);
         
         if (transaction == ERR_NOT_ENOUGH_ENERGY)
-            return 'TRANSACTION:: INSUFFICIENT RESOURCES...OFFER REQUIRES ' + tradeAmount + ' [' + resource_type + '] AND ' + tax + ' TRANSMISSION ENERGY';
+            return 'TRADE_RESOURCE:: INSUFFICIENT RESOURCES...OFFER REQUIRES ' + tradeAmount + ' [' + resource_type + '] AND ' + tax + ' TRANSMISSION ENERGY';
 
         if (transaction == ERR_TIRED)
-            return 'TRANSACTION:: TERMINAL COOLING DOWN...PLEASE WAIT BEFORE SELLING AGAIN';
+            return 'TRADE_RESOURCE:: TERMINAL COOLING DOWN...PLEASE WAIT BEFORE SELLING AGAIN';
             
         if (transaction == ERR_INVALID_ARGS){
-            console.log('TRANSACTION:: BUGSPLAT: CANNOT EXECUTE TRADE DEAL...GENERATING ERROR CODE');
-            console.log('TRANSACTION:: ORIGINAL INTENDED TRADE AMT: ' + tradeAmount);
+            console.log('TRADE_RESOURCE:: BUGSPLAT: CANNOT EXECUTE TRADE DEAL...GENERATING ERROR CODE');
+            console.log('TRADE_RESOURCE:: ORIGINAL INTENDED TRADE AMT: ' + tradeAmount);
             transaction = Game.market.deal(bestOffer.id, 1, GE.room.name); //attempt a test transaction for debug purposes
         }
         
         if (transaction != OK)
-            return 'TRANSACTION:: OPERATION FAILED WITH MARKET ERROR CODE ' + transaction;
+            return 'TRADE_RESOURCE:: OPERATION FAILED WITH MARKET ERROR CODE ' + transaction;
         
 
         //return confirmation of success
 
         //selling to players
         if (dir){
-            console.log('TRANSACTION:: ROOM #' + room_num + ' SOLD ' + tradeAmount + ' [' + resource_type + '] FOR ' +
+            console.log('TRADE_RESOURCE:: ROOM #' + room_num + ' SOLD ' + tradeAmount + ' [' + resource_type + '] FOR ' +
                 bestOffer.price + ' EACH (' + (tradeAmount*bestOffer.price).toFixed(3) + ' CREDITS GAINED) ... ENERGY TAX: ' +
                 tax + ' (' + (tax/tradeAmount).toFixed(3) + ' / unit)');
 
@@ -132,7 +132,7 @@ module.exports = {
         }
         //buying from players
         else{
-            console.log('TRANSACTION:: ROOM #' + room_num + ' BOUGHT ' + tradeAmount + ' [' + resource_type + '] FOR ' +
+            console.log('TRADE_RESOURCE:: ROOM #' + room_num + ' BOUGHT ' + tradeAmount + ' [' + resource_type + '] FOR ' +
                 bestOffer.price + ' EACH (' + (tradeAmount*bestOffer.price).toFixed(3) + ' CREDITS PAID) ... ENERGY TAX: ' +
                 tax + ' (' + (tax/tradeAmount).toFixed(3) + ' / unit)');
 

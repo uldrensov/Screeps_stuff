@@ -89,8 +89,6 @@ module.exports = {
                             }
                             //multiple invaders detected: evacuate and suicide
                             else if (i_threats > 1){
-                                //Game.notify(unit.name + ':: >>>>>> EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER HORDE INBOUND <<<<<<');
-
                                 console.log(unit.name + ':: >>>>>> EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER HORDE INBOUND <<<<<<');
                                 console.log(unit.name + ':: RECYCLING EVACUATED UNITS');
 
@@ -112,7 +110,6 @@ module.exports = {
 
                         //STAGE 3A. watch for hostile cores
                         if (invadercores.length && Memory.enforcer_MAX[unit.memory.home_index] < 0){
-                            //Game.notify(unit.name + ':: >>>>>> SIGNALLING ENFORCER TO SECTOR #' + unit.memory.home_index + '...CORE SIGHTED <<<<<<');
                             console.log(unit.name + ':: >>>>>> SIGNALLING ENFORCER TO SECTOR #' + unit.memory.home_index + '...CORE SIGHTED <<<<<<');
 
                             Memory.lastSeenCore_time[unit.memory.home_index] = Game.time;
@@ -126,7 +123,6 @@ module.exports = {
                         try{
                             //controlled by hostiles: cut off remote worker spawns, call in a purifier, and self-killswitch
                             if (unit.room.controller.reservation.username != unit.owner.username){
-                                //Game.notify(unit.name + ':: >>>>>> SIGNALLING PURIFIER TO SECTOR #' + unit.memory.home_index + '...CONTROLLER HAS FALLEN TO HOSTILE FORCES <<<<<<');
                                 console.log(unit.name + ':: >>>>>> SIGNALLING PURIFIER TO SECTOR #' + unit.memory.home_index + '...CONTROLLER HAS FALLEN TO HOSTILE FORCES <<<<<<');
 
                                 Memory.lastReserveLoss_time[unit.memory.home_index] =   Game.time;

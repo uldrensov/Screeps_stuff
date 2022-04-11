@@ -119,8 +119,8 @@ module.exports = {
 
         //init (allocate + populate) global data...
         //walls and ramparts
-        if (Memory.wall_threshold == undefined)                 Memory.wall_threshold =                    50000;         //TODO: move to SOFTDATA
-        if (Memory.rampart_threshold == undefined)              Memory.rampart_threshold =                 100000;        //TODO: move to SOFTDATA
+        if (Memory.wall_threshold == undefined)                 Memory.wall_threshold =                    50000;         //TODO: move to SET_SOFTDATA
+        if (Memory.rampart_threshold == undefined)              Memory.rampart_threshold =                 100000;        //TODO: move to SET_SOFTDATA
         if (Memory.construction_mode == undefined)              Memory.construction_mode =                 false;         //TODO: make this per-room
 
         //economy monitoring

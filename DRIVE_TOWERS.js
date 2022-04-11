@@ -1,6 +1,6 @@
 //function: drives towers in each room
 
-var SD = require('SOFTDATA');
+var SD = require('SET_SOFTDATA');
 
 
 module.exports = {

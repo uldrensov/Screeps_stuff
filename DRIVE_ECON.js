@@ -1,9 +1,9 @@
 //function: automates economic functions (vault monitor, market transactions, power procession, pixel generation)
 
-var SD =                    require('SOFTDATA');
-var TERMINALTRANSFER =      require('TERMINALTRANSFER.exe');
-var TRANSACTION =           require('TRANSACTION.exe');
-var ENERGYVENT =            require('ENERGYVENT.exe');
+var SD =                    require('SET_SOFTDATA');
+var TRANSFER_INROOM =       require('TRANSFER_INROOM.exe');
+var TRADE_RESOURCE =        require('TRADE_RESOURCE.exe');
+var TRADE_ENERGY =          require('TRADE_ENERGY.exe');
 
 
 module.exports = {
@@ -15,7 +15,7 @@ module.exports = {
         }
         
         
-        //email alerts for vault status
+        //alerts for vault status
         for (let i=0; i<SD.nexus_id.length; i++){
             //bypasses
             if (nexi[i] == null)                    continue; //error: if nexus fails to retrieve, skip the room
@@ -27,7 +27,6 @@ module.exports = {
                 Memory.vaultAlertLO_EN[i] = true;
             //disable (latch) further alerts from a room when it raises one
             else if ((nexi[i].room.storage.store.energy < SD.vault_boundary) && Memory.vaultAlertLO_EN[i]){
-                //Game.notify('DRIVE_ECON:: Vault #' + i + ' SHORTAGE');
                 //console.log('DRIVE_ECON:: Vault #' + i + ' SHORTAGE');
                 Memory.vaultAlertLO_EN[i] = false;
             }
@@ -38,7 +37,6 @@ module.exports = {
                 Memory.vaultAlertHI_EN[i] = true;
             //disable (latch) further alerts from a room when it raises one
             else if ((nexi[i].room.storage.store.getUsedCapacity() > nexi[i].room.storage.store.getCapacity() - SD.vault_boundary) && Memory.vaultAlertHI_EN[i]){
-                //Game.notify('DRIVE_ECON:: Vault #' + i + ' SURPLUS');
                 //console.log('DRIVE_ECON:: Vault #' + i + ' SURPLUS');
                 Memory.vaultAlertHI_EN[i] = false;
             }
@@ -96,14 +94,14 @@ module.exports = {
                             &&
                             vault.store.getUsedCapacity(RESOURCE_ENERGY) >= SD.cargo_size + SD.vault_boundary){
 
-                            autoload_return = TERMINALTRANSFER.run(i,RESOURCE_ENERGY,SD.cargo_size,'TRM',true,true);
+                            autoload_return = TRANSFER_INROOM.run(i,RESOURCE_ENERGY,SD.cargo_size,'TRM',true,true);
 
                             if (autoload_return != OK)
                                 console.log('DRIVE_ECON:: AUTOLOAD FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autoload_return + ']');
                         }
                         //if terminal's energy-to-mineral ratio is sufficient, then load minerals
                         else if (en_min_ratio >= .5){
-                            autoload_return = TERMINALTRANSFER.run(i,resource_type,SD.cargo_size,'TRM',true,true);
+                            autoload_return = TRANSFER_INROOM.run(i,resource_type,SD.cargo_size,'TRM',true,true);
                             
                             if (autoload_return != OK)
                                 console.log('DRIVE_ECON:: AUTOLOAD FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autoload_return + ']');
@@ -140,7 +138,7 @@ module.exports = {
                         //select a sellable resource (no specific priority order) and attempt to sell
                         for (let x=0; x<SD.sellable_products[i].length; x++){
                             if (nexi[i].room.terminal.store.getUsedCapacity(SD.sellable_products[i][x]) > 0){
-                                autosell_return = TRANSACTION.run(i,SD.sellable_products[i][x],true,0,false);
+                                autosell_return = TRADE_RESOURCE.run(i,SD.sellable_products[i][x],true,0,false);
 
                                 //upon successful sell, move on to the next room
                                 if (autosell_return == OK)
@@ -181,7 +179,7 @@ module.exports = {
                     //vent attempt
                     if (nexi[i].room.terminal != undefined)
                         if (nexi[i].room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) > 0){
-                            autovent_return = ENERGYVENT.run(i);
+                            autovent_return = TRADE_ENERGY.run(i);
 
                             if (autovent_return != OK)
                                 console.log('DRIVE_ECON:: AUTOVENT FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autovent_return + ']');

@@ -36,7 +36,6 @@ module.exports = {
 
                 //when invader is slain...
                 else if (Memory.evac_timer[unit.memory.home_index] > 0){
-                    //Game.notify(unit.name + ':: SECTOR #' + unit.memory.home_index + ': HOSTILES ELIMINATED');
                     console.log(unit.name + ':: SECTOR #' + unit.memory.home_index + ': HOSTILES ELIMINATED');
 
                     //reset the evac timer early

@@ -1,10 +1,10 @@
 //executable script: spawns a treasurer unit (if applicable), and writes a command into its memory
 //optionally, can also be called automatically by DRIVE_ECON.js
-    //require('TERMINALTRANSFER.exe').run(3,RESOURCE_ENERGY,100000,'TRM',true,true)
-    //require('TERMINALTRANSFER.exe').run(0,RESOURCE_POWER,100,'PWR',true,true)
-    //require('TERMINALTRANSFER.exe').run(7,RESOURCE_ENERGY,100000,'NUK',true,true)
+    //require('TRANSFER_INROOM.exe').run(3,RESOURCE_ENERGY,100000,'TRM',true,true)
+    //require('TRANSFER_INROOM.exe').run(0,RESOURCE_POWER,100,'PWR',true,true)
+    //require('TRANSFER_INROOM.exe').run(7,RESOURCE_ENERGY,100000,'NUK',true,true)
     
-var SD = require('SOFTDATA');
+var SD = require('SET_SOFTDATA');
 
 
 module.exports = {
@@ -20,15 +20,15 @@ module.exports = {
 
             case 'PWR':
                 if (!dir)
-                    return 'TERMINALTRANSFER:: POWER SPAWN WITHDRAW ACTION NOT SUPPORTED';
+                    return 'TRANSFER_INROOM:: POWER SPAWN WITHDRAW ACTION NOT SUPPORTED';
                 dest_toString = 'power nexus';
                 break;
 
             case 'NUK':
                 if (!dir)
-                    return 'TERMINALTRANSFER:: NUKER WITHDRAW ACTION NOT SUPPORTED';
+                    return 'TRANSFER_INROOM:: NUKER WITHDRAW ACTION NOT SUPPORTED';
                 if (o_type != RESOURCE_ENERGY && o_type != RESOURCE_GHODIUM)
-                    return 'TERMINALTRANSFER:: NUKER ONLY SUPPORTS ENERGY AND GHODIUM INPUTS';
+                    return 'TRANSFER_INROOM:: NUKER ONLY SUPPORTS ENERGY AND GHODIUM INPUTS';
                 dest_toString = 'nuker';
                 break;
 
@@ -37,7 +37,7 @@ module.exports = {
                 break;
 
             default:
-                    return 'TERMINALTRANSFER:: INVALID DESTINATION';
+                    return 'TRANSFER_INROOM:: INVALID DESTINATION';
         }
         
 
@@ -73,7 +73,7 @@ module.exports = {
             
                 //this only triggers if no unoccupied spawner is found
                 if (i == SD.spawner_id[room_num].length - 1)
-                    return 'TERMINALTRANSFER:: ALL SPAWNERS IN ROOM #' + room_num + ' ARE CURRENTLY OCCUPIED';
+                    return 'TRANSFER_INROOM:: ALL SPAWNERS IN ROOM #' + room_num + ' ARE CURRENTLY OCCUPIED';
             }
 
             //spawn the treasurer and initialise a command
@@ -81,9 +81,9 @@ module.exports = {
                 {memory: {role: 'treasurer', order_type: o_type, order_amt: o_amt, dir: dir, spec_dest: spec, task_progress: 0, autokill: autokill, home_index: room_num}});
 
             if (spawnResult == OK)
-                console.log('TERMINALTRANSFER:: Treasurer[' + room_num + ']-' + Game.time % SD.time_offset + ' spawning.');
+                console.log('TRANSFER_INROOM:: Treasurer[' + room_num + ']-' + Game.time % SD.time_offset + ' spawning.');
             else
-                return 'TERMINALTRANSFER:: TREASURER SPAWN FAILED WITH NEXUS ERROR CODE ' + spawnResult;
+                return 'TRANSFER_INROOM:: TREASURER SPAWN FAILED WITH NEXUS ERROR CODE ' + spawnResult;
         }
         
         //if a treasurer exists, simply rewrite its memory contents to issue a new command
@@ -100,7 +100,7 @@ module.exports = {
         //return confirmation of success
         let dir_toString = dir ? 'loading' : 'unloading';
         let to_fro = dir ? 'to' : 'from';
-        console.log('TERMINALTRANSFER:: ISSUING COMMAND: ROOM #' + room_num + ' ' + dir_toString + ' ' + o_amt + ' [' + o_type + '] ' + to_fro + ' ' + dest_toString);
+        console.log('TRANSFER_INROOM:: ISSUING COMMAND: ROOM #' + room_num + ' ' + dir_toString + ' ' + o_amt + ' [' + o_type + '] ' + to_fro + ' ' + dest_toString);
         
         return OK;
     }

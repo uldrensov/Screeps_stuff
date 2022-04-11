@@ -71,8 +71,6 @@ module.exports = {
                             }
                             //multiple invaders detected: evacuate and suicide
                             else if (i_threats > 1){
-                                //Game.notify(unit.name + ':: >>>>>> EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER HORDE INBOUND <<<<<<');
-
                                 console.log(unit.name + ':: >>>>>> EVACUATING SECTOR #' + unit.memory.home_index + '...INVADER HORDE INBOUND <<<<<<');
                                 console.log(unit.name + ':: RECYCLING EVACUATED UNITS');
 
@@ -100,7 +98,6 @@ module.exports = {
 
                         //when core is eliminated...
                         else{
-                            //Game.notify(unit.name + ':: SECTOR #' + unit.memory.home_index + ' RESTORED: CORE DESTROYED');
                             console.log(unit.name + ':: SECTOR #' + unit.memory.home_index + ' RESTORED: CORE DESTROYED');
 
                             //self-killswitch and return to dormant state

@@ -20,8 +20,8 @@ Anyone is welcome to clone this repository and run it themselves for demonstrati
 --These are files without .AI or .exe in their name--
 
 * main.js is called once per game tick; as the name implies, this is the main script that runs on repeat
-* SOFTDATA.js is a library containing various constants, parameters, and essential object IDs; this should be uniquely configured according to the user's needs and preferences [e.g. using my file with my personal settings will break your game]
-* MEMORYINIT.js initialises global memory, and is periodically looped to maintain configuration standards in case of corruption
+* SET_SOFTDATA.js is a library containing various constants, parameters, and essential object IDs; this should be uniquely configured according to the user's needs and preferences [e.g. using my file with my personal settings will break your game]
+* SET_MEMORYINIT.js initialises global memory, and is periodically looped to maintain configuration standards in case of corruption
 * DRIVE_SPAWN.js is called in main, and is responsible for spawning all units to meet the needs of the population quota
 * DRIVE_UNITS.js is called in main, and is responsible for running each unit type's respective AI script using the proper parameters
 * DRIVE_TOWERS.js is called in main, and is responsible for controlling defensive Towers in each room
@@ -49,10 +49,10 @@ Anyone is welcome to clone this repository and run it themselves for demonstrati
 * STATUSREPORT_E.exe.js writes a condensed summary report about the Storage/Terminal contents of every room
 * STATUSREPORT_R.exe.js writes a summary report about every long-distance mining site, including time trackers for recently detected threats
 * STATUSREPORT_T.exe.js writes a summary report about overall CPU/tick performance data, measured at various breakpoints throughout code execution
-* TERMINALTRANSFER.exe.js spawns in a 'Treasurer' unit to carry items (any amount, any type) between Storage and Terminal/Power Spawn/Nuker in a single chosen room
-* CIRCULATE.exe.js transfers goods (any amount, any type) between two chosen rooms via Terminal
-* TRANSACTION.exe.js uses the Terminal of a chosen room to buy or sell resources (any amount, any type) through the in-game market
-* ENERGYVENT.exe.js uses the Terminal of a chosen room to sell Energy (any amount) through the in-game market
+* TRANSFER_INROOM.exe.js spawns in a 'Treasurer' unit to carry items (any amount, any type) between Storage and Terminal/Power Spawn/Nuker in a single chosen room
+* TRANSFER_CROSSROOM.exe.js transfers goods (any amount, any type) between two chosen rooms via Terminal
+* TRADE_RESOURCE.exe.js uses the Terminal of a chosen room to buy or sell resources (any amount, any type) through the in-game market
+* TRADE_ENERGY.exe.js uses the Terminal of a chosen room to sell Energy (any amount) through the in-game market
 
 
 ## Usage: ##
@@ -66,9 +66,9 @@ More info coming soon...
 * More info coming soon...
 
 ### Adding new remote (long-distance) mining sites: ###
-* In SOFTDATA.js, add the desired Source ID (from the remote room) to the remotesource_id array, and the remote room's Controller ID to the remotectrl_id array
+* In SET_SOFTDATA.js, add the desired Source ID (from the remote room) to the remotesource_id array, and the remote room's Controller ID to the remotectrl_id array
 * Place two pathing/rally flags in the remote room: one for the Source, and one for the Controller
-* In SOFTDATA.js, add these flags' names (format: Game.flags['NAME']) to the remoteflag and reserveflag arrays, respectively
+* In SET_SOFTDATA.js, add these flags' names (format: Game.flags['NAME']) to the remoteflag and reserveflag arrays, respectively
 * In-game, set the orbitalAssimilator_MAX, orbitalDrone_MAX, and recalibrator_MAX arrays' nth element to 1, where n is the number of the room they shall spawn from
 
 ### Maintenance: ###
@@ -80,7 +80,4 @@ More info coming soon...
 --Email notifications can be enabled for the following:
 
 * Daily net gain/loss of credits and pixels
-* Contents within a Storage are about to overflow (surplus)
-* Energy capacity within a Storage is about to run out (shortage)
-* Armed enemy unit spotted in a room containing defensive Towers
-* Threat sightings and threat response updates in long-distance mining sites
+* Armed enemy players spotted in owned / reserved territory

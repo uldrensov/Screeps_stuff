@@ -1,6 +1,6 @@
 //function: controls all automatic unit spawns
 
-var SD = require('SOFTDATA');
+var SD = require('SET_SOFTDATA');
 
 
 module.exports = {
@@ -193,7 +193,7 @@ module.exports = {
                     
                 if (spawnResult == OK){
                     console.log('DRIVE_SPAWN:: >>>>>> EmergencyDrone[' + k + ']-' + Game.time % SD.time_offset + ' spawning. <<<<<<');
-                    //Game.notify('DRIVE_SPAWN:: Emergency drone deployed in room #' + k);
+                    Game.notify('DRIVE_SPAWN:: >>>>>> Emergency drone deployed in room #' + k + ' <<<<<<');
                 }
                 else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                     console.log('DRIVE_SPAWN:: >>>>>> SPAWN FAILURE IN ' + openNexus.name + ' (EDRONE): CODE ' + '[' + spawnResult + '] <<<<<<');

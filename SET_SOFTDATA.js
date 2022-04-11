@@ -142,7 +142,7 @@ module.exports = {
 
     //autosell-authorised products...
     sellable_products:      [[RESOURCE_ZYNTHIUM,            RESOURCE_GHODIUM_OXIDE],
-                            [RESOURCE_OXYGEN],
+                            [RESOURCE_OXYGEN,               RESOURCE_GHODIUM_OXIDE],
                             [RESOURCE_KEANIUM,              RESOURCE_GHODIUM_OXIDE],
                             [RESOURCE_CATALYST,             RESOURCE_GHODIUM_OXIDE],
                             [],
