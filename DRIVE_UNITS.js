@@ -70,7 +70,7 @@ module.exports = {
                     energiser.run(unit, SD.std_interval);
                     break;
                 case 'retrieverDrone':
-                    retrieverDrone.run(unit, SD.nexus_id[j], SD.en_ignore_lim);
+                    retrieverDrone.run(unit, SD.nexus_id[j], SD.en_ignore_lim, SD.std_interval);
                     break;
                 case 'sacrificer':
                     sacrificer.run(unit, SD.en_ignore_lim);

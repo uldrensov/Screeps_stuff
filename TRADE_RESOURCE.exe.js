@@ -62,11 +62,23 @@ module.exports = {
                         bestOffer = clientele[i];
                     }
             }
+
+            //if price tolerance is not met, proceed only if this resource is allowed to be dumped
             if (bestOffer.price < streetPrice * SD.sellPrice_tolerance
                 &&
                 !ignore_tolerance){
 
-                return 'TRADE_RESOURCE:: NO SUITABLE TRADES REQUESTING [' + resource_type + '] AT SUFFICIENTLY HIGH PRICES...TRY AGAIN LATER';
+                let ignoreTolerance_anyways = false;
+
+                for (let z=0; z<SD.dumpsell_whitelist.length; z++){
+                    if (resource_type == SD.dumpsell_whitelist[z]){
+                        ignoreTolerance_anyways = true;
+                        break;
+                    }
+                }
+
+                if (!ignoreTolerance_anyways)
+                    return 'TRADE_RESOURCE:: NO SUITABLE TRADES REQUESTING [' + resource_type + '] AT SUFFICIENTLY HIGH PRICES...TRY AGAIN LATER';
             }
         }
         //buying from players: find lowest price to buy from
@@ -79,10 +91,11 @@ module.exports = {
                         bestOffer = clientele[i];
                     }
             }
+            
             if (bestOffer.price > streetPrice * SD.buyPrice_tolerance
                 &&
                 !ignore_tolerance){
-
+                
                 return 'TRADE_RESOURCE:: NO SUITABLE TRADES OFFERING [' + resource_type + '] AT SUFFICIENTLY LOW PRICES...TRY AGAIN LATER';
             }
         }

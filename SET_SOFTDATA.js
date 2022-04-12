@@ -146,10 +146,11 @@ module.exports = {
                             [RESOURCE_KEANIUM,              RESOURCE_GHODIUM_OXIDE],
                             [RESOURCE_CATALYST,             RESOURCE_GHODIUM_OXIDE],
                             [],
-                            [RESOURCE_CATALYST],
-                            [RESOURCE_OXYGEN],
-                            [RESOURCE_LEMERGIUM],
-                            [RESOURCE_LEMERGIUM]],
+                            [RESOURCE_CATALYST,             RESOURCE_GHODIUM_OXIDE],
+                            [RESOURCE_OXYGEN,               RESOURCE_GHODIUM_OXIDE],
+                            [RESOURCE_LEMERGIUM,            RESOURCE_GHODIUM_OXIDE],
+                            [RESOURCE_LEMERGIUM,            RESOURCE_GHODIUM_OXIDE]],
+    dumpsell_whitelist:     [RESOURCE_GHODIUM_OXIDE],
 
 
     //special usernames...
