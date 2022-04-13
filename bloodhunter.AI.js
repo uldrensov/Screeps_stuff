@@ -1,20 +1,16 @@
-//BLOOD HUNTER: cross-room vengeance warrior designed to counter invader units in remote mining rooms
+//BLOOD HUNTER: cross-room vengeance warrior designed to counter enemy units in remote mining rooms
 //red trail ("fighter")
 
 module.exports = {
     run: function(unit, nexus_id, bloodscent){
         
         let nexus = Game.getObjectById(nexus_id);
-        
-        
-        //salvage unit and elevate threat level if too much damage is taken
-        if (unit.hits < unit.hitsMax*.25){
-            console.log(unit.name + ':: >>>>>> GRAVE CASUALTIES SUSTAINED ... RETREATING <<<<<<');
 
-            Memory.viable_prey[unit.memory.home_index] =            false; //returns bloodhunters to dormant state, in spite of the active evac timer
-            Memory.bloodhunter_casualty[unit.memory.home_index] =   true;
-            unit.memory.killswitch =                                true;
-        }
+        const dmgPerAtkPart = 30;
+        const lowHP_threshold = .25;
+
+        const reinforcement_delay = 100;
+        const bloodhunterCasualty_delay = 1000;
         
         
         //proceed if there is no suicide order
@@ -26,20 +22,53 @@ module.exports = {
 
             //pathing complete
             else{
+                //salvage unit and elevate threat level if too much damage is taken
+                if (unit.hits <= unit.hitsMax*lowHP_threshold){
+                    console.log(unit.name + ':: >>>>>> GRAVE CASUALTIES SUSTAINED ... RETREATING <<<<<<');
+
+                    Memory.evac_timer[unit.memory.home_index] +=            bloodhunterCasualty_delay; //add more evac time if the bloodhunter falls, just to be safe
+
+                    Memory.viable_prey[unit.memory.home_index] =            false; //returns bloodhunters to dormant state, in spite of the active evac timer
+                    Memory.bloodhunter_casualty[unit.memory.home_index] =   true;
+                    unit.memory.killswitch =                                true;
+                }
+
+
+                //locate and evaluate enemy
                 let bloodmark = unit.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-            
-                //attempt to kill the invader
+
                 if (bloodmark){
-                    if (unit.attack(bloodmark) == ERR_NOT_IN_RANGE)
+                    let enemy_attackParts = 0;
+
+                    for (let i=0; i<bloodmark.body.length; i++){
+                        if (bloodmark.body[i]['type'] == 'ATTACK')
+                            enemy_attackParts++;
+                    }
+
+                    //salvage unit and elevate threat level if the enemy is powerful enough to deal over 75% health in one hit
+                    if (enemy_attackParts*dmgPerAtkPart >= unit.hitsMax*(1-lowHP_threshold)){
+                        Game.notify(unit.name + ':: >>>>>> OVERWHELMING THREAT DETECTED IN SECTOR #' + unit.memory.home_index + ' ... RETREATING <<<<<<');
+                        console.log(unit.name + ':: >>>>>> OVERWHELMING THREAT DETECTED IN SECTOR #' + unit.memory.home_index + ' ... RETREATING <<<<<<');
+
+                        Memory.evac_timer[unit.memory.home_index] =             CREEP_LIFE_TIME; //react with full evac protocol
+
+                        Memory.viable_prey[unit.memory.home_index] =            false; //returns bloodhunters to dormant state, in spite of the active evac timer
+                        Memory.bloodhunter_casualty[unit.memory.home_index] =   true;
+                        unit.memory.killswitch =                                true;
+                    }
+            
+                    //engage the enemy
+                    else if (unit.attack(bloodmark) == ERR_NOT_IN_RANGE)
                         unit.moveTo(bloodmark);
                 }
 
-                //when invader is slain...
-                else if (Memory.evac_timer[unit.memory.home_index] > 0){
-                    console.log(unit.name + ':: SECTOR #' + unit.memory.home_index + ': HOSTILES ELIMINATED');
 
-                    //reset the evac timer early
-                    Memory.evac_timer[unit.memory.home_index] = 0; //triggers blood hunter dormancy
+                //when enemy is slain, or otherwise gone from sight...
+                else if (Memory.evac_timer[unit.memory.home_index] > reinforcement_delay){
+                    console.log(unit.name + ':: SECTOR #' + unit.memory.home_index + ': HOSTILES NO LONGER IN SIGHT');
+
+                    //wind back the evac timer to near-reset (in case more threats are soon to appear)
+                    Memory.evac_timer[unit.memory.home_index] = reinforcement_delay; //eventually triggers blood hunter dormancy
                 }
             }
         }

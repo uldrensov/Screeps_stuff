@@ -69,9 +69,9 @@ module.exports = {
                     
                             //enemy player(s) detected: evacuate and call a blood hunter
                             if (p_threats > 0){
-                                //Game.notify(unit.name + ':: >>>>>> EVACUATING SECTOR #' + unit.memory.home_index + '...' + p_name + ' INBOUND <<<<<<');
+                                //Game.notify(unit.name + ':: >>>>>> EVACUATING SECTOR #' + unit.memory.home_index + ' ... ' + p_name + ' INBOUND <<<<<<');
 
-                                console.log(unit.name + ':: >>>>>> EVACUATING SECTOR #' + unit.memory.home_index + '...' + p_name + ' INBOUND <<<<<<');
+                                console.log(unit.name + ':: >>>>>> EVACUATING SECTOR #' + unit.memory.home_index + ' ... ' + p_name + ' INBOUND <<<<<<');
                                 console.log(unit.name + ':: SIGNALLING BLOOD HUNTER');
 
                                 Memory.lastSeenEnemy_name[unit.memory.home_index] = p_name;

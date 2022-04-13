@@ -120,7 +120,18 @@ module.exports.loop = function(){
         }
     }
     
-    
+
+    //nuke detection alert
+    if (Game.time % SD.nukeCheck_interval == 0){
+        for (let i=0; i<SD.nexus_id.length; i++){
+            if (Game.getObjectById(SD.nexus_id[i]).room.find(FIND_NUKES).length){
+                Game.notify('MAIN:: >>>>>> INCOMING NUCLEAR STRIKE -- ROOM #' + i + ' <<<<<<');
+                console.log('MAIN:: >>>>>> INCOMING NUCLEAR STRIKE -- ROOM #' + i + ' <<<<<<');
+            }
+        }
+    }
+
+
     //run economy automation script
     DRIVE_ECON.run();
 

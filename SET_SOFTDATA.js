@@ -6,6 +6,8 @@ module.exports = {
     //general-purpose time values
     time_offset:            100000,     //used for unit naming
     std_interval:           15,         //tick interval for CPU-heavy actions
+    detection_interval:     5,          //tick interval for remote mining units' enemy detection check
+    nukeCheck_interval:     10000,      //tick interval for nuke detection
 
     //construction thresholds
     wall_threshold:         500000,     //de facto "max hp" for walls
@@ -31,6 +33,11 @@ module.exports = {
     
     
     //important hardcoded object IDs...
+    //controllers
+    ctrl_id:                ['5bbcae989099fc012e639474',    '5bbcae819099fc012e639302', '5bbcae989099fc012e63947f',
+                            '5bbcae809099fc012e6392f5',     '000000000000000000000000', '5bbcae369099fc012e638940',
+                            '5bbcaea69099fc012e639605',     '5bbcae289099fc012e6387b9', '5bbcae0c9099fc012e6385be',],
+
     //spawners
     nexus_id:               ['5e2d15a9e152154167131760',    '5e5b6eabb5c443745759aa65', '5e466c796fffaf84254b19ed',
                             '5ea53129e72edb5e91141913',     '000000000000000000000000', '5e90c0cd92ec7d74fd3827c3',

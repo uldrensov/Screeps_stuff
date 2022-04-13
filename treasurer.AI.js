@@ -97,7 +97,6 @@ module.exports = {
             //task complete notification
             else if (!unit.memory.done){
                 unit.memory.done = true;
-                console.log(unit.name + ':: *********************');
                 console.log(unit.name + ':: ORDER COMPLETE (ROOM #' + unit.memory.home_index + ')');
 
                 //killswitch message
@@ -105,8 +104,6 @@ module.exports = {
                     unit.memory.killswitch = true;
                     console.log(unit.name + ':: RECYCLING UNIT...');
                 }
-
-                console.log(unit.name + ':: *********************');
             }
         }
 

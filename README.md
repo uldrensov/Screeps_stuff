@@ -81,3 +81,4 @@ More info coming soon...
 
 * Daily net gain/loss of credits and pixels
 * Armed enemy players spotted in owned / reserved territory
+* Enemy nuclear attacks detected
