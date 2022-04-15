@@ -10,13 +10,13 @@ module.exports = {
     run: function(){
         
         let nexi = [];
-        for (let i=0; i<SD.nexus_id.length; i++){
-            nexi[i] = Game.getObjectById(SD.nexus_id[i]);
+        for (let i=0; i<SD.spawner_id.length; i++){
+            nexi[i] = Game.getObjectById(SD.spawner_id[i][0]);
         }
         
         
         //alerts for vault status
-        for (let i=0; i<SD.nexus_id.length; i++){
+        for (let i=0; i<SD.spawner_id.length; i++){
             //bypasses
             if (nexi[i] == null)                    continue; //error: if nexus fails to retrieve, skip the room
             if (nexi[i].room.storage == undefined)  continue; //error: if the vault is missing, skip the room
@@ -55,7 +55,7 @@ module.exports = {
             let en_min_ratio;
 
 
-            for (let i=0; i<SD.nexus_id.length; i++){
+            for (let i=0; i<SD.spawner_id.length; i++){
                 if (Memory.autoload_EN[i]){    
                     if (nexi[i] == null)                continue; //error: if nexus fails to retrieve, skip the room
                 
@@ -122,7 +122,7 @@ module.exports = {
             let autosell_return;
             
             
-            for (let i=0; i<SD.nexus_id.length; i++){
+            for (let i=0; i<SD.spawner_id.length; i++){
                 if (Memory.autosell_EN[i]){
                     if (nexi[i] == null)                continue; //error: if nexus fails to retrieve, skip the room
 
@@ -139,6 +139,16 @@ module.exports = {
                         for (let x=0; x<SD.sellable_products[i].length; x++){
                             if (nexi[i].room.terminal.store.getUsedCapacity(SD.sellable_products[i][x]) > 0){
                                 autosell_return = TRADE_RESOURCE.run(i,SD.sellable_products[i][x],true,0,false);
+
+                                //if price tolerance is not met, check if the resource is whitelisted for tolerance ignore, and re-attempt trade if so
+                                if (autosell_return == 'ERR_PRICETOL'){
+                                    for (let z=0; z<SD.dumpsell_whitelist.length; z++){
+                                        if (SD.sellable_products[i][x] == SD.dumpsell_whitelist[z]){
+                                            autosell_return = TRADE_RESOURCE.run(i,SD.sellable_products[i][x],true,0,true);
+                                            break;
+                                        }
+                                    }
+                                }
 
                                 //upon successful sell, move on to the next room
                                 if (autosell_return == OK)
@@ -166,7 +176,7 @@ module.exports = {
             let autovent_return;
 
 
-            for (let i=0; i<SD.nexus_id.length; i++){
+            for (let i=0; i<SD.spawner_id.length; i++){
                 if (Memory.autovent_EN[i]){
                     if (nexi[i] == null)            continue; //error: if nexus fails to retrieve, skip the room
                     
@@ -195,7 +205,7 @@ module.exports = {
 
         //process power
         let getPowerNex;
-        for (let i=0; i<SD.nexus_id.length; i++){
+        for (let i=0; i<SD.spawner_id.length; i++){
             if (nexi[i] == null)                    continue; //error: if nexus fails to retrieve, skip the room
 
             //ignore rooms under level requirement for power nexus

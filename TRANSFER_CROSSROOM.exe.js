@@ -8,23 +8,23 @@ module.exports = {
     run: function(src, dest, rsrc_type, amt){
         
         //room validation
-        if (src < 0 || src >= SD.nexus_id.length)   return 'TRANSFER_CROSSROOM:: INVALID -SRC- ARGUMENT';
-        if (dest < 0 || dest >= SD.nexus_id.length) return 'TRANSFER_CROSSROOM:: INVALID -DEST- ARGUMENT';
+        if (src < 0 || src >= SD.spawner_id.length)     return 'TRANSFER_CROSSROOM:: INVALID -SRC- ARGUMENT';
+        if (dest < 0 || dest >= SD.spawner_id.length)   return 'TRANSFER_CROSSROOM:: INVALID -DEST- ARGUMENT';
         
         //resource type validation
         for (let i=0; i<RESOURCES_ALL.length; i++){
-            if (rsrc_type == RESOURCES_ALL[i])      break;
-            else if (i == RESOURCES_ALL.length-1)   return 'TRANSFER_CROSSROOM:: INVALID RESOURCE TYPE';
+            if (rsrc_type == RESOURCES_ALL[i])          break;
+            else if (i == RESOURCES_ALL.length-1)       return 'TRANSFER_CROSSROOM:: INVALID RESOURCE TYPE';
         }
         
         let nexi = [];
-        for (let i=0; i<SD.nexus_id.length; i++){
-            nexi[i] = Game.getObjectById(SD.nexus_id[i]);
+        for (let i=0; i<SD.spawner_id.length; i++){
+            nexi[i] = Game.getObjectById(SD.spawner_id[i][0]);
         }
         
         //terminal validation
-        if (!nexi[src].room.terminal)               return 'TRANSFER_CROSSROOM:: NO TERMINAL PRESENT IN -SRC- ROOM';
-        if (!nexi[dest].room.terminal)              return 'TRANSFER_CROSSROOM:: NO TERMINAL PRESENT IN -DEST- ROOM';
+        if (!nexi[src].room.terminal)                   return 'TRANSFER_CROSSROOM:: NO TERMINAL PRESENT IN -SRC- ROOM';
+        if (!nexi[dest].room.terminal)                  return 'TRANSFER_CROSSROOM:: NO TERMINAL PRESENT IN -DEST- ROOM';
         
         
         //execute

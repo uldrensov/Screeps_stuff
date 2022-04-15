@@ -37,25 +37,28 @@ module.exports = {
         if (!unit.memory.fetching){
             if (unit.memory.towers.length){
                 let lowest_tower = Game.getObjectById(unit.memory.towers[0].id);
-                let getTower;
                 
-                for (let i=0; i<unit.memory.towers.length; i++){
-                    getTower = Game.getObjectById(unit.memory.towers[i].id);
-                    if (getTower == null) continue;
-                    try{
-                        if (getTower.store[RESOURCE_ENERGY] < lowest_tower.store[RESOURCE_ENERGY])
-                            lowest_tower = getTower;
-                    }
-                    catch{
-                        lowest_tower = getTower;
+                for (let i=1; i<unit.memory.towers.length; i++){
+                    //if invalid ID, skip
+                    if (Game.getObjectById(unit.memory.towers[i].id) == null)
+                        continue;
+
+                    //if bad init, assign without comparing anything
+                    if (!lowest_tower)
+                        lowest_tower = Game.getObjectById(unit.memory.towers[i].id);
+
+                    //determine lowest energy tower
+                    else if (Game.getObjectById(unit.memory.towers[i].id).store[RESOURCE_ENERGY]
+                        <
+                        lowest_tower.store[RESOURCE_ENERGY]){
+
+                        lowest_tower = Game.getObjectById(unit.memory.towers[i].id);
                     }
                 }
 
-                let getLowestTower = Game.getObjectById(lowest_tower.id);
-
-                if (getLowestTower != null){
-                    if (unit.transfer(getLowestTower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(getLowestTower);
+                if (Game.getObjectById(lowest_tower.id) != null){
+                    if (unit.transfer(Game.getObjectById(lowest_tower.id), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(Game.getObjectById(lowest_tower.id));
                 }
             }
         }

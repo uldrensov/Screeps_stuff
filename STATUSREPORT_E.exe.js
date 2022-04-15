@@ -14,8 +14,8 @@ module.exports = {
         
         
         //vault summary
-        for (let i=0; i<SD.nexus_id.length; i++){
-            nexus = Game.getObjectById(SD.nexus_id[i]);
+        for (let i=0; i<SD.spawner_id.length; i++){
+            nexus = Game.getObjectById(SD.spawner_id[i][0]);
             
             if (!nexus)     continue; //error: if nexus fails to retrieve, skip the room
             
@@ -31,8 +31,8 @@ module.exports = {
         console.log('STATUSREPORT_E::');
         
         //terminal summary
-        for (let j=0; j<SD.nexus_id.length; j++){
-            nexus = Game.getObjectById(SD.nexus_id[j]);
+        for (let j=0; j<SD.spawner_id.length; j++){
+            nexus = Game.getObjectById(SD.spawner_id[j][0]);
             
             if (!nexus)     continue; //error: if nexus fails to retrieve, skip the room
             

@@ -10,11 +10,11 @@ module.exports = {
     run: function(room_num, resource_type, dir, buy_amt, ignore_tolerance){
         
         //arg validation
-        if (Game.getObjectById(SD.nexus_id[room_num]) == undefined)
+        if (Game.getObjectById(SD.spawner_id[room_num][0]) == undefined)
             return 'TRADE_RESOURCE:: INVALID ROOM NUMBER';
         
         //general variable init and validation
-        let GE = Game.getObjectById(SD.nexus_id[room_num]).room.terminal;
+        let GE = Game.getObjectById(SD.spawner_id[room_num][0]).room.terminal;
 
         if (GE == null)
             return 'TRADE_RESOURCE:: ROOM IS MISSING A TERMINAL';
@@ -68,17 +68,8 @@ module.exports = {
                 &&
                 !ignore_tolerance){
 
-                let ignoreTolerance_anyways = false;
-
-                for (let z=0; z<SD.dumpsell_whitelist.length; z++){
-                    if (resource_type == SD.dumpsell_whitelist[z]){
-                        ignoreTolerance_anyways = true;
-                        break;
-                    }
-                }
-
-                if (!ignoreTolerance_anyways)
-                    return 'TRADE_RESOURCE:: NO SUITABLE TRADES REQUESTING [' + resource_type + '] AT SUFFICIENTLY HIGH PRICES...TRY AGAIN LATER';
+                console.log('TRADE_RESOURCE:: NO SUITABLE TRADES REQUESTING [' + resource_type + '] AT SUFFICIENTLY HIGH PRICES...TRY AGAIN LATER')
+                return 'ERR_PRICETOL';
             }
         }
         //buying from players: find lowest price to buy from
@@ -106,7 +97,7 @@ module.exports = {
 
         //amount to sell: as much as possible
         if (dir)
-            tradeAmount = bestOffer.amount < GE.store.getUsedCapacity(resource_type) ? bestOffer.amount : GE.store.getUsedCapacity(resource_type);
+            tradeAmount = Math.min(bestOffer.amount, GE.store.getUsedCapacity(resource_type));
         //amount to buy: variable quantity
         else
             tradeAmount = buy_amt;

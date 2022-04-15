@@ -3,74 +3,126 @@
 var SD =                    require('SET_SOFTDATA');
 
 var emergencyDrone =        require('emergencyDrone.AI');
-var sacrificer =            require('sacrificer.AI');
-var architect =             require('architect.AI');
-var phaseArchitect =        require('phaseArchitect.AI');
-var probe =                 require('probe.AI');
 var assimilator =           require('assimilator.AI');
 var drone =                 require('drone.AI');
 var energiser =             require('energiser.AI');
 var retrieverDrone =        require('retrieverDrone.AI');
-var recalibrator =          require('recalibrator.AI');
-var orbitalAssimilator =    require('orbitalAssimilator.AI');
-var orbitalDrone =          require('orbitalDrone.AI');
-var bloodhunter =           require('bloodhunter.AI');
-var enforcer =              require('enforcer.AI');
-var purifier =              require('purifier.AI');
+var sacrificer =            require('sacrificer.AI');
 var acolyte =               require('acolyte.AI');
 var adherent =              require('adherent.AI');
 var nullAdherent =          require('nullAdherent.AI');
 var supplicant =            require('supplicant.AI');
 var nullSupplicant =        require('nullSupplicant.AI');
+var probe =                 require('probe.AI');
+var orbitalAssimilator =    require('orbitalAssimilator.AI');
+var recalibrator =          require('recalibrator.AI');
+var orbitalDrone =          require('orbitalDrone.AI');
+var bloodhunter =           require('bloodhunter.AI');
+var enforcer =              require('enforcer.AI');
+var purifier =              require('purifier.AI');
 var ancientDrone =          require('ancientDrone.AI');
 var ancientAssimilator =    require('ancientAssimilator.AI');
+var architect =             require('architect.AI');
+var phaseArchitect =        require('phaseArchitect.AI');
 var visionary =             require('visionary.AI');
 var specialist =            require('specialist.AI');
 var saviour =               require('saviour.AI');
-var treasurer =             require('treasurer.AI');
 var emissary =              require('emissary.AI');
 var darktemplar =           require('darktemplar.AI');
 var hallucination =         require('hallucination.AI');
-var hightemplar =           require('hightemplar.AI');
+var shieldbattery =         require('shieldbattery.AI');
 var zealot =                require('zealot.AI');
+var treasurer =             require('treasurer.AI');
 
 
 module.exports = {
     run: function(){
+
+        //role-specific slowdown factors
+        const big_unit = 2;
+
 
         //alphabetise a roster of all living units
         let roster = [];
         for (let name in Game.creeps){
             roster.push(name);
         }
-        
         roster.sort();
 
 
+        //custom-sort the roster based on role priority
+        let sortedRoster = [];
+        let roleFound;
+
+        for (let x=0; x<SD.role_priority.length; x++){
+            roleFound = false;
+
+            for (let y=0; y<roster.length; y++){
+                //build the sorted roster by appending desired roles in order
+                if (Game.creeps[roster[y]].memory.role == SD.role_priority[x]){
+                    sortedRoster.push(roster[y]);
+                    roleFound = true;
+                }
+
+                //if this happens, the loop has already passed all units of the desired role
+                else if (roleFound)
+                    break;
+            }
+        }
+
+
         //run each unit's AI script, based on roster order
-        for (let i=0; i<roster.length; i++){
-            let unit = Game.creeps[roster[i]];
+        for (let i=0; i<sortedRoster.length; i++){
+            let unit = Game.creeps[sortedRoster[i]];
             let j = unit.memory.home_index;
+
+            //helper var used for CPU/tick diagnosis
+            let prev_unit = Game.creeps[sortedRoster[0]];
+            if (i > 0)
+                prev_unit = Game.creeps[sortedRoster[i-1]];
+
                 
             switch (unit.memory.role){
                 case 'emergencyDrone':
-                    emergencyDrone.run(unit, SD.nexus_id[j]);
+                    emergencyDrone.run(unit, SD.spawner_id[j][0]);
+                    break;
+                case 'assimilator': //big
+                    if (Game.time % big_unit == 0)
+                        assimilator.run(unit, SD.source1_id[j], SD.canister1_id[j]);
+                    break;
+                case 'assimilator2': //big
+                    if (Game.time % big_unit == 0)
+                        assimilator.run(unit, SD.source2_id[j], SD.canister2_id[j]);
                     break;
                 case 'drone': //slow unit
                     if (Game.time % Memory.roomSpeed[j] == 0)
-                        drone.run(unit, SD.nexus_id[j], SD.en_ignore_lim, SD.std_interval);
-                    break;
-                case 'assimilator':
-                    assimilator.run(unit, SD.source1_id[j], SD.canister1_id[j]);
-                    break;
-                case 'assimilator2':
-                    assimilator.run(unit, SD.source2_id[j], SD.canister2_id[j]);
+                        drone.run(unit, SD.spawner_id[j][0], SD.en_ignore_lim, SD.std_interval);
+
+                    //TICK LOG BREAKPOINT 3
+                    if (Memory.recordTick
+                    &&
+                    unit.memory.role != prev_unit.memory.role){
+                    
+                        if (Memory.cpu_log[3] == undefined)
+                            Memory.cpu_log[3] = [];
+                        Memory.cpu_log[3][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
+                    }
                     break;
                 case 'energiser':
                     energiser.run(unit, SD.std_interval);
+
+                    //TICK LOG BREAKPOINT 4
+                    if (Memory.recordTick
+                        &&
+                        unit.memory.role != prev_unit.memory.role){
+
+                        if (Memory.cpu_log[4] == undefined)
+                            Memory.cpu_log[4] = [];
+                        Memory.cpu_log[4][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
+                    }
                     break;
                 case 'retrieverDrone':
-                    retrieverDrone.run(unit, SD.nexus_id[j], SD.en_ignore_lim, SD.std_interval);
+                    retrieverDrone.run(unit, SD.spawner_id[j][0], SD.en_ignore_lim, SD.std_interval);
                     break;
                 case 'sacrificer':
                     sacrificer.run(unit, SD.en_ignore_lim);
@@ -96,6 +148,44 @@ module.exports = {
                 case 'probe':
                     probe.run(unit, SD.fixation_override, SD.en_ignore_lim, SD.vault_boundary);
                     break;
+                case 'orbitalAssimilator':
+                    orbitalAssimilator.run(unit, SD.spawner_id[j][0], SD.remotesource_id[j], SD.remoteflag[j], SD.remotecanister_id[j], SD.tower_id[j]);
+    
+                    //TICK LOG BREAKPOINT 5
+                    if (Memory.recordTick
+                        &&
+                        unit.memory.role != prev_unit.memory.role){
+                        
+                        if (Memory.cpu_log[5] == undefined)
+                            Memory.cpu_log[5] = [];
+                        Memory.cpu_log[5][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
+                    }
+                    break;
+                case 'recalibrator':
+                    recalibrator.run(unit, SD.spawner_id[j][0], SD.reserveflag[j], SD.tower_id[j]);
+                    break;
+                case 'orbitalDrone':
+                    orbitalDrone.run(unit, SD.spawner_id[j][0], SD.remotecanister_id[j], SD.remoteflag[j], SD.en_ignore_lim, SD.tower_id[j]);
+    
+                    //TICK LOG BREAKPOINT 6
+                    if (Memory.recordTick
+                        &&
+                        unit.memory.role != prev_unit.memory.role){
+    
+                        if (Memory.cpu_log[6] == undefined)
+                            Memory.cpu_log[6] = [];
+                        Memory.cpu_log[6][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
+                    }
+                    break;
+                case 'bloodhunter':
+                    bloodhunter.run(unit, SD.spawner_id[j][0], SD.remoteflag[j]);
+                    break;
+                case 'enforcer':
+                    enforcer.run(unit, SD.spawner_id[j][0], SD.remoteflag[j], SD.tower_id[j]);
+                    break;
+                case 'purifier':
+                    purifier.run(unit, SD.spawner_id[j][0], SD.remoteflag[j], SD.tower_id[j]);
+                    break;
                 case 'ancientDrone': //very slow unit
                     if (Game.time % Memory.roomSpeed[j]*3 == 0)
                         ancientDrone.run(unit, SD.mineralcanister_id[j]);
@@ -106,33 +196,11 @@ module.exports = {
                     break;
                 case 'architect': //slow unit
                     if (Game.time % Memory.roomSpeed[j] == 0)
-                        architect.run(unit, SD.nexus_id[j], SD.canister_bias, SD.vault_boundary);
+                        architect.run(unit, SD.spawner_id[j][0], SD.canister_bias, SD.vault_boundary);
                     break;
                 case 'phaseArchitect': //slow unit
                     if (Game.time % Memory.roomSpeed[j] == 0)
-                        phaseArchitect.run(unit, SD.nexus_id[j], SD.canister_bias);
-                    break;
-                case 'treasurer': //slow unit
-                    if (Game.time % Memory.roomSpeed[j] == 0)
-                        treasurer.run(unit, SD.nexus_id[j]);
-                    break;
-                case 'recalibrator':
-                    recalibrator.run(unit, SD.nexus_id[j], SD.reserveflag[j], SD.tower_id[j]);
-                    break;
-                case 'orbitalAssimilator':
-                    orbitalAssimilator.run(unit, SD.nexus_id[j], SD.remotesource_id[j], SD.remoteflag[j], SD.remotecanister_id[j], SD.tower_id[j]);
-                    break;
-                case 'orbitalDrone':
-                    orbitalDrone.run(unit, SD.nexus_id[j], SD.remotecanister_id[j], SD.remoteflag[j], SD.en_ignore_lim, SD.tower_id[j]);
-                    break;
-                case 'bloodhunter':
-                    bloodhunter.run(unit, SD.nexus_id[j], SD.remoteflag[j]);
-                    break;
-                case 'enforcer':
-                    enforcer.run(unit, SD.nexus_id[j], SD.remoteflag[j], SD.tower_id[j]);
-                    break;
-                case 'purifier':
-                    purifier.run(unit, SD.nexus_id[j], SD.remoteflag[j], SD.tower_id[j]);
+                        phaseArchitect.run(unit, SD.spawner_id[j][0], SD.canister_bias);
                     break;
                 case 'visionary':
                     visionary.run(unit, Game.flags['GOGO']); //TODO: save flag name to SD or Memory instead of hardcoding
@@ -147,16 +215,20 @@ module.exports = {
                     //emissary.run(unit, Game.flags['']);
                     break;
                 case 'darktemplar':
-                    //darktemplar.run(unit, SD.nexus_id[j], Game.flags['Terrans']);
+                    //darktemplar.run(unit, SD.spawner_id[j][0], Game.flags['Terrans']);
                     break;
                 case 'hallucination':
                     //hallucination.run(unit, Game.flags[''], Game.flags['']);
                     break;
-                case 'hightemplar':
-                    //hightemplar.run(unit, Game.flags['']);
+                case 'shieldbattery':
+                    //shieldbattery.run(unit, Game.flags['']);
                     break;
                 case 'zealot':
                     //zealot.run(unit, Game.flags[''], Game.flags['']);
+                    break;
+                case 'treasurer': //slow unit
+                    if (Game.time % Memory.roomSpeed[j] == 0)
+                        treasurer.run(unit, SD.spawner_id[j][0]);
                     break;
                 default:
                     console.log("UNITDRIVE:: " + unit.name + " HAS INVALID ROLE");

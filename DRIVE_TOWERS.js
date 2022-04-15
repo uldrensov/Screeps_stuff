@@ -7,8 +7,8 @@ module.exports = {
     run: function(){
         
         let nexi = [];
-        for (let i=0; i<SD.nexus_id.length; i++){
-            nexi[i] = Game.getObjectById(SD.nexus_id[i]);
+        for (let i=0; i<SD.spawner_id.length; i++){
+            nexi[i] = Game.getObjectById(SD.spawner_id[i][0]);
         }
         
         
@@ -16,7 +16,7 @@ module.exports = {
         //1. locate all towers
         //2. select a target, and an action to perform on it
         //3. execute action
-        for (let k=0; k<SD.nexus_id.length; k++){
+        for (let k=0; k<SD.spawner_id.length; k++){
             if (nexi[k] == null)                    continue; //error: if nexus fails to retrieve, skip the room
 
             //ignore rooms under level requirement for towers

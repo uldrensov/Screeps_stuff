@@ -7,8 +7,8 @@ module.exports = {
     run: function(){
         
         let nexi = [];
-        for (let i=0; i<SD.nexus_id.length; i++){
-            nexi[i] = Game.getObjectById(SD.nexus_id[i]);
+        for (let i=0; i<SD.spawner_id.length; i++){
+            nexi[i] = Game.getObjectById(SD.spawner_id[i][0]);
         }
         
         
@@ -19,11 +19,11 @@ module.exports = {
         let recalibrator_gang;      let orbitalDrone_gang;          let bloodhunter_gang;       let enforcer_gang;          let purifier_gang; 
         let ancientDrone_gang;      let ancientAssimilator_gang;    let architect_gang;         let phaseArchitect_gang;    let visionary_gang;
         let specialist_gang;        let saviour_gang;               let emissary_gang;          let darktemplar_gang;       let hallucination_gang;
-        let hightemplar_gang;       let zealot_gang;
+        let shieldbattery_gang;     let zealot_gang;
     
     
         //execute the auto-spawn and unit AI assignment routines for each room
-        for (let k=0; k<SD.nexus_id.length; k++){
+        for (let k=0; k<SD.spawner_id.length; k++){
             if (nexi[k] == null)            continue; //error: if nexus fails to retrieve, skip the room
         
             //count unit population by role
@@ -57,7 +57,7 @@ module.exports = {
             emissary_gang =              _.filter(Game.creeps, creep => creep.memory.role == 'emissary');
             darktemplar_gang =           _.filter(Game.creeps, creep => creep.memory.role == 'darktemplar');
             hallucination_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'hallucination');
-            hightemplar_gang =           _.filter(Game.creeps, creep => creep.memory.role == 'hightemplar');
+            shieldbattery_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'shieldbattery');
             zealot_gang =                _.filter(Game.creeps, creep => creep.memory.role == 'zealot');
 
 
@@ -618,15 +618,15 @@ module.exports = {
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (HALLUCINATION): CODE ' + '[' + spawnResult + ']');
                         break;
 
-                    //high templar: used during battle
-                    case (hightemplar_gang.length < Memory.hightemplar_MAX):
-                        spawnResult = openNexus.spawnCreep(SD.ht_body, 'Hightemplar[' + k + ']-' + Game.time % SD.time_offset,
-                            {memory: {role: 'hightemplar', home_index: k}});
+                    //shield battery: used during battle
+                    case (shieldbattery_gang.length < Memory.shieldbattery_MAX):
+                        spawnResult = openNexus.spawnCreep(SD.ht_body, 'Shieldbattery[' + k + ']-' + Game.time % SD.time_offset,
+                            {memory: {role: 'shieldbattery', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Hightemplar[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Shieldbattery[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
-                            console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (HIGH TEMPLAR): CODE ' + '[' + spawnResult + ']');
+                            console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (SHIELD BATTERY): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //zealot: used during battle

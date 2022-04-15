@@ -48,7 +48,7 @@ module.exports = {
         for (let name in Game.creeps){
             unit = Game.creeps[name];
 
-            if (unit.room == Game.getObjectById(SD.nexus_id[room_num]).room
+            if (unit.room == Game.getObjectById(SD.spawner_id[room_num][0]).room
                 &&
                 unit.memory.role == 'treasurer'){
 

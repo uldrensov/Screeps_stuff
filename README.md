@@ -22,6 +22,7 @@ Anyone is welcome to clone this repository and run it themselves for demonstrati
 * main.js is called once per game tick; as the name implies, this is the main script that runs on repeat
 * SET_SOFTDATA.js is a library containing various constants, parameters, and essential object IDs; this should be uniquely configured according to the user's needs and preferences [e.g. using my file with my personal settings will break your game]
 * SET_MEMORYINIT.js initialises global memory, and is periodically looped to maintain configuration standards in case of corruption
+* DRIVE_DAILIES.js is called in main, and is responsible for executing certain actions once per day (e.g. logging certain data points, sending certain notifications)
 * DRIVE_SPAWN.js is called in main, and is responsible for spawning all units to meet the needs of the population quota
 * DRIVE_UNITS.js is called in main, and is responsible for running each unit type's respective AI script using the proper parameters
 * DRIVE_TOWERS.js is called in main, and is responsible for controlling defensive Towers in each room

@@ -117,6 +117,7 @@ module.exports = {
                 }
             }
         }
+        
         else{
             var treasure_to_withdraw = RESOURCE_ENERGY;
             

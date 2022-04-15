@@ -24,7 +24,7 @@ module.exports = {
             else{
                 //salvage unit and elevate threat level if too much damage is taken
                 if (unit.hits <= unit.hitsMax*lowHP_threshold){
-                    console.log(unit.name + ':: >>>>>> GRAVE CASUALTIES SUSTAINED ... RETREATING <<<<<<');
+                    console.log(unit.name + ':: >>>>>> GRAVE CASUALTIES SUSTAINED ... ELEVATING EVACUATION STATUS <<<<<<');
 
                     Memory.evac_timer[unit.memory.home_index] +=            bloodhunterCasualty_delay; //add more evac time if the bloodhunter falls, just to be safe
 
@@ -47,8 +47,8 @@ module.exports = {
 
                     //salvage unit and elevate threat level if the enemy is powerful enough to deal over 75% health in one hit
                     if (enemy_attackParts*dmgPerAtkPart >= unit.hitsMax*(1-lowHP_threshold)){
-                        Game.notify(unit.name + ':: >>>>>> OVERWHELMING THREAT DETECTED IN SECTOR #' + unit.memory.home_index + ' ... RETREATING <<<<<<');
-                        console.log(unit.name + ':: >>>>>> OVERWHELMING THREAT DETECTED IN SECTOR #' + unit.memory.home_index + ' ... RETREATING <<<<<<');
+                        Game.notify(unit.name + ':: >>>>>> OVERWHELMING THREAT DETECTED IN SECTOR #' + unit.memory.home_index + ' ... ELEVATING EVACUATION STATUS <<<<<<');
+                        console.log(unit.name + ':: >>>>>> OVERWHELMING THREAT DETECTED IN SECTOR #' + unit.memory.home_index + ' ... ELEVATING EVACUATION STATUS <<<<<<');
 
                         Memory.evac_timer[unit.memory.home_index] =             CREEP_LIFE_TIME; //react with full evac protocol
 
@@ -65,7 +65,8 @@ module.exports = {
 
                 //when enemy is slain, or otherwise gone from sight...
                 else if (Memory.evac_timer[unit.memory.home_index] > reinforcement_delay){
-                    console.log(unit.name + ':: SECTOR #' + unit.memory.home_index + ': HOSTILES NO LONGER IN SIGHT');
+                    console.log(unit.name + ':: SECTOR #' + unit.memory.home_index + ': LAST ENCOUNTERED TARGET LONGER IN SIGHT ... RELEASING EVACUATION LOCKDOWN IN ' +
+                        reinforcement_delay + ' TICKS');
 
                     //wind back the evac timer to near-reset (in case more threats are soon to appear)
                     Memory.evac_timer[unit.memory.home_index] = reinforcement_delay; //eventually triggers blood hunter dormancy

@@ -13,7 +13,7 @@ module.exports = {
             return 'TRADE_ENERGY:: INVALID ROOM NUMBER';
         
         //variable init and additional validation
-        let GE = Game.getObjectById(SD.nexus_id[room_num]).room.terminal;
+        let GE = Game.getObjectById(SD.spawner_id[room_num][0]).room.terminal;
 
         if (GE == null)
             return 'TRADE_ENERGY:: ROOM IS MISSING A TERMINAL';
@@ -48,7 +48,7 @@ module.exports = {
         
 
         //make the transaction (potentially downsizing the tentative trade amount based on predicted tax calculation)
-        let tentativeTradeAmount = bestOffer.amount < GE.store.getUsedCapacity(RESOURCE_ENERGY) ? bestOffer.amount : GE.store.getUsedCapacity(RESOURCE_ENERGY);
+        let tentativeTradeAmount = Math.min(bestOffer.amount, GE.store.getUsedCapacity(RESOURCE_ENERGY));
         let tax = Game.market.calcTransactionCost(tentativeTradeAmount, bestOffer.roomName, GE.room.name);
 
         let finalTradeAmount = tentativeTradeAmount;
