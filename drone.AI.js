@@ -4,7 +4,19 @@
 module.exports = {
     run: function(unit, nexus_id, ignore_lim, std_interval){
         
-        var nexus = Game.getObjectById(nexus_id);
+        let nexus = Game.getObjectById(nexus_id);
+
+
+        //2-state FETCH / UNLOAD FSM...
+        //init
+        if (unit.memory.fetching == undefined)
+            unit.memory.fetching = true;
+        //if carry amt reaches full while FETCHING, switch to UNLOADING
+        if (unit.memory.fetching && unit.store.getFreeCapacity() == 0)
+            unit.memory.fetching = false;
+        //if carry amt depletes while UNLOADING, switch to FETCHING
+        if (!unit.memory.fetching && unit.store.getUsedCapacity() == 0)
+            unit.memory.fetching = true;
         
         
         //INPUTS: containers (ample), pickups<energy> (ample), pickups<mineral>, tombstones (non-empty), ruins (non-empty)
@@ -58,67 +70,10 @@ module.exports = {
                 }
             });
         }
-        
-        
-        //2-state fetch/unload FSM...
-        //if carry amt reaches full while fetching, switch to unloading
-        if (unit.memory.fetching && unit.store.getFreeCapacity() == 0)
-            unit.memory.fetching = false;
-        //if carry amt depletes while unloading, switch to fetching
-        if (!unit.memory.fetching && unit.store.getUsedCapacity() == 0)
-            unit.memory.fetching = true;
 
         
-        //behaviour execution...
-        if (!unit.memory.fetching){
-            //UNLOAD: vault<minerals>
-            var treasure_held = false;
-            var treasure_to_deposit;
-            
-            //determine if mineral pickups are present (index 1 to skip energy)
-            for (let i=1; i<RESOURCES_ALL.length; i++){
-                if (unit.store.getUsedCapacity(RESOURCES_ALL[i]) > 0){
-                    treasure_held = true;
-                    treasure_to_deposit = RESOURCES_ALL[i];
-                    break;
-                }
-            }
-            if (treasure_held && unit.room.storage != undefined){
-                if (unit.transfer(unit.room.storage, treasure_to_deposit) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(unit.room.storage);
-            }
-            else{
-                //UNLOAD: extension
-                if (pylon){
-                    if (unit.transfer(pylon, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(pylon);
-                }
-                //UNLOAD: main nexus
-                else if (nexus.store.getFreeCapacity(RESOURCE_ENERGY) != 0){
-                    if (unit.transfer(nexus, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(nexus);
-                }
-                //UNLOAD: local nexi
-                else if (unit.memory.local_nexi.length){
-                    var getLocalNex = Game.getObjectById(unit.memory.local_nexi[0].id);
-                    if (unit.transfer(getLocalNex, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(getLocalNex);
-                }
-                //UNLOAD: power nexus
-                else if (unit.memory.powernex.length){
-                    var getPowerNex = Game.getObjectById(unit.memory.powernex[0].id);
-                    if (unit.transfer(getPowerNex, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(getPowerNex);
-                }
-                //UNLOAD: vault<energy>
-                else if (unit.room.storage != undefined){
-                    if (unit.transfer(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(unit.room.storage);
-                }
-            }
-        }
-        
-        else{
+        //FSM execution (FETCHING): 
+        if (unit.memory.fetching){
             var treasure_to_withdraw = RESOURCE_ENERGY;
             
             //fetch: ruins<minerals>, ruins<energy> (fullest)
@@ -288,6 +243,56 @@ module.exports = {
                 //only fetch from the vault if the energy will actually be used
                 if (pylon || unit.memory.local_nexi.length){
                     if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(unit.room.storage);
+                }
+            }
+        }
+
+
+        //FSM execution (UNLOADING): 
+        else{
+            //UNLOAD: vault<minerals>
+            var treasure_held = false;
+            var treasure_to_deposit;
+            
+            //determine if mineral pickups are present (index 1 to skip energy)
+            for (let i=1; i<RESOURCES_ALL.length; i++){
+                if (unit.store.getUsedCapacity(RESOURCES_ALL[i]) > 0){
+                    treasure_held = true;
+                    treasure_to_deposit = RESOURCES_ALL[i];
+                    break;
+                }
+            }
+            if (treasure_held && unit.room.storage != undefined){
+                if (unit.transfer(unit.room.storage, treasure_to_deposit) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(unit.room.storage);
+            }
+            else{
+                //UNLOAD: extension
+                if (pylon){
+                    if (unit.transfer(pylon, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(pylon);
+                }
+                //UNLOAD: main nexus
+                else if (nexus.store.getFreeCapacity(RESOURCE_ENERGY) != 0){
+                    if (unit.transfer(nexus, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(nexus);
+                }
+                //UNLOAD: local nexi
+                else if (unit.memory.local_nexi.length){
+                    var getLocalNex = Game.getObjectById(unit.memory.local_nexi[0].id);
+                    if (unit.transfer(getLocalNex, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(getLocalNex);
+                }
+                //UNLOAD: power nexus
+                else if (unit.memory.powernex.length){
+                    var getPowerNex = Game.getObjectById(unit.memory.powernex[0].id);
+                    if (unit.transfer(getPowerNex, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(getPowerNex);
+                }
+                //UNLOAD: vault<energy>
+                else if (unit.room.storage != undefined){
+                    if (unit.transfer(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(unit.room.storage);
                 }
             }

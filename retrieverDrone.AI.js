@@ -19,11 +19,11 @@ module.exports = {
             }
         
         
-            //2-state fetch/unload FSM...
-            //if carry amt reaches full while fetching, switch to unloading
+            //2-state FETCH / UNLOAD FSM...
+            //if carry amt reaches full while FETCHING, switch to UNLOADING
             if (unit.memory.fetching && unit.store.getFreeCapacity() == 0)
                 unit.memory.fetching = false;
-            //if carry amt depletes while unloading, switch to fetching
+            //if carry amt depletes while UNLOADING, switch to FETCHING
             if (!unit.memory.fetching && unit.store[RESOURCE_ENERGY] == 0)
                 unit.memory.fetching = true;
 
