@@ -7,51 +7,26 @@ module.exports = {
         let nexus = Game.getObjectById(nexus_id);
 
 
+
         //2-state FETCH / UNLOAD FSM...
         //init
         if (unit.memory.fetching == undefined)
             unit.memory.fetching = true;
         //if carry amt reaches full while FETCHING, switch to UNLOADING
-        if (unit.memory.fetching && unit.store.getFreeCapacity() == 0)
+        if (unit.memory.fetching && unit.store.getFreeCapacity() == 0){
             unit.memory.fetching = false;
+            unit.memory.unload_target = null;
+        }
         //if carry amt depletes while UNLOADING, switch to FETCHING
-        if (!unit.memory.fetching && unit.store.getUsedCapacity() == 0)
+        if (!unit.memory.fetching && unit.store.getUsedCapacity() == 0){
             unit.memory.fetching = true;
-        
-        
-        //INPUTS: containers (ample), pickups<energy> (ample), pickups<mineral>, tombstones (non-empty), ruins (non-empty)
-        if (unit.memory.canisters == undefined || Game.time % std_interval == 0){
-            unit.memory.canisters = unit.room.find(FIND_STRUCTURES, {
-                filter: structure => {
-                    return structure.structureType == STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
-                }
-            });
-        }
-        if (unit.memory.scraps == undefined || Game.time % std_interval == 0){
-            unit.memory.scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
-                filter: resource => {
-                    return (resource.resourceType == RESOURCE_ENERGY && resource.amount > ignore_lim) ||
-                    resource.resourceType != RESOURCE_ENERGY;
-                }
-            });
-        }
-        if (unit.memory.tombs == undefined || Game.time % std_interval == 0){
-            unit.memory.tombs = unit.room.find(FIND_TOMBSTONES, {
-                filter: RoomObject => {
-                    return RoomObject.store.getUsedCapacity() > 0;
-                }
-            });
-        }
-        if (unit.memory.remains == undefined || Game.time % std_interval == 0){
-            unit.memory.remains = unit.room.find(FIND_RUINS, {
-                filter: RoomObject => {
-                    return RoomObject.store.getUsedCapacity() > 0;
-                }
-            });
+            unit.memory.fetch_target = null;
         }
         
+        
+
         //OUTPUTS: extension (non-full), nexi (non-full), power nexus (non-full)
-        var pylon = unit.pos.findClosestByPath(FIND_STRUCTURES, {
+        let pylon = unit.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
@@ -71,182 +46,214 @@ module.exports = {
             });
         }
 
+
         
         //FSM execution (FETCHING): 
         if (unit.memory.fetching){
-            var treasure_to_withdraw = RESOURCE_ENERGY;
-            
-            //fetch: ruins<minerals>, ruins<energy> (fullest)
-            if (unit.memory.remains.length){
-                var richest_remains = unit.memory.remains[0];
-                var treasure_found_r = false;
-                var getRemains;
-                
-                //search each ruin for any minerals (index 1 to skip energy)
-                for (let i=0; i<unit.memory.remains.length; i++){
-                    getRemains = Game.getObjectById(unit.memory.remains[i].id);
-                    if (getRemains == null) continue;
-                    for (let j=1; j<RESOURCES_ALL.length; j++){
-                        if (getRemains.store.getUsedCapacity(RESOURCES_ALL[j]) > 0){
-                            treasure_found_r = true;
-                            richest_remains = getRemains;
-                            treasure_to_withdraw = RESOURCES_ALL[j];
-                            break;
-                        }
+            //every standard interval where there is no fetch target, attempt to locate/determine one
+            if (Game.time % std_interval == 0 && !unit.memory.fetch_target){
+                unit.memory.fetch_type = RESOURCE_ENERGY;
+
+
+                //FETCH: ruins<minerals>, ruins<energy> (fullest)
+                //find ruins
+                let remains = unit.room.find(FIND_RUINS, {
+                    filter: RoomObject => {
+                        return RoomObject.store.getUsedCapacity() > 0;
                     }
-                    if (treasure_found_r) break;
-                }
-                
-                //if no minerals found, or if no vault exists to deposit them in, re-run the search with respect to energy
-                if (!treasure_found_r || unit.room.storage == null){
-                    for (let i=0; i<unit.memory.remains.length; i++){
-                        getRemains = Game.getObjectById(unit.memory.remains[i].id);
-                        if (getRemains == null) continue;
-                        try{
-                            if (getRemains.store.getUsedCapacity(RESOURCE_ENERGY) > Game.getObjectById(richest_remains.id).store.getUsedCapacity(RESOURCE_ENERGY))
-                                richest_remains = getRemains;
-                        }
-                        catch{ //candidate compares against null
-                            richest_remains = getRemains;
-                        }
-                    }
-                }
-                
-                var getRichestRemains = Game.getObjectById(richest_remains.id);
-                if (getRichestRemains != null){
-                    if (unit.withdraw(getRemains, treasure_to_withdraw) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(getRemains);
-                }
-            }
-            //fetch: tombstones<minerals>, tombstones<energy> (fullest)
-            else if (unit.memory.tombs.length){
-                var richest_tomb = unit.memory.tombs[0];
-                var treasure_found_t = false;
-                var getTomb;
-                
-                //search each tombstone for any minerals (index 1 to skip energy)
-                for (let i=0; i<unit.memory.tombs.length; i++){
-                    getTomb = Game.getObjectById(unit.memory.tombs[i].id);
-                    if (getTomb == null) continue;
-                    for (let j=1; j<RESOURCES_ALL.length; j++){
-                        if (getTomb.store.getUsedCapacity(RESOURCES_ALL[j]) > 0){
-                            treasure_found_t = true;
-                            richest_tomb = getTomb;
-                            treasure_to_withdraw = RESOURCES_ALL[j];
-                            break;
-                        }
-                    }
-                    if (treasure_found_t) break;
-                }
-                
-                //if no minerals found, or if no vault exists to deposit them in, re-run the search with respect to energy
-                if (!treasure_found_t || unit.room.storage == null){
-                    for (let i=0; i<unit.memory.tombs.length; i++){
-                        getTomb = Game.getObjectById(unit.memory.tombs[i].id);
-                        if (getTomb == null) continue;
-                        try{
-                            if (getTomb.store.getUsedCapacity(RESOURCE_ENERGY) > Game.getObjectById(richest_tomb.id).store.getUsedCapacity(RESOURCE_ENERGY))
-                                richest_tomb = getTomb;
-                        }
-                        catch{ //candidate compares against null
-                            richest_tomb = getTomb;
-                        }
-                    }
-                }
-                
-                var getRichestTomb = Game.getObjectById(richest_tomb.id);
-                if (getRichestTomb != null){
-                    if (unit.withdraw(getRichestTomb, treasure_to_withdraw) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(getRichestTomb);
-                }
-            }
-            //fetch: pickups<minerals> (least TTL), pickups<energy> (fullest))
-            else if (unit.memory.scraps.length){
-                var chosen_scrap = unit.memory.scraps[0];
-                var treasure_found_s = false;
-                var getScrap;
-                
-                //find the most endangered mineral pickup
-                for (let i=0; i<unit.memory.scraps.length; i++){
-                    getScrap = Game.getObjectById(unit.memory.scraps[i].id);
-                    if (getScrap == null) continue;
-                    try{
-                        if (getScrap.resourceType != RESOURCE_ENERGY && getScrap.amount < Game.getObjectById(chosen_scrap.id).amount){
-                            chosen_scrap = getScrap;
-                            treasure_found_s = true;
-                        }
-                    }
-                    catch{
-                        if (getScrap.resourceType != RESOURCE_ENERGY){
-                            chosen_scrap = getScrap;
-                            treasure_found_s = true;
-                        }
-                    }
-                }
-                //if no minerals found, re-run the search with respect to energy
-                if (!treasure_found_s){
-                    for (let i=0; i<unit.memory.scraps.length; i++){
-                        getScrap = Game.getObjectById(unit.memory.scraps[i].id);
-                        if (getScrap == null) continue;
-                        try{
-                            if (getScrap.energy > Game.getObjectById(chosen_scrap.id).energy)
-                                chosen_scrap = getScrap;
-                        }
-                        catch{
-                            chosen_scrap = getScrap;
-                        }
-                    }
-                }
-                
-                var getChosenScrap = Game.getObjectById(chosen_scrap.id);
-                if (getChosenScrap != null){
-                    if (unit.pickup(getChosenScrap) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(getChosenScrap);
-                }
-            }
-            //fetch: containers (fullest; fixation)
-            else if (unit.memory.canisters.length){
-                var fullest_canister = unit.memory.canisters[0];
-                var getCanister;
-                
-                //determine the fullest container in play
-                for (let i=0; i<unit.memory.canisters.length; i++){
-                    getCanister = Game.getObjectById(unit.memory.canisters[i].id);
-                    if (getCanister == null) continue;
-                    try{
-                        if (getCanister.store.getUsedCapacity(RESOURCE_ENERGY) > Game.getObjectById(fullest_canister.id).store.getUsedCapacity(RESOURCE_ENERGY))
-                            fullest_canister = getCanister;
-                    }
-                    catch{
-                        fullest_canister = getCanister;
-                    }
-                }
-                
-                if (Game.getObjectById(fullest_canister.id) != null){
-                    var getFixationPrev = Game.getObjectById(unit.memory.fixation);
+                });
+
+                //inspect ruins found
+                if (remains.length){
+                    let richest_remains = remains[0];
+                    let treasure_found_r = false;
                     
-                    //if there is no current "fixated" container, set fixation on the fullest one
-                    if (getFixationPrev == null)
-                        unit.memory.fixation = fullest_canister.id;
-                    //otherwise, only switch fixation if the previous one crosses beneath the "ignore" criteria
-                    else if (getFixationPrev.store[RESOURCE_ENERGY] < ignore_lim)
-                        unit.memory.fixation = fullest_canister.id;
-                
-                    //finally, withdraw from the fixated target
-                    var getFixationNew = Game.getObjectById(unit.memory.fixation);
-                    if (unit.withdraw(getFixationNew, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(getFixationNew);
+                    //search each ruin for any minerals, if a vault exists to deposit them into
+                    if (unit.room.storage){
+                        for (let i=0; i<remains.length; i++){
+                            //index 1 to skip RESOURCE_ENERGY
+                            for (let j=1; j<RESOURCES_ALL.length; j++){
+                                if (remains[i].store.getUsedCapacity(RESOURCES_ALL[j]) > 0){
+                                    unit.memory.fetch_type =    RESOURCES_ALL[j];
+                                    richest_remains =           remains[i];
+                                    treasure_found_r =          true;
+                                    break;
+                                }
+                            }
+
+                            if (treasure_found_r)               break;
+                        }
+                    }
+                    
+                    //if the mineral search fails, re-run the search, but for energy instead
+                    if (!treasure_found_r){
+                        for (let i=0; i<remains.length; i++){
+                            if (remains[i].store.getUsedCapacity(RESOURCE_ENERGY)
+                                >
+                                Game.getObjectById(richest_remains.id).store.getUsedCapacity(RESOURCE_ENERGY)){
+
+                                richest_remains = remains[i];
+                            }
+                        }
+                    }
+                    
+                    //confirm final choice of ruins
+                    unit.memory.fetch_target = richest_remains.id;
+                }
+
+
+                //continue looking for a fetch target, if one is not found yet
+                if (!unit.memory.fetch_target){
+                    //FETCH: tombstones<minerals>, tombstones<energy> (fullest)
+                    //find tombstones
+                    let tombs = unit.room.find(FIND_TOMBSTONES, {
+                        filter: RoomObject => {
+                            return RoomObject.store.getUsedCapacity() > 0;
+                        }
+                    });
+
+                    //inspect tombstones found
+                    if (tombs.length){
+                        let richest_tomb = tombs[0];
+                        let treasure_found_t = false;
+                        
+                        //search each tombstone for any minerals, if a vault exists to deposit them into
+                        if (unit.room.storage){
+                            for (let i=0; i<tombs.length; i++){
+                                //index 1 to skip RESOURCE_ENERGY
+                                for (let j=1; j<RESOURCES_ALL.length; j++){
+                                    if (tombs[i].store.getUsedCapacity(RESOURCES_ALL[j]) > 0){
+                                        unit.memory.fetch_type =    RESOURCES_ALL[j];
+                                        richest_tomb =              tombs[i];
+                                        treasure_found_t =          true;
+                                        break;
+                                    }
+                                }
+
+                                if (treasure_found_t)               break;
+                            }
+                        }
+                        
+                        //if the mineral search fails, re-run the search, but for energy instead
+                        if (!treasure_found_t){
+                            for (let i=0; i<tombs.length; i++){
+                                if (tombs[i].store.getUsedCapacity(RESOURCE_ENERGY)
+                                    >
+                                    Game.getObjectById(richest_tomb.id).store.getUsedCapacity(RESOURCE_ENERGY)){
+
+                                    richest_tomb = tombs[i];
+                                }
+                            }
+                        }
+                        
+                        //confirm final choice of tombstone
+                        unit.memory.fetch_target = richest_tomb;
+                    }
+                }
+
+
+                //continue looking for a fetch target, if one is not found yet
+                if (!unit.memory.fetch_target){
+                    //FETCH: pickups<minerals> (least TTL), pickups<energy> (fullest))
+                    //find pickups
+                    let scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
+                        filter: resource => {
+                            return (resource.resourceType == RESOURCE_ENERGY && resource.amount > ignore_lim) ||
+                            resource.resourceType != RESOURCE_ENERGY;
+                        }
+                    });
+
+                    //inspect pickups found
+                    if (scraps.length){
+                        let chosen_scrap = scraps[0];
+                        let treasure_found_s = false;
+                        
+                        //find the most endangered mineral pickup, if a vault exists to deposit them into
+                        if (unit.room.storage){
+                            for (let i=0; i<scraps.length; i++){
+                                if (scraps[i].resourceType != RESOURCE_ENERGY
+                                    &&
+                                    scraps[i].amount < chosen_scrap.amount){
+
+                                    unit.memory.fetch_type = scraps[i].resourceType;
+                                    chosen_scrap = scraps[i];
+                                    treasure_found_s = true;
+                                }
+                            }
+                        }
+
+                        //if the mineral search fails, re-run the search, but for energy instead
+                        if (!treasure_found_s){
+                            for (let i=0; i<scraps.length; i++){
+                                if (scraps[i].energy > chosen_scrap.energy)
+                                    chosen_scrap = scraps[i];
+                            }
+                        }
+                        
+                        //confirm final choice of pickup
+                        unit.memory.fetch_target = chosen_scrap;
+                    }
+                }
+
+
+                //continue looking for a fetch target, if one is not found yet
+                if (!unit.memory.fetch_target){
+                    //FETCH: containers (fullest; fixation)
+                    //find containers
+                    let canisters = unit.room.find(FIND_STRUCTURES, {
+                        filter: structure => {
+                            return structure.structureType == STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
+                        }
+                    });
+
+                    //inspect containers found
+                    if (canisters.length){
+                        let fullest_canister = canisters[0];
+                        
+                        //determine the fullest container
+                        for (let i=0; i<canisters.length; i++){
+                            if (getCanister.store.getUsedCapacity(RESOURCE_ENERGY)
+                                >
+                                fullest_canister.store.getUsedCapacity(RESOURCE_ENERGY)){
+
+                                fullest_canister = getCanister;
+                            }
+                        }
+                        
+
+
+                        
+                        let getFixationPrev = Game.getObjectById(unit.memory.fixation);
+                        
+                        //if there is no current "fixated" container, set fixation on the fullest one
+                        if (getFixationPrev == null)
+                            unit.memory.fixation = fullest_canister.id;
+                        //otherwise, only switch fixation if the previous one crosses beneath the "ignore" criteria
+                        else if (getFixationPrev.store[RESOURCE_ENERGY] < ignore_lim)
+                            unit.memory.fixation = fullest_canister.id;
+                    
+                        //finally, withdraw from the fixated target
+                        let getFixationNew = Game.getObjectById(unit.memory.fixation);
+                        if (unit.withdraw(getFixationNew, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                            unit.moveTo(getFixationNew);
+                    }
+                }
+
+
+                //FETCH: vault
+                else if (unit.room.storage != undefined){
+                    //only fetch from the vault if the energy will actually be used
+                    if (pylon || unit.memory.local_nexi.length){
+                        if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                            unit.moveTo(unit.room.storage);
+                    }
                 }
             }
-            //fetch: vault
-            else if (unit.room.storage != undefined){
-                //only fetch from the vault if the energy will actually be used
-                if (pylon || unit.memory.local_nexi.length){
-                    if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(unit.room.storage);
-                }
-            }
+
+
+
         }
+
 
 
         //FSM execution (UNLOADING): 
@@ -263,10 +270,11 @@ module.exports = {
                     break;
                 }
             }
-            if (treasure_held && unit.room.storage != undefined){
+
+            if (treasure_held && unit.room.storage != undefined)
                 if (unit.transfer(unit.room.storage, treasure_to_deposit) == ERR_NOT_IN_RANGE)
                     unit.moveTo(unit.room.storage);
-            }
+
             else{
                 //UNLOAD: extension
                 if (pylon){
