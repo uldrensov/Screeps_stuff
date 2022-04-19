@@ -85,7 +85,7 @@ module.exports = {
                     //STAGE 2 END: proceed if no threats detected
                     else{
                         //STAGE 3: purify the controller
-                        if (unit.room.controller.reservation != undefined){
+                        if (unit.room.controller.reservation){
                             if (unit.attackController(unit.room.controller) == ERR_NOT_IN_RANGE)
                                 unit.moveTo(unit.room.controller);
                         }

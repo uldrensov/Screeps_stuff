@@ -80,8 +80,9 @@ module.exports = {
             }
             
             //select an initial target to fixate upon, or determine if the previous fixation is worth overriding for the new weakest structure (subtract percentage values)
-            if (Game.getObjectById(unit.memory.fixation) == undefined ||
-            (Game.getObjectById(unit.memory.fixation).hits / unit.memory.fixation_max) - base_perc > override_threshold){
+            if (!Game.getObjectById(unit.memory.fixation) ||
+                (Game.getObjectById(unit.memory.fixation).hits / unit.memory.fixation_max) - base_perc > override_threshold){
+
                 unit.memory.fixation = weakest.id;
                 unit.memory.fixation_max = HPmax_base;
             }
@@ -93,12 +94,13 @@ module.exports = {
                     unit.moveTo(final_target);
             }
             //release the fixation if it reaches max
-            else delete unit.memory.fixation;
+            else
+                delete unit.memory.fixation;
         }
 
         else{
             //fetch: vault (respect limit)
-            if (unit.room.storage != undefined && unit.room.storage.store.energy > reserve){
+            if (unit.room.storage && unit.room.storage.store.energy > reserve){
                 if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(unit.room.storage);
             }

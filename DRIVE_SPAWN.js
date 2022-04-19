@@ -24,7 +24,9 @@ module.exports = {
     
         //execute the auto-spawn and unit AI assignment routines for each room
         for (let k=0; k<SD.spawner_id.length; k++){
-            if (nexi[k] == null)            continue; //error: if nexus fails to retrieve, skip the room
+            //bypass: if nexus fails to retrieve, skip the room
+            if (!nexi[k])
+                continue;
         
             //count unit population by role
             emergencyDrone_gang =        _.filter(Game.creeps, creep => creep.memory.role == 'emergencyDrone'        && creep.memory.home_index == k);
@@ -62,7 +64,7 @@ module.exports = {
 
 
             //determine if mineral mining is possible (for ancient drone / assimilator spawns)
-            if (Game.getObjectById(Memory.extractor_id[k]) == null){
+            if (!Game.getObjectById(Memory.extractor_id[k])){
 
                 let extractor = nexi[k].room.find(FIND_STRUCTURES, {
                     filter: structure => {
@@ -73,17 +75,17 @@ module.exports = {
                 Memory.extractor_id[k] = extractor[0].id;
             }
 
-            if (Memory.mineral_type[k] == undefined)
+            if (!Memory.mineral_type[k])
                 Memory.mineral_type[k] = nexi[k].room.find(FIND_MINERALS)[0];
 
-            if (Memory.extractor_id[k] != null
+            if (Memory.extractor_id[k]
                 &&
                 Game.getObjectById(Memory.mineral_type[k].id).mineralAmount > 0){
 
                 Memory.ancientDrone_MAX[k] =            1;
                 Memory.ancientAssimilator_MAX[k] =      1;
             }
-            else if (Memory.extractor_id[k] != null){
+            else if (Memory.extractor_id[k]){
                 Memory.ancientDrone_MAX[k] =            -1;
                 Memory.ancientAssimilator_MAX[k] =      -1;
             }
@@ -158,7 +160,7 @@ module.exports = {
 
             //vault energy...
             let vault_energy = 0;
-            if (nexi[k].room.storage != undefined)
+            if (nexi[k].room.storage)
                 vault_energy = nexi[k].room.storage.store.energy;
 
 
@@ -184,10 +186,6 @@ module.exports = {
 
             let total_dropped_energy = 0;
             for (let i=0; i<scraps.length; i++){
-                //scrap can possibly cease to exist suddenly, due to decay
-                if (Game.getObjectById(scraps[i].id) == null)
-                    continue;
-
                 total_dropped_energy += Game.getObjectById(scraps[i].id).amount;
             }
 
@@ -201,9 +199,9 @@ module.exports = {
             let openNexus;
 
             for (let i=0; i<SD.spawner_id[k].length; i++){
-                if (Game.getObjectById(SD.spawner_id[k][i]) == null)
+                if (!Game.getObjectById(SD.spawner_id[k][i]))
                     continue;
-                if (Game.getObjectById(SD.spawner_id[k][i]).spawning == null){
+                if (!Game.getObjectById(SD.spawner_id[k][i]).spawning){
                     openNexus = Game.getObjectById(SD.spawner_id[k][i]);
                     break;
                 }
@@ -316,7 +314,7 @@ module.exports = {
                         break;
 
                     //without retriever drones, dropped energy is wasted
-                    case ((retrieverDrone_gang.length < Memory.retrieverDrone_MAX[k]) && openNexus.room.storage != undefined):
+                    case ((retrieverDrone_gang.length < Memory.retrieverDrone_MAX[k]) && openNexus.room.storage):
                         spawnResult = openNexus.spawnCreep(SD.drone_body[k], 'RetrieverDrone[' + k + ']-' + Game.time % SD.time_offset,
                             {memory: {role: 'retrieverDrone', home_index: k}});
 
@@ -427,11 +425,11 @@ module.exports = {
                     case (recalibrator_gang.length < Memory.recalibrator_MAX[k]):
                         //spawn criteria for recalibrator role requires visiblity of the remote mining room controller
                         //therefore, stall spawns for this role (and all other roles below) until the remote controller is visible (e.g. when an orbitalAssimilator occupies the remote room)
-                        if (Game.getObjectById(SD.remotectrl_id[k]) == undefined)
+                        if (!Game.getObjectById(SD.remotectrl_id[k]))
                             break;
                         
                         //if reservation is neutral
-                        else if (Game.getObjectById(SD.remotectrl_id[k]).reservation == undefined){
+                        else if (!Game.getObjectById(SD.remotectrl_id[k]).reservation){
                             spawnResult = openNexus.spawnCreep(SD.recal_body[k], 'Recalibrator[' + k + ']-' + Game.time % SD.time_offset,
                                 {memory: {role: 'recalibrator', rallied: false, home_index: k}})
 

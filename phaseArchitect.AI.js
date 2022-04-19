@@ -50,7 +50,7 @@ module.exports = {
             }
             else{
                 //fetch: vault (respect limit)
-                if (unit.room.storage != undefined){
+                if (unit.room.storage){
                     if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(unit.room.storage);
                 }

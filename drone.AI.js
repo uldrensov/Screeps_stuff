@@ -1,4 +1,4 @@
-//DRONE: collects treasure and resupplies spawning structures
+//DRONE: collects resources around the room. and resupplies spawning structures
 //white trail ("carrier")
 
 module.exports = {

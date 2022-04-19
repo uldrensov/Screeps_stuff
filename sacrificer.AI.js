@@ -4,13 +4,15 @@
 module.exports = {
     run: function(unit, ignore_lim){
         
-        if (unit.memory.ctrl_id == undefined)
+        if (!unit.memory.ctrl_id)
             unit.memory.ctrl_id = unit.room.controller.id;
+
         let obelisk = Game.getObjectById(unit.memory.ctrl_id);
         
         
         //INPUTS: energy sources, containers (ample)
         let sources = obelisk.room.find(FIND_SOURCES);
+        
         let canisters = obelisk.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER &&
@@ -45,7 +47,7 @@ module.exports = {
                 }
                 
                 //if there is no current target container, "fixate" on the fullest one
-                if (unit.memory.fixation == undefined)
+                if (!unit.memory.fixation)
                     unit.memory.fixation = fullest_canister.id;
                 //otherwise, only switch fixation if the previous one crosses beneath the "ignore" criteria
                 else if (Game.getObjectById(unit.memory.fixation).store[RESOURCE_ENERGY] < ignore_lim)

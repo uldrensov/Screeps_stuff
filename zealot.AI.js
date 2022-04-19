@@ -14,7 +14,7 @@ module.exports = {
         
         if (unit.memory.rallied){
             //commit the tank unit's ID to memory (once) when both units are in the same room
-            if (unit.memory.tank_id == undefined){
+            if (!unit.memory.tank_id){
                 let tank = _.filter(Game.creeps, creep => creep.memory.role == 'hallucination');
 
                 if (tank.length){
@@ -22,11 +22,13 @@ module.exports = {
                         unit.memory.tank_id = tank[0].id;
                 }
             }
+
             //when the tank is found, and leaves the standby room, follow it into the foreign room
             else if (Game.getObjectById(unit.memory.tank_id).room == target_flag.room){
                 //follow into room
                 if (unit.room != target_flag.room)
                     unit.moveTo(target_flag, {visualizePathStyle: {stroke: '#ff0000'}});
+
                 //once followed, attack a target
                 else{
                     let att = unit.room.find(FIND_STRUCTURES, {
@@ -34,6 +36,7 @@ module.exports = {
                             return structure.structureType == STRUCTURE_EXTENSION;
                         }
                     });
+                    
                     if (unit.attack(att[0]) == ERR_NOT_IN_RANGE)
                         unit.moveTo(att[0], {visualizePathStyle: {stroke: '#ff0000'}});
                 }

@@ -19,6 +19,7 @@ module.exports = {
         if (unit.memory.retreating)
             unit.moveTo(healpoint, {visualizePathStyle: {stroke: '#00ffff'}});
         //return to the foreign room until sufficiently injured again
-        else unit.moveTo(waypoint, {visualizePathStyle: {stroke: '#00ffff'}});
+        else
+            unit.moveTo(waypoint, {visualizePathStyle: {stroke: '#00ffff'}});
     }
 };

@@ -7,7 +7,7 @@ module.exports = {
         let canister = Game.getObjectById(canister_id);
         
         
-        if (canister != null){
+        if (canister){
             //INPUTS: mineral source
             let mineral_src = unit.room.find(FIND_MINERALS);
         
@@ -17,7 +17,8 @@ module.exports = {
             if (!unit.pos.isEqualTo(canister.pos))
                 unit.moveTo(canister);
             //fetch: mineral source
-            else unit.harvest(mineral_src[0]);
+            else
+                unit.harvest(mineral_src[0]);
         }
     }
 };

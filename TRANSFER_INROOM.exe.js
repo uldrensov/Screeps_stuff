@@ -64,9 +64,11 @@ module.exports = {
         if (!treasurer){
             //determine an unoccupied spawner for the treasurer
             for (let i=0; i<SD.spawner_id[room_num].length; i++){
-                if (Game.getObjectById(SD.spawner_id[room_num][i]) == null)     continue; //error: if nexus fails to retrieve, skip the room
+                //bypass: if nexus fails to retrieve, skip the room
+                if (!Game.getObjectById(SD.spawner_id[room_num][i]))
+                    continue;
 
-                if (Game.getObjectById(SD.spawner_id[room_num][i]).spawning == null){
+                if (!Game.getObjectById(SD.spawner_id[room_num][i]).spawning){
                     openNexus = Game.getObjectById(SD.spawner_id[room_num][i]);
                     break;
                 }

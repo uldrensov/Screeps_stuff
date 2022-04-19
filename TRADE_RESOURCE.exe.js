@@ -10,13 +10,13 @@ module.exports = {
     run: function(room_num, resource_type, dir, buy_amt, ignore_tolerance){
         
         //arg validation
-        if (Game.getObjectById(SD.spawner_id[room_num][0]) == undefined)
+        if (!Game.getObjectById(SD.spawner_id[room_num][0]))
             return 'TRADE_RESOURCE:: INVALID ROOM NUMBER';
         
         //general variable init and validation
         let GE = Game.getObjectById(SD.spawner_id[room_num][0]).room.terminal;
 
-        if (GE == null)
+        if (!GE)
             return 'TRADE_RESOURCE:: ROOM IS MISSING A TERMINAL';
 
         if (GE.store.getUsedCapacity(RESOURCE_ENERGY) == 0)

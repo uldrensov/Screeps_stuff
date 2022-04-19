@@ -16,7 +16,8 @@ module.exports = {
             if (!unit.pos.isEqualTo(canister.pos))
                 unit.moveTo(canister);
             //fetch: energy source
-            else unit.harvest(src);
+            else
+                unit.harvest(src);
         }
     }
 };

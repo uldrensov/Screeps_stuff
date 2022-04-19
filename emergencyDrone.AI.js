@@ -89,7 +89,7 @@ module.exports = {
             
             else{
                 //fetch: vault
-                if (unit.room.storage != undefined && unit.room.storage.store.energy > 0)
+                if (unit.room.storage && unit.room.storage.store.energy > 0)
                     if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(unit.room.storage);
 
@@ -104,7 +104,7 @@ module.exports = {
                     }
                     
                     //if there is no current target container, "fixate" on the fullest one
-                    if (unit.memory.fixation == undefined)
+                    if (!unit.memory.fixation)
                         unit.memory.fixation = fullest_canister.id;
                     //otherwise, only switch fixation if the previous one crosses beneath the (reduced) "ignore" criteria
                     else if (Game.getObjectById(unit.memory.fixation).store[RESOURCE_ENERGY] < lowbound)

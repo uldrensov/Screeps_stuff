@@ -40,7 +40,8 @@ module.exports = {
             //stand on the overflow container
             if (!unit.pos.isEqualTo(canister.pos))
                 unit.moveTo(canister);
-            else unit.harvest(src);
+            else
+                unit.harvest(src);
         }
     }
 };

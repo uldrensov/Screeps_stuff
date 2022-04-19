@@ -5,7 +5,7 @@ module.exports = {
     run: function(unit, std_interval){
         
         //INPUTS: containers (non-empty)
-        if (unit.memory.canisters == undefined || Game.time % std_interval == 0){
+        if (!unit.memory.canisters || Game.time % std_interval == 0){
             unit.memory.canisters = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
@@ -14,7 +14,7 @@ module.exports = {
         }
         
         //OUTPUTS: towers (non-full)
-        if (unit.memory.towers == undefined || Game.time % std_interval == 0){
+        if (!unit.memory.towers || Game.time % std_interval == 0){
             unit.memory.towers = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return (structure.structureType == STRUCTURE_TOWER) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
@@ -40,7 +40,7 @@ module.exports = {
                 
                 for (let i=1; i<unit.memory.towers.length; i++){
                     //if invalid ID, skip
-                    if (Game.getObjectById(unit.memory.towers[i].id) == null)
+                    if (!Game.getObjectById(unit.memory.towers[i].id))
                         continue;
 
                     //if bad init, assign without comparing anything
@@ -56,42 +56,42 @@ module.exports = {
                     }
                 }
 
-                if (Game.getObjectById(lowest_tower.id) != null){
+                if (Game.getObjectById(lowest_tower.id))
                     if (unit.transfer(Game.getObjectById(lowest_tower.id), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(Game.getObjectById(lowest_tower.id));
-                }
             }
         }
 
         else{
             //fetch: vault
-            if (unit.room.storage != undefined && unit.room.storage.store.energy > 0){
+            if (unit.room.storage && unit.room.storage.store.energy > 0)
                 if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(unit.room.storage);
-            }
+            
             //fetch: containers (fullest)
             else if (unit.memory.canisters.length){
                 let fullest_canister = Game.getObjectById(unit.memory.canisters[0].id);
 
                 for (let i=0; i<unit.memory.canisters.length; i++){
-                    let getCanister = Game.getObjectById(unit.memory.canisters[i].id);
-
-                    if (getCanister == null) continue;
+                    if (!Game.getObjectById(unit.memory.canisters[i].id))
+                        continue;
+                        
                     try{
-                        if (getCanister.store.getUsedCapacity(RESOURCE_ENERGY) > fullest_canister.store.getUsedCapacity(RESOURCE_ENERGY))
-                            fullest_canister = getCanister;
+                        if (Game.getObjectById(unit.memory.canisters[i].id).store.getUsedCapacity(RESOURCE_ENERGY)
+                            >
+                            fullest_canister.store.getUsedCapacity(RESOURCE_ENERGY)){
+
+                            fullest_canister = Game.getObjectById(unit.memory.canisters[i].id);
+                        }
                     }
                     catch{
-                        fullest_canister = getCanister;
+                        fullest_canister = Game.getObjectById(unit.memory.canisters[i].id);
                     }
                 }
 
-                let getFullestCanister = Game.getObjectById(fullest_canister.id);
-
-                if (getFullestCanister != null){
-                    if (unit.withdraw(getFullestCanister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(getFullestCanister);
-                }
+                if (Game.getObjectById(fullest_canister.id))
+                    if (unit.withdraw(Game.getObjectById(fullest_canister.id), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(Game.getObjectById(fullest_canister.id));
             }
         }
     }

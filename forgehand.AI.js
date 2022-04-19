@@ -10,7 +10,7 @@ module.exports = {
         let nexus = Game.getObjectById(nexus_id);
 
         //init lab ids to memory
-        if (unit.memory.reactant1_id == undefined){ //if one is undefined, then both are
+        if (!unit.memory.reactant1_id){ //if one is undefined, then both are
             unit.memory.reactant1_id = SD.reactant_id[home_index][0];
             unit.memory.reactant2_id = SD.reactant_id[home_index][1];
         }
@@ -67,7 +67,7 @@ module.exports = {
 
                             case 'P':
                                 //memorise the powernex id
-                                if (unit.memory.powernex == undefined){
+                                if (!unit.memory.powernex){
                                     unit.memory.powernex = unit.room.find(FIND_STRUCTURES, {
                                         filter: structure => {
                                             return structure.structureType == STRUCTURE_POWER_SPAWN;

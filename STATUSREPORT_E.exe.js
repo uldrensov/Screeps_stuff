@@ -17,7 +17,7 @@ module.exports = {
         for (let i=0; i<SD.spawner_id.length; i++){
             nexus = Game.getObjectById(SD.spawner_id[i][0]);
             
-            if (!nexus)     continue; //error: if nexus fails to retrieve, skip the room
+            if (!nexus)     continue; //bypass: if nexus fails to retrieve, skip the room
             
             vault = nexus.room.storage;
             mineral = Memory.mineral_type[i].mineralType;
@@ -34,7 +34,7 @@ module.exports = {
         for (let j=0; j<SD.spawner_id.length; j++){
             nexus = Game.getObjectById(SD.spawner_id[j][0]);
             
-            if (!nexus)     continue; //error: if nexus fails to retrieve, skip the room
+            if (!nexus)     continue; //bypass: if nexus fails to retrieve, skip the room
             
             term = nexus.room.terminal;
             mineral = Memory.mineral_type[j].mineralType;

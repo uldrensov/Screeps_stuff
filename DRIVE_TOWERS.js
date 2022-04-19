@@ -17,7 +17,7 @@ module.exports = {
         //2. select a target, and an action to perform on it
         //3. execute action
         for (let k=0; k<SD.spawner_id.length; k++){
-            if (nexi[k] == null)                    continue; //error: if nexus fails to retrieve, skip the room
+            if (!nexi[k])                           continue; //bypass: if nexus fails to retrieve, skip the room
 
             //ignore rooms under level requirement for towers
             if (nexi[k].room.controller.level < 3)  continue;
@@ -32,7 +32,7 @@ module.exports = {
                 //allow the room to skip this step if all 6 towers can be validated
                 //saves some time, but can be improved to allow skips in rooms that can't support 6 towers
                 for (let q=0; q<6; q++){
-                    if (Game.getObjectById(Memory.turretsByRoom[k][q]) == null){
+                    if (!Game.getObjectById(Memory.turretsByRoom[k][q])){
                         towercheck = false;
                         break;
                     }

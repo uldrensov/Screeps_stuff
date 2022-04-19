@@ -6,8 +6,8 @@ module.exports = {
         
         const nexus = Game.getObjectById(nexus_id);
 
-        if (unit.memory.dropoff_id == undefined){
-            if (Game.getObjectById(nexus_id).room.storage != undefined)
+        if (!unit.memory.dropoff_id){
+            if (Game.getObjectById(nexus_id).room.storage)
                 unit.memory.dropoff_id = Game.getObjectById(nexus_id).room.storage.id;
             else{
                 unit.memory.killswitch = true;
@@ -46,7 +46,7 @@ module.exports = {
                     }
                     else{
                         //UNLOAD: vault (if container/link is designated, but full)
-                        if (dropoff.store.getFreeCapacity(RESOURCE_ENERGY) == 0 && unit.room.storage != undefined)
+                        if (dropoff.store.getFreeCapacity(RESOURCE_ENERGY) == 0 && unit.room.storage)
                             unit.moveTo(unit.room.storage);
                         //UNLOAD: container/link/vault
                         else if (unit.transfer(dropoff, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)

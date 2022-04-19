@@ -18,8 +18,8 @@ module.exports = {
         //alerts for vault status
         for (let i=0; i<SD.spawner_id.length; i++){
             //bypasses
-            if (nexi[i] == null)                    continue; //error: if nexus fails to retrieve, skip the room
-            if (nexi[i].room.storage == undefined)  continue; //error: if the vault is missing, skip the room
+            if (!nexi[i])                               continue; //bypass: if nexus fails to retrieve, skip the room
+            if (!nexi[i].room.storage)                  continue; //bypass: if the vault is missing, skip the room
         
             //LO...
             //enable (unlatch) the potential for LO alert when a room's vault energy is over the "floor" by 50% of the absolute threshold value
@@ -56,8 +56,9 @@ module.exports = {
 
 
             for (let i=0; i<SD.spawner_id.length; i++){
-                if (Memory.autoload_EN[i]){    
-                    if (nexi[i] == null)                continue; //error: if nexus fails to retrieve, skip the room
+                if (Memory.autoload_EN[i]){  
+                    //bypass: if nexus fails to retrieve, skip the room  
+                    if (!nexi[i])                       continue;
                 
                     //check for vault/terminal existence
                     vault = nexi[i].room.storage;
@@ -74,7 +75,7 @@ module.exports = {
                 
                     //load the terminal if there is sufficient free space for cargo
                     if (term.store.getFreeCapacity() >= SD.cargo_size){
-                        resource_type = undefined;
+                        resource_type = null;
 
                         //select a sellable resource that meets the cargo size
                         for (let x=0; x<SD.sellable_products[i].length; x++){
@@ -84,7 +85,8 @@ module.exports = {
                             }
                         }
                         //do nothing for the current room if no suitable resource is found
-                        if (resource_type == undefined) continue;
+                        if (!resource_type)
+                            continue;
 
 
                         en_min_ratio = term.store.getUsedCapacity(RESOURCE_ENERGY) / term.store.getUsedCapacity(resource_type);
@@ -124,7 +126,9 @@ module.exports = {
             
             for (let i=0; i<SD.spawner_id.length; i++){
                 if (Memory.autosell_EN[i]){
-                    if (nexi[i] == null)                continue; //error: if nexus fails to retrieve, skip the room
+                    //bypass: if nexus fails to retrieve, skip the room
+                    if (!nexi[i])
+                        continue;
 
                     //print header if at least one room's autosell is enabled
                     if (printFlag){
@@ -132,8 +136,8 @@ module.exports = {
                         printFlag = false;
                     }
                     
-                    if (nexi[i].room.terminal != undefined){
-                        autosell_return = undefined;
+                    if (nexi[i].room.terminal){
+                        autosell_return = null;
                         
                         //select a sellable resource (no specific priority order) and attempt to sell
                         for (let x=0; x<SD.sellable_products[i].length; x++){
@@ -157,7 +161,7 @@ module.exports = {
                         }
 
                         //if sellable resources exist, but all failed to sell, output the error of the very last attempt
-                        if (autosell_return != undefined)
+                        if (autosell_return)
                             if (autosell_return != OK)
                                 console.log('DRIVE_ECON:: AUTOSELL FAILED IN ROOM #' + i + ' WITH LAST ERROR RESPONSE [' + autosell_return + ']');
                     }
@@ -178,7 +182,9 @@ module.exports = {
 
             for (let i=0; i<SD.spawner_id.length; i++){
                 if (Memory.autovent_EN[i]){
-                    if (nexi[i] == null)            continue; //error: if nexus fails to retrieve, skip the room
+                    //bypass: if nexus fails to retrieve, skip the room
+                    if (!nexi[i])
+                        continue;
                     
                     //print header if at least one autovent is enabled
                     if (printFlag){
@@ -187,7 +193,7 @@ module.exports = {
                     }
 
                     //vent attempt
-                    if (nexi[i].room.terminal != undefined)
+                    if (nexi[i].room.terminal)
                         if (nexi[i].room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) > 0){
                             autovent_return = TRADE_ENERGY.run(i);
 
@@ -204,24 +210,23 @@ module.exports = {
         
 
         //process power
-        let getPowerNex;
         for (let i=0; i<SD.spawner_id.length; i++){
-            if (nexi[i] == null)                    continue; //error: if nexus fails to retrieve, skip the room
+            if (!nexi[i])                           continue; //bypass: if nexus fails to retrieve, skip the room
 
             //ignore rooms under level requirement for power nexus
             if (nexi[i].room.controller.level < 8)  continue;
 
 
-            getPowerNex = Game.getObjectById(Memory.powernex_id[i]);
-            
-            //if powernex exists, proceed
-            if (getPowerNex != null){
-                if (getPowerNex.store.getUsedCapacity(RESOURCE_POWER) > 0
+            //if powernex exists, process power
+            if (Game.getObjectById(Memory.powernex_id[i])){
+                if (Game.getObjectById(Memory.powernex_id[i]).store.getUsedCapacity(RESOURCE_POWER) > 0
                     &&
-                    getPowerNex.store.getUsedCapacity(RESOURCE_ENERGY) >= 50)
+                    Game.getObjectById(Memory.powernex_id[i]).store.getUsedCapacity(RESOURCE_ENERGY) >= 50){
 
-                    getPowerNex.processPower();
+                    Game.getObjectById(Memory.powernex_id[i]).processPower();
+                }
             }
+
             //if no powernex exists, search for one periodically
             else if (Game.time % SD.std_interval == 0){
                 let powernex = nexi[i].room.find(FIND_STRUCTURES, {
@@ -229,6 +234,7 @@ module.exports = {
                         return structure.structureType == STRUCTURE_POWER_SPAWN;
                     }
                 });
+
                 Memory.powernex_id[i] = powernex.length ? powernex[0].id : 'NULL';
             }
         }

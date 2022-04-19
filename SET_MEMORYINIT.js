@@ -120,7 +120,7 @@ module.exports = {
         
 
         //init (allocate + populate) global data...
-        //unit name roster (sorted)
+        //custom-sorted unit roster
         if (Memory.unit_roster == undefined)                    Memory.unit_roster =                       [];            //do not modify manually
 
         //walls and ramparts

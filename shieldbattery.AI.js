@@ -12,6 +12,7 @@ module.exports = {
         if (!unit.pos.isEqualTo(waypoint.pos))
             unit.moveTo(waypoint, {visualizePathStyle: {stroke: '#00ffff'}});
         //heal targets whenever possible
-        else unit.heal(patients[0]);
+        else
+            unit.heal(patients[0]);
     }
 };

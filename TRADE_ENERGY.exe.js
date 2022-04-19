@@ -15,7 +15,7 @@ module.exports = {
         //variable init and additional validation
         let GE = Game.getObjectById(SD.spawner_id[room_num][0]).room.terminal;
 
-        if (GE == null)
+        if (!GE)
             return 'TRADE_ENERGY:: ROOM IS MISSING A TERMINAL';
 
         if (GE.store.getUsedCapacity(RESOURCE_ENERGY) == 0)

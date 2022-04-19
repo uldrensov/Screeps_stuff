@@ -35,7 +35,9 @@ module.exports = {
 
                 //notify about vault energy changes, and reset counters
                 for (let i=0; i<SD.ctrl_id.length; i++){
-                    if (!Game.getObjectById(ctrl_id[i]))        continue; //error: if controller fails to retrieve, skip the room
+                    //bypass: if controller fails to retrieve, skip the room
+                    if (!Game.getObjectById(ctrl_id[i]))
+                        continue;
 
                     if (Game.getObjectById(ctrl_id[i]).room.storage){
                         Game.notify('DRIVE_DAILIES:: Vault #' + i + ' energy: ' + vaultEnergy_levels[i] + ' (yesterday) -->> ' +

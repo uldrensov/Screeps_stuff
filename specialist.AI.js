@@ -76,7 +76,7 @@ module.exports = {
                     unit.moveTo(remains[0]);
             
             //fetch: source (manual override)
-            else if (unit.memory.force_src != undefined)
+            else if (unit.memory.force_src)
                 if (unit.harvest(Game.getObjectById(unit.memory.force_src)) == ERR_NOT_IN_RANGE)
                     unit.moveTo(Game.getObjectById(unit.memory.force_src));
             

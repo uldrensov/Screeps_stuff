@@ -39,7 +39,7 @@ module.exports = {
     run: function(){
 
         //role-specific slowdown factors
-        const big_unit = 2;
+        const big_unit = 2; //big units are 2x as effective per tick, but work at 0.5x speed
 
 
         //periodically update a custom-sorted roster of all units on the field
@@ -90,7 +90,9 @@ module.exports = {
         for (let i=0; i<Memory.unit_roster.length; i++){
             let unit = Game.creeps[Memory.unit_roster[i]];
 
-            if (!unit)          continue; //error: if unit fails to retrieve, skip it
+            //bypass: if unit fails to retrieve, skip it
+            if (!unit)
+                continue;
 
             let j = unit.memory.home_index;
 

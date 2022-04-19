@@ -30,7 +30,7 @@ module.exports = {
 
                         case 'PWR':
                             //memorise the powernex id
-                            if (unit.memory.powernex == undefined){
+                            if (!unit.memory.powernex){
                                 unit.memory.powernex = unit.room.find(FIND_STRUCTURES, {
                                     filter: structure => {
                                         return structure.structureType == STRUCTURE_POWER_SPAWN;
@@ -42,7 +42,7 @@ module.exports = {
 
                         case 'NUK':
                             //memorise the nuker id
-                            if (unit.memory.kimmyJ == undefined){
+                            if (!unit.memory.kimmyJ){
                                 unit.memory.kimmyJ = unit.room.find(FIND_STRUCTURES, {
                                     filter: structure => {
                                         return structure.structureType == STRUCTURE_NUKER;
@@ -54,7 +54,7 @@ module.exports = {
 
                         case 'FAC':
                             //memorise the factory id
-                            if (unit.memory.factory == undefined){
+                            if (!unit.memory.factory){
                                 unit.memory.factory = unit.room.find(FIND_STRUCTURES, {
                                     filter: structure => {
                                         return structure.structureType == STRUCTURE_FACTORY;

@@ -68,7 +68,9 @@ module.exports.loop = function(){
         }
 
         for (let i=0; i<SD.spawner_id.length; i++){
-            if (nexi[i] == null)    continue; //error: if nexus fails to retrieve, skip the room
+            //bypass: if nexus fails to retrieve, skip the room
+            if (!nexi[i])
+                continue;
                 
             roomStructs_sub50 = nexi[i].room.find(FIND_STRUCTURES, {
                 filter: structure => {

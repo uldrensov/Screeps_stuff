@@ -231,14 +231,14 @@ module.exports = {
 
                                                             console.log('STATUSREPORT:: Spawning energy: ' + ext_energy + ' extended, ' + nexi_energy + ' nexi');
 
-        if (nexus.room.storage != undefined)                console.log('STATUSREPORT:: Vault contents: ' + nexus.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) + ' energy; ' +
+        if (nexus.room.storage)                             console.log('STATUSREPORT:: Vault contents: ' + nexus.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) + ' energy; ' +
                                                                 nexus.room.storage.store.getUsedCapacity(Memory.mineral_type[room_num].mineralType) + ' ' + Memory.mineral_type[room_num].mineralType + '; ' +
                                                                 (nexus.room.storage.store.getUsedCapacity() -
                                                                 (nexus.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) + nexus.room.storage.store.getUsedCapacity(Memory.mineral_type[room_num].mineralType))) + ' misc.');
 
                                                             console.log('STATUSREPORT:: Vault space remaining: ' + nexus.room.storage.store.getFreeCapacity());
 
-        if (nexus.room.terminal != undefined)               console.log('STATUSREPORT:: Terminal contents: ' + nexus.room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) + ' energy; ' +
+        if (nexus.room.terminal)                            console.log('STATUSREPORT:: Terminal contents: ' + nexus.room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) + ' energy; ' +
                                                                 nexus.room.terminal.store.getUsedCapacity(Memory.mineral_type[room_num].mineralType) + ' ' + Memory.mineral_type[room_num].mineralType + '; ' +
                                                                 (nexus.room.terminal.store.getUsedCapacity() -
                                                                 (nexus.room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) + nexus.room.terminal.store.getUsedCapacity(Memory.mineral_type[room_num].mineralType))) + ' misc.');
