@@ -27,14 +27,14 @@ module.exports = {
                 const dropoff = Game.getObjectById(unit.memory.dropoff_id);
             
             
-                //2-state FETCH / UNLOAD FSM...
+                //FETCH / UNLOAD FSM...
                 //if carry amt reaches full while FETCHING, switch to UNLOADING
-                if (unit.memory.fetching && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
+                if (unit.memory.fetching && unit.store.getFreeCapacity() == 0){
                     unit.memory.fetching = false;
                     unit.memory.rallied = false;
                 }
                 //if carry amt depletes while UNLOADING, switch to FETCHING
-                if (!unit.memory.fetching && unit.store[RESOURCE_ENERGY] == 0)
+                if (!unit.memory.fetching && unit.store.getUsedCapacity() == 0)
                     unit.memory.fetching = true;
 
                     
@@ -188,17 +188,17 @@ module.exports = {
                                     }
                                 });
                 
-                                //fetch: pickups<energy>
+                                //FETCH: pickups<energy>
                                 if (scraps.length){
                                     if (unit.pickup(scraps[0]) == ERR_NOT_IN_RANGE)
                                         unit.moveTo(scraps[0]);
                                 }
-                                //fetch: tombstones<energy>
+                                //FETCH: tombstones<energy>
                                 else if (tombs.length){
                                     if (unit.withdraw(tombs[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                                         unit.moveTo(tombs[0]);
                                 }
-                                //fetch: container
+                                //FETCH: container
                                 else if (unit.withdraw(canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                                     unit.moveTo(canister);
                             }

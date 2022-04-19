@@ -6,13 +6,14 @@ var SD =                    require('SET_SOFTDATA');
 module.exports = {
     run: function(){
 
+        const log_size = 600;
         const secondsIn24h = 86400;
         
 
         //allow CPU logging on this tick, until the counter reaches 600 today
         Memory.recordTick = false;
 
-        if (Memory.ticksLoggedToday < 600){
+        if (Memory.ticksLoggedToday < log_size){
             Memory.recordTick = true;
             Memory.ticksLoggedToday++;
         }
@@ -22,7 +23,8 @@ module.exports = {
         if (Game.time % SD.std_interval == 0){
             //processes to run once per day...
             if ((Date.now() - Memory.dayStart_timestamp) / 1000
-                > secondsIn24h){
+                >
+                secondsIn24h){
 
                 //update the "meridian" timestamp once per day
                 Memory.dayStart_timestamp = Date.now();

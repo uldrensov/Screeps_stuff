@@ -10,6 +10,9 @@ module.exports = {
         for (let i=0; i<SD.spawner_id.length; i++){
             nexi[i] = Game.getObjectById(SD.spawner_id[i][0]);
         }
+
+        const reserveDuration_max = 5000;
+        const claimUnit_TTL = 600;
         
         
         //for storing population count in each room
@@ -240,7 +243,9 @@ module.exports = {
                 &&
                 (assimilator_gang.length == 0 && assimilator2_gang.length == 0 && acolyte_gang.length == 0 && acolyte2_gang.length == 0)
                 &&
-                (droneAccessible_energy < assim_price[k] || droneAccessible_energy < acoly_price[k])){
+                (droneAccessible_energy < assim_price[k]
+                    ||
+                droneAccessible_energy < acoly_price[k])){
 
                 spawnResult = openNexus.spawnCreep(SD.edrone_body, 'EmergencyDrone[' + k + ']-' + Game.time % SD.time_offset,
                     {memory: {role: 'emergencyDrone', home_index: k}});
@@ -444,7 +449,7 @@ module.exports = {
                         //if reservation is mine, and falls sufficiently low
                         else if (Game.getObjectById(SD.remotectrl_id[k]).reservation.username == nexi[k].owner.username
                             &&
-                            Game.getObjectById(SD.remotectrl_id[k]).reservation.ticksToEnd < (5000 - (claim_strength-1)*600)){
+                            Game.getObjectById(SD.remotectrl_id[k]).reservation.ticksToEnd < (reserveDuration_max - (claim_strength-1)*claimUnit_TTL)){
 
                             spawnResult = openNexus.spawnCreep(SD.recal_body[k], 'Recalibrator[' + k + ']-' + Game.time % SD.time_offset,
                                 {memory: {role: 'recalibrator', rallied: false, home_index: k}})

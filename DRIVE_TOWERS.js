@@ -10,6 +10,8 @@ module.exports = {
         for (let i=0; i<SD.spawner_id.length; i++){
             nexi[i] = Game.getObjectById(SD.spawner_id[i][0]);
         }
+
+        const healthy_percent = .95;
         
         
         //per room:
@@ -154,7 +156,9 @@ module.exports = {
                 else{
                     let repairStructs = nexi[k].room.find(FIND_STRUCTURES, {
                         filter: structure => { //ignore structures over 95% hp
-                            return ((structure.hits < structure.hitsMax * .95 && structure.structureType != STRUCTURE_WALL
+                            return ((structure.hits < structure.hitsMax * healthy_percent
+                                &&
+                                structure.structureType != STRUCTURE_WALL
                                 &&
                                 structure.structureType != STRUCTURE_RAMPART));
                         }

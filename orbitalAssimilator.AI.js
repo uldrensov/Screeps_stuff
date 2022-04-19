@@ -155,12 +155,12 @@ module.exports = {
                                 }
                                 //fetching (with container)
                                 else if (unit.harvest(src) == ERR_NOT_IN_RANGE)
-                                    //fetch: sources
+                                    //FETCH: sources
                                     unit.moveTo(src);
                             }
                             //fetching (without container)
                             else if (unit.harvest(src) == ERR_NOT_IN_RANGE)
-                                //fetch: sources
+                                //FETCH: sources
                                 unit.moveTo(src);
                         }
                     }

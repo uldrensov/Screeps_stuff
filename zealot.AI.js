@@ -17,10 +17,9 @@ module.exports = {
             if (!unit.memory.tank_id){
                 let tank = _.filter(Game.creeps, creep => creep.memory.role == 'hallucination');
 
-                if (tank.length){
+                if (tank.length)
                     if (tank[0].room == standby_flag.room)
                         unit.memory.tank_id = tank[0].id;
-                }
             }
 
             //when the tank is found, and leaves the standby room, follow it into the foreign room

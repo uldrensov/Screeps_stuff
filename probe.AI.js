@@ -3,6 +3,9 @@
 
 module.exports = {
     run: function(unit, override_threshold, ignore_lim, reserve){
+
+        const energyCanisters_max = 2;
+
         
         //INPUTS: energy sources, containers (ample)
         let sources = unit.room.find(FIND_SOURCES);
@@ -26,12 +29,12 @@ module.exports = {
         });
         
         
-        //2-state FETCH / UNLOAD FSM...
+        //FETCH / UNLOAD FSM...
         //if carry amt reaches full while FETCHING, switch to UNLOADING
-        if (unit.memory.fetching && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
+        if (unit.memory.fetching && unit.store.getFreeCapacity() == 0)
             unit.memory.fetching = false;
         //if carry amt depletes while UNLOADING, switch to FETCHING
-        if (!unit.memory.fetching && unit.store[RESOURCE_ENERGY] == 0)
+        if (!unit.memory.fetching && unit.store.getUsedCapacity() == 0)
             unit.memory.fetching = true;
 
         
@@ -56,6 +59,7 @@ module.exports = {
                 default:
                     HPmax_base = weakest.hitsMax;
             }
+
             base_perc = weakest.hits / HPmax_base;
             
             //repeat for each remaining candidate
@@ -73,6 +77,7 @@ module.exports = {
                     default:
                         HPmax_compare = repairTargets[i].hitsMax;
                 }
+
                 compare_perc = repairTargets[i].hits / HPmax_compare;
                 
                 //compare and update
@@ -84,8 +89,11 @@ module.exports = {
             }
             
             //select an initial target to fixate upon, or determine if the previous fixation is worth overriding for the new weakest structure (subtract percentage values)
-            if (!Game.getObjectById(unit.memory.fixation) ||
-                (Game.getObjectById(unit.memory.fixation).hits / unit.memory.fixation_max) - base_perc > override_threshold){
+            if (!Game.getObjectById(unit.memory.fixation)
+                ||
+                (Game.getObjectById(unit.memory.fixation).hits / unit.memory.fixation_max) - base_perc
+                    >
+                override_threshold){
 
                 unit.memory.fixation = weakest.id;
                 unit.memory.fixation_max = HPmax_base;
@@ -93,32 +101,41 @@ module.exports = {
             
             //finally, attempt to repair the fixated target until its max / threshold
             let final_target = Game.getObjectById(unit.memory.fixation);
-            if (final_target.hits < unit.memory.fixation_max){
+
+            if (final_target.hits < unit.memory.fixation_max)
                 if (unit.repair(final_target) == ERR_NOT_IN_RANGE)
                     unit.moveTo(final_target);
-            }
+            
             //release the fixation if it reaches max
             else
                 delete unit.memory.fixation;
         }
 
+        
         else{
-            //fetch: vault (respect limit)
-            if (unit.room.storage && unit.room.storage.store.energy > reserve){
+            //FETCH: vault (respect limit)
+            if (unit.room.storage && (unit.room.storage.store.energy > reserve))
                 if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(unit.room.storage);
-            }
-            //fetch: containers (fullest)
+            
+            //FETCH: containers (fullest)
             else if (canisters.length){
                 let fullest_canister = canisters[0];
 
-                if (canisters.length == 2 && canisters[1].store.getUsedCapacity(RESOURCE_ENERGY) > canisters[0].store.getUsedCapacity(RESOURCE_ENERGY))
+                if (canisters.length == energyCanisters_max
+                    &&
+                    canisters[1].store.getUsedCapacity(RESOURCE_ENERGY)
+                        >
+                    canisters[0].store.getUsedCapacity(RESOURCE_ENERGY)){
+
                     fullest_canister = canisters[1];
+                }
                 
                 if (unit.withdraw(fullest_canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(fullest_canister);
             }
-            //fetch: sources
+
+            //FETCH: sources
             else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE)
                 unit.moveTo(sources[0]);
         }

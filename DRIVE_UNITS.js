@@ -142,7 +142,7 @@ module.exports = {
                     }
                     break;
                 case 'retrieverDrone':
-                    retrieverDrone.run(unit, SD.spawner_id[j][0], SD.en_ignore_lim, SD.std_interval);
+                    retrieverDrone.run(unit, SD.en_ignore_lim, SD.std_interval);
                     break;
                 case 'sacrificer':
                     sacrificer.run(unit, SD.en_ignore_lim);
@@ -208,15 +208,15 @@ module.exports = {
                     break;
                 case 'ancientDrone': //very slow unit
                     if (Game.time % Memory.roomSpeed[j]*3 == 0)
-                        ancientDrone.run(unit, SD.mineralcanister_id[j]);
+                        ancientDrone.run(unit, SD.mineralcanister_id[j], SD.std_interval);
                     break;
                 case 'ancientAssimilator': //very slow unit
                     if (Game.time % Memory.roomSpeed[j]*3 == 0)
-                        ancientAssimilator.run(unit, SD.mineralcanister_id[j]);
+                        ancientAssimilator.run(unit, SD.mineralcanister_id[j], SD.std_interval);
                     break;
                 case 'architect': //slow unit
                     if (Game.time % Memory.roomSpeed[j] == 0)
-                        architect.run(unit, SD.spawner_id[j][0], SD.canister_bias, SD.vault_boundary);
+                        architect.run(unit, SD.canister_bias, SD.vault_boundary, SD.std_interval);
                     break;
                 case 'phaseArchitect': //slow unit
                     if (Game.time % Memory.roomSpeed[j] == 0)
@@ -235,7 +235,7 @@ module.exports = {
                     //emissary.run(unit, Game.flags['']);
                     break;
                 case 'darktemplar':
-                    //darktemplar.run(unit, SD.spawner_id[j][0], Game.flags['Terrans']);
+                    //darktemplar.run(unit, Game.flags['Terrans']);
                     break;
                 case 'hallucination':
                     //hallucination.run(unit, Game.flags[''], Game.flags['']);

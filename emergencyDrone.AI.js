@@ -66,12 +66,12 @@ module.exports = {
         
 
 
-            //2-state FETCH / UNLOAD FSM...
+            //FETCH / UNLOAD FSM...
             //if carry amt reaches full while FETCHING, switch to UNLOADING
-            if (unit.memory.fetching && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
+            if (unit.memory.fetching && unit.store.getFreeCapacity() == 0)
                 unit.memory.fetching = false;
             //if carry amt depletes while UNLOADING, switch to FETCHING
-            if (!unit.memory.fetching && unit.store[RESOURCE_ENERGY] == 0)
+            if (!unit.memory.fetching && unit.store.getUsedCapacity() == 0)
                 unit.memory.fetching = true;
 
         
@@ -88,16 +88,16 @@ module.exports = {
             }
             
             else{
-                //fetch: vault
+                //FETCH: vault
                 if (unit.room.storage && unit.room.storage.store.energy > 0)
                     if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(unit.room.storage);
 
-                //fetch: containers (fullest; fixation)
+                //FETCH: containers (fullest; fixation)
                 else if (canisters.length){
-                    //determine the fullest container in play
                     let fullest_canister = canisters[0];
 
+                    //determine the fullest container
                     for (let i=0; i<canisters.length; i++){
                         if (canisters[i].store.getUsedCapacity(RESOURCE_ENERGY) > fullest_canister.store.getUsedCapacity(RESOURCE_ENERGY))
                             fullest_canister = canisters[i];
@@ -111,17 +111,15 @@ module.exports = {
                         unit.memory.fixation = fullest_canister.id;
 
                     //finally, withdraw from the fixated target
-                    let canister_target = Game.getObjectById(unit.memory.fixation);
-
-                    if (unit.withdraw(canister_target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(canister_target);
+                    if (unit.withdraw(Game.getObjectById(unit.memory.fixation), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(Game.getObjectById(unit.memory.fixation));
                 }
 
-                //fetch: tombstones<energy> (fullest)
+                //FETCH: tombstones<energy> (fullest)
                 else if (tombs.length){
-                    //determine the fullest tomb in play
                     let richest_tomb = tombs[0];
 
+                    //determine the fullest tomb
                     for (let i=0; i<tombs.length; i++){
                         if (tombs[i].store.getUsedCapacity(RESOURCE_ENERGY) > richest_tomb.store.getUsedCapacity(RESOURCE_ENERGY))
                             richest_tomb = tombs[i];
@@ -133,12 +131,12 @@ module.exports = {
 
                 //TODO: pickups
 
-                //fetch: pickups<energy> (fullest)
+                //FETCH: pickups<energy> (fullest)
                 else if (scraps.length){
-                    //
                     let chosen_scrap = scraps[0];
 
-                    for (let i=0; i<scraps.length; i++){
+                    //determine the most plentiful pickup
+                    for (let i=1; i<scraps.length; i++){
                         if (scraps[i].energy > chosen_scrap.energy)
                             chosen_scrap = scraps[i];
                     }
@@ -147,7 +145,7 @@ module.exports = {
                         unit.moveTo(chosen_scrap);
                 }
 
-                //fetch: sources
+                //FETCH: sources
                 else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE)
                     unit.moveTo(sources[0]);
             }

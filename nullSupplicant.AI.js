@@ -4,26 +4,29 @@
 module.exports = {
     run: function(unit, warpRX0_id){
         
-        //INPUTS: link
         let warpRX0 = Game.getObjectById(warpRX0_id);
         
         
-        //2-state FETCH / UNLOAD FSM...
+        //FETCH / UNLOAD FSM...
+        //init (starts in FETCHING mode)
+        if (unit.memory.fetching == undefined)
+            unit.memory.fetching = true;
+
         //if carry amt reaches full while FETCHING, switch to UNLOADING
-        if (unit.memory.fetching && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
+        if (unit.memory.fetching && unit.store.getFreeCapacity() == 0)
             unit.memory.fetching = false;
         //if carry amt depletes while UNLOADING, switch to FETCHING
-        if (!unit.memory.fetching && unit.store[RESOURCE_ENERGY] == 0)
+        if (!unit.memory.fetching && unit.store.getUsedCapacity() == 0)
             unit.memory.fetching = true;
 
         
         //behaviour execution...
         //UNLOAD: controller
-        if (!unit.memory.fetching){
+        if (!unit.memory.fetching)
             if (unit.upgradeController(unit.room.controller) == ERR_NOT_IN_RANGE)
                 unit.moveTo(unit.room.controller);
-        }
-        //fetch: link
+        
+        //FETCH: link
         else if (unit.withdraw(warpRX0, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
             unit.moveTo(warpRX0);
     }

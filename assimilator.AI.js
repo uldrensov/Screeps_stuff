@@ -4,18 +4,17 @@
 module.exports = {
     run: function(unit, src_id, canister_id){
         
-        canister = Game.getObjectById(canister_id);
-        
-        //INPUTS: energy source
-        src = Game.getObjectById(src_id);
+        src =       Game.getObjectById(src_id);
+        canister =  Game.getObjectById(canister_id);
         
         
+        //continually mine from a designated source while standing on a container
         if (canister){
-            //continually mine from a designated source while standing on a container...
             //ensure correct position
             if (!unit.pos.isEqualTo(canister.pos))
                 unit.moveTo(canister);
-            //fetch: energy source
+                
+            //FETCH: energy source
             else
                 unit.harvest(src);
         }

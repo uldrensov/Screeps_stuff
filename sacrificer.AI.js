@@ -22,12 +22,12 @@ module.exports = {
         });
         
         
-        //2-state FETCH / UNLOAD FSM...
+        //FETCH / UNLOAD FSM...
         //if carry amt reaches full while FETCHING, switch to UNLOADING
-        if (unit.memory.fetching && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
+        if (unit.memory.fetching && unit.store.getFreeCapacity() == 0)
             unit.memory.fetching = false;
         //if carry amt depletes while UNLOADING, switch to FETCHING
-        if (!unit.memory.fetching && unit.store[RESOURCE_ENERGY] == 0)
+        if (!unit.memory.fetching && unit.store.getUsedCapacity() == 0)
             unit.memory.fetching = true;
 
         
@@ -38,10 +38,11 @@ module.exports = {
                 unit.moveTo(obelisk);
         }
         else{
-            //fetch: containers (fullest; fixation)
+            //FETCH: containers (fullest; fixation)
             if (canisters.length){
-                //determine the fullest container in play
                 let fullest_canister = canisters[0];
+
+                //determine the fullest container
                 for (let i=0; i<canisters.length; i++){
                     if (canisters[i].store.getUsedCapacity(RESOURCE_ENERGY) > fullest_canister.store.getUsedCapacity(RESOURCE_ENERGY))
                         fullest_canister = canisters[i];
@@ -55,11 +56,11 @@ module.exports = {
                     unit.memory.fixation = fullest_canister.id;
 
                 //finally, withdraw from the fixated target
-                let canister_target = Game.getObjectById(unit.memory.fixation);
-                if (unit.withdraw(canister_target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(canister_target);
+                if (unit.withdraw(Game.getObjectById(unit.memory.fixation), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(Game.getObjectById(unit.memory.fixation));
             }
-            //fetch: sources
+            
+            //FETCH: sources
             else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE)
                 unit.moveTo(sources[0]);
         }

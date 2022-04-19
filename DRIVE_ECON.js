@@ -13,6 +13,9 @@ module.exports = {
         for (let i=0; i<SD.spawner_id.length; i++){
             nexi[i] = Game.getObjectById(SD.spawner_id[i][0]);
         }
+
+        const threshApproach_factor = 1.5;
+        const powerProcess_cost = 50;
         
         
         //alerts for vault status
@@ -23,20 +26,38 @@ module.exports = {
         
             //LO...
             //enable (unlatch) the potential for LO alert when a room's vault energy is over the "floor" by 50% of the absolute threshold value
-            if ((nexi[i].room.storage.store.energy > SD.vault_boundary * 1.5) && !Memory.vaultAlertLO_EN[i])
+            if ((nexi[i].room.storage.store.energy > SD.vault_boundary * threshApproach_factor)
+                &&
+                !Memory.vaultAlertLO_EN[i]){
+
                 Memory.vaultAlertLO_EN[i] = true;
+            }
             //disable (latch) further alerts from a room when it raises one
-            else if ((nexi[i].room.storage.store.energy < SD.vault_boundary) && Memory.vaultAlertLO_EN[i]){
+            else if ((nexi[i].room.storage.store.energy < SD.vault_boundary)
+                &&
+                Memory.vaultAlertLO_EN[i]){
+                    
                 //console.log('DRIVE_ECON:: Vault #' + i + ' SHORTAGE');
                 Memory.vaultAlertLO_EN[i] = false;
             }
         
             //HI...
             //enable (unlatch) the potential for HI alert when a room's vault is under the "ceiling" by 50% of the absolute threshold value
-            if ((nexi[i].room.storage.store.getUsedCapacity() < nexi[i].room.storage.store.getCapacity() - (SD.vault_boundary * 1.5)) && !Memory.vaultAlertHI_EN[i])
+            if ((nexi[i].room.storage.store.getUsedCapacity()
+                    <
+                (nexi[i].room.storage.store.getCapacity() - (SD.vault_boundary * threshApproach_factor)))
+                &&
+                !Memory.vaultAlertHI_EN[i]){
+
                 Memory.vaultAlertHI_EN[i] = true;
+            }
             //disable (latch) further alerts from a room when it raises one
-            else if ((nexi[i].room.storage.store.getUsedCapacity() > nexi[i].room.storage.store.getCapacity() - SD.vault_boundary) && Memory.vaultAlertHI_EN[i]){
+            else if ((nexi[i].room.storage.store.getUsedCapacity()
+                    >
+                (nexi[i].room.storage.store.getCapacity() - SD.vault_boundary))
+                &&
+                Memory.vaultAlertHI_EN[i]){
+
                 //console.log('DRIVE_ECON:: Vault #' + i + ' SURPLUS');
                 Memory.vaultAlertHI_EN[i] = false;
             }
@@ -221,7 +242,7 @@ module.exports = {
             if (Game.getObjectById(Memory.powernex_id[i])){
                 if (Game.getObjectById(Memory.powernex_id[i]).store.getUsedCapacity(RESOURCE_POWER) > 0
                     &&
-                    Game.getObjectById(Memory.powernex_id[i]).store.getUsedCapacity(RESOURCE_ENERGY) >= 50){
+                    Game.getObjectById(Memory.powernex_id[i]).store.getUsedCapacity(RESOURCE_ENERGY) >= powerProcess_cost){
 
                     Game.getObjectById(Memory.powernex_id[i]).processPower();
                 }

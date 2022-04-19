@@ -43,12 +43,12 @@ module.exports = {
         let hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
         
         
-        //2-state FETCH / UNLOAD FSM...
+        //FETCH / UNLOAD FSM...
         //if carry amt reaches full while FETCHING, switch to UNLOADING
-        if (unit.memory.fetching && unit.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
+        if (unit.memory.fetching && unit.store.getFreeCapacity() == 0)
             unit.memory.fetching = false;
         //if carry amt depletes while UNLOADING, switch to FETCHING
-        if (!unit.memory.fetching && unit.store[RESOURCE_ENERGY] == 0)
+        if (!unit.memory.fetching && unit.store.getUsedCapacity() == 0)
             unit.memory.fetching = true;
                 
                 
@@ -59,28 +59,31 @@ module.exports = {
                 unit.moveTo(hotspot);
             
         else{
-            //fetch: pickups (fullest)
+            //FETCH: pickups (fullest)
             if (scraps.length){
-                //
                 let chosen_scrap = scraps[0];
-                for (let i=0; i<scraps.length; i++){
+
+                //determine the most plentiful pickup
+                for (let i=1; i<scraps.length; i++){
                     if (scraps[i].energy > chosen_scrap.energy)
                         chosen_scrap = scraps[i];
                 }
+
                 if (unit.pickup(chosen_scrap) == ERR_NOT_IN_RANGE)
                     unit.moveTo(chosen_scrap);
             }
-            //fetch: ruins
+
+            //FETCH: ruins
             else if (remains.length)
                 if (unit.withdraw(remains[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(remains[0]);
             
-            //fetch: source (manual override)
+            //FETCH: source (manual override)
             else if (unit.memory.force_src)
                 if (unit.harvest(Game.getObjectById(unit.memory.force_src)) == ERR_NOT_IN_RANGE)
                     unit.moveTo(Game.getObjectById(unit.memory.force_src));
             
-            //fetch: source
+            //FETCH: source
             else if (unit.harvest(src) == ERR_NOT_IN_RANGE)
                 unit.moveTo(src);
         }
