@@ -120,6 +120,9 @@ module.exports = {
         
 
         //init (allocate + populate) global data...
+        //unit name roster (sorted)
+        if (Memory.unit_roster == undefined)                    Memory.unit_roster =                       [];            //do not modify manually
+
         //walls and ramparts
         if (Memory.wall_threshold == undefined)                 Memory.wall_threshold =                    50000;         //TODO: move to SET_SOFTDATA
         if (Memory.rampart_threshold == undefined)              Memory.rampart_threshold =                 100000;        //TODO: move to SET_SOFTDATA

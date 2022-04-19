@@ -42,32 +42,38 @@ module.exports = {
         const big_unit = 2;
 
 
-        //alphabetise a roster of all living units
-        let roster = [];
-        for (let name in Game.creeps){
-            roster.push(name);
-        }
-        roster.sort();
-
-
-        //custom-sort the roster based on role priority
-        let sortedRoster = [];
-        let roleFound;
-
-        for (let x=0; x<SD.role_priority.length; x++){
-            roleFound = false;
-
-            for (let y=0; y<roster.length; y++){
-                //build the sorted roster by appending desired roles in order
-                if (Game.creeps[roster[y]].memory.role == SD.role_priority[x]){
-                    sortedRoster.push(roster[y]);
-                    roleFound = true;
-                }
-
-                //if this happens, the loop has already passed all units of the desired role
-                else if (roleFound)
-                    break;
+        //periodically update a custom-sorted roster of all units on the field
+        if (Game.time % SD.std_interval == 0){
+            //alphabetise a roster of all living units
+            let roster = [];
+            for (let name in Game.creeps){
+                roster.push(name);
             }
+            roster.sort();
+
+
+            //custom-sort the roster based on role priority
+            let sortedRoster = [];
+            let roleFound;
+
+            for (let x=0; x<SD.role_priority.length; x++){
+                roleFound = false;
+
+                for (let y=0; y<roster.length; y++){
+                    //build the sorted roster by appending desired roles in order
+                    if (Game.creeps[roster[y]].memory.role == SD.role_priority[x]){
+                        sortedRoster.push(roster[y]);
+                        roleFound = true;
+                    }
+
+                    //if this happens, the loop has already passed all units of the desired role
+                    else if (roleFound)
+                        break;
+                }
+            }
+
+            //save roster results to memory
+            Memory.unit_roster = sortedRoster;
         }
 
 
@@ -81,14 +87,17 @@ module.exports = {
 
 
         //run each unit's AI script, based on roster order
-        for (let i=0; i<sortedRoster.length; i++){
-            let unit = Game.creeps[sortedRoster[i]];
+        for (let i=0; i<Memory.unit_roster.length; i++){
+            let unit = Game.creeps[Memory.unit_roster[i]];
+
+            if (!unit)          continue; //error: if unit fails to retrieve, skip it
+
             let j = unit.memory.home_index;
 
             //helper var used for CPU/tick diagnosis
-            let prev_unit = Game.creeps[sortedRoster[0]];
+            let prev_unit = Game.creeps[Memory.unit_roster[0]];
             if (i > 0)
-                prev_unit = Game.creeps[sortedRoster[i-1]];
+                prev_unit = Game.creeps[Memory.unit_roster[i-1]];
 
                 
             switch (unit.memory.role){
