@@ -27,14 +27,16 @@ module.exports = {
         //FSM execution (FETCHING): 
         if (unit.memory.fetching){
             //clear old fetch target if...
-            //...if previous target is no longer valid (destroyed, or scrap expired)
-            if (!Game.getObjectById(unit.memory.fetch_target.id))
-                unit.memory.fetch_target = null;
-
-            //...or if previous target has a store property, and is empty
-            else if (Game.getObjectById(unit.memory.fetch_target.id).store)
-                if (Game.getObjectById(unit.memory.fetch_target.id).store.getUsedCapacity() == 0)
+            if (unit.memory.fetch_target){
+                //...if previous target is no longer valid (destroyed, or scrap expired)
+                if (!Game.getObjectById(unit.memory.fetch_target))
                     unit.memory.fetch_target = null;
+
+                //...or if previous target has a store property, and is empty
+                else if (Game.getObjectById(unit.memory.fetch_target).store)
+                    if (Game.getObjectById(unit.memory.fetch_target).store.getUsedCapacity() == 0)
+                        unit.memory.fetch_target = null;
+            }
 
 
             //when fetch target is blank, attempt to locate/determine a new one
@@ -199,11 +201,11 @@ module.exports = {
                         
                         //determine the fullest container
                         for (let i=1; i<canisters.length; i++){
-                            if (getCanister.store.getUsedCapacity(RESOURCE_ENERGY)
+                            if (canisters[i].store.getUsedCapacity(RESOURCE_ENERGY)
                                 >
                                 fullest_canister.store.getUsedCapacity(RESOURCE_ENERGY)){
 
-                                fullest_canister = getCanister;
+                                fullest_canister = canisters[i];
                             }
                         }
                     
@@ -236,16 +238,16 @@ module.exports = {
 
                         //only fetch from the vault if the energy will actually be used
                         if (pylons.length || local_nexi.length || powernexi.length)
-                            unit.memory.fetch_target = unit.room.storage;
+                            unit.memory.fetch_target = unit.room.storage.id;
                     }
                 }
             }
 
 
             //if a suitable fetch target is registered, FETCH from it
-            if (unit.memory.fetch_target)
-                if (unit.withdraw(Game.getObjectById(unit.memory.fetch_target.id), unit.memory.fetch_type) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(Game.getObjectById(unit.memory.fetch_target.id));
+            if (Game.getObjectById(unit.memory.fetch_target))
+                if (unit.withdraw(Game.getObjectById(unit.memory.fetch_target), unit.memory.fetch_type) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(Game.getObjectById(unit.memory.fetch_target));
         }
 
 
@@ -253,14 +255,16 @@ module.exports = {
         //FSM execution (UNLOADING): 
         else{
             //clear old unload target if...
-            //...if previous target is no longer valid (e.g. destroyed)
-            if (!Game.getObjectById(unit.memory.unload_target.id))
-                unit.memory.unload_target = null;
-
-            //...or if previous target remains standing, and is full
-            else if (Game.getObjectById(unit.memory.unload_target.id).store)
-                if (Game.getObjectById(unit.memory.unload_target.id).store.getFreeCapacity() == 0)
+            if (unit.memory.unload_target){
+                //...if previous target is no longer valid (e.g. destroyed)
+                if (!Game.getObjectById(unit.memory.unload_target))
                     unit.memory.unload_target = null;
+
+                //...or if previous target remains standing, and is full
+                else if (Game.getObjectById(unit.memory.unload_target).store)
+                    if (Game.getObjectById(unit.memory.unload_target).store.getFreeCapacity(unit.memory.unload_type) == 0)
+                        unit.memory.unload_target = null;
+            }
 
 
             //when unload target is blank, attempt to locate/determine a new one
@@ -285,7 +289,7 @@ module.exports = {
 
                 //select vault to unload non-energy resources
                 if (treasure_held)
-                    unit.memory.unload_target = unit.room.storage;
+                    unit.memory.unload_target = unit.room.storage.id;
 
 
                 //continue looking for an unload target, if one is not found yet
@@ -300,7 +304,7 @@ module.exports = {
                     
                     //select extension to unload energy
                     if (pylon)
-                        unit.memory.unload_target = pylon;
+                        unit.memory.unload_target = pylon.id;
                 }
 
 
@@ -316,7 +320,7 @@ module.exports = {
 
                     //select spawner to unload energy
                     if (local_nexi.length)
-                        unit.memory.unload_target = local_nexi[0];
+                        unit.memory.unload_target = local_nexi[0].id;
                 }
 
 
@@ -331,7 +335,7 @@ module.exports = {
                     });
 
                     if (powernexi.length)
-                        unit.memory.unload_target = powernexi[0];
+                        unit.memory.unload_target = powernexi[0].id;
                 }
 
 
@@ -339,15 +343,15 @@ module.exports = {
                 if (!unit.memory.unload_target){
                     //UNLOAD: vault<energy>
                     if (unit.room.storage)
-                        unit.memory.unload_target = unit.room.storage;
+                        unit.memory.unload_target = unit.room.storage.id;
                 }
-            
-                
-                //if a suitable unload target is registered, UNLOAD from it
-                if (unit.memory.unload_target)
-                    if (unit.transfer(unit.memory.unload_target, unit.memory.unload_type) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(unit.memory.unload_target);
             }
+
+
+            //if a suitable unload target is registered, UNLOAD from it
+            if (Game.getObjectById(unit.memory.unload_target))
+                if (unit.transfer(Game.getObjectById(unit.memory.unload_target), unit.memory.unload_type) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(Game.getObjectById(unit.memory.unload_target));
         }
     }
 };
