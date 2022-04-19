@@ -8,7 +8,9 @@ module.exports = {
         if (!unit.memory.canisters || Game.time % std_interval == 0){
             unit.memory.canisters = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
-                    return structure.structureType == STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+                    return structure.structureType == STRUCTURE_CONTAINER
+                        &&
+                        structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
                 }
             });
         }
@@ -17,7 +19,9 @@ module.exports = {
         if (!unit.memory.towers || Game.time % std_interval == 0){
             unit.memory.towers = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
-                    return (structure.structureType == STRUCTURE_TOWER) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                    return (structure.structureType == STRUCTURE_TOWER)
+                        &&
+                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                 }
             });
         }

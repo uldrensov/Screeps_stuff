@@ -180,7 +180,9 @@ module.exports = {
             //for retriever drone spawn, determine how much energy is dropped on the ground
             let scraps = nexi[k].room.find(FIND_DROPPED_RESOURCES, {
                 filter: resource => {
-                    return resource.resourceType == RESOURCE_ENERGY && resource.amount > SD.en_ignore_lim;
+                    return resource.resourceType == RESOURCE_ENERGY
+                        &&
+                        resource.amount > SD.en_ignore_lim;
                 }
             });
 

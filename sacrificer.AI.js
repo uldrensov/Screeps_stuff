@@ -15,8 +15,9 @@ module.exports = {
         
         let canisters = obelisk.room.find(FIND_STRUCTURES, {
             filter: structure => {
-                return structure.structureType == STRUCTURE_CONTAINER &&
-                structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
+                return structure.structureType == STRUCTURE_CONTAINER
+                    &&
+                    structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
             }
         });
         

@@ -8,16 +8,20 @@ module.exports = {
         let sources = unit.room.find(FIND_SOURCES);
         let canisters = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
-                return structure.structureType == STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
+                return structure.structureType == STRUCTURE_CONTAINER
+                    &&
+                    structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
             }
         });
         
         //OUTPUTS: structures (non-full/threshold)
         let repairTargets = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
-                return ((structure.hits < structure.hitsMax && structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART) ||
-                (structure.hits < Memory.wall_threshold && structure.structureType == STRUCTURE_WALL) ||
-                (structure.hits < Memory.rampart_threshold && structure.structureType == STRUCTURE_RAMPART));
+                return ((structure.hits < structure.hitsMax && structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART)
+                    ||
+                    (structure.hits < Memory.wall_threshold && structure.structureType == STRUCTURE_WALL)
+                    ||
+                    (structure.hits < Memory.rampart_threshold && structure.structureType == STRUCTURE_RAMPART));
             }
         });
         

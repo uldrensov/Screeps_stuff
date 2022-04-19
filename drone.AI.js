@@ -5,21 +5,21 @@ module.exports = {
     run: function(unit, ignore_lim){
         
         //FETCH / UNLOAD FSM...
-        //init
+        //init (starts in FETCHING mode)
         if (unit.memory.fetching == undefined){
             unit.memory.fetching = true;
-            unit.memory.fetch_target = null;
+            unit.memory.fetch_target_ID = null;
         }
 
         //if carry amt reaches full while FETCHING, switch to UNLOADING
         if (unit.memory.fetching && unit.store.getFreeCapacity() == 0){
             unit.memory.fetching = false;
-            unit.memory.unload_target = null;
+            unit.memory.unload_target_ID = null;
         }
         //if carry amt depletes while UNLOADING, switch to FETCHING
         if (!unit.memory.fetching && unit.store.getUsedCapacity() == 0){
             unit.memory.fetching = true;
-            unit.memory.fetch_target = null;
+            unit.memory.fetch_target_ID = null;
         }
 
 
@@ -27,20 +27,20 @@ module.exports = {
         //FSM execution (FETCHING): 
         if (unit.memory.fetching){
             //clear old fetch target if...
-            if (unit.memory.fetch_target){
+            if (unit.memory.fetch_target_ID){
                 //...if previous target is no longer valid (destroyed, or scrap expired)
-                if (!Game.getObjectById(unit.memory.fetch_target))
-                    unit.memory.fetch_target = null;
+                if (!Game.getObjectById(unit.memory.fetch_target_ID))
+                    unit.memory.fetch_target_ID = null;
 
-                //...or if previous target has a store property, and is empty
-                else if (Game.getObjectById(unit.memory.fetch_target).store)
-                    if (Game.getObjectById(unit.memory.fetch_target).store.getUsedCapacity() == 0)
-                        unit.memory.fetch_target = null;
+                //...or if previous target has a store property, and is now empty
+                else if (Game.getObjectById(unit.memory.fetch_target_ID).store)
+                    if (Game.getObjectById(unit.memory.fetch_target_ID).store.getUsedCapacity() == 0)
+                        unit.memory.fetch_target_ID = null;
             }
 
 
             //when fetch target is blank, attempt to locate/determine a new one
-            if (!unit.memory.fetch_target){
+            if (!unit.memory.fetch_target_ID){
                 unit.memory.fetch_type = RESOURCE_ENERGY;
 
 
@@ -52,7 +52,7 @@ module.exports = {
                     }
                 });
 
-                //inspect ruins found
+                //inspect any ruins found
                 if (remains.length){
                     let richest_remains = remains[0];
                     let treasure_found_r = false;
@@ -74,7 +74,7 @@ module.exports = {
                         }
                     }
                     
-                    //if the resource search fails, re-run the search, but for energy instead
+                    //if the resource search fails, search for fullest on energy instead
                     if (!treasure_found_r){
                         for (let i=1; i<remains.length; i++){
                             if (remains[i].store.getUsedCapacity(RESOURCE_ENERGY)
@@ -86,13 +86,13 @@ module.exports = {
                         }
                     }
                     
-                    //confirm final choice of ruins
-                    unit.memory.fetch_target = richest_remains.id;
+                    //save final choice of ruins
+                    unit.memory.fetch_target_ID = richest_remains.id;
                 }
 
 
-                //continue looking for a fetch target, if one is not found yet
-                if (!unit.memory.fetch_target){
+                //continue looking for a fetch target, if one is not found yet (choice #2)
+                if (!unit.memory.fetch_target_ID){
                     //FETCH: tombstones<non-energy>, tombstones<energy> (fullest)
                     //find tombstones
                     let tombs = unit.room.find(FIND_TOMBSTONES, {
@@ -101,7 +101,7 @@ module.exports = {
                         }
                     });
 
-                    //inspect tombstones found
+                    //inspect any tombstones found
                     if (tombs.length){
                         let richest_tomb = tombs[0];
                         let treasure_found_t = false;
@@ -123,7 +123,7 @@ module.exports = {
                             }
                         }
                         
-                        //if the resource search fails, re-run the search, but for energy instead
+                        //if the resource search fails, search for fullest on energy instead
                         if (!treasure_found_t){
                             for (let i=1; i<tombs.length; i++){
                                 if (tombs[i].store.getUsedCapacity(RESOURCE_ENERGY)
@@ -135,24 +135,25 @@ module.exports = {
                             }
                         }
                         
-                        //confirm final choice of tombstone
-                        unit.memory.fetch_target = richest_tomb.id;
+                        //save final choice of tombstone
+                        unit.memory.fetch_target_ID = richest_tomb.id;
                     }
                 }
 
 
-                //continue looking for a fetch target, if one is not found yet
-                if (!unit.memory.fetch_target){
-                    //FETCH: pickups<non-energy> (least TTL), pickups<energy> (fullest))
+                //continue looking for a fetch target, if one is not found yet (choice #3)
+                if (!unit.memory.fetch_target_ID){
+                    //FETCH: pickups<non-energy> (least TTL), pickups<energy> (fullest)
                     //find pickups
                     let scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
                         filter: resource => {
-                            return (resource.resourceType == RESOURCE_ENERGY && resource.amount > ignore_lim) ||
-                            resource.resourceType != RESOURCE_ENERGY;
+                            return (resource.resourceType == RESOURCE_ENERGY && resource.amount > ignore_lim)
+                                ||
+                                resource.resourceType != RESOURCE_ENERGY;
                         }
                     });
 
-                    //inspect pickups found
+                    //inspect any pickups found
                     if (scraps.length){
                         let chosen_scrap = scraps[0];
                         let treasure_found_s = false;
@@ -171,7 +172,7 @@ module.exports = {
                             }
                         }
 
-                        //if the resource search fails, re-run the search, but for energy instead
+                        //if the resource search fails, search for fullest on energy instead
                         if (!treasure_found_s){
                             for (let i=1; i<scraps.length; i++){
                                 if (scraps[i].energy > chosen_scrap.energy)
@@ -179,23 +180,25 @@ module.exports = {
                             }
                         }
                         
-                        //confirm final choice of pickup
-                        unit.memory.fetch_target = chosen_scrap.id;
+                        //save final choice of pickup
+                        unit.memory.fetch_target_ID = chosen_scrap.id;
                     }
                 }
 
 
-                //continue looking for a fetch target, if one is not found yet
-                if (!unit.memory.fetch_target){
-                    //FETCH: containers (fullest; fixation)
+                //continue looking for a fetch target, if one is not found yet (choice #4)
+                if (!unit.memory.fetch_target_ID){
+                    //FETCH: containers<energy> (fullest)
                     //find containers
                     let canisters = unit.room.find(FIND_STRUCTURES, {
                         filter: structure => {
-                            return structure.structureType == STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
+                            return structure.structureType == STRUCTURE_CONTAINER
+                                &&
+                                structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
                         }
                     });
 
-                    //inspect containers found
+                    //inspect any containers found
                     if (canisters.length){
                         let fullest_canister = canisters[0];
                         
@@ -209,45 +212,51 @@ module.exports = {
                             }
                         }
                     
-                        //confirm final choice of container
-                        unit.memory.fetch_target = fullest_canister.id;
+                        //save final choice of container
+                        unit.memory.fetch_target_ID = fullest_canister.id;
                     }
                 }
 
 
-                //continue looking for a fetch target, if one is not found yet
-                if (!unit.memory.fetch_target){
-                    //FETCH: vault
-                    //check spawners and extensions for unloading purposes
+                //continue looking for a fetch target, if one is not found yet (choice #5 - final)
+                if (!unit.memory.fetch_target_ID){
+                    //FETCH: vault<energy>
+                    //check spawners and extensions...
                     if (unit.room.storage){
                         let pylons = unit.room.find(FIND_STRUCTURES, {
                             filter: structure => {
-                                return structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                                return structure.structureType == STRUCTURE_EXTENSION
+                                    &&
+                                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                             }
                         });
                         let local_nexi = unit.room.find(FIND_STRUCTURES, {
                             filter: structure => {
-                                return structure.structureType == STRUCTURE_SPAWN && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                                return structure.structureType == STRUCTURE_SPAWN
+                                    &&
+                                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                             }
                         });
                         let powernexi = unit.room.find(FIND_STRUCTURES, {
                             filter: structure => {
-                                return structure.structureType == STRUCTURE_POWER_SPAWN && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                                return structure.structureType == STRUCTURE_POWER_SPAWN
+                                    &&
+                                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                             }
                         });
 
-                        //only fetch from the vault if the energy will actually be used
+                        //...only fetch from the vault if the energy is actually needed for refilling spawners and extensions
                         if (pylons.length || local_nexi.length || powernexi.length)
-                            unit.memory.fetch_target = unit.room.storage.id;
+                            unit.memory.fetch_target_ID = unit.room.storage.id;
                     }
                 }
             }
 
 
             //if a suitable fetch target is registered, FETCH from it
-            if (Game.getObjectById(unit.memory.fetch_target))
-                if (unit.withdraw(Game.getObjectById(unit.memory.fetch_target), unit.memory.fetch_type) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(Game.getObjectById(unit.memory.fetch_target));
+            if (Game.getObjectById(unit.memory.fetch_target_ID))
+                if (unit.withdraw(Game.getObjectById(unit.memory.fetch_target_ID), unit.memory.fetch_type) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(Game.getObjectById(unit.memory.fetch_target_ID));
         }
 
 
@@ -255,20 +264,24 @@ module.exports = {
         //FSM execution (UNLOADING): 
         else{
             //clear old unload target if...
-            if (unit.memory.unload_target){
+            if (unit.memory.unload_target_ID){
                 //...if previous target is no longer valid (e.g. destroyed)
-                if (!Game.getObjectById(unit.memory.unload_target))
-                    unit.memory.unload_target = null;
+                if (!Game.getObjectById(unit.memory.unload_target_ID))
+                    unit.memory.unload_target_ID = null;
 
-                //...or if previous target remains standing, and is full
-                else if (Game.getObjectById(unit.memory.unload_target).store)
-                    if (Game.getObjectById(unit.memory.unload_target).store.getFreeCapacity(unit.memory.unload_type) == 0)
-                        unit.memory.unload_target = null;
+                //...or if previous target remains standing, and is now full
+                else if (Game.getObjectById(unit.memory.unload_target_ID).store)
+                    if (Game.getObjectById(unit.memory.unload_target_ID).store.getFreeCapacity(unit.memory.unload_type) == 0)
+                        unit.memory.unload_target_ID = null;
+
+                //...or if the unit was holding multiple resource types, and is finished unloading the most recent type (but not the other types)
+                else if (unit.store.getUsedCapacity() > 0 && unit.store.getUsedCapacity(unit.memory.unload_type) == 0)
+                    unit.memory.unload_target_ID = null;
             }
 
 
             //when unload target is blank, attempt to locate/determine a new one
-            if (!unit.memory.unload_target){
+            if (!unit.memory.unload_target_ID){
                 unit.memory.unload_type = RESOURCE_ENERGY;
 
 
@@ -287,71 +300,79 @@ module.exports = {
                     }
                 }
 
-                //select vault to unload non-energy resources
+                //save vault as choice
                 if (treasure_held)
-                    unit.memory.unload_target = unit.room.storage.id;
+                    unit.memory.unload_target_ID = unit.room.storage.id;
 
 
-                //continue looking for an unload target, if one is not found yet
-                if (!unit.memory.unload_target){
+                //continue looking for an unload target, if one is not found yet (choice #2)
+                if (!unit.memory.unload_target_ID){
                     //UNLOAD: extension (nearest)
                     //find extension
                     let pylon = unit.pos.findClosestByPath(FIND_STRUCTURES, {
                         filter: structure => {
-                            return structure.structureType == STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                            return structure.structureType == STRUCTURE_EXTENSION
+                                &&
+                                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                         }
                     });
                     
-                    //select extension to unload energy
+                    //save extension as choice
                     if (pylon)
-                        unit.memory.unload_target = pylon.id;
+                        unit.memory.unload_target_ID = pylon.id;
                 }
 
 
-                //continue looking for an unload target, if one is not found yet
-                if (!unit.memory.unload_target){
+                //continue looking for an unload target, if one is not found yet (choice #3)
+                if (!unit.memory.unload_target_ID){
                     //UNLOAD: spawners
                     //find spawners
                     let local_nexi = unit.room.find(FIND_STRUCTURES, {
                         filter: structure => {
-                            return structure.structureType == STRUCTURE_SPAWN && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                            return structure.structureType == STRUCTURE_SPAWN
+                                &&
+                                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                         }
                     });
 
-                    //select spawner to unload energy
+                    //save spawner as choice
                     if (local_nexi.length)
-                        unit.memory.unload_target = local_nexi[0].id;
+                        unit.memory.unload_target_ID = local_nexi[0].id;
                 }
 
 
-                //continue looking for an unload target, if one is not found yet
-                if (!unit.memory.unload_target){
+                //continue looking for an unload target, if one is not found yet (choice #4)
+                if (!unit.memory.unload_target_ID){
                     //UNLOAD: power spawner<energy>
                     //find power spawners
                     let powernexi = unit.room.find(FIND_STRUCTURES, {
                         filter: structure => {
-                            return structure.structureType == STRUCTURE_POWER_SPAWN && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                            return structure.structureType == STRUCTURE_POWER_SPAWN
+                                &&
+                                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                         }
                     });
 
+                    //save power spawner as choice
                     if (powernexi.length)
-                        unit.memory.unload_target = powernexi[0].id;
+                        unit.memory.unload_target_ID = powernexi[0].id;
                 }
 
 
-                //continue looking for an unload target, if one is not found yet
-                if (!unit.memory.unload_target){
+                //continue looking for an unload target, if one is not found yet (choice #5 - final)
+                if (!unit.memory.unload_target_ID){
                     //UNLOAD: vault<energy>
+                    //save vault as choice
                     if (unit.room.storage)
-                        unit.memory.unload_target = unit.room.storage.id;
+                        unit.memory.unload_target_ID = unit.room.storage.id;
                 }
             }
 
 
-            //if a suitable unload target is registered, UNLOAD from it
-            if (Game.getObjectById(unit.memory.unload_target))
-                if (unit.transfer(Game.getObjectById(unit.memory.unload_target), unit.memory.unload_type) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(Game.getObjectById(unit.memory.unload_target));
+            //if a suitable unload target is registered, UNLOAD into it
+            if (Game.getObjectById(unit.memory.unload_target_ID))
+                if (unit.transfer(Game.getObjectById(unit.memory.unload_target_ID), unit.memory.unload_type) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(Game.getObjectById(unit.memory.unload_target_ID));
         }
     }
 };

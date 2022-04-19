@@ -13,7 +13,9 @@ module.exports = {
             if (!unit.memory.scraps || Game.time % std_interval == 0){
                 unit.memory.scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
                     filter: resource => {
-                        return resource.resourceType == RESOURCE_ENERGY && resource.amount > ignore_lim;
+                        return resource.resourceType == RESOURCE_ENERGY
+                            &&
+                            resource.amount > ignore_lim;
                     }
                 });
             }

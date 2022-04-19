@@ -155,22 +155,22 @@ module.exports = {
                     let repairStructs = nexi[k].room.find(FIND_STRUCTURES, {
                         filter: structure => { //ignore structures over 95% hp
                             return ((structure.hits < structure.hitsMax * .95 && structure.structureType != STRUCTURE_WALL
-                                    &&
-                                    structure.structureType != STRUCTURE_RAMPART));
+                                &&
+                                structure.structureType != STRUCTURE_RAMPART));
                         }
                     });
                     let repairWalls = nexi[k].room.find(FIND_STRUCTURES, {
                         filter: (structure) => {
                             return ((structure.hits < Memory.wall_threshold
-                                    &&
-                                    structure.structureType == STRUCTURE_WALL));
+                                &&
+                                structure.structureType == STRUCTURE_WALL));
                         }
                     });
                     let repairRamparts = nexi[k].room.find(FIND_STRUCTURES, {
                         filter: (structure) => {
                             return ((structure.hits < Memory.rampart_threshold
-                                    &&
-                                    structure.structureType == STRUCTURE_RAMPART));
+                                &&
+                                structure.structureType == STRUCTURE_RAMPART));
                         }
                     });
 
