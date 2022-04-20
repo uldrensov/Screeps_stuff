@@ -254,9 +254,15 @@ module.exports = {
 
 
             //if a suitable fetch target is registered, FETCH from it
-            if (Game.getObjectById(unit.memory.fetch_target_ID))
+            if (Game.getObjectById(unit.memory.fetch_target_ID)){
+                //.withdraw for most targets
                 if (unit.withdraw(Game.getObjectById(unit.memory.fetch_target_ID), unit.memory.fetch_type) == ERR_NOT_IN_RANGE)
                     unit.moveTo(Game.getObjectById(unit.memory.fetch_target_ID));
+
+                //.pickup for scraps
+                else if (unit.pickup(Game.getObjectById(unit.memory.fetch_target_ID)) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(Game.getObjectById(unit.memory.fetch_target_ID));
+            }
         }
 
 
