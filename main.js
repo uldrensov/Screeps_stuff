@@ -12,7 +12,7 @@ module.exports.loop = function(){
     //run memory init periodically to maintain configuration standards
     //if this is the first time the software is run, call SET_MEMORYINIT immediately
     if (Game.time % SD.std_interval == 0 || !Memory.init_true){
-        SET_MEMORYINIT.run(SD.spawner_id.length);
+        SET_MEMORYINIT.run(SD.ctrl_id.length);
         Memory.init_true = true;
     }
     
@@ -27,7 +27,7 @@ module.exports.loop = function(){
     
 
     //remote mining security response
-    for (let i=0; i<SD.spawner_id.length; i++){
+    for (let i=0; i<SD.ctrl_id.length; i++){
         //high alert: count down the timer, disable remote worker spawns, disable enforcer/purifier spawns, and enable blood hunter spawn (if prey is killable)
         if (Memory.evac_timer[i] > 0){
             Memory.evac_timer[i]--;
@@ -62,17 +62,17 @@ module.exports.loop = function(){
         let roomStructs_sub50;
         let roomStructs_sub75;
 
-        let nexi = [];
-        for (let i=0; i<SD.spawner_id.length; i++){
-            nexi[i] = Game.getObjectById(SD.spawner_id[i][0]);
+        let ctrl = [];
+        for (let i=0; i<SD.ctrl_id.length; i++){
+            ctrl[i] = Game.getObjectById(SD.ctrl_id[i]);
         }
 
-        for (let i=0; i<SD.spawner_id.length; i++){
-            //bypass: if nexus fails to retrieve, skip the room
-            if (!nexi[i])
+        for (let i=0; i<SD.ctrl_id.length; i++){
+            //bypass: if controller fails to retrieve, skip the room
+            if (!ctrl[i])
                 continue;
                 
-            roomStructs_sub50 = nexi[i].room.find(FIND_STRUCTURES, {
+            roomStructs_sub50 = ctrl[i].room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return ((structure.hits < structure.hitsMax*.5          && structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART)
                             ||
@@ -81,7 +81,7 @@ module.exports.loop = function(){
                             (structure.hits < Memory.rampart_threshold*.5   && structure.structureType == STRUCTURE_RAMPART));
                 }
             });
-            roomStructs_sub75 = nexi[i].room.find(FIND_STRUCTURES, {
+            roomStructs_sub75 = ctrl[i].room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return ((structure.hits < structure.hitsMax*.75         && structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART)
                             ||
@@ -99,8 +99,8 @@ module.exports.loop = function(){
 
     //nuke detection alert
     if (Game.time % SD.nukeCheck_interval == 0){
-        for (let i=0; i<SD.spawner_id.length; i++){
-            if (Game.getObjectById(SD.spawner_id[i][0]).room.find(FIND_NUKES).length){
+        for (let i=0; i<SD.ctrl_id.length; i++){
+            if (Game.getObjectById(SD.ctrl_id[i]).room.find(FIND_NUKES).length){
                 Game.notify('MAIN:: >>>>>> INCOMING NUCLEAR STRIKE -- ROOM #' + i + ' <<<<<<');
                 console.log('MAIN:: >>>>>> INCOMING NUCLEAR STRIKE -- ROOM #' + i + ' <<<<<<');
             }

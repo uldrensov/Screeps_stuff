@@ -8,27 +8,26 @@ module.exports = {
     run: function(src, dest, rsrc_type, amt){
         
         //room validation
-        if (src < 0 || src >= SD.spawner_id.length)     return 'TRANSFER_CROSSROOM:: INVALID -SRC- ARGUMENT';
-        if (dest < 0 || dest >= SD.spawner_id.length)   return 'TRANSFER_CROSSROOM:: INVALID -DEST- ARGUMENT';
+        if (src < 0 || src >= SD.ctrl_id.length)                    return 'TRANSFER_CROSSROOM:: INVALID -SRC- ARGUMENT (ARG OUT-OF-BOUNDS)';
+        if (dest < 0 || dest >= SD.ctrl_id.length)                  return 'TRANSFER_CROSSROOM:: INVALID -DEST- ARGUMENT (ARG OUT-OF-BOUNDS)';
+        if (!Game.getObjectById(SD.ctrl_id[src]))                   return 'TRANSFER_CROSSROOM:: INVALID -SRC- ARGUMENT (FAILED TO GET CONTROLLER)';
+        if (!Game.getObjectById(SD.ctrl_id[dest]))                  return 'TRANSFER_CROSSROOM:: INVALID -DEST- ARGUMENT (FAILED TO GET CONTROLLER)';
         
         //resource type validation
         for (let i=0; i<RESOURCES_ALL.length; i++){
-            if (rsrc_type == RESOURCES_ALL[i])          break;
-            else if (i == RESOURCES_ALL.length-1)       return 'TRANSFER_CROSSROOM:: INVALID RESOURCE TYPE';
-        }
-        
-        let nexi = [];
-        for (let i=0; i<SD.spawner_id.length; i++){
-            nexi[i] = Game.getObjectById(SD.spawner_id[i][0]);
+            if (rsrc_type == RESOURCES_ALL[i])                      break;
+            else if (i == RESOURCES_ALL.length-1)                   return 'TRANSFER_CROSSROOM:: INVALID RESOURCE TYPE';
         }
         
         //terminal validation
-        if (!nexi[src].room.terminal)                   return 'TRANSFER_CROSSROOM:: NO TERMINAL PRESENT IN -SRC- ROOM';
-        if (!nexi[dest].room.terminal)                  return 'TRANSFER_CROSSROOM:: NO TERMINAL PRESENT IN -DEST- ROOM';
+        if (!Game.getObjectById(SD.ctrl_id[src]).room.terminal)     return 'TRANSFER_CROSSROOM:: NO TERMINAL PRESENT IN -SRC- ROOM';
+        if (!Game.getObjectById(SD.ctrl_id[dest]).room.terminal)    return 'TRANSFER_CROSSROOM:: NO TERMINAL PRESENT IN -DEST- ROOM';
         
         
         //execute
-        let circResult = nexi[src].room.terminal.send(rsrc_type, amt, nexi[dest].room.name);
+        let circResult = Game.getObjectById(SD.ctrl_id[src]).room.terminal.send(
+            rsrc_type, amt, Game.getObjectById(SD.ctrl_id[dest]).room.name
+        );
 
         //return confirmation of success, or failure error message
         switch (circResult){

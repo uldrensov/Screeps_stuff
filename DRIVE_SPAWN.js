@@ -6,13 +6,13 @@ var SD = require('SET_SOFTDATA');
 module.exports = {
     run: function(){
         
-        let nexi = [];
-        for (let i=0; i<SD.spawner_id.length; i++){
-            nexi[i] = Game.getObjectById(SD.spawner_id[i][0]);
+        let ctrl = [];
+        for (let i=0; i<SD.ctrl_id.length; i++){
+            ctrl[i] = Game.getObjectById(SD.ctrl_id[i]);
         }
 
-        const reserveDuration_max = 5000;
-        const claimUnit_TTL = 600;
+        const reserveDuration_max =     5000;
+        const claimUnit_TTL =           600;
         
         
         //for storing population count in each room
@@ -26,9 +26,9 @@ module.exports = {
     
     
         //execute the auto-spawn and unit AI assignment routines for each room
-        for (let k=0; k<SD.spawner_id.length; k++){
-            //bypass: if nexus fails to retrieve, skip the room
-            if (!nexi[k])
+        for (let k=0; k<SD.ctrl_id.length; k++){
+            //bypass: if controller fails to retrieve, skip the room
+            if (!ctrl[k])
                 continue;
         
             //count unit population by role
@@ -69,7 +69,7 @@ module.exports = {
             //determine if mineral mining is possible (for ancient drone / assimilator spawns)
             if (!Game.getObjectById(Memory.extractor_id[k])){
 
-                let extractor = nexi[k].room.find(FIND_STRUCTURES, {
+                let extractor = ctrl[k].room.find(FIND_STRUCTURES, {
                     filter: structure => {
                         return structure.structureType == STRUCTURE_EXTRACTOR;
                     }
@@ -79,7 +79,7 @@ module.exports = {
             }
 
             if (!Memory.mineral_type[k])
-                Memory.mineral_type[k] = nexi[k].room.find(FIND_MINERALS)[0];
+                Memory.mineral_type[k] = ctrl[k].room.find(FIND_MINERALS)[0];
 
             if (Memory.extractor_id[k]
                 &&
@@ -122,7 +122,7 @@ module.exports = {
 
             //for edrone spawn logic, count up total room energy within spawn structures, canisters, and the vault
             //fullest nexus energy...
-            let local_nexi = nexi[k].room.find(FIND_STRUCTURES, {
+            let local_nexi = ctrl[k].room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_SPAWN;
                 }
@@ -136,7 +136,7 @@ module.exports = {
 
 
             //extension energy...
-            let local_exts = nexi[k].room.find(FIND_STRUCTURES, {
+            let local_exts = ctrl[k].room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_EXTENSION;
                 }
@@ -149,7 +149,7 @@ module.exports = {
 
 
             //canister energy...
-            let local_canisters = nexi[k].room.find(FIND_STRUCTURES, {
+            let local_canisters = ctrl[k].room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_CONTAINER;
                 }
@@ -163,8 +163,8 @@ module.exports = {
 
             //vault energy...
             let vault_energy = 0;
-            if (nexi[k].room.storage)
-                vault_energy = nexi[k].room.storage.store.energy;
+            if (ctrl[k].room.storage)
+                vault_energy = ctrl[k].room.storage.store.energy;
 
 
             //totaled up...
@@ -181,7 +181,7 @@ module.exports = {
             
 
             //for retriever drone spawn, determine how much energy is dropped on the ground
-            let scraps = nexi[k].room.find(FIND_DROPPED_RESOURCES, {
+            let scraps = ctrl[k].room.find(FIND_DROPPED_RESOURCES, {
                 filter: resource => {
                     return resource.resourceType == RESOURCE_ENERGY
                         &&
@@ -447,7 +447,7 @@ module.exports = {
                         }
 
                         //if reservation is mine, and falls sufficiently low
-                        else if (Game.getObjectById(SD.remotectrl_id[k]).reservation.username == nexi[k].owner.username
+                        else if (Game.getObjectById(SD.remotectrl_id[k]).reservation.username == ctrl[k].owner.username
                             &&
                             Game.getObjectById(SD.remotectrl_id[k]).reservation.ticksToEnd < (reserveDuration_max - (claim_strength-1)*claimUnit_TTL)){
 

@@ -6,9 +6,9 @@ var SD = require('SET_SOFTDATA');
 module.exports = {
     run: function(){
         
-        let nexi = [];
-        for (let i=0; i<SD.spawner_id.length; i++){
-            nexi[i] = Game.getObjectById(SD.spawner_id[i][0]);
+        let ctrl = [];
+        for (let i=0; i<SD.ctrl_id.length; i++){
+            ctrl[i] = Game.getObjectById(SD.ctrl_id[i]);
         }
 
         const healthy_percent = .95;
@@ -18,11 +18,11 @@ module.exports = {
         //1. locate all towers
         //2. select a target, and an action to perform on it
         //3. execute action
-        for (let k=0; k<SD.spawner_id.length; k++){
-            if (!nexi[k])                           continue; //bypass: if nexus fails to retrieve, skip the room
+        for (let k=0; k<SD.ctrl_id.length; k++){
+            if (!ctrl[k])                           continue; //bypass: if controller fails to retrieve, skip the room
 
             //ignore rooms under level requirement for towers
-            if (nexi[k].room.controller.level < 3)  continue;
+            if (ctrl[k].level < 3)                  continue;
             
 
             //1.
@@ -41,7 +41,7 @@ module.exports = {
                 }
 
                 if (!towercheck){
-                    Memory.turretsByRoom[k] = nexi[k].room.find(FIND_STRUCTURES, {
+                    Memory.turretsByRoom[k] = ctrl[k].room.find(FIND_STRUCTURES, {
                         filter: structure => {
                             return structure.structureType == STRUCTURE_TOWER;
                         }
@@ -58,7 +58,7 @@ module.exports = {
             Memory.turretTarget_id[k] = 'NULL';
 
             //detect foreign units and determine presence of hostiles among them
-            let foreigner = nexi[k].room.find(FIND_HOSTILE_CREEPS);
+            let foreigner = ctrl[k].room.find(FIND_HOSTILE_CREEPS);
 
             if (foreigner.length){
                 let threatvalues = [];
@@ -139,7 +139,7 @@ module.exports = {
 
             //designate heals/repairs only if energy can be spared, and if construction mode is disabled (for repairs)
             else{
-                let injured_units = nexi[k].room.find(FIND_MY_CREEPS, {
+                let injured_units = ctrl[k].room.find(FIND_MY_CREEPS, {
                     filter: creep => {
                         return creep.hits < creep.hitsMax;
                     }
@@ -154,7 +154,7 @@ module.exports = {
                 //UNLOAD: structures
                 //treat walls and ramparts differently from everything else (hp max reasons)
                 else{
-                    let repairStructs = nexi[k].room.find(FIND_STRUCTURES, {
+                    let repairStructs = ctrl[k].room.find(FIND_STRUCTURES, {
                         filter: structure => { //ignore structures over 95% hp
                             return ((structure.hits < structure.hitsMax * healthy_percent
                                 &&
@@ -163,14 +163,14 @@ module.exports = {
                                 structure.structureType != STRUCTURE_RAMPART));
                         }
                     });
-                    let repairWalls = nexi[k].room.find(FIND_STRUCTURES, {
+                    let repairWalls = ctrl[k].room.find(FIND_STRUCTURES, {
                         filter: (structure) => {
                             return ((structure.hits < Memory.wall_threshold
                                 &&
                                 structure.structureType == STRUCTURE_WALL));
                         }
                     });
-                    let repairRamparts = nexi[k].room.find(FIND_STRUCTURES, {
+                    let repairRamparts = ctrl[k].room.find(FIND_STRUCTURES, {
                         filter: (structure) => {
                             return ((structure.hits < Memory.rampart_threshold
                                 &&

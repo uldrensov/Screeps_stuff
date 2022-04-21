@@ -6,8 +6,8 @@ var SD =                    require('SET_SOFTDATA');
 module.exports = {
     run: function(){
 
-        const log_size = 600;
-        const secondsIn24h = 86400;
+        const log_size =        600;
+        const secondsIn24h =    86400;
         
 
         //allow CPU logging on this tick, until the counter reaches 600 today

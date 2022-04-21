@@ -19,6 +19,7 @@ module.exports = {
             
             else if (unit.claimController(unit.room.controller) == ERR_NOT_IN_RANGE)
                 unit.moveTo(unit.room.controller, {visualizePathStyle: {stroke: '#00ffff'}});
+                
             else if (unit.room.controller.my){
                 Memory.visionary_MAX[unit.memory.home_index] = 0;
                 unit.suicide();

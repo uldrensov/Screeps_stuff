@@ -8,9 +8,14 @@ module.exports = {
     run: function(room_num){
         
         //arg validation
-        if (room_num < 0 || room_num >= SD.spawner_id.length)
-            return 'STATUSREPORT:: INVALID ROOM NUMBER';
-        
+        if (room_num < 0 || room_num >= SD.ctrl_id.length)
+            return 'STATUSREPORT:: INVALID ROOM NUMBER (ARG OUT-OF-BOUNDS)';
+
+        let ctrl = Game.getObjectById(SD.ctrl_id[room_num]);
+        if (!ctrl)
+            return 'STATUSREPORT:: INVALID ROOM NUMBER (FAILED TO GET CONTROLLER)';
+
+
 
         //memory validation
         if
@@ -27,10 +32,6 @@ module.exports = {
 
             return 'STATUSREPORT:: MEMORY VALIDATION FAILED';
         }
-        
-        
-
-        let nexus = Game.getObjectById(SD.spawner_id[room_num][0]);
         
         
 
@@ -85,7 +86,7 @@ module.exports = {
         //room state...
         //determine total nexi energy
         let nexi_energy = 0;
-        let Nexi = nexus.room.find(FIND_STRUCTURES, {
+        let Nexi = ctrl.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return structure.structureType == STRUCTURE_SPAWN;
             }
@@ -98,7 +99,7 @@ module.exports = {
 
         //determine total extension energy
         let ext_energy = 0;
-        let extensions = nexus.room.find(FIND_STRUCTURES, {
+        let extensions = ctrl.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return structure.structureType == STRUCTURE_EXTENSION;
             }
@@ -111,7 +112,7 @@ module.exports = {
         
         //determine total container energy
         let can_energy = 0;
-        let canisters = nexus.room.find(FIND_STRUCTURES, {
+        let canisters = ctrl.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return structure.structureType == STRUCTURE_CONTAINER;
             }
@@ -124,7 +125,7 @@ module.exports = {
         
         //determine total dropped (pickup) energy
         let scrap_energy = 0;
-        let scraps = nexus.room.find(FIND_DROPPED_RESOURCES, {
+        let scraps = ctrl.room.find(FIND_DROPPED_RESOURCES, {
             filter: resource => {
                 return resource.resourceType == RESOURCE_ENERGY;
             }
@@ -137,12 +138,12 @@ module.exports = {
         
 
         //determine controller levelup percentage
-        let control_perc = ((nexus.room.controller.progress / nexus.room.controller.progressTotal) * 100).toFixed(3);
+        let control_perc = ((ctrl.progress / ctrl.progressTotal) * 100).toFixed(3);
         
 
 
         //count worn structures and walls (but not ramparts)
-        let worn_structs = nexus.room.find(FIND_STRUCTURES, {
+        let worn_structs = ctrl.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return (structure.hits < structure.hitsMax
                     &&
@@ -152,7 +153,7 @@ module.exports = {
             }
         });
 
-        let worn_walls = nexus.room.find(FIND_STRUCTURES, {
+        let worn_walls = ctrl.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return (structure.hits < Memory.wall_threshold
                     &&
@@ -226,22 +227,22 @@ module.exports = {
         
 
         //state of the room report
-        if (nexus.room.controller.level < 8)                console.log('STATUSREPORT:: Controller EXP: ' + control_perc + '% -> ' + nexus.room.controller.progress + '/' + nexus.room.controller.progressTotal);
+        if (ctrl.level < 8)                                 console.log('STATUSREPORT:: Controller EXP: ' + control_perc + '% -> ' + ctrl.progress + '/' + ctrl.progressTotal);
         else                                                console.log('STATUSREPORT:: Controller EXP: MAX');
 
                                                             console.log('STATUSREPORT:: Spawning energy: ' + ext_energy + ' extended, ' + nexi_energy + ' nexi');
 
-        if (nexus.room.storage)                             console.log('STATUSREPORT:: Vault contents: ' + nexus.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) + ' energy; ' +
-                                                                nexus.room.storage.store.getUsedCapacity(Memory.mineral_type[room_num].mineralType) + ' ' + Memory.mineral_type[room_num].mineralType + '; ' +
-                                                                (nexus.room.storage.store.getUsedCapacity() -
-                                                                (nexus.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) + nexus.room.storage.store.getUsedCapacity(Memory.mineral_type[room_num].mineralType))) + ' misc.');
+        if (ctrl.room.storage)                              console.log('STATUSREPORT:: Vault contents: ' + ctrl.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) + ' energy; ' +
+                                                                ctrl.room.storage.store.getUsedCapacity(Memory.mineral_type[room_num].mineralType) + ' ' + Memory.mineral_type[room_num].mineralType + '; ' +
+                                                                (ctrl.room.storage.store.getUsedCapacity() -
+                                                                (ctrl.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) + ctrl.room.storage.store.getUsedCapacity(Memory.mineral_type[room_num].mineralType))) + ' misc.');
 
-                                                            console.log('STATUSREPORT:: Vault space remaining: ' + nexus.room.storage.store.getFreeCapacity());
+                                                            console.log('STATUSREPORT:: Vault space remaining: ' + ctrl.room.storage.store.getFreeCapacity());
 
-        if (nexus.room.terminal)                            console.log('STATUSREPORT:: Terminal contents: ' + nexus.room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) + ' energy; ' +
-                                                                nexus.room.terminal.store.getUsedCapacity(Memory.mineral_type[room_num].mineralType) + ' ' + Memory.mineral_type[room_num].mineralType + '; ' +
-                                                                (nexus.room.terminal.store.getUsedCapacity() -
-                                                                (nexus.room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) + nexus.room.terminal.store.getUsedCapacity(Memory.mineral_type[room_num].mineralType))) + ' misc.');
+        if (ctrl.room.terminal)                             console.log('STATUSREPORT:: Terminal contents: ' + ctrl.room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) + ' energy; ' +
+                                                                ctrl.room.terminal.store.getUsedCapacity(Memory.mineral_type[room_num].mineralType) + ' ' + Memory.mineral_type[room_num].mineralType + '; ' +
+                                                                (ctrl.room.terminal.store.getUsedCapacity() -
+                                                                (ctrl.room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) + ctrl.room.terminal.store.getUsedCapacity(Memory.mineral_type[room_num].mineralType))) + ' misc.');
 
         if (canisters.length)                               console.log('STATUSREPORT:: Total canister energy: '    + can_energy);
                                                             console.log('STATUSREPORT:: Total dropped energy: '     + scrap_energy);

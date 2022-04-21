@@ -7,19 +7,19 @@ var SD = require('SET_SOFTDATA');
 module.exports = {
     run: function(){
         
-        let nexus;
+        let ctrl;
         let vault;
         let term;
         let mineral;
         
         
         //vault summary
-        for (let i=0; i<SD.spawner_id.length; i++){
-            nexus = Game.getObjectById(SD.spawner_id[i][0]);
+        for (let i=0; i<SD.ctrl_id.length; i++){
+            ctrl = Game.getObjectById(SD.ctrl_id[i]);
             
-            if (!nexus)     continue; //bypass: if nexus fails to retrieve, skip the room
+            if (!ctrl)      continue; //bypass: if controller fails to retrieve, skip the room
             
-            vault = nexus.room.storage;
+            vault = ctrl.room.storage;
             mineral = Memory.mineral_type[i].mineralType;
             
             if (vault)
@@ -31,12 +31,12 @@ module.exports = {
         console.log('STATUSREPORT_E::');
         
         //terminal summary
-        for (let j=0; j<SD.spawner_id.length; j++){
-            nexus = Game.getObjectById(SD.spawner_id[j][0]);
+        for (let j=0; j<SD.ctrl_id.length; j++){
+            ctrl = Game.getObjectById(SD.ctrl_id[j]);
             
-            if (!nexus)     continue; //bypass: if nexus fails to retrieve, skip the room
+            if (!ctrl)      continue; //bypass: if controller fails to retrieve, skip the room
             
-            term = nexus.room.terminal;
+            term = ctrl.room.terminal;
             mineral = Memory.mineral_type[j].mineralType;
             
             if (term)

@@ -9,31 +9,31 @@ var TRADE_ENERGY =          require('TRADE_ENERGY.exe');
 module.exports = {
     run: function(){
         
-        let nexi = [];
-        for (let i=0; i<SD.spawner_id.length; i++){
-            nexi[i] = Game.getObjectById(SD.spawner_id[i][0]);
+        let ctrl = [];
+        for (let i=0; i<SD.ctrl_id.length; i++){
+            ctrl[i] = Game.getObjectById(SD.ctrl_id[i]);
         }
 
-        const threshApproach_factor = 1.5;
-        const powerProcess_cost = 50;
+        const threshApproach_factor =   1.5;
+        const powerProcess_cost =       50;
         
         
         //alerts for vault status
-        for (let i=0; i<SD.spawner_id.length; i++){
+        for (let i=0; i<SD.ctrl_id.length; i++){
             //bypasses
-            if (!nexi[i])                               continue; //bypass: if nexus fails to retrieve, skip the room
-            if (!nexi[i].room.storage)                  continue; //bypass: if the vault is missing, skip the room
+            if (!ctrl[i])                               continue; //bypass: if controller fails to retrieve, skip the room
+            if (!ctrl[i].room.storage)                  continue; //bypass: if the vault is missing, skip the room
         
             //LO...
             //enable (unlatch) the potential for LO alert when a room's vault energy is over the "floor" by 50% of the absolute threshold value
-            if ((nexi[i].room.storage.store.energy > SD.vault_boundary * threshApproach_factor)
+            if ((ctrl[i].room.storage.store.energy > SD.vault_boundary * threshApproach_factor)
                 &&
                 !Memory.vaultAlertLO_EN[i]){
 
                 Memory.vaultAlertLO_EN[i] = true;
             }
             //disable (latch) further alerts from a room when it raises one
-            else if ((nexi[i].room.storage.store.energy < SD.vault_boundary)
+            else if ((ctrl[i].room.storage.store.energy < SD.vault_boundary)
                 &&
                 Memory.vaultAlertLO_EN[i]){
                     
@@ -43,18 +43,18 @@ module.exports = {
         
             //HI...
             //enable (unlatch) the potential for HI alert when a room's vault is under the "ceiling" by 50% of the absolute threshold value
-            if ((nexi[i].room.storage.store.getUsedCapacity()
+            if ((ctrl[i].room.storage.store.getUsedCapacity()
                     <
-                (nexi[i].room.storage.store.getCapacity() - (SD.vault_boundary * threshApproach_factor)))
+                (ctrl[i].room.storage.store.getCapacity() - (SD.vault_boundary * threshApproach_factor)))
                 &&
                 !Memory.vaultAlertHI_EN[i]){
 
                 Memory.vaultAlertHI_EN[i] = true;
             }
             //disable (latch) further alerts from a room when it raises one
-            else if ((nexi[i].room.storage.store.getUsedCapacity()
+            else if ((ctrl[i].room.storage.store.getUsedCapacity()
                     >
-                (nexi[i].room.storage.store.getCapacity() - SD.vault_boundary))
+                (ctrl[i].room.storage.store.getCapacity() - SD.vault_boundary))
                 &&
                 Memory.vaultAlertHI_EN[i]){
 
@@ -76,14 +76,14 @@ module.exports = {
             let en_min_ratio;
 
 
-            for (let i=0; i<SD.spawner_id.length; i++){
+            for (let i=0; i<SD.ctrl_id.length; i++){
                 if (Memory.autoload_EN[i]){  
-                    //bypass: if nexus fails to retrieve, skip the room  
-                    if (!nexi[i])                       continue;
+                    //bypass: if controller fails to retrieve, skip the room  
+                    if (!ctrl[i])                       continue;
                 
                     //check for vault/terminal existence
-                    vault = nexi[i].room.storage;
-                    term = nexi[i].room.terminal;
+                    vault = ctrl[i].room.storage;
+                    term = ctrl[i].room.terminal;
 
                     if (!vault || !term)                continue;
 
@@ -145,10 +145,10 @@ module.exports = {
             let autosell_return;
             
             
-            for (let i=0; i<SD.spawner_id.length; i++){
+            for (let i=0; i<SD.ctrl_id.length; i++){
                 if (Memory.autosell_EN[i]){
-                    //bypass: if nexus fails to retrieve, skip the room
-                    if (!nexi[i])
+                    //bypass: if controller fails to retrieve, skip the room
+                    if (!ctrl[i])
                         continue;
 
                     //print header if at least one room's autosell is enabled
@@ -157,12 +157,12 @@ module.exports = {
                         printFlag = false;
                     }
                     
-                    if (nexi[i].room.terminal){
+                    if (ctrl[i].room.terminal){
                         autosell_return = null;
                         
                         //select a sellable resource (no specific priority order) and attempt to sell
                         for (let x=0; x<SD.sellable_products[i].length; x++){
-                            if (nexi[i].room.terminal.store.getUsedCapacity(SD.sellable_products[i][x]) > 0){
+                            if (ctrl[i].room.terminal.store.getUsedCapacity(SD.sellable_products[i][x]) > 0){
                                 autosell_return = TRADE_RESOURCE.run(i,SD.sellable_products[i][x],true,0,false);
 
                                 //if price tolerance is not met, check if the resource is whitelisted for tolerance ignore, and re-attempt trade if so
@@ -201,10 +201,10 @@ module.exports = {
             let autovent_return;
 
 
-            for (let i=0; i<SD.spawner_id.length; i++){
+            for (let i=0; i<SD.ctrl_id.length; i++){
                 if (Memory.autovent_EN[i]){
-                    //bypass: if nexus fails to retrieve, skip the room
-                    if (!nexi[i])
+                    //bypass: if controller fails to retrieve, skip the room
+                    if (!ctrl[i])
                         continue;
                     
                     //print header if at least one autovent is enabled
@@ -214,8 +214,8 @@ module.exports = {
                     }
 
                     //vent attempt
-                    if (nexi[i].room.terminal)
-                        if (nexi[i].room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) > 0){
+                    if (ctrl[i].room.terminal)
+                        if (ctrl[i].room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) > 0){
                             autovent_return = TRADE_ENERGY.run(i);
 
                             if (autovent_return != OK)
@@ -231,11 +231,11 @@ module.exports = {
         
 
         //process power
-        for (let i=0; i<SD.spawner_id.length; i++){
-            if (!nexi[i])                           continue; //bypass: if nexus fails to retrieve, skip the room
+        for (let i=0; i<SD.ctrl_id.length; i++){
+            if (!ctrl[i])                           continue; //bypass: if controller fails to retrieve, skip the room
 
             //ignore rooms under level requirement for power nexus
-            if (nexi[i].room.controller.level < 8)  continue;
+            if (ctrl[i].level < 8)                  continue;
 
 
             //if powernex exists, process power
@@ -250,7 +250,7 @@ module.exports = {
 
             //if no powernex exists, search for one periodically
             else if (Game.time % SD.std_interval == 0){
-                let powernex = nexi[i].room.find(FIND_STRUCTURES, {
+                let powernex = ctrl[i].room.find(FIND_STRUCTURES, {
                     filter: structure => {
                         return structure.structureType == STRUCTURE_POWER_SPAWN;
                     }
