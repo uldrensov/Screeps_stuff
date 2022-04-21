@@ -6,13 +6,14 @@ var SD = require('SET_SOFTDATA');
 module.exports = {
     run: function(){
         
+        const reserveDuration_max =     5000;
+        const claimUnit_TTL =           600;
+
+
         let ctrl = [];
         for (let i=0; i<SD.ctrl_id.length; i++){
             ctrl[i] = Game.getObjectById(SD.ctrl_id[i]);
         }
-
-        const reserveDuration_max =     5000;
-        const claimUnit_TTL =           600;
         
         
         //for storing population count in each room

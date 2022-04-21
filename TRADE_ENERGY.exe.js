@@ -9,11 +9,14 @@ module.exports = {
     run: function(room_num){
         
         //arg validation
-        if (room_num < 0 || room_num >= SD.spawner_id.length)
-            return 'TRADE_ENERGY:: INVALID ROOM NUMBER';
+        if (room_num < 0 || room_num >= SD.ctrl_id.length)
+            return 'TRADE_ENERGY:: INVALID ROOM NUMBER (ARG OUT-OF-BOUNDS)';
+        if (!Game.getObjectById(SD.ctrl_id[room_num]))
+            return 'TRADE_ENERGY:: INVALID ROOM NUMBER (FAILED TO GET CONTROLLER)';
         
+
         //variable init and additional validation
-        let GE = Game.getObjectById(SD.spawner_id[room_num][0]).room.terminal;
+        let GE = Game.getObjectById(SD.ctrl_id[room_num][0]).room.terminal;
 
         if (!GE)
             return 'TRADE_ENERGY:: ROOM IS MISSING A TERMINAL';
@@ -21,7 +24,9 @@ module.exports = {
         if (GE.store.getUsedCapacity(RESOURCE_ENERGY) == 0)
             return 'TRADE_ENERGY:: TERMINAL TRANSMISSION FUEL DEPLETED';
 
-        let hist = Game.market.getHistory(RESOURCE_ENERGY);
+
+
+        //grab market data and perform pre-transaction calculations...
         let clientele = Game.market.getAllOrders({type: ORDER_BUY, resourceType: RESOURCE_ENERGY});
 
         if (!clientele.length)
@@ -29,6 +34,7 @@ module.exports = {
         
         
         //calculate average street price
+        let hist = Game.market.getHistory(RESOURCE_ENERGY);
         let streetPrice = 0;
 
         for (let i=0; i<hist.length; i++){
@@ -36,18 +42,23 @@ module.exports = {
         }
         streetPrice /= hist.length;
         
+
         //find the best offer within price range
         let bestOffer = clientele[0];
 
         for (let i=0; i<clientele.length; i++){
-            if (clientele[i].price > bestOffer.price && clientele[i].amount > 0)
+            if (clientele[i].price > bestOffer.price
+                &&
+                clientele[i].amount > 0){
+
                 bestOffer = clientele[i];
+            }
         }
         if (bestOffer.price < streetPrice * SD.sellPrice_tolerance)
             return 'TRADE_ENERGY:: NO SUITABLE OFFERS WITHIN DESIRED PRICE RANGE...TRY AGAIN LATER';
         
 
-        //make the transaction (potentially downsizing the tentative trade amount based on predicted tax calculation)
+        //calculate trade amount and energy tax (potentially downsizing the tentative trade amount based on predicted tax calculation)
         let tentativeTradeAmount = Math.min(bestOffer.amount, GE.store.getUsedCapacity(RESOURCE_ENERGY));
         let tax = Game.market.calcTransactionCost(tentativeTradeAmount, bestOffer.roomName, GE.room.name);
 
@@ -56,6 +67,9 @@ module.exports = {
         if (tentativeTradeAmount+tax > GE.store.getUsedCapacity(RESOURCE_ENERGY))
             finalTradeAmount -= tax; //reduce the amount of energy to sell if projected tax cannot be afforded
 
+            
+
+        //make the transaction
         let transaction = Game.market.deal(bestOffer.id, finalTradeAmount, GE.room.name);
         
         if (transaction == ERR_NOT_ENOUGH_ENERGY)

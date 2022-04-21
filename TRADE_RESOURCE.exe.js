@@ -10,11 +10,14 @@ module.exports = {
     run: function(room_num, resource_type, dir, buy_amt, ignore_tolerance){
         
         //arg validation
-        if (!Game.getObjectById(SD.spawner_id[room_num][0]))
-            return 'TRADE_RESOURCE:: INVALID ROOM NUMBER';
+        if (room_num < 0 || room_num >= SD.ctrl_id.length)
+            return 'TRADE_RESOURCE:: INVALID ROOM NUMBER (ARG OUT-OF-BOUNDS)';
+        if (!Game.getObjectById(SD.ctrl_id[room_num]))
+            return 'TRADE_RESOURCE:: INVALID ROOM NUMBER (FAILED TO GET CONTROLLER)';
         
+
         //general variable init and validation
-        let GE = Game.getObjectById(SD.spawner_id[room_num][0]).room.terminal;
+        let GE = Game.getObjectById(SD.ctrl_id[room_num]).room.terminal;
 
         if (!GE)
             return 'TRADE_RESOURCE:: ROOM IS MISSING A TERMINAL';
@@ -22,6 +25,9 @@ module.exports = {
         if (GE.store.getUsedCapacity(RESOURCE_ENERGY) == 0)
             return 'TRADE_RESOURCE:: TERMINAL TRANSMISSION FUEL DEPLETED';
 
+
+
+        //grab market data and perform pre-transaction calculations...
         let clientele;
 
         //init market (selling to players)
@@ -105,6 +111,7 @@ module.exports = {
         let tax = Game.market.calcTransactionCost(tradeAmount, bestOffer.roomName, GE.room.name);
 
 
+
         //make the transaction
         let transaction = Game.market.deal(bestOffer.id, tradeAmount, GE.room.name);
         
@@ -124,8 +131,7 @@ module.exports = {
             return 'TRADE_RESOURCE:: OPERATION FAILED WITH MARKET ERROR CODE ' + transaction;
         
 
-        //return confirmation of success
-
+        //return confirmation of success...
         //selling to players
         if (dir){
             console.log('TRADE_RESOURCE:: ROOM #' + room_num + ' SOLD ' + tradeAmount + ' [' + resource_type + '] FOR ' +

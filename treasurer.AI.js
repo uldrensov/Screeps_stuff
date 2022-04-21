@@ -9,17 +9,18 @@ module.exports = {
         
         //proceed if there is no suicide order
         if (!unit.memory.killswitch){
-            //clear this flag for every new command issued
+            //clear the 'done' flag for every new command issued
             if (unit.memory.task_progress == 0)
                 unit.memory.done = false;
                 
+
             //determine inputs and outputs
             if (unit.memory.task_progress < unit.memory.order_amt){
-                //[false] transfer direction (unload terminal into vault)
+                //[false] transfer direction (e.g. unload terminal into vault)
                 let input = nexus.room.terminal;
                 let output = nexus.room.storage;
 
-                //[true] transfer direction (load terminal/powernex/nuker from vault)
+                //[true] transfer direction (e.g. load terminal/powernex/nuker from vault)
                 if (unit.memory.dir){
                     input = nexus.room.storage;
 
@@ -72,15 +73,15 @@ module.exports = {
 
                 let finaltrip = false;
 
-                //fetch
+                //FETCH
                 if (unit.store.getFreeCapacity(unit.memory.order_type) > 0){ //if unit is not fully loaded...
-                    if (input.store.getUsedCapacity(unit.memory.order_type) == 0) //...but there is no more for the unit to withdraw: switch to unload mode
+                    if (input.store.getUsedCapacity(unit.memory.order_type) == 0) //...but there is no more for the unit to withdraw: hot-switch to unload mode
                         finaltrip = true;
                     else if (unit.withdraw(input, unit.memory.order_type) == ERR_NOT_IN_RANGE)
                         unit.moveTo(input);
                 }
 
-                //unload
+                //UNLOAD
                 if (unit.store.getFreeCapacity(unit.memory.order_type) == 0 || finaltrip){ //if unit is fully loaded, or if carrying its final load
                     let most_recent_load = unit.store.getUsedCapacity(unit.memory.order_type);
                     let unload_result = unit.transfer(output, unit.memory.order_type);
@@ -94,6 +95,7 @@ module.exports = {
                 }
             }
 
+
             //task complete notification
             else if (!unit.memory.done){
                 unit.memory.done = true;
@@ -106,6 +108,7 @@ module.exports = {
                 }
             }
         }
+
 
         //built-in economic killswitch
         else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)

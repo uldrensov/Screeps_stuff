@@ -7,6 +7,10 @@ var SD = require('SET_SOFTDATA');
 module.exports = {
     run: function(room_num){
         
+        const ctrlLvl_max = 8;
+
+
+        
         //arg validation
         if (room_num < 0 || room_num >= SD.ctrl_id.length)
             return 'STATUSREPORT:: INVALID ROOM NUMBER (ARG OUT-OF-BOUNDS)';
@@ -16,10 +20,8 @@ module.exports = {
             return 'STATUSREPORT:: INVALID ROOM NUMBER (FAILED TO GET CONTROLLER)';
 
 
-
         //memory validation
-        if
-            (Memory.wall_threshold ==               undefined || Memory.rampart_threshold ==                undefined || Memory.mineral_type[room_num] ==           undefined ||
+        if (Memory.wall_threshold ==                undefined || Memory.rampart_threshold ==                undefined || Memory.mineral_type[room_num] ==           undefined ||
             Memory.assimilator_MAX[room_num] ==     undefined || Memory.assimilator2_MAX[room_num] ==       undefined || Memory.drone_MAX[room_num] ==              undefined ||
             Memory.energiser_MAX[room_num] ==       undefined || Memory.retrieverDrone_MAX[room_num] ==     undefined || Memory.sacrificer_MAX[room_num] ==         undefined ||
             Memory.acolyte_MAX[room_num] ==         undefined || Memory.acolyte2_MAX[room_num] ==           undefined || Memory.adherent_MAX[room_num] ==           undefined ||
@@ -86,14 +88,14 @@ module.exports = {
         //room state...
         //determine total nexi energy
         let nexi_energy = 0;
-        let Nexi = ctrl.room.find(FIND_STRUCTURES, {
+        let local_nexi = ctrl.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return structure.structureType == STRUCTURE_SPAWN;
             }
         });
-        if (Nexi.length){
-            for (let i=0; i<Nexi.length; i++){
-                nexi_energy += Nexi[i].store.getUsedCapacity(RESOURCE_ENERGY);
+        if (local_nexi.length){
+            for (let i=0; i<local_nexi.length; i++){
+                nexi_energy += local_nexi[i].store.getUsedCapacity(RESOURCE_ENERGY);
             }
         }
 
@@ -170,8 +172,12 @@ module.exports = {
             weakest_struct = worn_structs[0];
 
             for (let i=1; i<worn_structs.length; i++){
-                if ((worn_structs[i].hits / worn_structs[i].hitsMax) < (weakest_struct.hits / weakest_struct.hitsMax))
+                if ((worn_structs[i].hits / worn_structs[i].hitsMax)
+                    <
+                    (weakest_struct.hits / weakest_struct.hitsMax)){
+
                     weakest_struct = worn_structs[i];
+                }
             }
             weakstruct_perc = ((weakest_struct.hits / weakest_struct.hitsMax) * 100).toFixed(3);
         }
@@ -185,8 +191,12 @@ module.exports = {
             weakest_wall = worn_walls[0];
 
             for (let i=1; i<worn_walls.length; i++){
-                if (worn_walls[i].hits / Memory.wall_threshold < weakest_wall.hits / Memory.wall_threshold)
+                if ((worn_walls[i].hits / Memory.wall_threshold)
+                    <
+                    (weakest_wall.hits / Memory.wall_threshold)){
+
                     weakest_wall = worn_walls[i];
+                }
             }
             weakwall_perc = ((weakest_wall.hits / Memory.wall_threshold) * 100).toFixed(3);
         }
@@ -227,7 +237,7 @@ module.exports = {
         
 
         //state of the room report
-        if (ctrl.level < 8)                                 console.log('STATUSREPORT:: Controller EXP: ' + control_perc + '% -> ' + ctrl.progress + '/' + ctrl.progressTotal);
+        if (ctrl.level < ctrlLvl_max)                       console.log('STATUSREPORT:: Controller EXP: ' + control_perc + '% -> ' + ctrl.progress + '/' + ctrl.progressTotal);
         else                                                console.log('STATUSREPORT:: Controller EXP: MAX');
 
                                                             console.log('STATUSREPORT:: Spawning energy: ' + ext_energy + ' extended, ' + nexi_energy + ' nexi');

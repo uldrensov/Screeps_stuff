@@ -6,10 +6,11 @@ module.exports = {
 
         const energyCanisters_max = 2;
         
+        
         let hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
 
 
-        //periodically confirm valid energy sources and canisters in the room
+        //periodically confirm valid sources and canisters in the room
         if (Game.time % std_interval == 0){
             let sources = unit.room.find(FIND_SOURCES);
 
@@ -32,10 +33,6 @@ module.exports = {
         
 
         //FETCH / UNLOAD FSM...
-        //init (starts in FETCHING mode)
-        if (unit.memory.fetching == undefined)
-            unit.memory.fetching = true;
-
         //if carry amt reaches full while FETCHING, switch to UNLOADING
         if (unit.memory.fetching && unit.store.getFreeCapacity() == 0)
             unit.memory.fetching = false;

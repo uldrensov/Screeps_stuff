@@ -4,8 +4,8 @@
 module.exports = {
     run: function(unit, standby_flag, standby_flag2){
         
-        //travelling...
-        //trek to the first checkpoint
+        //one-time double-flag rally FSM...
+        //first checkpoint
         if (unit.pos.isEqualTo(standby_flag.pos))
             unit.memory.rallied = true;
         if (!unit.memory.rallied){
@@ -22,7 +22,7 @@ module.exports = {
         }
             
             
-        //input: sources (non-empty)
+        //INPUTS: sources (non-empty)
         let sources = unit.room.find(FIND_SOURCES, {
             filter: RoomObject => {
                 return RoomObject.energy > 0;
@@ -39,12 +39,13 @@ module.exports = {
             unit.memory.fetching = true;
 
         
-        //behaviour execution...
-        if (!unit.memory.fetching){
+        //FSM execution (UNLOADING):
+        if (!unit.memory.fetching)
             //UNLOAD: controller
             if (unit.upgradeController(unit.room.controller))
                 unit.moveTo(unit.room.controller);
-        }
+        
+        //FSM execution (FETCHING):
         else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE)
             //FETCH: sources
             unit.moveTo(sources[0]);

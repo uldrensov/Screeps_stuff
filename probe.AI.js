@@ -7,7 +7,8 @@ module.exports = {
         const energyCanisters_max = 2;
 
         
-        //INPUTS: energy sources, containers (ample)
+
+        //INPUTS: sources, containers (ample)
         let sources = unit.room.find(FIND_SOURCES);
         let canisters = unit.room.find(FIND_STRUCTURES, {
             filter: structure => {
@@ -28,6 +29,7 @@ module.exports = {
             }
         });
         
+
         
         //FETCH / UNLOAD FSM...
         //if carry amt reaches full while FETCHING, switch to UNLOADING
@@ -37,18 +39,16 @@ module.exports = {
         if (!unit.memory.fetching && unit.store.getUsedCapacity() == 0)
             unit.memory.fetching = true;
 
+
         
-        //behaviour execution...
-        //UNLOAD: structure (weakest %; fixation)
+        //FSM execution (UNLOADING):
         if (!unit.memory.fetching && repairTargets.length){
-            
-            //find the weakest structure in terms of %
+            //UNLOAD: structure (weakest %; fixation)
             let weakest = repairTargets[0];
-            
-            //init a base case: get proper maximum / threshold value before calculating %
             let HPmax_base;
             let base_perc;
 
+            //use the proper HP threshold value
             switch (weakest.structureType){
                 case STRUCTURE_WALL:
                     HPmax_base = Memory.wall_threshold;
@@ -62,11 +62,13 @@ module.exports = {
 
             base_perc = weakest.hits / HPmax_base;
             
-            //repeat for each remaining candidate
+
+            //find the weakest structure in terms of HP %
             let HPmax_compare;
             let compare_perc;
 
-            for (let i=0; i<repairTargets.length; i++){
+            for (let i=1; i<repairTargets.length; i++){
+                //use the proper HP threshold value
                 switch (repairTargets[i].structureType){
                     case STRUCTURE_WALL:
                         HPmax_compare = Memory.wall_threshold;
@@ -80,18 +82,18 @@ module.exports = {
 
                 compare_perc = repairTargets[i].hits / HPmax_compare;
                 
-                //compare and update
                 if (compare_perc < base_perc){
-                    weakest = repairTargets[i];
-                    HPmax_base = HPmax_compare;
-                    base_perc = compare_perc;
+                    weakest =       repairTargets[i];
+                    HPmax_base =    HPmax_compare;
+                    base_perc =     compare_perc;
                 }
             }
             
+
             //select an initial target to fixate upon, or determine if the previous fixation is worth overriding for the new weakest structure (subtract percentage values)
             if (!Game.getObjectById(unit.memory.fixation)
                 ||
-                (Game.getObjectById(unit.memory.fixation).hits / unit.memory.fixation_max) - base_perc
+                ((Game.getObjectById(unit.memory.fixation).hits / unit.memory.fixation_max) - base_perc)
                     >
                 override_threshold){
 
@@ -112,14 +114,16 @@ module.exports = {
         }
 
         
+        //FSM execution (FETCHING):
         else{
             //FETCH: vault (respect limit)
-            if (unit.room.storage && (unit.room.storage.store.energy > reserve))
-                if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(unit.room.storage);
+            if (unit.room.storage)
+                if (unit.room.storage.store.energy > reserve)
+                    if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(unit.room.storage);
             
             //FETCH: containers (fullest)
-            else if (canisters.length){
+            if (canisters.length || (unit.room.storage.store.energy <= reserve)){
                 let fullest_canister = canisters[0];
 
                 if (canisters.length == energyCanisters_max

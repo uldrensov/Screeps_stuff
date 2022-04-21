@@ -6,12 +6,14 @@ var SD = require('SET_SOFTDATA');
 module.exports = {
     run: function(){
         
+        const ctrlLvl_towers = 3;
+        const healthy_percent = .95;
+
+        
         let ctrl = [];
         for (let i=0; i<SD.ctrl_id.length; i++){
             ctrl[i] = Game.getObjectById(SD.ctrl_id[i]);
         }
-
-        const healthy_percent = .95;
         
         
         //per room:
@@ -22,7 +24,7 @@ module.exports = {
             if (!ctrl[k])                           continue; //bypass: if controller fails to retrieve, skip the room
 
             //ignore rooms under level requirement for towers
-            if (ctrl[k].level < 3)                  continue;
+            if (ctrl[k].level < ctrlLvl_towers)     continue;
             
 
             //1.

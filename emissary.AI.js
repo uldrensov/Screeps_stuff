@@ -5,7 +5,7 @@
 module.exports = {
     run: function(unit, standby_1){
         
-        //rally to the flag location first
+        //one-time single-flag rally FSM
         if (!unit.memory.rallied)
             unit.moveTo(standby_1, {visualizePathStyle: {stroke: '#00ffff'}});
         if (unit.pos.isEqualTo(standby_1.pos))

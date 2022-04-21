@@ -27,6 +27,7 @@ module.exports = {
         }
         
         
+
         //FETCH / UNLOAD FSM...
         //if carry amt reaches full while FETCHING, switch to UNLOADING
         if (unit.memory.fetching && unit.store.getFreeCapacity() == 0)
@@ -35,15 +36,17 @@ module.exports = {
         if (!unit.memory.fetching && unit.store.getUsedCapacity() == 0)
             unit.memory.fetching = true;
 
+
         
-        //behaviour execution...
-        //UNLOAD: towers (most drained)
+        //FSM execution (UNLOADING):
         if (!unit.memory.fetching){
+            //UNLOAD: towers (most drained)
             if (unit.memory.towers.length){
                 let lowest_tower = Game.getObjectById(unit.memory.towers[0].id);
                 
+                //determine lowest energy tower
                 for (let i=1; i<unit.memory.towers.length; i++){
-                    //if invalid ID, skip
+                    //if memorised tower no longer exists, skip it
                     if (!Game.getObjectById(unit.memory.towers[i].id))
                         continue;
 
@@ -51,7 +54,6 @@ module.exports = {
                     if (!lowest_tower)
                         lowest_tower = Game.getObjectById(unit.memory.towers[i].id);
 
-                    //determine lowest energy tower
                     else if (Game.getObjectById(unit.memory.towers[i].id).store[RESOURCE_ENERGY]
                         <
                         lowest_tower.store[RESOURCE_ENERGY]){
@@ -60,12 +62,14 @@ module.exports = {
                     }
                 }
 
-                if (Game.getObjectById(lowest_tower.id))
-                    if (unit.transfer(Game.getObjectById(lowest_tower.id), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(Game.getObjectById(lowest_tower.id));
+                if (lowest_tower)
+                    if (unit.transfer(lowest_tower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(lowest_tower);
             }
         }
 
+
+        //FSM execution (FETCHING):
         else{
             //FETCH: vault
             if (unit.room.storage && unit.room.storage.store.energy > 0)

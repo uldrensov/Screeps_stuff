@@ -19,7 +19,7 @@ module.exports = {
         
         
         //summary 1: room existence, danger level, summoned recovery units
-        for (let i=0; i<SD.spawner_id.length; i++){
+        for (let i=0; i<SD.ctrl_id.length; i++){
             remote_exists =     (Memory.orbitalAssimilator_MAX[i] != 0)     ? true          : false;
             danger_level =      (Memory.evac_timer[i] > 0)                  ? 'HIGH'        : 'LOW';
             bloodhunt_status =  (danger_level == 'LOW')                     ? 'DORMANT'     : (Memory.bloodhunter_casualty[i])           ? 'DEFEATED'   :
@@ -36,7 +36,7 @@ module.exports = {
         console.log('STATUSREPORT_R::');
         
         //summary 2: time passed since last incidents observed
-        for (let j=0; j<SD.spawner_id.length; j++){
+        for (let j=0; j<SD.ctrl_id.length; j++){
             remote_exists =     (Memory.orbitalAssimilator_MAX[j] != 0)     ? true          : false;
             ticksago_enemy =    isNaN(Memory.lastSeenEnemy_time[j])         ? '∞'           : (Game.time - Memory.lastSeenEnemy_time[j]);
             ticksago_core =     isNaN(Memory.lastSeenCore_time[j])          ? '∞'           : (Game.time - Memory.lastSeenCore_time[j]);

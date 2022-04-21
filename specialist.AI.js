@@ -4,8 +4,8 @@
 module.exports = {
     run: function(unit, standby_flag, standby_flag2){
         
-        //travelling...
-        //trek to the first checkpoint
+        //one-time double-flag rally FSM...
+        //first checkpoint
         if (unit.pos.isEqualTo(standby_flag.pos))
             unit.memory.rallied = true;
         if (!unit.memory.rallied){
@@ -20,9 +20,10 @@ module.exports = {
             unit.moveTo(standby_flag2, {visualizePathStyle: {stroke: '#00ff00'}});
             return;
         }
-        
-            
-        //input: source (non-empty), pickups, ruins (non-empty)
+
+
+
+        //INPUTS: source (non-empty), pickups, ruins (non-empty)
         let src = unit.pos.findClosestByPath(FIND_SOURCES, {
             filter: RoomObject => {
                 return RoomObject.energy > 0;
@@ -39,10 +40,11 @@ module.exports = {
             }
         });
         
-        //output: construction hotspot
+        //OUTPUTS: construction hotspot
         let hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
-        
-        
+
+
+
         //FETCH / UNLOAD FSM...
         //if carry amt reaches full while FETCHING, switch to UNLOADING
         if (unit.memory.fetching && unit.store.getFreeCapacity() == 0)
@@ -52,12 +54,15 @@ module.exports = {
             unit.memory.fetching = true;
                 
                 
-        //behaviour execution...
+
+        //FSM execution (UNLOADING):
         if (!unit.memory.fetching && hotspot)
             //UNLOAD: construction hotspot
             if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
                 unit.moveTo(hotspot);
             
+
+        //FSM execution (FETCHING):
         else{
             //FETCH: pickups (fullest)
             if (scraps.length){
@@ -77,11 +82,6 @@ module.exports = {
             else if (remains.length)
                 if (unit.withdraw(remains[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(remains[0]);
-            
-            //FETCH: source (manual override)
-            else if (unit.memory.force_src)
-                if (unit.harvest(Game.getObjectById(unit.memory.force_src)) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(Game.getObjectById(unit.memory.force_src));
             
             //FETCH: source
             else if (unit.harvest(src) == ERR_NOT_IN_RANGE)

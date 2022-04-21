@@ -22,10 +22,12 @@ module.exports = {
             vault = ctrl.room.storage;
             mineral = Memory.mineral_type[i].mineralType;
             
-            if (vault)
+            if (vault && mineral)
                 console.log('STATUSREPORT_E:: Vault #' + i + ': ' + vault.store.getUsedCapacity() + '-> ' +  vault.store.getUsedCapacity(RESOURCE_ENERGY) + ' energy, ' +
                     vault.store.getUsedCapacity(mineral) + ' ' + mineral + ', ' +
                     (vault.store.getUsedCapacity() - (vault.store.getUsedCapacity(RESOURCE_ENERGY) + vault.store.getUsedCapacity(mineral))) + ' misc.');
+            else
+                console.log('STATUSREPORT_E:: Vault #' + i + ': ERROR RETRIEVING DATA');
         }
         
         console.log('STATUSREPORT_E::');
@@ -39,10 +41,12 @@ module.exports = {
             term = ctrl.room.terminal;
             mineral = Memory.mineral_type[j].mineralType;
             
-            if (term)
+            if (term && mineral)
                 console.log('STATUSREPORT_E:: Terminal #' + j + ': ' + term.store.getUsedCapacity() + '-> ' +  term.store.getUsedCapacity(RESOURCE_ENERGY) + ' energy, ' +
                     term.store.getUsedCapacity(mineral) + ' ' + mineral + ', ' +
                     (term.store.getUsedCapacity() - (term.store.getUsedCapacity(RESOURCE_ENERGY) + term.store.getUsedCapacity(mineral))) + ' misc.');
+            else
+                console.log('STATUSREPORT_E:: Terminal #' + i + ': ERROR RETRIEVING DATA');
         }
         
 

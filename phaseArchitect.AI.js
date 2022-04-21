@@ -4,9 +4,11 @@
 module.exports = {
     run: function(unit, nexus_id, bias){
         
+        const energyCanisters_max = 2;
+
+
         let nexus = Game.getObjectById(nexus_id);
 
-        const energyCanisters_max = 2;
 
 
         //proceed if there is no suicide order
@@ -25,15 +27,19 @@ module.exports = {
             
             
             //self-killswitch routine
+            let hotspot;
+
             if (!hotspot_scan.length){
-                Memory.phaseArchitect_MAX[unit.memory.home_index] = -1;
                 console.log(unit.name + ':: PHASE CONSTRUCTION COMPLETE (ROOM #' + unit.memory.home_index + ')');
+
+                Memory.phaseArchitect_MAX[unit.memory.home_index] = -1;
                 unit.memory.killswitch = true;
             }
             else
-                var hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+                hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
             
             
+
             //FETCH / UNLOAD FSM...
             //if carry amt reaches full while FETCHING, switch to UNLOADING
             if (unit.memory.fetching && unit.store.getFreeCapacity() == 0)
@@ -43,13 +49,15 @@ module.exports = {
                 unit.memory.fetching = true;
                 
                 
-            //behaviour execution...
-            //UNLOAD: construction hotspot (nearest)
+
+            //FSM execution (UNLOADING):
             if (!unit.memory.fetching && hotspot)
+                //UNLOAD: construction hotspot (nearest)
                 if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
                     unit.moveTo(hotspot);
 
                     
+            //FSM execution (FETCHING):
             else{
                 //FETCH: vault (respect limit)
                 if (unit.room.storage)

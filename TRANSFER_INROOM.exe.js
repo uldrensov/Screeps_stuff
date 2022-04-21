@@ -43,12 +43,12 @@ module.exports = {
 
         //determine if a treasurer already exists in the specified room (exhaustive search)
         let unit;
-        let treasurer = false;
+        let treasurer;
 
         for (let name in Game.creeps){
             unit = Game.creeps[name];
 
-            if (unit.room == Game.getObjectById(SD.spawner_id[room_num][0]).room
+            if (unit.room == Game.getObjectById(SD.ctrl_id[room_num]).room
                 &&
                 unit.memory.role == 'treasurer'){
 
@@ -58,32 +58,36 @@ module.exports = {
         }
         
 
+        let local_nexi = Game.getObjectById(SD.ctrl_id[room_num]).room.find(FIND_STRUCTURES, {
+            filter: structure => {
+                return structure.structureType == STRUCTURE_SPAWN;
+            }
+        });
+
         //if no treasurer currently exists...
-        let openNexus = Game.getObjectById(SD.spawner_id[room_num][0]);
+        if (!treasurer && local_nexi.length){
+            //determine an unoccupied nexus for the treasurer
+            let openNexus;
 
-        if (!treasurer){
-            //determine an unoccupied spawner for the treasurer
-            for (let i=0; i<SD.spawner_id[room_num].length; i++){
-                //bypass: if nexus fails to retrieve, skip the room
-                if (!Game.getObjectById(SD.spawner_id[room_num][i]))
-                    continue;
-
-                if (!Game.getObjectById(SD.spawner_id[room_num][i]).spawning){
-                    openNexus = Game.getObjectById(SD.spawner_id[room_num][i]);
+            for (let i=0; i<local_nexi.length; i++){
+                //find a nexus that isn't currently trying to spawn something
+                if (!local_nexi[i].spawning){
+                    openNexus = local_nexi[i]
                     break;
                 }
-            
-                //this only triggers if no unoccupied spawner is found
-                if (i == SD.spawner_id[room_num].length - 1)
-                    return 'TRANSFER_INROOM:: ALL SPAWNERS IN ROOM #' + room_num + ' ARE CURRENTLY OCCUPIED';
             }
+
+            //if no unoccupied nexus is found
+            if (!openNexus)
+                return 'TRANSFER_INROOM:: ALL SPAWNERS IN ROOM #' + room_num + ' ARE CURRENTLY OCCUPIED';
+
 
             //spawn the treasurer and initialise a command
             let spawnResult = openNexus.spawnCreep(SD.treas_body, 'Treasurer[' + room_num + ']-' + Game.time % SD.time_offset,
                 {memory: {role: 'treasurer', order_type: o_type, order_amt: o_amt, dir: dir, spec_dest: spec, task_progress: 0, autokill: autokill, home_index: room_num}});
 
             if (spawnResult == OK)
-                console.log('TRANSFER_INROOM:: Treasurer[' + room_num + ']-' + Game.time % SD.time_offset + ' spawning.');
+                console.log('TRANSFER_INROOM:: Treasurer[' + room_num + ']-' + Game.time % SD.time_offset + ' spawning.'); //emulate a spawn message, as seen in DRIVE_SPAWN.js
             else
                 return 'TRANSFER_INROOM:: TREASURER SPAWN FAILED WITH NEXUS ERROR CODE ' + spawnResult;
         }

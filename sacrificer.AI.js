@@ -1,19 +1,14 @@
-//sacrificer: standard controller attendant
+//sacrificer: early game controller attendant
 //violet trail ("upgrader")
 
 module.exports = {
     run: function(unit, ignore_lim){
         
-        if (!unit.memory.ctrl_id)
-            unit.memory.ctrl_id = unit.room.controller.id;
-
-        let obelisk = Game.getObjectById(unit.memory.ctrl_id);
+        //INPUTS: sources, containers (ample)
+        if (!unit.memory.sources)
+            unit.memory.sources = unit.room.controller.room.find(FIND_SOURCES);
         
-        
-        //INPUTS: energy sources, containers (ample)
-        let sources = obelisk.room.find(FIND_SOURCES);
-        
-        let canisters = obelisk.room.find(FIND_STRUCTURES, {
+        let canisters = unit.room.controller.room.find(FIND_STRUCTURES, {
             filter: structure => {
                 return structure.structureType == STRUCTURE_CONTAINER
                     &&
@@ -22,6 +17,7 @@ module.exports = {
         });
         
         
+
         //FETCH / UNLOAD FSM...
         //if carry amt reaches full while FETCHING, switch to UNLOADING
         if (unit.memory.fetching && unit.store.getFreeCapacity() == 0)
@@ -30,20 +26,23 @@ module.exports = {
         if (!unit.memory.fetching && unit.store.getUsedCapacity() == 0)
             unit.memory.fetching = true;
 
+
         
-        //behaviour execution...
-        if (!unit.memory.fetching){
+        //FSM execution (UNLOADING):
+        if (!unit.memory.fetching)
             //UNLOAD: controller
-            if (unit.upgradeController(obelisk) == ERR_NOT_IN_RANGE)
-                unit.moveTo(obelisk);
-        }
+            if (unit.upgradeController(unit.room.controller) == ERR_NOT_IN_RANGE)
+                unit.moveTo(unit.room.controller);
+
+
+        //FSM execution (FETCHING):
         else{
             //FETCH: containers (fullest; fixation)
             if (canisters.length){
                 let fullest_canister = canisters[0];
 
                 //determine the fullest container
-                for (let i=0; i<canisters.length; i++){
+                for (let i=1; i<canisters.length; i++){
                     if (canisters[i].store.getUsedCapacity(RESOURCE_ENERGY) > fullest_canister.store.getUsedCapacity(RESOURCE_ENERGY))
                         fullest_canister = canisters[i];
                 }
@@ -61,8 +60,8 @@ module.exports = {
             }
             
             //FETCH: sources
-            else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE)
-                unit.moveTo(sources[0]);
+            else if (unit.harvest(Game.getObjectById(unit.memory.sources[0].id)) == ERR_NOT_IN_RANGE)
+                unit.moveTo(Game.getObjectById(unit.memory.sources[0].id));
         }
     }
 };

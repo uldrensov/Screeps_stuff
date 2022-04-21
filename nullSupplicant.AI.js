@@ -4,14 +4,12 @@
 module.exports = {
     run: function(unit, warpRX0_id){
         
-        let warpRX0 = Game.getObjectById(warpRX0_id);
+        let warpRX0 =   Game.getObjectById(warpRX0_id);
+        
+        if (!warpRX0)   return 'UNIT ERROR: ' + unit.name + ' REQUIRES A RX LINK';
         
         
         //FETCH / UNLOAD FSM...
-        //init (starts in FETCHING mode)
-        if (unit.memory.fetching == undefined)
-            unit.memory.fetching = true;
-
         //if carry amt reaches full while FETCHING, switch to UNLOADING
         if (unit.memory.fetching && unit.store.getFreeCapacity() == 0)
             unit.memory.fetching = false;
@@ -20,14 +18,15 @@ module.exports = {
             unit.memory.fetching = true;
 
         
-        //behaviour execution...
-        //UNLOAD: controller
+        //FSM execution (UNLOADING):
         if (!unit.memory.fetching)
+            //UNLOAD: controller
             if (unit.upgradeController(unit.room.controller) == ERR_NOT_IN_RANGE)
                 unit.moveTo(unit.room.controller);
         
-        //FETCH: link
+        //FSM execution (FETCHING):
         else if (unit.withdraw(warpRX0, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+            //FETCH: link
             unit.moveTo(warpRX0);
     }
 };

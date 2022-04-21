@@ -4,10 +4,11 @@
 module.exports = {
     run: function(unit, nexus_id){
         
-        let nexus = Game.getObjectById(nexus_id);
-        
         //emergency drone's reduced "ignore limit"
         const lowbound = 50;
+
+
+        let nexus = Game.getObjectById(nexus_id);
         
 
         //proceed if there is no suicide order
@@ -29,7 +30,7 @@ module.exports = {
 
 
 
-            //INPUTS: energy sources, containers (ample), pickups (ample), tombstones (non-empty)
+            //INPUTS: sources, containers (ample), pickups (ample), tombstones (non-empty)
             const sources = unit.room.find(FIND_SOURCES);
 
             const canisters = unit.room.find(FIND_STRUCTURES, {
@@ -98,7 +99,7 @@ module.exports = {
                     let fullest_canister = canisters[0];
 
                     //determine the fullest container
-                    for (let i=0; i<canisters.length; i++){
+                    for (let i=1; i<canisters.length; i++){
                         if (canisters[i].store.getUsedCapacity(RESOURCE_ENERGY) > fullest_canister.store.getUsedCapacity(RESOURCE_ENERGY))
                             fullest_canister = canisters[i];
                     }

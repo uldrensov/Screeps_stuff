@@ -8,14 +8,16 @@ var TRADE_ENERGY =          require('TRADE_ENERGY.exe');
 
 module.exports = {
     run: function(){
+
+        const ctrlLvl_max = 8;
+        const threshApproach_factor =   1.5;
+        const powerProcess_cost =       50;
+        
         
         let ctrl = [];
         for (let i=0; i<SD.ctrl_id.length; i++){
             ctrl[i] = Game.getObjectById(SD.ctrl_id[i]);
         }
-
-        const threshApproach_factor =   1.5;
-        const powerProcess_cost =       50;
         
         
         //alerts for vault status
@@ -235,7 +237,7 @@ module.exports = {
             if (!ctrl[i])                           continue; //bypass: if controller fails to retrieve, skip the room
 
             //ignore rooms under level requirement for power nexus
-            if (ctrl[i].level < 8)                  continue;
+            if (ctrl[i].level < ctrlLvl_max)        continue;
 
 
             //if powernex exists, process power

@@ -3,14 +3,14 @@
 
 module.exports = {
     run: function(unit, nexus_id, bloodscent){
-        
-        let nexus = Game.getObjectById(nexus_id);
 
         const dmgPerAtkPart =               30;
         const lowHP_threshold =             .25;
-
         const reinforcement_delay =         100;
         const bloodhunterCasualty_delay =   1000;
+
+
+        let nexus = Game.getObjectById(nexus_id);
         
         
         //proceed if there is no suicide order

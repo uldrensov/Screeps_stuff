@@ -29,6 +29,7 @@ module.exports = {
             rsrc_type, amt, Game.getObjectById(SD.ctrl_id[dest]).room.name
         );
 
+        
         //return confirmation of success, or failure error message
         switch (circResult){
             case 0:
