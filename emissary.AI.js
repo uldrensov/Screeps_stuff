@@ -14,7 +14,7 @@ module.exports = {
         
         //search for hostile contruction sites to trample, en route to the flag
         if (!unit.memory.rallied){
-            let shrines = unit.pos.findClosestByRange(FIND_HOSTILE_CONSTRUCTION_SITES, {
+            const shrines = unit.pos.findClosestByRange(FIND_HOSTILE_CONSTRUCTION_SITES, {
                 filter: RoomObject => {
                     return RoomObject.progress > 0;
                 }

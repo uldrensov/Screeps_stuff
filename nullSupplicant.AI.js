@@ -4,7 +4,7 @@
 module.exports = {
     run: function(unit, warpRX0_id){
         
-        let warpRX0 = Game.getObjectById(warpRX0_id);
+        const warpRX0 = Game.getObjectById(warpRX0_id);
         
         if (!warpRX0){
             console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A RX LINK');

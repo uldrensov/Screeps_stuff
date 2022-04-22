@@ -4,10 +4,10 @@
 module.exports = {
     run: function(unit, src_id, warpRX_id, warpTX_id, canister_id){
         
-        let src =       Game.getObjectById(src_id);
-        let warpRX =    Game.getObjectById(warpRX_id);
-        let warpTX =    Game.getObjectById(warpTX_id);
-        let canister =  Game.getObjectById(canister_id);
+        const src =       Game.getObjectById(src_id);
+        const warpRX =    Game.getObjectById(warpRX_id);
+        const warpTX =    Game.getObjectById(warpTX_id);
+        const canister =  Game.getObjectById(canister_id);
 
         if (!src){
             console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A SOURCE');

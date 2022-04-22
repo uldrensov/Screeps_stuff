@@ -18,11 +18,8 @@ module.exports = {
         if (!unit.memory.killswitch){
             //proceed if the evacuation alarm is not raised
             if (Memory.evac_timer[unit.memory.home_index] == 0){
-                //INPUTS: container
-                const canister = Game.getObjectById(canister_id);
-                
-                //OUTPUTS: vault
-                const dropoff = Game.getObjectById(unit.memory.dropoff_id);
+                const canister =    Game.getObjectById(canister_id);
+                const dropoff =     Game.getObjectById(unit.memory.dropoff_id);
             
             
                 //FETCH / UNLOAD FSM...
@@ -39,13 +36,14 @@ module.exports = {
                 //performing actions at home room...
                 if (!unit.memory.fetching){
                     //navigate to homeroom
-                    if (unit.room.name != Game.getObjectById(nexus_id).room.name){
+                    if (unit.room.name != Game.getObjectById(nexus_id).room.name)
                         unit.moveTo(dropoff);
-                    }
+                        
                     else{
                         //UNLOAD: vault (if container/link is designated, but full)
                         if (dropoff.store.getFreeCapacity(RESOURCE_ENERGY) == 0 && unit.room.storage)
                             unit.moveTo(unit.room.storage);
+                            
                         //UNLOAD: container/link/vault
                         else if (unit.transfer(dropoff, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                             unit.moveTo(dropoff);
@@ -171,18 +169,11 @@ module.exports = {
                             //STAGE 3B END: proceed if room reservation is intact
                             if (!reservation_lost){
                                 //STAGE 4. fetch from inputs
-
-                                //INPUTS: pickups, tombstones (non-empty)
                                 const scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
                                     filter: resource => {
                                         return resource.resourceType == RESOURCE_ENERGY
                                             &&
                                             resource.amount > ignore_lim;
-                                    }
-                                });
-                                const tombs = unit.room.find(FIND_TOMBSTONES, {
-                                    filter: RoomObject => {
-                                        return RoomObject.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
                                     }
                                 });
                 
@@ -191,14 +182,26 @@ module.exports = {
                                     if (unit.pickup(scraps[0]) == ERR_NOT_IN_RANGE)
                                         unit.moveTo(scraps[0]);
                                 }
+
+
                                 //FETCH: tombstones<energy>
-                                else if (tombs.length){
-                                    if (unit.withdraw(tombs[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                                        unit.moveTo(tombs[0]);
-                                }
-                                //FETCH: container
-                                else if (unit.withdraw(canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                                    unit.moveTo(canister);
+                                else{
+                                    const tombs = unit.room.find(FIND_TOMBSTONES, {
+                                        filter: RoomObject => {
+                                            return RoomObject.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+                                        }
+                                    });
+
+                                    if (tombs.length){
+                                        if (unit.withdraw(tombs[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                                            unit.moveTo(tombs[0]);
+                                    }
+
+
+                                    //FETCH: container
+                                    else if (unit.withdraw(canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                                        unit.moveTo(canister);
+                                }    
                             }
                         }
                     } 

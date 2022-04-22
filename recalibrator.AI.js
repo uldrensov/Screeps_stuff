@@ -19,7 +19,7 @@ module.exports = {
                     let p_threats = 0;
                     let p_name = '[NULL]';
 
-                    let foreigner = unit.room.find(FIND_HOSTILE_CREEPS);
+                    const foreigner = unit.room.find(FIND_HOSTILE_CREEPS);
 
                     //STAGE 2 START: check any foreigners present in the room, and respond appropriately
                     if (foreigner.length){
@@ -81,7 +81,7 @@ module.exports = {
 
                     //STAGE 2 END: proceed if no threats detected
                     else{
-                        let invadercores = unit.room.find(FIND_HOSTILE_STRUCTURES, {
+                        const invadercores = unit.room.find(FIND_HOSTILE_STRUCTURES, {
                             filter: structure => {
                                 return structure.structureType == STRUCTURE_INVADER_CORE;
                             }

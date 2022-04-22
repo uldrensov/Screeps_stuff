@@ -2,9 +2,9 @@
 //black trail ("collector")
 
 module.exports = {
-    run: function(unit, canister_id, std_interval){
+    run: function(unit, canister_id){
         
-        let canister = Game.getObjectById(canister_id);
+        const canister = Game.getObjectById(canister_id);
 
         if (!canister){
             console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A CANISTER');

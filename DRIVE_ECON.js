@@ -252,7 +252,7 @@ module.exports = {
 
             //if no powernex exists, search for one periodically
             else if (Game.time % SD.std_interval == 0){
-                let powernex = ctrl[i].room.find(FIND_STRUCTURES, {
+                const powernex = ctrl[i].room.find(FIND_STRUCTURES, {
                     filter: structure => {
                         return structure.structureType == STRUCTURE_POWER_SPAWN;
                     }

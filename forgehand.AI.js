@@ -13,8 +13,8 @@ module.exports = {
             unit.memory.reactant2_id = SD.reactant_id[home_index][1];
         }
 
-        let r1 = Game.getObjectById(unit.memory.reactant1_id);
-        let r2 = Game.getObjectById(unit.memory.reactant2_id);
+        const r1 = Game.getObjectById(unit.memory.reactant1_id);
+        const r2 = Game.getObjectById(unit.memory.reactant2_id);
 
 
         //if lab1 is not empty, clean it out

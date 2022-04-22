@@ -8,16 +8,14 @@ module.exports = {
         if (!unit.memory.killswitch){
             //proceed if the evacuation alarm is not raised
             if (Memory.evac_timer[unit.memory.home_index] == 0){
-                //INPUTS: source
-                let src = Game.getObjectById(src_id);
-            
-                //OUTPUTS: containers (damaged)
-                let canister = Game.getObjectById(canister_id);
+                const src =         Game.getObjectById(src_id);
+                const canister =    Game.getObjectById(canister_id);
             
             
                 //remote canister maintenance...
                 if (unit.memory.repairmode == undefined)
                     unit.memory.repairmode = false; //init
+                    
                 //if carried energy is over half, unit may repair
                 if (unit.store[RESOURCE_ENERGY] > unit.store.getCapacity()/2)
                     unit.memory.repairmode = true;
@@ -37,7 +35,7 @@ module.exports = {
                     let p_threats = 0;
                     let p_name = '[NULL]';
 
-                    let foreigner = unit.room.find(FIND_HOSTILE_CREEPS);
+                    const foreigner = unit.room.find(FIND_HOSTILE_CREEPS);
 
                     //STAGE 2 START: check any foreigners present in the room, and respond appropriately
                     if (foreigner.length){
@@ -99,7 +97,7 @@ module.exports = {
 
                     //STAGE 2 END: proceed if no threats detected
                     else{
-                        let invadercores = unit.room.find(FIND_HOSTILE_STRUCTURES, {
+                        const invadercores = unit.room.find(FIND_HOSTILE_STRUCTURES, {
                             filter: structure => {
                                 return structure.structureType == STRUCTURE_INVADER_CORE;
                             }
@@ -155,6 +153,7 @@ module.exports = {
                                     //FETCH: sources
                                     unit.moveTo(src);
                             }
+                            
                             //fetching (without container)
                             else if (unit.harvest(src) == ERR_NOT_IN_RANGE)
                                 //FETCH: sources

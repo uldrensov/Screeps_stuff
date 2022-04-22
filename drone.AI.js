@@ -44,7 +44,7 @@ module.exports = {
 
                 //FETCH: ruins<non-energy>, ruins<energy> (fullest)
                 //find ruins
-                let remains = unit.room.find(FIND_RUINS, {
+                const remains = unit.room.find(FIND_RUINS, {
                     filter: RoomObject => {
                         return RoomObject.store.getUsedCapacity() > 0;
                     }
@@ -93,7 +93,7 @@ module.exports = {
                 if (!unit.memory.fetch_target_ID){
                     //FETCH: tombstones<non-energy>, tombstones<energy> (fullest)
                     //find tombstones
-                    let tombs = unit.room.find(FIND_TOMBSTONES, {
+                    const tombs = unit.room.find(FIND_TOMBSTONES, {
                         filter: RoomObject => {
                             return RoomObject.store.getUsedCapacity() > 0;
                         }
@@ -143,7 +143,7 @@ module.exports = {
                 if (!unit.memory.fetch_target_ID){
                     //FETCH: pickups<non-energy> (least TTL), pickups<energy> (fullest)
                     //find pickups
-                    let scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
+                    const scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
                         filter: resource => {
                             return (resource.resourceType == RESOURCE_ENERGY && resource.amount > ignore_lim)
                                 ||
@@ -188,7 +188,7 @@ module.exports = {
                 if (!unit.memory.fetch_target_ID){
                     //FETCH: containers<energy> (fullest)
                     //find containers
-                    let canisters = unit.room.find(FIND_STRUCTURES, {
+                    const canisters = unit.room.find(FIND_STRUCTURES, {
                         filter: structure => {
                             return structure.structureType == STRUCTURE_CONTAINER
                                 &&
@@ -221,21 +221,21 @@ module.exports = {
                     //FETCH: vault<energy>
                     //check spawners and extensions...
                     if (unit.room.storage){
-                        let pylons = unit.room.find(FIND_STRUCTURES, {
+                        const pylons = unit.room.find(FIND_STRUCTURES, {
                             filter: structure => {
                                 return structure.structureType == STRUCTURE_EXTENSION
                                     &&
                                     structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                             }
                         });
-                        let local_nexi = unit.room.find(FIND_STRUCTURES, {
+                        const local_nexi = unit.room.find(FIND_STRUCTURES, {
                             filter: structure => {
                                 return structure.structureType == STRUCTURE_SPAWN
                                     &&
                                     structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                             }
                         });
-                        let powernexi = unit.room.find(FIND_STRUCTURES, {
+                        const powernexi = unit.room.find(FIND_STRUCTURES, {
                             filter: structure => {
                                 return structure.structureType == STRUCTURE_POWER_SPAWN
                                     &&
@@ -251,7 +251,7 @@ module.exports = {
             }
 
 
-            //if a suitable fetch target is registered, FETCH from it
+            //if a suitable fetch target is registered, fetch from it
             if (Game.getObjectById(unit.memory.fetch_target_ID)){
                 //.withdraw for most targets
                 if (unit.withdraw(Game.getObjectById(unit.memory.fetch_target_ID), unit.memory.fetch_type) == ERR_NOT_IN_RANGE)
@@ -313,7 +313,7 @@ module.exports = {
                 if (!unit.memory.unload_target_ID){
                     //UNLOAD: extension (nearest)
                     //find extension
-                    let pylon = unit.pos.findClosestByPath(FIND_STRUCTURES, {
+                    const pylon = unit.pos.findClosestByPath(FIND_STRUCTURES, {
                         filter: structure => {
                             return structure.structureType == STRUCTURE_EXTENSION
                                 &&
@@ -331,7 +331,7 @@ module.exports = {
                 if (!unit.memory.unload_target_ID){
                     //UNLOAD: spawners
                     //find spawners
-                    let local_nexi = unit.room.find(FIND_STRUCTURES, {
+                    const local_nexi = unit.room.find(FIND_STRUCTURES, {
                         filter: structure => {
                             return structure.structureType == STRUCTURE_SPAWN
                                 &&
@@ -349,7 +349,7 @@ module.exports = {
                 if (!unit.memory.unload_target_ID){
                     //UNLOAD: power spawner<energy>
                     //find power spawners
-                    let powernexi = unit.room.find(FIND_STRUCTURES, {
+                    const powernexi = unit.room.find(FIND_STRUCTURES, {
                         filter: structure => {
                             return structure.structureType == STRUCTURE_POWER_SPAWN
                                 &&

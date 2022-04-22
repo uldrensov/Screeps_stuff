@@ -19,7 +19,7 @@ module.exports = {
                     let p_threats = 0;
                     let p_name = '[NULL]';
 
-                    let foreigner = unit.room.find(FIND_HOSTILE_CREEPS);
+                    const foreigner = unit.room.find(FIND_HOSTILE_CREEPS);
 
                     //STAGE 2 START: check any foreigners present in the room, and respond appropriately
                     if (foreigner.length){

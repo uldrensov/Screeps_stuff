@@ -15,22 +15,22 @@ module.exports = {
         //destroy everything in the room
         if (unit.memory.rallied){
             //acquire all possible targets
-            let hatchery = unit.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
+            const hatchery = unit.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_SPAWN;
                 }
             });
-            let creeptumor = unit.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
+            const creeptumor = unit.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_EXTENSION;
                 }
             });
-            let spinecrawler = unit.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
+            const spinecrawler = unit.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_TOWER;
                 }
             });
-            let abomination = unit.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
+            const abomination = unit.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
         
 
             //select target

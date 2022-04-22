@@ -39,7 +39,8 @@ module.exports = {
     run: function(){
 
         //role-specific slowdown factors
-        const big_unit = 2; //big units are 2x as effective per tick, but work at 0.5x speed
+        const big_unit =    2; //big units are 2x as effective per tick, but work at 0.5x speed
+        const very_slow =   3; //used for units that are in no rush to complete their task
 
 
         //periodically update a custom-sorted roster of all units on the field
@@ -79,7 +80,6 @@ module.exports = {
 
         //TICK LOG BREAKPOINT 3
         if (Memory.recordTick){
-            
             if (Memory.cpu_log[3] == undefined)
                 Memory.cpu_log[3] = [];
             Memory.cpu_log[3][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
@@ -214,12 +214,12 @@ module.exports = {
                     purifier.run(unit, SD.spawner_id[j][0], SD.remoteflag[j], SD.tower_id[j]);
                     break;
                 case 'ancientDrone': //very slow unit
-                    if (Game.time % Memory.roomSpeed[j]*3 == 0)
-                        ancientDrone.run(unit, SD.mineralcanister_id[j], SD.std_interval);
+                    if (Game.time % Memory.roomSpeed[j]*very_slow == 0)
+                        ancientDrone.run(unit, SD.mineralcanister_id[j]);
                     break;
                 case 'ancientAssimilator': //very slow unit
-                    if (Game.time % Memory.roomSpeed[j]*3 == 0)
-                        ancientAssimilator.run(unit, SD.mineralcanister_id[j], SD.std_interval);
+                    if (Game.time % Memory.roomSpeed[j]*very_slow == 0)
+                        ancientAssimilator.run(unit, SD.mineralcanister_id[j]);
                     break;
                 case 'architect': //slow unit
                     if (Game.time % Memory.roomSpeed[j] == 0)

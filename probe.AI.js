@@ -22,7 +22,7 @@ module.exports = {
         if (!unit.memory.fetching){
             //UNLOAD: structure (weakest %; fixation)
             //find all damaged structures in the room
-            let repairTargets = unit.room.find(FIND_STRUCTURES, {
+            const repairTargets = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return ((structure.hits < structure.hitsMax && structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART)
                         ||
@@ -123,8 +123,9 @@ module.exports = {
             }
             
             
+            //FETCH: containers (fullest)
             else{
-                let canisters = unit.room.find(FIND_STRUCTURES, {
+                const canisters = unit.room.find(FIND_STRUCTURES, {
                     filter: structure => {
                         return structure.structureType == STRUCTURE_CONTAINER
                             &&
@@ -132,8 +133,6 @@ module.exports = {
                     }
                 });
 
-
-                //FETCH: containers (fullest)
                 if (canisters.length || (unit.room.storage.store.energy <= reserve)){
                     let fullest_canister = canisters[0];
 
@@ -149,6 +148,7 @@ module.exports = {
                     if (unit.withdraw(fullest_canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(fullest_canister);
                 }
+
 
                 //FETCH: sources
                 else{

@@ -4,8 +4,8 @@
 module.exports = {
     run: function(unit, src_id, canister_id){
         
-        src =       Game.getObjectById(src_id);
-        canister =  Game.getObjectById(canister_id);
+        const src =       Game.getObjectById(src_id);
+        const canister =  Game.getObjectById(canister_id);
 
         if (!src){
             console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A SOURCE');

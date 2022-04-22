@@ -70,7 +70,7 @@ module.exports = {
             //determine if mineral mining is possible (for ancient drone / assimilator spawns)
             if (!Game.getObjectById(Memory.extractor_id[k])){
 
-                let extractor = ctrl[k].room.find(FIND_STRUCTURES, {
+                const extractor = ctrl[k].room.find(FIND_STRUCTURES, {
                     filter: structure => {
                         return structure.structureType == STRUCTURE_EXTRACTOR;
                     }
@@ -123,7 +123,7 @@ module.exports = {
 
             //for edrone spawn logic, count up total room energy within spawn structures, canisters, and the vault
             //fullest nexus energy...
-            let local_nexi = ctrl[k].room.find(FIND_STRUCTURES, {
+            const local_nexi = ctrl[k].room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_SPAWN;
                 }
@@ -137,7 +137,7 @@ module.exports = {
 
 
             //extension energy...
-            let local_exts = ctrl[k].room.find(FIND_STRUCTURES, {
+            const local_exts = ctrl[k].room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_EXTENSION;
                 }
@@ -150,7 +150,7 @@ module.exports = {
 
 
             //canister energy...
-            let local_canisters = ctrl[k].room.find(FIND_STRUCTURES, {
+            const local_canisters = ctrl[k].room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_CONTAINER;
                 }
@@ -169,7 +169,7 @@ module.exports = {
 
 
             //totaled up...
-            let droneAccessible_energy = fullestNexus.store.energy + extension_energy + canister_energy + vault_energy;
+            const droneAccessible_energy = fullestNexus.store.energy + extension_energy + canister_energy + vault_energy;
             
 
 
@@ -182,7 +182,7 @@ module.exports = {
             
 
             //for retriever drone spawn, determine how much energy is dropped on the ground
-            let scraps = ctrl[k].room.find(FIND_DROPPED_RESOURCES, {
+            const scraps = ctrl[k].room.find(FIND_DROPPED_RESOURCES, {
                 filter: resource => {
                     return resource.resourceType == RESOURCE_ENERGY
                         &&

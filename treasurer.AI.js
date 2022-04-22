@@ -80,8 +80,8 @@ module.exports = {
 
                 //UNLOAD
                 if (unit.store.getFreeCapacity(unit.memory.order_type) == 0 || finaltrip){ //if unit is fully loaded, or if carrying its final load
-                    let most_recent_load = unit.store.getUsedCapacity(unit.memory.order_type);
-                    let unload_result = unit.transfer(output, unit.memory.order_type);
+                    const most_recent_load = unit.store.getUsedCapacity(unit.memory.order_type);
+                    const unload_result = unit.transfer(output, unit.memory.order_type);
 
                     if (unload_result == ERR_NOT_IN_RANGE)
                         unit.moveTo(output);

@@ -10,8 +10,7 @@ module.exports = {
 
         //proceed if there is no suicide order
         if (!unit.memory.killswitch){
-            //OUTPUTS: construction hotspot
-            let hotspot_scan = unit.room.find(FIND_CONSTRUCTION_SITES);
+            const hotspot_scan = unit.room.find(FIND_CONSTRUCTION_SITES);
             
             
             //self-killswitch routine
@@ -56,7 +55,7 @@ module.exports = {
                 
                 //FETCH: containers (fullest)
                 else{
-                    let canisters = unit.room.find(FIND_STRUCTURES, {
+                    const canisters = unit.room.find(FIND_STRUCTURES, {
                         filter: structure => {
                             return structure.structureType == STRUCTURE_CONTAINER
                                 &&

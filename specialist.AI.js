@@ -36,7 +36,7 @@ module.exports = {
         //FSM execution (UNLOADING):
         if (!unit.memory.fetching){
             //UNLOAD: construction hotspot
-            let hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+            const hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
 
             if (hotspot)
                 if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
@@ -46,24 +46,13 @@ module.exports = {
 
         //FSM execution (FETCHING):
         else{
-            let src = unit.pos.findClosestByPath(FIND_SOURCES, {
-                filter: RoomObject => {
-                    return RoomObject.energy > 0;
-                }
-            });
-            let scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
+            //FETCH: pickups (fullest)
+            const scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
                 filter: resource => {
                     return resource.resourceType == RESOURCE_ENERGY;
                 }
             });
-            let remains = unit.room.find(FIND_RUINS, {
-                filter: RoomObject => {
-                    return RoomObject.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
-                }
-            });
 
-
-            //FETCH: pickups (fullest)
             if (scraps.length){
                 let chosen_scrap = scraps[0];
 
@@ -77,15 +66,30 @@ module.exports = {
                     unit.moveTo(chosen_scrap);
             }
 
+
             //FETCH: ruins
-            else if (remains.length){
-                if (unit.withdraw(remains[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(remains[0]);
+            else{
+                const remains = unit.room.find(FIND_RUINS, {
+                    filter: RoomObject => {
+                        return RoomObject.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+                    }
+                });
+
+                if (remains.length){
+                    if (unit.withdraw(remains[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(remains[0]);
+                }
+
+
+                //FETCH: source
+                else{
+                    if (!unit.memory.src_ID)
+                        unit.memory.src_ID = unit.room.find(FIND_SOURCES)[0].id;
+
+                    if (unit.harvest(Game.getObjectById(unit.memory.src_ID)) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(Game.getObjectById(unit.memory.src_ID));
+                }
             }
-            
-            //FETCH: source
-            else if (unit.harvest(src) == ERR_NOT_IN_RANGE)
-                unit.moveTo(src);
         }
     }
 };

@@ -9,7 +9,7 @@ module.exports = {
 
         //periodically confirm valid canisters in the room
         if (Game.time % std_interval == 0){
-            let canisters = unit.room.find(FIND_STRUCTURES, {
+            const canisters = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_CONTAINER
                         &&
@@ -35,7 +35,8 @@ module.exports = {
 
         //FSM execution (UNLOADING):
         if (!unit.memory.fetching){
-            let hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+            //UNLOAD: construction hotspot (nearest)
+            const hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
 
             if (hotspot)
                 if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
@@ -75,6 +76,7 @@ module.exports = {
                     unit.moveTo(Game.getObjectById(fullest_canister_ID));
             }
 
+            
             //FETCH: sources
             else{
                 if (!unit.memory.src_ID)

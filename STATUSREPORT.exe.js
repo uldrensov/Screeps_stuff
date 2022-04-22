@@ -39,33 +39,33 @@ module.exports = {
 
         //census...
         //count unit population by role
-        let emergencyDrone_gang =       _.filter(Game.creeps, creep => creep.memory.role == 'emergencyDrone'        && creep.memory.home_index == room_num);
-        let assimilator_gang =          _.filter(Game.creeps, creep => creep.memory.role == 'assimilator'           && creep.memory.home_index == room_num);
-        let assimilator2_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'assimilator2'          && creep.memory.home_index == room_num);
-        let drone_gang =                _.filter(Game.creeps, creep => creep.memory.role == 'drone'                 && creep.memory.home_index == room_num);
-        let energiser_gang =            _.filter(Game.creeps, creep => creep.memory.role == 'energiser'             && creep.memory.home_index == room_num);
-        let retrieverDrone_gang =       _.filter(Game.creeps, creep => creep.memory.role == 'retrieverDrone'        && creep.memory.home_index == room_num);
-        let sacrificer_gang =           _.filter(Game.creeps, creep => creep.memory.role == 'sacrificer'            && creep.memory.home_index == room_num);
-        let acolyte_gang =              _.filter(Game.creeps, creep => creep.memory.role == 'acolyte'               && creep.memory.home_index == room_num);
-        let acolyte2_gang =             _.filter(Game.creeps, creep => creep.memory.role == 'acolyte2'              && creep.memory.home_index == room_num);
-        let adherent_gang =             _.filter(Game.creeps, creep => creep.memory.role == 'adherent'              && creep.memory.home_index == room_num);
-        let nullAdherent_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'nullAdherent'          && creep.memory.home_index == room_num);
-        let supplicant_gang =           _.filter(Game.creeps, creep => creep.memory.role == 'supplicant'            && creep.memory.home_index == room_num);
-        let nullSupplicant_gang =       _.filter(Game.creeps, creep => creep.memory.role == 'nullSupplicant'        && creep.memory.home_index == room_num);
-        let probe_gang =                _.filter(Game.creeps, creep => creep.memory.role == 'probe'                 && creep.memory.home_index == room_num);
-        let orbitalAssimilator_gang =   _.filter(Game.creeps, creep => creep.memory.role == 'orbitalAssimilator'    && creep.memory.home_index == room_num);
-        let recalibrator_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'recalibrator'          && creep.memory.home_index == room_num);
-        let orbitalDrone_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'orbitalDrone'          && creep.memory.home_index == room_num);
-        let bloodhunter_gang =          _.filter(Game.creeps, creep => creep.memory.role == 'bloodhunter'           && creep.memory.home_index == room_num);
-        let enforcer_gang =             _.filter(Game.creeps, creep => creep.memory.role == 'enforcer'              && creep.memory.home_index == room_num);
-        let purifier_gang =             _.filter(Game.creeps, creep => creep.memory.role == 'purifier'              && creep.memory.home_index == room_num);
-        let ancientDrone_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'ancientDrone'          && creep.memory.home_index == room_num);
-        let ancientAssimilator_gang =   _.filter(Game.creeps, creep => creep.memory.role == 'ancientAssimilator'    && creep.memory.home_index == room_num);
-        let architect_gang =            _.filter(Game.creeps, creep => creep.memory.role == 'architect'             && creep.memory.home_index == room_num);
-        let phaseArchitect_gang =       _.filter(Game.creeps, creep => creep.memory.role == 'phaseArchitect'        && creep.memory.home_index == room_num);
-        let specialist_gang =           _.filter(Game.creeps, creep => creep.memory.role == 'specialist'            && creep.memory.home_index == room_num);
-        let saviour_gang =              _.filter(Game.creeps, creep => creep.memory.role == 'saviour'               && creep.memory.home_index == room_num);
-        let treasurer_gang =            _.filter(Game.creeps, creep => creep.memory.role == 'treasurer'             && creep.memory.home_index == room_num);
+        const emergencyDrone_gang =       _.filter(Game.creeps, creep => creep.memory.role == 'emergencyDrone'        && creep.memory.home_index == room_num);
+        const assimilator_gang =          _.filter(Game.creeps, creep => creep.memory.role == 'assimilator'           && creep.memory.home_index == room_num);
+        const assimilator2_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'assimilator2'          && creep.memory.home_index == room_num);
+        const drone_gang =                _.filter(Game.creeps, creep => creep.memory.role == 'drone'                 && creep.memory.home_index == room_num);
+        const energiser_gang =            _.filter(Game.creeps, creep => creep.memory.role == 'energiser'             && creep.memory.home_index == room_num);
+        const retrieverDrone_gang =       _.filter(Game.creeps, creep => creep.memory.role == 'retrieverDrone'        && creep.memory.home_index == room_num);
+        const sacrificer_gang =           _.filter(Game.creeps, creep => creep.memory.role == 'sacrificer'            && creep.memory.home_index == room_num);
+        const acolyte_gang =              _.filter(Game.creeps, creep => creep.memory.role == 'acolyte'               && creep.memory.home_index == room_num);
+        const acolyte2_gang =             _.filter(Game.creeps, creep => creep.memory.role == 'acolyte2'              && creep.memory.home_index == room_num);
+        const adherent_gang =             _.filter(Game.creeps, creep => creep.memory.role == 'adherent'              && creep.memory.home_index == room_num);
+        const nullAdherent_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'nullAdherent'          && creep.memory.home_index == room_num);
+        const supplicant_gang =           _.filter(Game.creeps, creep => creep.memory.role == 'supplicant'            && creep.memory.home_index == room_num);
+        const nullSupplicant_gang =       _.filter(Game.creeps, creep => creep.memory.role == 'nullSupplicant'        && creep.memory.home_index == room_num);
+        const probe_gang =                _.filter(Game.creeps, creep => creep.memory.role == 'probe'                 && creep.memory.home_index == room_num);
+        const orbitalAssimilator_gang =   _.filter(Game.creeps, creep => creep.memory.role == 'orbitalAssimilator'    && creep.memory.home_index == room_num);
+        const recalibrator_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'recalibrator'          && creep.memory.home_index == room_num);
+        const orbitalDrone_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'orbitalDrone'          && creep.memory.home_index == room_num);
+        const bloodhunter_gang =          _.filter(Game.creeps, creep => creep.memory.role == 'bloodhunter'           && creep.memory.home_index == room_num);
+        const enforcer_gang =             _.filter(Game.creeps, creep => creep.memory.role == 'enforcer'              && creep.memory.home_index == room_num);
+        const purifier_gang =             _.filter(Game.creeps, creep => creep.memory.role == 'purifier'              && creep.memory.home_index == room_num);
+        const ancientDrone_gang =         _.filter(Game.creeps, creep => creep.memory.role == 'ancientDrone'          && creep.memory.home_index == room_num);
+        const ancientAssimilator_gang =   _.filter(Game.creeps, creep => creep.memory.role == 'ancientAssimilator'    && creep.memory.home_index == room_num);
+        const architect_gang =            _.filter(Game.creeps, creep => creep.memory.role == 'architect'             && creep.memory.home_index == room_num);
+        const phaseArchitect_gang =       _.filter(Game.creeps, creep => creep.memory.role == 'phaseArchitect'        && creep.memory.home_index == room_num);
+        const specialist_gang =           _.filter(Game.creeps, creep => creep.memory.role == 'specialist'            && creep.memory.home_index == room_num);
+        const saviour_gang =              _.filter(Game.creeps, creep => creep.memory.role == 'saviour'               && creep.memory.home_index == room_num);
+        const treasurer_gang =            _.filter(Game.creeps, creep => creep.memory.role == 'treasurer'             && creep.memory.home_index == room_num);
         
 
 
@@ -88,7 +88,7 @@ module.exports = {
         //room state...
         //determine total nexi energy
         let nexi_energy = 0;
-        let local_nexi = ctrl.room.find(FIND_STRUCTURES, {
+        const local_nexi = ctrl.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return structure.structureType == STRUCTURE_SPAWN;
             }
@@ -101,7 +101,7 @@ module.exports = {
 
         //determine total extension energy
         let ext_energy = 0;
-        let extensions = ctrl.room.find(FIND_STRUCTURES, {
+        const extensions = ctrl.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return structure.structureType == STRUCTURE_EXTENSION;
             }
@@ -114,7 +114,7 @@ module.exports = {
         
         //determine total container energy
         let can_energy = 0;
-        let canisters = ctrl.room.find(FIND_STRUCTURES, {
+        const canisters = ctrl.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return structure.structureType == STRUCTURE_CONTAINER;
             }
@@ -127,7 +127,7 @@ module.exports = {
         
         //determine total dropped (pickup) energy
         let scrap_energy = 0;
-        let scraps = ctrl.room.find(FIND_DROPPED_RESOURCES, {
+        const scraps = ctrl.room.find(FIND_DROPPED_RESOURCES, {
             filter: resource => {
                 return resource.resourceType == RESOURCE_ENERGY;
             }
@@ -140,12 +140,12 @@ module.exports = {
         
 
         //determine controller levelup percentage
-        let control_perc = ((ctrl.progress / ctrl.progressTotal) * 100).toFixed(3);
+        const control_perc = ((ctrl.progress / ctrl.progressTotal) * 100).toFixed(3);
         
 
 
         //count worn structures and walls (but not ramparts)
-        let worn_structs = ctrl.room.find(FIND_STRUCTURES, {
+        const worn_structs = ctrl.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return (structure.hits < structure.hitsMax
                     &&
@@ -155,7 +155,7 @@ module.exports = {
             }
         });
 
-        let worn_walls = ctrl.room.find(FIND_STRUCTURES, {
+        const worn_walls = ctrl.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return (structure.hits < Memory.wall_threshold
                     &&

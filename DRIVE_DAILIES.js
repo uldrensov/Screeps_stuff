@@ -22,7 +22,7 @@ module.exports = {
         //periodically check if a new day has passed
         if (Game.time % SD.std_interval == 0){
             //processes to run once per day...
-            if ((Date.now() - Memory.dayStart_timestamp) / 1000
+            if (((Date.now() - Memory.dayStart_timestamp) / 1000)
                 >
                 secondsIn24h){
 

@@ -4,9 +4,9 @@
 module.exports = {
     run: function(unit, tile_id, warpTX0_id, warpRX0_id, reserve){
         
-        let tile =      Game.getObjectById(tile_id);
-        let warpTX0 =   Game.getObjectById(warpTX0_id);
-        let warpRX0 =   Game.getObjectById(warpRX0_id);
+        const tile =      Game.getObjectById(tile_id);
+        const warpTX0 =   Game.getObjectById(warpTX0_id);
+        const warpRX0 =   Game.getObjectById(warpRX0_id);
 
         if (!tile){
             console.log('UNIT ERROR: ' + unit.name + ' REQUIRES AN IDENTIFIABLE TILE');

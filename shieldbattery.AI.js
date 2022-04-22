@@ -5,7 +5,7 @@
 module.exports = {
     run: function(unit, waypoint){
         
-        let patients = _.filter(Game.creeps, creep => creep.memory.role == 'hallucination');
+        const patients = _.filter(Game.creeps, creep => creep.memory.role == 'hallucination');
         
         
         //navigate to a predetermined waypoint

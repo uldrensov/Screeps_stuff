@@ -40,17 +40,12 @@ module.exports = {
         
         //FSM execution (FETCHING):
         else{
-            let sources = unit.room.find(FIND_SOURCES, {
-                filter: RoomObject => {
-                    return RoomObject.energy > 0;
-                }
-            });
-
             //FETCH: sources
-            if (sources.length){
-                if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(sources[0]);
-            }
+            if (!unit.memory.src_ID)
+                unit.memory.src_ID = unit.room.find(FIND_SOURCES)[0].id;
+
+            if (unit.harvest(Game.getObjectById(unit.memory.src_ID)) == ERR_NOT_IN_RANGE)
+                unit.moveTo(Game.getObjectById(unit.memory.src_ID));
         }
     }
 };

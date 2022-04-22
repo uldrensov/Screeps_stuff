@@ -54,13 +54,12 @@ module.exports = {
             
             //2.
 
-            //OUTPUTS: hostiles -> my units (injured) -> my structures (damaged)
             //reset previous action/target
             Memory.turretCommand[k] = 'IDLE';
             Memory.turretTarget_id[k] = 'NULL';
 
             //detect foreign units and determine presence of hostiles among them
-            let foreigner = ctrl[k].room.find(FIND_HOSTILE_CREEPS);
+            const foreigner = ctrl[k].room.find(FIND_HOSTILE_CREEPS);
 
             if (foreigner.length){
                 let threatvalues = [];
@@ -117,6 +116,7 @@ module.exports = {
                     }
                 }
 
+                
                 //UNLOAD: hostiles
                 if (highest_threat_val > 0){
                     //enemy locked on
@@ -141,7 +141,7 @@ module.exports = {
 
             //designate heals/repairs only if energy can be spared, and if construction mode is disabled (for repairs)
             else{
-                let injured_units = ctrl[k].room.find(FIND_MY_CREEPS, {
+                const injured_units = ctrl[k].room.find(FIND_MY_CREEPS, {
                     filter: creep => {
                         return creep.hits < creep.hitsMax;
                     }
@@ -153,10 +153,11 @@ module.exports = {
                     Memory.turretTarget_id[k] = injured_units[0].id; //no specific priority given to any particular unit
                 }
 
+                
                 //UNLOAD: structures
                 //treat walls and ramparts differently from everything else (hp max reasons)
                 else{
-                    let repairStructs = ctrl[k].room.find(FIND_STRUCTURES, {
+                    const repairStructs = ctrl[k].room.find(FIND_STRUCTURES, {
                         filter: structure => { //ignore structures over 95% hp
                             return ((structure.hits < structure.hitsMax * healthy_percent
                                 &&
@@ -165,14 +166,14 @@ module.exports = {
                                 structure.structureType != STRUCTURE_RAMPART));
                         }
                     });
-                    let repairWalls = ctrl[k].room.find(FIND_STRUCTURES, {
+                    const repairWalls = ctrl[k].room.find(FIND_STRUCTURES, {
                         filter: (structure) => {
                             return ((structure.hits < Memory.wall_threshold
                                 &&
                                 structure.structureType == STRUCTURE_WALL));
                         }
                     });
-                    let repairRamparts = ctrl[k].room.find(FIND_STRUCTURES, {
+                    const repairRamparts = ctrl[k].room.find(FIND_STRUCTURES, {
                         filter: (structure) => {
                             return ((structure.hits < Memory.rampart_threshold
                                 &&

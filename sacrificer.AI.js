@@ -24,7 +24,7 @@ module.exports = {
 
         //FSM execution (FETCHING):
         else{
-            let canisters = unit.room.find(FIND_STRUCTURES, {
+            const canisters = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_CONTAINER
                         &&
@@ -49,7 +49,7 @@ module.exports = {
                 else if (Game.getObjectById(unit.memory.fixation).store[RESOURCE_ENERGY] < ignore_lim)
                     unit.memory.fixation = fullest_canister.id;
 
-                //finally, withdraw from the fixated target
+                //finally, fetch from the fixated target
                 if (unit.withdraw(Game.getObjectById(unit.memory.fixation), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(Game.getObjectById(unit.memory.fixation));
             }

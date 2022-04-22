@@ -32,7 +32,7 @@ module.exports = {
 
 
                 //locate and evaluate enemy
-                let bloodmark = unit.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+                const bloodmark = unit.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
 
                 if (bloodmark){
                     let enemy_attackParts = 0;
