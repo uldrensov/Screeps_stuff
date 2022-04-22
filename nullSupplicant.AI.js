@@ -4,9 +4,12 @@
 module.exports = {
     run: function(unit, warpRX0_id){
         
-        let warpRX0 =   Game.getObjectById(warpRX0_id);
+        let warpRX0 = Game.getObjectById(warpRX0_id);
         
-        if (!warpRX0)   return 'UNIT ERROR: ' + unit.name + ' REQUIRES A RX LINK';
+        if (!warpRX0){
+            console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A RX LINK');
+            return;
+        }
         
         
         //FETCH / UNLOAD FSM...
@@ -19,10 +22,11 @@ module.exports = {
 
         
         //FSM execution (UNLOADING):
-        if (!unit.memory.fetching)
+        if (!unit.memory.fetching){
             //UNLOAD: controller
             if (unit.upgradeController(unit.room.controller) == ERR_NOT_IN_RANGE)
                 unit.moveTo(unit.room.controller);
+        }
         
         //FSM execution (FETCHING):
         else if (unit.withdraw(warpRX0, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)

@@ -40,10 +40,11 @@ module.exports = {
 
         
         //FSM execution (UNLOADING):
-        if (!unit.memory.fetching)
+        if (!unit.memory.fetching){
             //UNLOAD: controller
             if (unit.upgradeController(unit.room.controller))
                 unit.moveTo(unit.room.controller);
+        }
         
         //FSM execution (FETCHING):
         else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE)

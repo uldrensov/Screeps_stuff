@@ -17,11 +17,14 @@ module.exports = {
         //FSM execution (UNLOADING):
         if (!unit.memory.fetching){
             //UNLOAD: vault<energy>
-            if (unit.room.storage)
+            if (unit.room.storage){
                 if (unit.transfer(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(unit.room.storage);
-            else
-                return 'UNIT ERROR: ' + unit.name + ' REQUIRES A HOME VAULT';
+            }
+            else{
+                console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A HOME VAULT');
+                return;
+            }
         }
         
 

@@ -14,9 +14,10 @@ module.exports = {
         //take the room's controller
         if (unit.memory.rallied){
             //if controller is reserved by foreign powers
-            if (unit.room.controller.reservation)
+            if (unit.room.controller.reservation){
                 if (unit.attackController(unit.room.controller) == ERR_NOT_IN_RANGE)
                     unit.moveTo(unit.room.controller, {visualizePathStyle: {stroke: '#00ffff'}});
+            }
             
             //if controller is free for the taking
             else if (unit.claimController(unit.room.controller) == ERR_NOT_IN_RANGE)

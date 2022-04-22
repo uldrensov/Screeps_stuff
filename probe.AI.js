@@ -104,9 +104,10 @@ module.exports = {
             //finally, attempt to repair the fixated target until its max / threshold
             let final_target = Game.getObjectById(unit.memory.fixation);
 
-            if (final_target.hits < unit.memory.fixation_max)
+            if (final_target.hits < unit.memory.fixation_max){
                 if (unit.repair(final_target) == ERR_NOT_IN_RANGE)
                     unit.moveTo(final_target);
+            }
             
             //release the fixation if it reaches max
             else

@@ -9,7 +9,7 @@ var TRADE_ENERGY =          require('TRADE_ENERGY.exe');
 module.exports = {
     run: function(){
 
-        const ctrlLvl_max = 8;
+        const ctrlLvl_max =             8;
         const threshApproach_factor =   1.5;
         const powerProcess_cost =       50;
         

@@ -8,9 +8,18 @@ module.exports = {
         let warpTX0 =   Game.getObjectById(warpTX0_id);
         let warpRX0 =   Game.getObjectById(warpRX0_id);
 
-        if (!tile)      return 'UNIT ERROR: ' + unit.name + ' REQUIRES A IDENTIFIABLE TILE';
-        if (!warpTX0)   return 'UNIT ERROR: ' + unit.name + ' REQUIRES A TX LINK';
-        if (!warpRX0)   return 'UNIT ERROR: ' + unit.name + ' REQUIRES A RX LINK';
+        if (!tile){
+            console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A IDENTIFIABLE TILE');
+            return;
+        }
+        if (!warpTX0){
+            console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A TX LINK');
+            return;
+        }
+        if (!warpRX0){
+            console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A RX LINK');
+            return;
+        }
         
         
         //ensure correct position

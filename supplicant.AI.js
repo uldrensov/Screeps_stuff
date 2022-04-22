@@ -13,18 +13,22 @@ module.exports = {
             unit.memory.fetching = true;
 
         
-        //state behaviour...
-        //UNLOAD: controller
-        if (!unit.memory.fetching)
+        //FSM execution (UNLOADING):
+        if (!unit.memory.fetching){
+            //UNLOAD: controller
             if (unit.upgradeController(unit.room.controller) == ERR_NOT_IN_RANGE)
                 unit.moveTo(unit.room.controller);
-                
-        //FETCH: vault
-        else if (unit.room.storage)
+        }
+        
+        //FSM execution (FETCHING):
+        else if (unit.room.storage){
+            //FETCH: vault
             if (unit.room.storage.store.energy > reserve)
                 if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(unit.room.storage);
+        }
+
         else
-            return 'UNIT ERROR: ' + unit.name + ' REQUIRES A HOME VAULT';
+            console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A HOME VAULT');
     }
 };

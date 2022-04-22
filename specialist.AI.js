@@ -56,10 +56,11 @@ module.exports = {
                 
 
         //FSM execution (UNLOADING):
-        if (!unit.memory.fetching && hotspot)
+        if (!unit.memory.fetching && hotspot){
             //UNLOAD: construction hotspot
             if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
                 unit.moveTo(hotspot);
+        }
             
 
         //FSM execution (FETCHING):
@@ -79,9 +80,10 @@ module.exports = {
             }
 
             //FETCH: ruins
-            else if (remains.length)
+            else if (remains.length){
                 if (unit.withdraw(remains[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(remains[0]);
+            }
             
             //FETCH: source
             else if (unit.harvest(src) == ERR_NOT_IN_RANGE)

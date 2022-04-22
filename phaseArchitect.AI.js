@@ -51,18 +51,20 @@ module.exports = {
                 
 
             //FSM execution (UNLOADING):
-            if (!unit.memory.fetching && hotspot)
+            if (!unit.memory.fetching && hotspot){
                 //UNLOAD: construction hotspot (nearest)
                 if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
                     unit.moveTo(hotspot);
+            }
 
                     
             //FSM execution (FETCHING):
             else{
                 //FETCH: vault (respect limit)
-                if (unit.room.storage)
+                if (unit.room.storage){
                     if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(unit.room.storage);
+                }
                 
                 //FETCH: containers (fullest)
                 else if (canisters.length){
