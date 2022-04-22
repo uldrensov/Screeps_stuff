@@ -23,28 +23,6 @@ module.exports = {
 
 
 
-        //INPUTS: source (non-empty), pickups, ruins (non-empty)
-        let src = unit.pos.findClosestByPath(FIND_SOURCES, {
-            filter: RoomObject => {
-                return RoomObject.energy > 0;
-            }
-        });
-        let scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
-            filter: resource => {
-                return resource.resourceType == RESOURCE_ENERGY;
-            }
-        });
-        let remains = unit.room.find(FIND_RUINS, {
-            filter: RoomObject => {
-                return RoomObject.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
-            }
-        });
-        
-        //OUTPUTS: construction hotspot
-        let hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
-
-
-
         //FETCH / UNLOAD FSM...
         //if carry amt reaches full while FETCHING, switch to UNLOADING
         if (unit.memory.fetching && unit.store.getFreeCapacity() == 0)
@@ -56,15 +34,35 @@ module.exports = {
                 
 
         //FSM execution (UNLOADING):
-        if (!unit.memory.fetching && hotspot){
+        if (!unit.memory.fetching){
             //UNLOAD: construction hotspot
-            if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
-                unit.moveTo(hotspot);
+            let hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+
+            if (hotspot)
+                if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(hotspot);
         }
             
 
         //FSM execution (FETCHING):
         else{
+            let src = unit.pos.findClosestByPath(FIND_SOURCES, {
+                filter: RoomObject => {
+                    return RoomObject.energy > 0;
+                }
+            });
+            let scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
+                filter: resource => {
+                    return resource.resourceType == RESOURCE_ENERGY;
+                }
+            });
+            let remains = unit.room.find(FIND_RUINS, {
+                filter: RoomObject => {
+                    return RoomObject.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+                }
+            });
+
+
             //FETCH: pickups (fullest)
             if (scraps.length){
                 let chosen_scrap = scraps[0];

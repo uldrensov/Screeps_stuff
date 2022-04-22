@@ -182,6 +182,7 @@ module.exports = {
                             [RESOURCE_OXYGEN,               RESOURCE_GHODIUM_OXIDE],
                             [RESOURCE_LEMERGIUM,            RESOURCE_GHODIUM_OXIDE],
                             [RESOURCE_LEMERGIUM,            RESOURCE_GHODIUM_OXIDE]],
+                            
     dumpsell_whitelist:     [RESOURCE_GHODIUM_OXIDE],
 
 

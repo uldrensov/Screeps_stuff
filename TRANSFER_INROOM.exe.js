@@ -64,7 +64,7 @@ module.exports = {
             }
         });
 
-        //if no treasurer currently exists...
+        //if no treasurer currently exists, spawn a new one to execute the command
         if (!treasurer && local_nexi.length){
             //determine an unoccupied nexus for the treasurer
             let openNexus;
@@ -77,7 +77,7 @@ module.exports = {
                 }
             }
 
-            //if no unoccupied nexus is found
+            //if no available nexus, exit script
             if (!openNexus)
                 return 'TRANSFER_INROOM:: ALL SPAWNERS IN ROOM #' + room_num + ' ARE CURRENTLY OCCUPIED';
 
@@ -92,7 +92,7 @@ module.exports = {
                 return 'TRANSFER_INROOM:: TREASURER SPAWN FAILED WITH NEXUS ERROR CODE ' + spawnResult;
         }
         
-        //if a treasurer exists, simply rewrite its memory contents to issue a new command
+        //if a treasurer exists, simply rewrite its memory contents to issue the new command
         else{
             unit.memory.order_type =    o_type;
             unit.memory.order_amt =     o_amt;

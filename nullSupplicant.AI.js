@@ -30,7 +30,7 @@ module.exports = {
         
         //FSM execution (FETCHING):
         else if (unit.withdraw(warpRX0, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-            //FETCH: link
+            //FETCH: RX link
             unit.moveTo(warpRX0);
     }
 };

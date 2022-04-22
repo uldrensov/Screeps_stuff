@@ -4,21 +4,23 @@
 
 module.exports = {
     run: function(unit, waypoint, healpoint){
+
+        const lowHP_threshold = .25;
+
         
-        //two-states...
-        //if heavily damaged, come back
-        if (!unit.memory.retreating && unit.hits < unit.hitsMax * .2)
+        //combat behaviour FSM...
+        //if heavily damaged, retreat
+        if (!unit.memory.retreating && (unit.hits < unit.hitsMax * lowHP_threshold))
             unit.memory.retreating = true;
         //once restored to full, return to battle
-        if (unit.memory.retreating && unit.hits == unit.hitsMax)
+        if (unit.memory.retreating && (unit.hits == unit.hitsMax))
             unit.memory.retreating = false;
 
         
-        //behaviour execution...
-        //retreat from the foreign room to receive healing
+        //FSM execution (RETREATING)
         if (unit.memory.retreating)
             unit.moveTo(healpoint, {visualizePathStyle: {stroke: '#00ffff'}});
-        //return to the foreign room until sufficiently injured again
+        //FSM execution (ADVANCING)
         else
             unit.moveTo(waypoint, {visualizePathStyle: {stroke: '#00ffff'}});
     }

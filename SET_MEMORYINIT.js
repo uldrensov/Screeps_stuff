@@ -3,7 +3,7 @@
 module.exports = {
     run: function(roomcount){
         
-        //init (allocate) arrays for room-specific data...
+        //allocate arrays for ROOM-LOCAL data...
         //unit population maxima
         if (Memory.assimilator_MAX == undefined)                Memory.assimilator_MAX =                   [];
             if (Memory.assimilator2_MAX == undefined)           Memory.assimilator2_MAX =                  [];
@@ -65,7 +65,7 @@ module.exports = {
         if (Memory.powernex_id == undefined)                    Memory.powernex_id =                       [];            //do not modify manually
         
 
-        //init (populate) arrays with room-specific data...
+        //populate arrays with ROOM-LOCAL data...
         for (let i=0; i<roomcount; i++){
             if (Memory.assimilator_MAX[i] == undefined)         Memory.assimilator_MAX[i] =                0;
                 if (Memory.assimilator2_MAX[i] == undefined)    Memory.assimilator2_MAX[i] =               0;
@@ -119,7 +119,8 @@ module.exports = {
         }
         
 
-        //init (allocate + populate) global data...
+
+        //allocate and populate GLOBAL data...
         //custom-sorted unit roster
         if (Memory.unit_roster == undefined)                    Memory.unit_roster =                       [];            //do not modify manually
 

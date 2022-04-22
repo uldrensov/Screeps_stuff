@@ -70,7 +70,7 @@ module.exports = {
 
 
         //determine time until next unit death in the room
-        let nextdeath_timeleft = CREEP_LIFE_TIME; //init at max time-to-live
+        let nextdeath_timeleft = CREEP_LIFE_TIME; //init at max TTL
         let nextdeath_unit = 'NULL';
 
         for (let name in Game.creeps){
@@ -78,8 +78,8 @@ module.exports = {
                 &&
                 (Game.creeps[name].memory.home_index == room_num)){
 
-                nextdeath_timeleft = Game.creeps[name].ticksToLive;
-                nextdeath_unit = name;
+                nextdeath_timeleft =    Game.creeps[name].ticksToLive;
+                nextdeath_unit =        name;
             }
         }
         

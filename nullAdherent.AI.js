@@ -9,7 +9,7 @@ module.exports = {
         let warpRX0 =   Game.getObjectById(warpRX0_id);
 
         if (!tile){
-            console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A IDENTIFIABLE TILE');
+            console.log('UNIT ERROR: ' + unit.name + ' REQUIRES AN IDENTIFIABLE TILE');
             return;
         }
         if (!warpTX0){
@@ -29,7 +29,7 @@ module.exports = {
 
         //remain there and work
         else{
-            //transmit when the link reaches max capacity
+            //transmit when the TX link reaches max capacity
             if (warpTX0.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
                 warpTX0.transferEnergy(warpRX0, warpTX0.store[RESOURCE_ENERGY]);
             

@@ -9,8 +9,25 @@ module.exports = {
         let warpTX =    Game.getObjectById(warpTX_id);
         let canister =  Game.getObjectById(canister_id);
 
+        if (!src){
+            console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A SOURCE');
+            return;
+        }
+        if (!warpRX){
+            console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A RX LINK');
+            return;
+        }
+        if (!warpTX){
+            console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A TX LINK');
+            return;
+        }
+        if (!canister){
+            console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A CANISTER');
+            return;
+        }
 
-        //transmit when the link reaches max capacity
+
+        //transmit when the TX link reaches max capacity
         if (warpTX.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
             warpTX.transferEnergy(warpRX, warpTX.store[RESOURCE_ENERGY]);
         
@@ -26,7 +43,7 @@ module.exports = {
 
         //FSM execution (UNLOADING):
         if (!unit.memory.fetching){
-            //attempt to deposit new payload; if RX is full, overflow-mine into the container
+            //attempt to deposit new payload; if RX is full, mine into the overflow container
             if (unit.transfer(warpTX, RESOURCE_ENERGY) == ERR_FULL)
                 unit.harvest(src);
         }

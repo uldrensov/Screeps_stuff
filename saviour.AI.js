@@ -22,14 +22,6 @@ module.exports = {
         }
             
             
-        //INPUTS: sources (non-empty)
-        let sources = unit.room.find(FIND_SOURCES, {
-            filter: RoomObject => {
-                return RoomObject.energy > 0;
-            }
-        });
-            
-            
         //FETCH / UNLOAD FSM...
         //if carry amt reaches full while FETCHING, switch to UNLOADING
         if (unit.memory.fetching && unit.store.getFreeCapacity() == 0)
@@ -47,8 +39,18 @@ module.exports = {
         }
         
         //FSM execution (FETCHING):
-        else if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE)
+        else{
+            let sources = unit.room.find(FIND_SOURCES, {
+                filter: RoomObject => {
+                    return RoomObject.energy > 0;
+                }
+            });
+
             //FETCH: sources
-            unit.moveTo(sources[0]);
+            if (sources.length){
+                if (unit.harvest(sources[0]) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(sources[0]);
+            }
+        }
     }
 };

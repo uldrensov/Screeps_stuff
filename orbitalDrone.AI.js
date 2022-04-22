@@ -4,14 +4,12 @@
 module.exports = {
     run: function(unit, nexus_id, canister_id, standby_flag, ignore_lim, flee_point){
         
-        const nexus = Game.getObjectById(nexus_id);
-
         if (!unit.memory.dropoff_id){
             if (Game.getObjectById(nexus_id).room.storage)
                 unit.memory.dropoff_id = Game.getObjectById(nexus_id).room.storage.id;
             else{
-                unit.memory.killswitch = true;
-                return 'orbitalDroneAI:: UNIT ERROR: ' + unit.name + ' REQUIRES A HOME VAULT IN ROOM #' + unit.memory.home_index;
+                console.log('orbitalDroneAI:: UNIT ERROR: ' + unit.name + ' REQUIRES A HOME VAULT IN ROOM #' + unit.memory.home_index);
+                return;
             }
         }
         
@@ -217,7 +215,7 @@ module.exports = {
 
 
         //built-in economic killswitch
-        else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
-            unit.moveTo(nexus);
+        else if (Game.getObjectById(nexus_id).recycleCreep(unit) == ERR_NOT_IN_RANGE)
+            unit.moveTo(Game.getObjectById(nexus_id));
     }
 };

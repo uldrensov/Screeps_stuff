@@ -7,8 +7,6 @@ var SD = require('SET_SOFTDATA'); //TODO: pass SD stuff as args; dont include it
 module.exports = {
     run: function(unit, nexus_id, home_index){
         
-        let nexus = Game.getObjectById(nexus_id);
-
         //init lab ids to memory
         if (!unit.memory.reactant1_id){ //if one is undefined, then both are
             unit.memory.reactant1_id = SD.reactant_id[home_index][0];
@@ -34,8 +32,8 @@ module.exports = {
 
             //unload
             if (unit.store.getFreeCapacity() == 0 || finaltrip){ //if unit is fully loaded, or if carrying its final load
-                if (unit.transfer(nexus.room.storage, cleanout_type) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(nexus.room.storage);
+                if (unit.transfer(Game.getObjectById(nexus_id).room.storage, cleanout_type) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(Game.getObjectById(nexus_id).room.storage);
             }
         }
 
@@ -54,15 +52,15 @@ module.exports = {
                 if (unit.memory.task1_progress < unit.memory.order1_amt){
                     //[false] transfer direction (unload lab into vault)
                     let input = r1;
-                    let output = nexus.room.storage;
+                    let output = Game.getObjectById(nexus_id).room.storage;
 
                     //[true] transfer direction (load lab from vault)
                     if (unit.memory.dir){
-                        input = nexus.room.storage;
+                        input = Game.getObjectById(nexus_id).room.storage;
 
                         switch (unit.memory.spec_dest){
                             case 'NA':
-                                output = nexus.room.terminal;
+                                output = Game.getObjectById(nexus_id).room.terminal;
                                 break;
 
                             case 'P':
@@ -120,8 +118,8 @@ module.exports = {
             }
 
             //built-in economic killswitch
-            else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(nexus);
+            else if (Game.getObjectById(nexus_id).recycleCreep(unit) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(Game.getObjectById(nexus_id));
         }
     }
 };

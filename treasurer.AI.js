@@ -4,9 +4,6 @@
 module.exports = {
     run: function(unit, nexus_id){
         
-        let nexus = Game.getObjectById(nexus_id);
-        
-        
         //proceed if there is no suicide order
         if (!unit.memory.killswitch){
             //clear the 'done' flag for every new command issued
@@ -17,16 +14,16 @@ module.exports = {
             //determine inputs and outputs
             if (unit.memory.task_progress < unit.memory.order_amt){
                 //[false] transfer direction (e.g. unload terminal into vault)
-                let input = nexus.room.terminal;
-                let output = nexus.room.storage;
+                let input = Game.getObjectById(nexus_id).room.terminal;
+                let output = Game.getObjectById(nexus_id).room.storage;
 
                 //[true] transfer direction (e.g. load terminal/powernex/nuker from vault)
                 if (unit.memory.dir){
-                    input = nexus.room.storage;
+                    input = Game.getObjectById(nexus_id).room.storage;
 
                     switch (unit.memory.spec_dest){
                         case 'TRM':
-                            output = nexus.room.terminal;
+                            output = Game.getObjectById(nexus_id).room.terminal;
                             break;
 
                         case 'PWR':
@@ -111,7 +108,7 @@ module.exports = {
 
 
         //built-in economic killswitch
-        else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
-            unit.moveTo(nexus);
+        else if (Game.getObjectById(nexus_id).recycleCreep(unit) == ERR_NOT_IN_RANGE)
+            unit.moveTo(Game.getObjectById(nexus_id));
     }
 };

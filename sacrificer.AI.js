@@ -4,20 +4,6 @@
 module.exports = {
     run: function(unit, ignore_lim){
         
-        //INPUTS: sources, containers (ample)
-        if (!unit.memory.sources)
-            unit.memory.sources = unit.room.controller.room.find(FIND_SOURCES);
-        
-        let canisters = unit.room.controller.room.find(FIND_STRUCTURES, {
-            filter: structure => {
-                return structure.structureType == STRUCTURE_CONTAINER
-                    &&
-                    structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
-            }
-        });
-        
-        
-
         //FETCH / UNLOAD FSM...
         //if carry amt reaches full while FETCHING, switch to UNLOADING
         if (unit.memory.fetching && unit.store.getFreeCapacity() == 0)
@@ -38,6 +24,14 @@ module.exports = {
 
         //FSM execution (FETCHING):
         else{
+            let canisters = unit.room.find(FIND_STRUCTURES, {
+                filter: structure => {
+                    return structure.structureType == STRUCTURE_CONTAINER
+                        &&
+                        structure.store.getUsedCapacity(RESOURCE_ENERGY) > ignore_lim;
+                }
+            });
+
             //FETCH: containers (fullest; fixation)
             if (canisters.length){
                 let fullest_canister = canisters[0];
@@ -60,9 +54,15 @@ module.exports = {
                     unit.moveTo(Game.getObjectById(unit.memory.fixation));
             }
             
+
             //FETCH: sources
-            else if (unit.harvest(Game.getObjectById(unit.memory.sources[0].id)) == ERR_NOT_IN_RANGE)
-                unit.moveTo(Game.getObjectById(unit.memory.sources[0].id));
+            else{
+                if (!unit.memory.src_ID)
+                    unit.memory.src_ID = unit.room.find(FIND_SOURCES)[0].id;
+
+                if (unit.harvest(Game.getObjectById(unit.memory.src_ID)) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(Game.getObjectById(unit.memory.src_ID));
+            }
         }
     }
 };

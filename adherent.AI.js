@@ -4,8 +4,21 @@
 module.exports = {
     run: function(unit, tile_id, warpRX_id){
         
-        let tile = Game.getObjectById(tile_id);
-        let warpRX = Game.getObjectById(warpRX_id);
+        let tile =      Game.getObjectById(tile_id);
+        let warpRX =    Game.getObjectById(warpRX_id);
+
+        if (!tile){
+            console.log('UNIT ERROR: ' + unit.name + ' REQUIRES AN IDENTIFIABLE TILE');
+            return;
+        }
+        if (!warpRX){
+            console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A RX LINK');
+            return;
+        }
+        if (!unit.room.storage){
+            console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A HOME VAULT');
+            return;
+        }
         
         
         //ensure correct position
@@ -14,7 +27,7 @@ module.exports = {
 
         //remain there and work
         else{
-            //FETCH: link
+            //FETCH: RX link
             if (unit.store.getFreeCapacity() > 0) //if unit is not fully loaded
                 unit.withdraw(warpRX, RESOURCE_ENERGY);
 

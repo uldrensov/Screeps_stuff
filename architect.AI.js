@@ -5,19 +5,10 @@ module.exports = {
     run: function(unit, bias, reserve, std_interval){
 
         const energyCanisters_max = 2;
-        
-        
-        let hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
 
 
-        //periodically confirm valid sources and canisters in the room
+        //periodically confirm valid canisters in the room
         if (Game.time % std_interval == 0){
-            let sources = unit.room.find(FIND_SOURCES);
-
-            if (sources.length)
-                unit.memory.src_ID = sources[0].id;
-
-
             let canisters = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_CONTAINER
@@ -43,18 +34,30 @@ module.exports = {
             
 
         //FSM execution (UNLOADING):
-        if (!unit.memory.fetching && hotspot)
-            if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
-                unit.moveTo(hotspot);
+        if (!unit.memory.fetching){
+            let hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+
+            if (hotspot)
+                if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(hotspot);
+        }
         
 
         //FSM execution (FETCHING):
         else if (unit.memory.fetching){
             //FETCH: vault<energy> (respect limit)
-            if (unit.room.storage && (unit.room.storage.store.energy > reserve))
+            let canFetch_storage = false;
+
+            if (unit.room.storage)
+                if (unit.room.storage.store.energy > reserve)
+                    canFetch_storage = true;
+
+            if (canFetch_storage){
                 if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     unit.moveTo(unit.room.storage);
+            }
             
+
             //FETCH: containers (fullest)
             else if (unit.memory.canisters){
                 let fullest_canister_ID = canisters[0].id;
@@ -73,9 +76,13 @@ module.exports = {
             }
 
             //FETCH: sources
-            else if (Game.getObjectById(unit.memory.src_ID))
+            else{
+                if (!unit.memory.src_ID)
+                    unit.memory.src_ID = unit.room.find(FIND_SOURCES)[0].id;
+
                 if (unit.harvest(Game.getObjectById(unit.memory.src_ID)) == ERR_NOT_IN_RANGE)
                     unit.moveTo(Game.getObjectById(unit.memory.src_ID));
+            }
         }
     }
 };

@@ -4,9 +4,6 @@
 module.exports = {
     run: function(unit, nexus_id, pollution, flee_point){
         
-        let nexus = Game.getObjectById(nexus_id);
-        
-        
         //proceed if there is no suicide order
         if (!unit.memory.killswitch){
             //proceed if the evacuation alarm is not raised
@@ -119,7 +116,7 @@ module.exports = {
 
 
         //built-in economic killswitch
-        else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
-            unit.moveTo(nexus);
+        else if (Game.getObjectById(nexus_id).recycleCreep(unit) == ERR_NOT_IN_RANGE)
+            unit.moveTo(Game.getObjectById(nexus_id));
     }
 };

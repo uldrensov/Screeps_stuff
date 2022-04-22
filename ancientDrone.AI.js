@@ -6,14 +6,15 @@ module.exports = {
         
         let canister = Game.getObjectById(canister_id);
 
-
-        //periodically confirm the mineral type of the room
-        if (Game.time % std_interval == 0){
-            let mineral_src = unit.room.find(FIND_MINERALS);
-
-            if (mineral_src.length)
-                unit.memory.mineral_type = mineral_src[0].mineralType;
+        if (!canister){
+            console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A CANISTER');
+            return;
         }
+
+
+        //obtain the mineral type of the room
+        if (!unit.memory.mineral_type)
+            unit.memory.mineral_type = unit.room.find(FIND_MINERALS)[0].mineralType;
         
             
         //FETCH / UNLOAD FSM...
@@ -25,15 +26,14 @@ module.exports = {
             unit.memory.fetching = true;
             
         
-        if (unit.memory.mineral_type){
-            //FSM execution (UNLOADING):
-            if (!unit.memory.fetching)
-                if (unit.transfer(unit.room.storage, unit.memory.mineral_type) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(unit.room.storage);
-            
-            //FSM execution (FETCHING):
-            else if (unit.withdraw(canister, unit.memory.mineral_type) == ERR_NOT_IN_RANGE)
-                unit.moveTo(canister);
+        //FSM execution (UNLOADING):
+        if (!unit.memory.fetching){
+            if (unit.transfer(unit.room.storage, unit.memory.mineral_type) == ERR_NOT_IN_RANGE)
+                unit.moveTo(unit.room.storage);
         }
+        
+        //FSM execution (FETCHING):
+        else if (unit.withdraw(canister, unit.memory.mineral_type) == ERR_NOT_IN_RANGE)
+            unit.moveTo(canister);
     }
 };

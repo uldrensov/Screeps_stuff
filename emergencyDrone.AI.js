@@ -8,9 +8,6 @@ module.exports = {
         const lowbound = 50;
 
 
-        let nexus = Game.getObjectById(nexus_id);
-        
-
         //proceed if there is no suicide order
         if (!unit.memory.killswitch){
             //self-killswitch routine
@@ -84,8 +81,8 @@ module.exports = {
                     if (unit.transfer(pylon, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         unit.moveTo(pylon);
                 //UNLOAD: nexus
-                else if (unit.transfer(nexus, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(nexus);
+                else if (unit.transfer(Game.getObjectById(nexus_id), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(Game.getObjectById(nexus_id));
             }
             
             else{
@@ -154,7 +151,7 @@ module.exports = {
 
 
         //built-in economic killswitch
-        else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
-            unit.moveTo(nexus);
+        else if (Game.getObjectById(nexus_id).recycleCreep(unit) == ERR_NOT_IN_RANGE)
+            unit.moveTo(Game.getObjectById(nexus_id));
     }
 };

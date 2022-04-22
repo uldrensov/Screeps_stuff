@@ -12,9 +12,9 @@ module.exports = {
             unit.memory.rallied = true;
             
             
-        //destroy everything in sight
+        //destroy everything in the room
         if (unit.memory.rallied){
-            //acquire targets
+            //acquire all possible targets
             let hatchery = unit.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
                 filter: structure => {
                     return structure.structureType == STRUCTURE_SPAWN;
@@ -32,7 +32,8 @@ module.exports = {
             });
             let abomination = unit.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
         
-            //select and attack target
+
+            //select target
             let lockon;
             
             if (spinecrawler)       lockon = spinecrawler;
@@ -41,11 +42,14 @@ module.exports = {
             else if (abomination)   lockon = abomination;
             else                    lockon = unit.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES); //any remaining structures
         
+
+            //attack target
             if (lockon){
                 if (unit.attack(lockon) == ERR_NOT_IN_RANGE)
                     unit.moveTo(lockon, {visualizePathStyle: {stroke: '#ff0000'}});
+
                 else if (unit.attack(lockon) == ERR_NO_BODYPART) //safe mode
-                    unit.moveTo(Game.flags['Vespene'], {visualizePathStyle: {stroke: '#ff0000'}});
+                    unit.moveTo(Game.flags['Vespene'], {visualizePathStyle: {stroke: '#ff0000'}}); //TODO: why is this specific flag used?
             }
         }
     }

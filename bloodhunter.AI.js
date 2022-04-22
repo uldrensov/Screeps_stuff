@@ -10,9 +10,6 @@ module.exports = {
         const bloodhunterCasualty_delay =   1000;
 
 
-        let nexus = Game.getObjectById(nexus_id);
-        
-        
         //proceed if there is no suicide order
         if (!unit.memory.killswitch){
             //simple cross-room navigation
@@ -76,7 +73,7 @@ module.exports = {
 
 
         //built-in economic killswitch
-        else if (nexus.recycleCreep(unit) == ERR_NOT_IN_RANGE)
-            unit.moveTo(nexus);
+        else if (Game.getObjectById(nexus_id).recycleCreep(unit) == ERR_NOT_IN_RANGE)
+            unit.moveTo(Game.getObjectById(nexus_id));
     }
 };

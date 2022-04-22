@@ -19,8 +19,8 @@ module.exports = {
             
             if (!ctrl)      continue; //bypass: if controller fails to retrieve, skip the room
             
-            vault = ctrl.room.storage;
-            mineral = Memory.mineral_type[i].mineralType;
+            vault =         ctrl.room.storage;
+            mineral =       Memory.mineral_type[i].mineralType;
             
             if (vault && mineral)
                 console.log('STATUSREPORT_E:: Vault #' + i + ': ' + vault.store.getUsedCapacity() + '-> ' +  vault.store.getUsedCapacity(RESOURCE_ENERGY) + ' energy, ' +
@@ -30,16 +30,18 @@ module.exports = {
                 console.log('STATUSREPORT_E:: Vault #' + i + ': ERROR RETRIEVING DATA');
         }
         
+
         console.log('STATUSREPORT_E::');
         
+
         //terminal summary
         for (let j=0; j<SD.ctrl_id.length; j++){
             ctrl = Game.getObjectById(SD.ctrl_id[j]);
             
             if (!ctrl)      continue; //bypass: if controller fails to retrieve, skip the room
             
-            term = ctrl.room.terminal;
-            mineral = Memory.mineral_type[j].mineralType;
+            term =          ctrl.room.terminal;
+            mineral =       Memory.mineral_type[j].mineralType;
             
             if (term && mineral)
                 console.log('STATUSREPORT_E:: Terminal #' + j + ': ' + term.store.getUsedCapacity() + '-> ' +  term.store.getUsedCapacity(RESOURCE_ENERGY) + ' energy, ' +

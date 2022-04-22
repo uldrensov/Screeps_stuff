@@ -3,6 +3,12 @@
 
 module.exports = {
     run: function(unit, reserve){
+
+        if (!unit.room.storage){
+            console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A HOME VAULT');
+            return;
+        }
+
         
         //FETCH / UNLOAD FSM...
         //if carry amt reaches full while FETCHING, switch to UNLOADING
@@ -21,14 +27,9 @@ module.exports = {
         }
         
         //FSM execution (FETCHING):
-        else if (unit.room.storage){
+        else if (unit.room.storage.store.energy > reserve)
             //FETCH: vault
-            if (unit.room.storage.store.energy > reserve)
-                if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(unit.room.storage);
-        }
-
-        else
-            console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A HOME VAULT');
+            if (unit.withdraw(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                unit.moveTo(unit.room.storage);
     }
 };
