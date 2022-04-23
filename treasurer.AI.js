@@ -2,7 +2,7 @@
 //white trail ("carrier")
 
 module.exports = {
-    run: function(unit, nexus_id){
+    run: function(unit){
         
         //proceed if there is no suicide order
         if (!unit.memory.killswitch){
@@ -14,16 +14,16 @@ module.exports = {
             //determine inputs and outputs
             if (unit.memory.task_progress < unit.memory.order_amt){
                 //[false] transfer direction (e.g. unload terminal into vault)
-                let input = Game.getObjectById(nexus_id).room.terminal;
-                let output = Game.getObjectById(nexus_id).room.storage;
+                let input =     unit.room.terminal;
+                let output =    unit.room.storage;
 
                 //[true] transfer direction (e.g. load terminal/powernex/nuker from vault)
                 if (unit.memory.dir){
-                    input = Game.getObjectById(nexus_id).room.storage;
+                    input = unit.room.storage;
 
                     switch (unit.memory.spec_dest){
                         case 'TRM':
-                            output = Game.getObjectById(nexus_id).room.terminal;
+                            output = unit.room.terminal;
                             break;
 
                         case 'PWR':
@@ -108,7 +108,19 @@ module.exports = {
 
 
         //built-in economic killswitch
-        else if (Game.getObjectById(nexus_id).recycleCreep(unit) == ERR_NOT_IN_RANGE)
-            unit.moveTo(Game.getObjectById(nexus_id));
+        else{
+            if (!Game.getObjectById(unit.memory.suicide_nexus_ID)){
+                const sui_nexi = unit.room.find(FIND_STRUCTURES, {
+                    filter: structure => {
+                        return structure.structureType == STRUCTURE_SPAWN;
+                    }
+                });
+
+                unit.memory.suicide_nexus_ID = sui_nexi[0].id;
+            }
+
+            if (Game.getObjectById(unit.memory.suicide_nexus_ID).recycleCreep(unit) == ERR_NOT_IN_RANGE)
+                unit.moveTo(Game.getObjectById(unit.memory.suicide_nexus_ID));
+        }
     }
 };

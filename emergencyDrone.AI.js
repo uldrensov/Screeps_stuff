@@ -2,7 +2,7 @@
 //white trail ("carrier")
 
 module.exports = {
-    run: function(unit, nexus_id){
+    run: function(unit){
         
         //emergency drone's reduced "ignore limit"
         const lowbound = 50;
@@ -55,8 +55,19 @@ module.exports = {
 
 
                 //UNLOAD: nexus
-                else if (unit.transfer(Game.getObjectById(nexus_id), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(Game.getObjectById(nexus_id));
+                else{
+                    const local_nexi = unit.room.find(FIND_STRUCTURES, {
+                        filter: structure => {
+                            return structure.structureType == STRUCTURE_SPAWN
+                                &&
+                                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                        }
+                    });
+
+                    if (local_nexi.length)
+                        if (unit.transfer(local_nexi[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                            unit.moveTo(local_nexi[0]);
+                }
             }
             
 
@@ -173,7 +184,19 @@ module.exports = {
 
 
         //built-in economic killswitch
-        else if (Game.getObjectById(nexus_id).recycleCreep(unit) == ERR_NOT_IN_RANGE)
-            unit.moveTo(Game.getObjectById(nexus_id));
+        else{
+            if (!Game.getObjectById(unit.memory.suicide_nexus_ID)){
+                const sui_nexi = unit.room.find(FIND_STRUCTURES, {
+                    filter: structure => {
+                        return structure.structureType == STRUCTURE_SPAWN;
+                    }
+                });
+
+                unit.memory.suicide_nexus_ID = sui_nexi[0].id;
+            }
+
+            if (Game.getObjectById(unit.memory.suicide_nexus_ID).recycleCreep(unit) == ERR_NOT_IN_RANGE)
+                unit.moveTo(Game.getObjectById(unit.memory.suicide_nexus_ID));
+        }
     }
 };

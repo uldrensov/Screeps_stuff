@@ -1,6 +1,6 @@
 //function: controls all "daily" actions, e.g. logging certain data points
 
-var SD =                    require('SET_SOFTDATA');
+var SD = require('SET_SOFTDATA');
 
 
 module.exports = {

@@ -1,6 +1,6 @@
 //function: runs various threat-response mechanisms
 
-var SD =                    require('SET_SOFTDATA');
+var SD = require('SET_SOFTDATA');
 
 
 module.exports = {
@@ -78,8 +78,8 @@ module.exports = {
         if (Game.time % SD.nukeCheck_interval == 0){
             for (let i=0; i<SD.ctrl_id.length; i++){
                 if (Game.getObjectById(SD.ctrl_id[i]).room.find(FIND_NUKES).length){
-                    Game.notify('MAIN:: >>>>>> INCOMING NUCLEAR STRIKE -- ROOM #' + i + ' <<<<<<');
-                    console.log('MAIN:: >>>>>> INCOMING NUCLEAR STRIKE -- ROOM #' + i + ' <<<<<<');
+                    Game.notify('DRIVE_RESPONSES:: >>>>>> INCOMING NUCLEAR STRIKE -- ROOM #' + i + ' <<<<<<');
+                    console.log('DRIVE_RESPONSES:: >>>>>> INCOMING NUCLEAR STRIKE -- ROOM #' + i + ' <<<<<<');
                 }
             }
         }

@@ -103,7 +103,7 @@ module.exports = {
 
             switch (unit.memory.role){
                 case 'emergencyDrone':
-                    emergencyDrone.run(unit, SD.spawner_id[j][0]);
+                    emergencyDrone.run(unit);
                     break;
                 case 'assimilator': //big
                     if (Game.time % big_unit == 0)
@@ -172,7 +172,7 @@ module.exports = {
                     probe.run(unit, SD.fixation_override, SD.en_ignore_lim, SD.vault_boundary);
                     break;
                 case 'orbitalAssimilator':
-                    orbitalAssimilator.run(unit, SD.spawner_id[j][0], SD.remotesource_id[j], SD.remoteflag[j], SD.remotecanister_id[j], SD.tower_id[j]);
+                    orbitalAssimilator.run(unit, SD.spawner_id[j][0], SD.remotesource_id[j], SD.remoteflag[j], SD.remotecanister_id[j], SD.retreatTower_id[j]);
     
                     //TICK LOG BREAKPOINT 6
                     if (prev_unit){
@@ -187,10 +187,10 @@ module.exports = {
                     }
                     break;
                 case 'recalibrator':
-                    recalibrator.run(unit, SD.spawner_id[j][0], SD.reserveflag[j], SD.tower_id[j]);
+                    recalibrator.run(unit, SD.spawner_id[j][0], SD.reserveflag[j], SD.retreatTower_id[j]);
                     break;
                 case 'orbitalDrone':
-                    orbitalDrone.run(unit, SD.spawner_id[j][0], SD.remotecanister_id[j], SD.remoteflag[j], SD.en_ignore_lim, SD.tower_id[j]);
+                    orbitalDrone.run(unit, SD.spawner_id[j][0], SD.remotecanister_id[j], SD.remoteflag[j], SD.en_ignore_lim, SD.retreatTower_id[j]);
     
                     //TICK LOG BREAKPOINT 7
                     if (prev_unit){
@@ -208,10 +208,10 @@ module.exports = {
                     bloodhunter.run(unit, SD.spawner_id[j][0], SD.remoteflag[j]);
                     break;
                 case 'enforcer':
-                    enforcer.run(unit, SD.spawner_id[j][0], SD.remoteflag[j], SD.tower_id[j]);
+                    enforcer.run(unit, SD.spawner_id[j][0], SD.remoteflag[j], SD.retreatTower_id[j]);
                     break;
                 case 'purifier':
-                    purifier.run(unit, SD.spawner_id[j][0], SD.remoteflag[j], SD.tower_id[j]);
+                    purifier.run(unit, SD.spawner_id[j][0], SD.remoteflag[j], SD.retreatTower_id[j]);
                     break;
                 case 'ancientDrone': //very slow unit
                     if (Game.time % Memory.roomSpeed[j]*very_slow == 0)
@@ -227,7 +227,7 @@ module.exports = {
                     break;
                 case 'phaseArchitect': //slow unit
                     if (Game.time % Memory.roomSpeed[j] == 0)
-                        phaseArchitect.run(unit, SD.spawner_id[j][0], SD.canister_bias);
+                        phaseArchitect.run(unit, SD.canister_bias);
                     break;
                 case 'visionary':
                     visionary.run(unit, Game.flags['GOGO']); //TODO: save flag name to SD or Memory instead of hardcoding
@@ -255,7 +255,7 @@ module.exports = {
                     break;
                 case 'treasurer': //slow unit
                     if (Game.time % Memory.roomSpeed[j] == 0)
-                        treasurer.run(unit, SD.spawner_id[j][0]);
+                        treasurer.run(unit);
                     break;
                 default:
                     console.log("UNITDRIVE:: " + unit.name + " HAS INVALID ROLE");

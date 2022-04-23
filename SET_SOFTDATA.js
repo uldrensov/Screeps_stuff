@@ -106,7 +106,7 @@ module.exports = {
 
 
     //specific towers
-    tower_id:               ['5e76a9799b9279cd3b8d5c7d',    '5e5c992bb655c985f872fdd1', '5ea4d90bcdd80c534a3abc8e',
+    retreatTower_id:        ['5e76a9799b9279cd3b8d5c7d',    '5e5c992bb655c985f872fdd1', '5ea4d90bcdd80c534a3abc8e',
                             '5e6dedb3b2181dab6255bd37',     '5eacde6466154c86cb8dbf5a', '5e76c1bc7e17fe2a086ed2e0',
                             '5ed71c1163d51255eee5d760',     '5eafc6815ed8e62449836ce9', '623bfb3fc088bfb245421656'],    //remote mining team retreats towards this
                 

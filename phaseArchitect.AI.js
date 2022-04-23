@@ -2,7 +2,7 @@
 //green trail ("builder")
 
 module.exports = {
-    run: function(unit, nexus_id, bias){
+    run: function(unit, bias){
         
         const energyCanisters_max = 2;
 
@@ -84,7 +84,19 @@ module.exports = {
         
         
         //built-in economic killswitch
-        else if (Game.getObjectById(nexus_id).recycleCreep(unit) == ERR_NOT_IN_RANGE)
-            unit.moveTo(Game.getObjectById(nexus_id));
+        else{
+            if (!Game.getObjectById(unit.memory.suicide_nexus_ID)){
+                const sui_nexi = unit.room.find(FIND_STRUCTURES, {
+                    filter: structure => {
+                        return structure.structureType == STRUCTURE_SPAWN;
+                    }
+                });
+
+                unit.memory.suicide_nexus_ID = sui_nexi[0].id;
+            }
+
+            if (Game.getObjectById(unit.memory.suicide_nexus_ID).recycleCreep(unit) == ERR_NOT_IN_RANGE)
+                unit.moveTo(Game.getObjectById(unit.memory.suicide_nexus_ID));
+        }
     }
 };

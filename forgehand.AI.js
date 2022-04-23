@@ -32,8 +32,8 @@ module.exports = {
 
             //unload
             if (unit.store.getFreeCapacity() == 0 || finaltrip){ //if unit is fully loaded, or if carrying its final load
-                if (unit.transfer(Game.getObjectById(nexus_id).room.storage, cleanout_type) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(Game.getObjectById(nexus_id).room.storage);
+                if (unit.transfer(unit.room.storage, cleanout_type) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(unit.room.storage);
             }
         }
 
@@ -52,11 +52,11 @@ module.exports = {
                 if (unit.memory.task1_progress < unit.memory.order1_amt){
                     //[false] transfer direction (unload lab into vault)
                     let input = r1;
-                    let output = Game.getObjectById(nexus_id).room.storage;
+                    let output = unit.room.storage;
 
                     //[true] transfer direction (load lab from vault)
                     if (unit.memory.dir){
-                        input = Game.getObjectById(nexus_id).room.storage;
+                        input = unit.room.storage;
 
                         switch (unit.memory.spec_dest){
                             case 'NA':
@@ -117,9 +117,22 @@ module.exports = {
                 }
             }
 
+            
             //built-in economic killswitch
-            else if (Game.getObjectById(nexus_id).recycleCreep(unit) == ERR_NOT_IN_RANGE)
-                    unit.moveTo(Game.getObjectById(nexus_id));
+            else{
+                if (!Game.getObjectById(unit.memory.suicide_nexus_ID)){
+                    const sui_nexi = unit.room.find(FIND_STRUCTURES, {
+                        filter: structure => {
+                            return structure.structureType == STRUCTURE_SPAWN;
+                        }
+                    });
+    
+                    unit.memory.suicide_nexus_ID = sui_nexi[0].id;
+                }
+    
+                if (Game.getObjectById(unit.memory.suicide_nexus_ID).recycleCreep(unit) == ERR_NOT_IN_RANGE)
+                    unit.moveTo(Game.getObjectById(unit.memory.suicide_nexus_ID));
+            }
         }
     }
 };
