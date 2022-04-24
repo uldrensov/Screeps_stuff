@@ -11,6 +11,7 @@ module.exports = {
 
         const ctrlLvl_max =             8;
         const threshApproach_factor =   1.5;
+        const transacRatio_standard =   0.5; //expected energy required per resource sold via terminal
         const powerProcess_cost =       50;
         
         
@@ -75,7 +76,7 @@ module.exports = {
             let vault;
             let term;
 
-            let en_min_ratio;
+            let energyToResrc_ratio;
 
 
             for (let i=0; i<SD.ctrl_id.length; i++){
@@ -84,8 +85,8 @@ module.exports = {
                     if (!ctrl[i])                       continue;
                 
                     //check for vault/terminal existence
-                    vault = ctrl[i].room.storage;
-                    term = ctrl[i].room.terminal;
+                    vault =                             ctrl[i].room.storage;
+                    term =                              ctrl[i].room.terminal;
 
                     if (!vault || !term)                continue;
 
@@ -112,21 +113,22 @@ module.exports = {
                             continue;
 
 
-                        en_min_ratio = term.store.getUsedCapacity(RESOURCE_ENERGY) / term.store.getUsedCapacity(resource_type);
+                        energyToResrc_ratio = term.store.getUsedCapacity(RESOURCE_ENERGY) / term.store.getUsedCapacity(resource_type);
                     
-                        //if terminal's energy-to-mineral ratio is insufficient, and vault has enough energy to *spare*, then load energy required for transaction
-                        if (en_min_ratio < .5
+                        //if terminal's energy-to-resource ratio is insufficient, and vault has enough energy to *spare*, then load energy required for transaction
+                        if ((energyToResrc_ratio < transacRatio_standard)
                             &&
-                            vault.store.getUsedCapacity(RESOURCE_ENERGY) >= SD.cargo_size + SD.vault_boundary){
+                            (vault.store.getUsedCapacity(RESOURCE_ENERGY) >= (SD.cargo_size + SD.vault_boundary))){
 
-                            autoload_return = TRANSFER_INROOM.run(i,RESOURCE_ENERGY,SD.cargo_size,'TRM',true,true);
+                            autoload_return = TRANSFER_INROOM.run(i, RESOURCE_ENERGY, SD.cargo_size, 'TRM', true, true);
 
                             if (autoload_return != OK)
                                 console.log('DRIVE_ECON:: AUTOLOAD FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autoload_return + ']');
                         }
-                        //if terminal's energy-to-mineral ratio is sufficient, then load minerals
-                        else if (en_min_ratio >= .5){
-                            autoload_return = TRANSFER_INROOM.run(i,resource_type,SD.cargo_size,'TRM',true,true);
+
+                        //if terminal's energy-to-resource ratio is sufficient, then load resources
+                        else if (energyToResrc_ratio >= transacRatio_standard){
+                            autoload_return = TRANSFER_INROOM.run(i, resource_type, SD.cargo_size, 'TRM', true, true);
                             
                             if (autoload_return != OK)
                                 console.log('DRIVE_ECON:: AUTOLOAD FAILED IN ROOM #' + i + ' WITH ERROR RESPONSE [' + autoload_return + ']');
@@ -141,7 +143,7 @@ module.exports = {
         }
         
         
-        //export terminal minerals
+        //export terminal resources
         if (Game.time % SD.autosell_interval == 0){
             let printFlag = true; //helper var for printing the header only once, and the footer only if the header prints
             let autosell_return;
@@ -165,13 +167,13 @@ module.exports = {
                         //select a sellable resource (no specific priority order) and attempt to sell
                         for (let x=0; x<SD.sellable_products[i].length; x++){
                             if (ctrl[i].room.terminal.store.getUsedCapacity(SD.sellable_products[i][x]) > 0){
-                                autosell_return = TRADE_RESOURCE.run(i,SD.sellable_products[i][x],true,0,false);
+                                autosell_return = TRADE_RESOURCE.run(i, SD.sellable_products[i][x], true, 0, false);
 
                                 //if price tolerance is not met, check if the resource is whitelisted for tolerance ignore, and re-attempt trade if so
                                 if (autosell_return == 'ERR_PRICETOL'){
                                     for (let z=0; z<SD.dumpsell_whitelist.length; z++){
                                         if (SD.sellable_products[i][x] == SD.dumpsell_whitelist[z]){
-                                            autosell_return = TRADE_RESOURCE.run(i,SD.sellable_products[i][x],true,0,true);
+                                            autosell_return = TRADE_RESOURCE.run(i, SD.sellable_products[i][x], true, 0, true);
                                             break;
                                         }
                                     }
@@ -258,7 +260,7 @@ module.exports = {
                     }
                 });
 
-                Memory.powernex_id[i] = powernex.length ? powernex[0].id : 'NULL';
+                Memory.powernex_id[i] = powernex.length ? powernex[0].id : null;
             }
         }
         

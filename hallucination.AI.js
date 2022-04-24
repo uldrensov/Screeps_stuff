@@ -5,7 +5,7 @@
 module.exports = {
     run: function(unit, waypoint, healpoint){
 
-        const lowHP_threshold = .25;
+        const lowHP_threshold = 0.25;
 
         
         //combat behaviour FSM...

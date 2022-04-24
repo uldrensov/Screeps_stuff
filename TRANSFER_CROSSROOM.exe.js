@@ -1,5 +1,5 @@
 //executable script: transfers goods across owned terminals
-    //require('TRANSFER_CROSSROOM.exe').run(0,8,RESOURCE_ENERGY,100000)
+    //require('TRANSFER_CROSSROOM.exe').run(0, 8, RESOURCE_ENERGY, 100000)
 
 var SD = require('SET_SOFTDATA');
 

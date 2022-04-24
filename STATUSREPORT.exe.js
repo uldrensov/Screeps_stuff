@@ -71,7 +71,7 @@ module.exports = {
 
         //determine time until next unit death in the room
         let nextdeath_timeleft = CREEP_LIFE_TIME; //init at max TTL
-        let nextdeath_unit = 'NULL';
+        let nextdeath_unit = '(ROOM IS BARREN...)';
 
         for (let name in Game.creeps){
             if ((Game.creeps[name].ticksToLive < nextdeath_timeleft)

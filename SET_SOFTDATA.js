@@ -19,14 +19,14 @@ module.exports = {
     buyPrice_tolerance:     1.10,       //avoids buying resources above this percentage of the avg price
     cargo_size:             100000,     //outbound "crate" size for trade terminal autoloading
     autoload_interval:      800,        //tick interval for automatic terminal loading (should exceed # of ticks required for a treasurer to finish an order)
-    autosell_interval:      200,        //tick interval for automatic terminal sales (both mineral sales and energy sales)
+    autosell_interval:      200,        //tick interval for automatic terminal sales (both resource sales and energy sales)
 
     //energy management
-    tower_reserve_ratio:    .5,         //towers will reserve this percentage of their energy for attacking
+    tower_reserve_ratio:    0.5,        //towers will reserve this percentage of their energy for attacking
     vault_boundary:         100000,     //all units except (e)drones, energisers, and phase architects will avoid withdrawing from vaults containing less than this
 
     //unit role-specific values
-    fixation_override:      .25,        //probes will break fixation upon spotting an absolute % gap this wide
+    fixation_override:      0.25,       //probes will break fixation upon spotting an absolute % gap this wide
     canister_bias:          300,        //can force canister-fetching units to prefer one by default, until this wide of a disparity is detected
     en_ignore_lim:          100,        //drones/sacrificers/probes will ignore containers/pickups containing less energy than this
     cleanup_thresh:         2000,       //retriever drones arrive upon detecting this much uncollected energy on the ground, and stop at a quarter of this value

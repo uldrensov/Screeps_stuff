@@ -5,7 +5,7 @@ module.exports = {
     run: function(unit, nexus_id, bloodscent){
 
         const dmgPerAtkPart =               30;
-        const lowHP_threshold =             .25;
+        const lowHP_threshold =             0.25;
         const reinforcement_delay =         100;
         const bloodhunterCasualty_delay =   1000;
 

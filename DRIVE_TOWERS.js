@@ -6,8 +6,8 @@ var SD = require('SET_SOFTDATA');
 module.exports = {
     run: function(){
         
-        const ctrlLvl_towers = 3;
-        const healthy_percent = .95;
+        const ctrlLvl_towers =      3;
+        const healthy_percent =     0.95;
 
         
         let ctrl = [];
@@ -56,7 +56,7 @@ module.exports = {
 
             //reset previous action/target
             Memory.turretCommand[k] = 'IDLE';
-            Memory.turretTarget_id[k] = 'NULL';
+            Memory.turretTarget_id[k] = null;
 
             //detect foreign units and determine presence of hostiles among them
             const foreigner = ctrl[k].room.find(FIND_HOSTILE_CREEPS);

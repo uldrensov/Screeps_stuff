@@ -78,14 +78,6 @@ module.exports = {
         }
 
 
-        //TICK LOG BREAKPOINT 3
-        if (Memory.recordTick){
-            if (Memory.cpu_log[3] == undefined)
-                Memory.cpu_log[3] = [];
-            Memory.cpu_log[3][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
-        }
-
-
         //helper var used for CPU/tick diagnosis
         let prev_unit = Game.creeps[Memory.unit_roster[0]];
         
@@ -117,30 +109,30 @@ module.exports = {
                     if (Game.time % Memory.roomSpeed[j] == 0)
                         drone.run(unit, SD.en_ignore_lim);
 
-                    //TICK LOG BREAKPOINT 4
+                    //TICK LOG BREAKPOINT 3
                     if (prev_unit){
                         if (Memory.recordTick
                             &&
                             unit.memory.role != prev_unit.memory.role){
                         
-                            if (Memory.cpu_log[4] == undefined)
-                                Memory.cpu_log[4] = [];
-                            Memory.cpu_log[4][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
+                            if (!Memory.cpu_log[3])
+                                Memory.cpu_log[3] = [];
+                            Memory.cpu_log[3][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
                         }
                     }
                     break;
                 case 'energiser':
                     energiser.run(unit, SD.std_interval);
 
-                    //TICK LOG BREAKPOINT 5
+                    //TICK LOG BREAKPOINT 4
                     if (prev_unit){
                         if (Memory.recordTick
                             &&
                             unit.memory.role != prev_unit.memory.role){
 
-                            if (Memory.cpu_log[5] == undefined)
-                                Memory.cpu_log[5] = [];
-                            Memory.cpu_log[5][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
+                            if (!Memory.cpu_log[4])
+                                Memory.cpu_log[4] = [];
+                            Memory.cpu_log[4][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
                         }
                     }
                     break;
@@ -158,12 +150,36 @@ module.exports = {
                     break;
                 case 'adherent':
                     adherent.run(unit, SD.adher_tile_id[j], SD.warpRX_id[j]);
+
+                    //TICK LOG BREAKPOINT 5
+                    if (prev_unit){
+                        if (Memory.recordTick
+                            &&
+                            unit.memory.role != prev_unit.memory.role){
+                            
+                            if (!Memory.cpu_log[5])
+                                Memory.cpu_log[5] = [];
+                            Memory.cpu_log[5][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
+                        }
+                    }
                     break;
                 case 'nullAdherent':
                     nullAdherent.run(unit, SD.adher_tile_id[j], SD.warpRX_id[j], SD.warpTX_id[j], SD.vault_boundary);
                     break;
                 case 'supplicant':
                     supplicant.run(unit, SD.vault_boundary);
+
+                    //TICK LOG BREAKPOINT 6
+                    if (prev_unit){
+                        if (Memory.recordTick
+                            &&
+                            unit.memory.role != prev_unit.memory.role){
+                            
+                            if (!Memory.cpu_log[6])
+                                Memory.cpu_log[6] = [];
+                            Memory.cpu_log[6][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
+                        }
+                    }
                     break;
                 case 'nullSupplicant':
                     nullSupplicant.run(unit, SD.warpTX_id[j]);
@@ -174,15 +190,15 @@ module.exports = {
                 case 'orbitalAssimilator':
                     orbitalAssimilator.run(unit, SD.spawner_id[j][0], SD.remotesource_id[j], SD.remoteflag[j], SD.remotecanister_id[j], SD.retreatTower_id[j]);
     
-                    //TICK LOG BREAKPOINT 6
+                    //TICK LOG BREAKPOINT 7
                     if (prev_unit){
                         if (Memory.recordTick
                             &&
                             unit.memory.role != prev_unit.memory.role){
                             
-                            if (Memory.cpu_log[6] == undefined)
-                                Memory.cpu_log[6] = [];
-                            Memory.cpu_log[6][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
+                            if (!Memory.cpu_log[7])
+                                Memory.cpu_log[7] = [];
+                            Memory.cpu_log[7][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
                         }
                     }
                     break;
@@ -192,15 +208,15 @@ module.exports = {
                 case 'orbitalDrone':
                     orbitalDrone.run(unit, SD.spawner_id[j][0], SD.remotecanister_id[j], SD.remoteflag[j], SD.en_ignore_lim, SD.retreatTower_id[j]);
     
-                    //TICK LOG BREAKPOINT 7
+                    //TICK LOG BREAKPOINT 8
                     if (prev_unit){
                         if (Memory.recordTick
                             &&
                             unit.memory.role != prev_unit.memory.role){
         
-                            if (Memory.cpu_log[7] == undefined)
-                                Memory.cpu_log[7] = [];
-                            Memory.cpu_log[7][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
+                            if (!Memory.cpu_log[8])
+                                Memory.cpu_log[8] = [];
+                            Memory.cpu_log[8][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
                         }
                     }
                     break;

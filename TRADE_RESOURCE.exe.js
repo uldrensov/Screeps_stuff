@@ -1,7 +1,7 @@
 //executable script: attempts to buy or sell resources from a room's terminal
 //optionally, can also be called automatically by DRIVE_ECON.js
-    //require('TRADE_RESOURCE.exe').run(0,RESOURCE_ZYNTHIUM,true,0,false)
-    //require('TRADE_RESOURCE.exe').run(0,RESOURCE_POWER,false,1000,false)
+    //require('TRADE_RESOURCE.exe').run(0, RESOURCE_ZYNTHIUM, true, 0, false)
+    //require('TRADE_RESOURCE.exe').run(0, RESOURCE_POWER, false, 1000, false)
 
 var SD = require('SET_SOFTDATA');
 

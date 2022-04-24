@@ -1,8 +1,8 @@
 //executable script: spawns a treasurer unit (if applicable), and writes a command into its memory
 //optionally, can also be called automatically by DRIVE_ECON.js
-    //require('TRANSFER_INROOM.exe').run(3,RESOURCE_ENERGY,100000,'TRM',true,true)
-    //require('TRANSFER_INROOM.exe').run(0,RESOURCE_POWER,100,'PWR',true,true)
-    //require('TRANSFER_INROOM.exe').run(7,RESOURCE_ENERGY,100000,'NUK',true,true)
+    //require('TRANSFER_INROOM.exe').run(3, RESOURCE_ENERGY, 100000, 'TRM', true, true)
+    //require('TRANSFER_INROOM.exe').run(0, RESOURCE_POWER, 100, 'PWR', true, true)
+    //require('TRANSFER_INROOM.exe').run(7, RESOURCE_ENERGY, 100000, 'NUK', true, true)
     
 var SD = require('SET_SOFTDATA');
 

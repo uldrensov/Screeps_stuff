@@ -12,9 +12,10 @@ module.exports = {
                 const canister =    Game.getObjectById(canister_id);
             
             
-                //remote canister maintenance...
+                //remote canister maintenance FSM...
+                //init
                 if (unit.memory.repairmode == undefined)
-                    unit.memory.repairmode = false; //init
+                    unit.memory.repairmode = false;
                     
                 //if carried energy is over half, unit may repair
                 if (unit.store[RESOURCE_ENERGY] > unit.store.getCapacity()/2)

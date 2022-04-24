@@ -97,7 +97,7 @@ module.exports = {
             if (Memory.darktemplar_MAX[i] == undefined)         Memory.darktemplar_MAX[i] =                0;             //role is currently unfinished/unimplemented
             
             if (Memory.turretCommand[i] == undefined)           Memory.turretCommand[i] =                  'IDLE';        //do not modify manually
-            if (Memory.turretTarget_id[i] == undefined)         Memory.turretTarget_id[i] =                'NULL';        //do not modify manually
+            if (Memory.turretTarget_id[i] == undefined)         Memory.turretTarget_id[i] =                null;          //do not modify manually
             
             if (Memory.vaultEnergy_levels[i] == undefined)      Memory.vaultEnergy_levels[i] =             0;             //do not modify manually
             if (Memory.vaultAlertLO_EN[i] == undefined)         Memory.vaultAlertLO_EN[i] =                false;         //do not modify manually
@@ -106,7 +106,7 @@ module.exports = {
             if (Memory.evac_timer[i] == undefined)              Memory.evac_timer[i] =                     0;             //do not modify manually
             if (Memory.viable_prey[i] == undefined)             Memory.viable_prey[i] =                    false;         //do not modify manually
             if (Memory.bloodhunter_casualty[i] == undefined)    Memory.bloodhunter_casualty[i] =           false;         //do not modify manually
-            if (Memory.lastSeenEnemy_name[i] == undefined)      Memory.lastSeenEnemy_name[i] =             'NULL';        //do not modify manually
+            if (Memory.lastSeenEnemy_name[i] == undefined)      Memory.lastSeenEnemy_name[i] =             '(NONE)';      //do not modify manually
             if (Memory.lastSeenEnemy_time[i] == undefined)      Memory.lastSeenEnemy_time[i] =             'NEVER';       //do not modify manually
             if (Memory.lastSeenCore_time[i] == undefined)       Memory.lastSeenCore_time[i] =              'NEVER';       //do not modify manually
             if (Memory.lastReserveLoss_time[i] == undefined)    Memory.lastReserveLoss_time[i] =           'NEVER';       //do not modify manually

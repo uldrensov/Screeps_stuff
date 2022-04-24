@@ -40,7 +40,7 @@ module.exports.loop = function(){
 
     //TICK LOG BREAKPOINT 0
     if (Memory.recordTick){
-        if (Memory.cpu_log[0] == undefined)
+        if (!Memory.cpu_log[0])
             Memory.cpu_log[0] = [];
         Memory.cpu_log[0][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
     }
@@ -52,7 +52,7 @@ module.exports.loop = function(){
 
     //TICK LOG BREAKPOINT 1
     if (Memory.recordTick){
-        if (Memory.cpu_log[1] == undefined)
+        if (!Memory.cpu_log[1])
             Memory.cpu_log[1] = [];
         Memory.cpu_log[1][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
     }
@@ -63,7 +63,7 @@ module.exports.loop = function(){
 
     //TICK LOG BREAKPOINT 2
     if (Memory.recordTick){
-        if (Memory.cpu_log[2] == undefined)
+        if (!Memory.cpu_log[2])
             Memory.cpu_log[2] = [];
         Memory.cpu_log[2][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
     }
