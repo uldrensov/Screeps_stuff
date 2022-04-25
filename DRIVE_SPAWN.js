@@ -7,7 +7,7 @@ module.exports = {
     run: function(){
         
         const reserveDuration_max =     5000;
-        const claimUnit_TTL =           600;
+        const claimUnit_TTL =           600; //units with a CLAIM body part have significantly reduced TTL than usual
 
 
         let ctrl = [];

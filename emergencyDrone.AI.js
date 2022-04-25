@@ -4,8 +4,7 @@
 module.exports = {
     run: function(unit){
         
-        //emergency drone's reduced "ignore limit"
-        const lowbound = 50;
+        const lowbound = 50; //emergency drone's reduced "ignore limit"
 
 
         //proceed if there is no suicide order

@@ -71,4 +71,11 @@ module.exports.loop = function(){
     
     //run unit AI scripts
     DRIVE_UNITS.run();
+
+    //TICK LOG BREAKPOINT 9
+    if (Memory.recordTick){
+        if (!Memory.cpu_log[9])
+            Memory.cpu_log[9] = [];
+        Memory.cpu_log[9][Memory.ticksLoggedToday-1] = Game.cpu.getUsed();
+    }
 }

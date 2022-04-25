@@ -135,7 +135,8 @@ module.exports = {
 
         //performance monitoring
         if (Memory.recordTick == undefined)                     Memory.recordTick =                        false;         //do not modify manually
-        if (Memory.dayStart_timestamp == undefined)             Memory.dayStart_timestamp =                Date.now();    //do not modify manually
+        if (Memory.dayStart_timestamp == undefined)             Memory.dayStart_timestamp =                0;             //do not modify manually
+        if (Memory.converted_timestamp == undefined)            Memory.converted_timestamp =               '(T_PENDING)'; //do not modify manually
         if (Memory.cpu_log == undefined)                        Memory.cpu_log =                           [];            //do not modify manually
         if (Memory.ticksLoggedToday == undefined)               Memory.ticksLoggedToday =                  0;             //do not modify manually
 

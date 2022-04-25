@@ -23,7 +23,7 @@ module.exports = {
             console.log('STATUSREPORT_T:: BREAKPOINT ' + k + ': ' + breakpoint_avgs[k].toFixed(1) + ' CPU averaged');
         }
 
-        console.log('STATUSREPORT_T:: Results calculated using ' + Memory.ticksLoggedToday + ' samples.');
+        console.log('STATUSREPORT_T:: Results calculated using ' + Memory.ticksLoggedToday + ' samples, taken since [' + Memory.converted_timestamp + ']');
 
 
         return 'STATUSREPORT_T:: ***** END *****';

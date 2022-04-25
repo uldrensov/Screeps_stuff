@@ -13,6 +13,7 @@ module.exports = {
         const threshApproach_factor =   1.5;
         const transacRatio_standard =   0.5; //expected energy required per resource sold via terminal
         const powerProcess_cost =       50;
+        const bucket_max =              10000;
         
         
         let ctrl = [];
@@ -266,7 +267,7 @@ module.exports = {
         
         
         //produce cosmetics currency
-        if (Game.cpu.bucket == 10000){
+        if (Game.cpu.bucket == bucket_max){
             if (Game.cpu.generatePixel() == OK){
                 console.log('DRIVE_ECON:: PIXEL GENERATED');
                 Memory.pixelGainToday++;
