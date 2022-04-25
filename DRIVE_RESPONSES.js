@@ -77,6 +77,10 @@ module.exports = {
         //nuke detection alert response
         if (Game.time % SD.nukeCheck_interval == 0){
             for (let i=0; i<SD.ctrl_id.length; i++){
+                //bypass: if controller fails to retrieve, skip the room
+                if (!Game.getObjectById(SD.ctrl_id[i]))
+                    continue;
+
                 if (Game.getObjectById(SD.ctrl_id[i]).room.find(FIND_NUKES).length){
                     Game.notify('DRIVE_RESPONSES:: >>>>>> INCOMING NUCLEAR STRIKE -- ROOM #' + i + ' <<<<<<');
                     console.log('DRIVE_RESPONSES:: >>>>>> INCOMING NUCLEAR STRIKE -- ROOM #' + i + ' <<<<<<');

@@ -31,12 +31,12 @@ module.exports = {
                 >
                 secondsIn24h){
 
-                //update the "meridian" timestamp once per day
+                //update the "day start" timestamp every 24h
                 Memory.dayStart_timestamp = Date.now();
 
                 //update the "user-friendly" timestamp
                 let secondsSince_epoch =                Date.now()          / milli;                    //seconds since the Unix epoch, AKA 00:00 UTC, 01 Jan 1970
-                let secondsSince_0000 =                 secondsSince_epoch  % secondsIn24h;             //seconds since 00:00 UTC
+                let secondsSince_0000 =                 secondsSince_epoch  % secondsIn24h;             //seconds since 00:00 UTC, today
                 let t_raw =                             secondsSince_0000   / secondsInHour;            //hours since 00:00 UTC, in decimal form
                 let t_hours =                           Math.floor(t_raw);                              //hour component of t_raw, unadjusted
                 let t_mins =                            (t_raw - t_hours)   * decimalToClock_minutes;   //minute component of t_raw
