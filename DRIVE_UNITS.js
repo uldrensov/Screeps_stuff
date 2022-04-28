@@ -107,7 +107,7 @@ module.exports = {
                     break;
                 case 'drone': //slow unit
                     if (Game.time % Memory.roomSpeed[j] == 0)
-                        drone.run(unit, SD.en_ignore_lim);
+                        drone.run(unit, SD.energyIgnore_threshold);
 
                     //TICK LOG BREAKPOINT 3
                     if (prev_unit){
@@ -137,10 +137,10 @@ module.exports = {
                     }
                     break;
                 case 'retrieverDrone':
-                    retrieverDrone.run(unit, SD.en_ignore_lim, SD.std_interval);
+                    retrieverDrone.run(unit, SD.energyIgnore_threshold, SD.std_interval);
                     break;
                 case 'sacrificer':
-                    sacrificer.run(unit, SD.en_ignore_lim);
+                    sacrificer.run(unit, SD.energyIgnore_threshold);
                     break;
                 case 'acolyte':
                     acolyte.run(unit, SD.source1_id[j], SD.warpRX_id[j], SD.warpTX_id[j][0], SD.canister1_id[j]);
@@ -149,7 +149,7 @@ module.exports = {
                     acolyte.run(unit, SD.source2_id[j], SD.warpRX_id[j], SD.warpTX_id[j][1], SD.canister2_id[j]);
                     break;
                 case 'adherent':
-                    adherent.run(unit, SD.adher_tile_id[j], SD.warpRX_id[j]);
+                    adherent.run(unit, SD.adherTile_id[j], SD.warpRX_id[j]);
 
                     //TICK LOG BREAKPOINT 5
                     if (prev_unit){
@@ -164,7 +164,7 @@ module.exports = {
                     }
                     break;
                 case 'nullAdherent':
-                    nullAdherent.run(unit, SD.adher_tile_id[j], SD.warpRX_id[j], SD.warpTX_id[j], SD.vault_boundary);
+                    nullAdherent.run(unit, SD.adherTile_id[j], SD.warpRX_id[j], SD.warpTX_id[j], SD.vault_boundary);
                     break;
                 case 'supplicant':
                     supplicant.run(unit, SD.vault_boundary);
@@ -185,10 +185,10 @@ module.exports = {
                     nullSupplicant.run(unit, SD.warpTX_id[j]);
                     break;
                 case 'probe':
-                    probe.run(unit, SD.fixation_override, SD.en_ignore_lim, SD.vault_boundary);
+                    probe.run(unit, SD.fixationOverride_amt, SD.energyIgnore_threshold, SD.vault_boundary);
                     break;
                 case 'orbitalAssimilator':
-                    orbitalAssimilator.run(unit, SD.spawner_id[j][0], SD.remotesource_id[j], SD.remoteflag[j], SD.remotecanister_id[j], SD.retreatTower_id[j]);
+                    orbitalAssimilator.run(unit, SD.spawner_id[j][0], SD.remoteSource_id[j], SD.remote_flag[j], SD.retreatTower_id[j], SD.std_interval);
     
                     //TICK LOG BREAKPOINT 7
                     if (prev_unit){
@@ -203,10 +203,10 @@ module.exports = {
                     }
                     break;
                 case 'recalibrator':
-                    recalibrator.run(unit, SD.spawner_id[j][0], SD.reserveflag[j], SD.retreatTower_id[j]);
+                    recalibrator.run(unit, SD.spawner_id[j][0], SD.reserve_flag[j], SD.retreatTower_id[j]);
                     break;
                 case 'orbitalDrone':
-                    orbitalDrone.run(unit, SD.spawner_id[j][0], SD.remotecanister_id[j], SD.remoteflag[j], SD.en_ignore_lim, SD.retreatTower_id[j]);
+                    orbitalDrone.run(unit, SD.spawner_id[j][0], SD.remote_flag[j], SD.energyIgnore_threshold, SD.retreatTower_id[j], SD.std_interval);
     
                     //TICK LOG BREAKPOINT 8
                     if (prev_unit){
@@ -221,29 +221,29 @@ module.exports = {
                     }
                     break;
                 case 'bloodhunter':
-                    bloodhunter.run(unit, SD.spawner_id[j][0], SD.remoteflag[j]);
+                    bloodhunter.run(unit, SD.spawner_id[j][0], SD.remote_flag[j]);
                     break;
                 case 'enforcer':
-                    enforcer.run(unit, SD.spawner_id[j][0], SD.remoteflag[j], SD.retreatTower_id[j]);
+                    enforcer.run(unit, SD.spawner_id[j][0], SD.remote_flag[j], SD.retreatTower_id[j]);
                     break;
                 case 'purifier':
-                    purifier.run(unit, SD.spawner_id[j][0], SD.remoteflag[j], SD.retreatTower_id[j]);
+                    purifier.run(unit, SD.spawner_id[j][0], SD.remote_flag[j], SD.retreatTower_id[j]);
                     break;
                 case 'ancientDrone': //very slow unit
                     if (Game.time % Memory.roomSpeed[j]*very_slow == 0)
-                        ancientDrone.run(unit, SD.mineralcanister_id[j]);
+                        ancientDrone.run(unit, SD.mineralCanister_id[j]);
                     break;
                 case 'ancientAssimilator': //very slow unit
                     if (Game.time % Memory.roomSpeed[j]*very_slow == 0)
-                        ancientAssimilator.run(unit, SD.mineralcanister_id[j]);
+                        ancientAssimilator.run(unit, SD.mineralCanister_id[j]);
                     break;
                 case 'architect': //slow unit
                     if (Game.time % Memory.roomSpeed[j] == 0)
-                        architect.run(unit, SD.canister_bias, SD.vault_boundary, SD.std_interval);
+                        architect.run(unit, SD.vault_boundary, SD.std_interval);
                     break;
                 case 'phaseArchitect': //slow unit
                     if (Game.time % Memory.roomSpeed[j] == 0)
-                        phaseArchitect.run(unit, SD.canister_bias);
+                        phaseArchitect.run(unit);
                     break;
                 case 'visionary':
                     visionary.run(unit, Game.flags['GOGO']); //TODO: save flag name to SD or Memory instead of hardcoding

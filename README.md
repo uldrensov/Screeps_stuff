@@ -68,9 +68,9 @@ More info coming soon...
 * More info coming soon...
 
 ### Adding new remote (long-distance) mining sites: ###
-* In SET_SOFTDATA.js, add the desired Source ID (from the remote room) to the remotesource_id array, and the remote room's Controller ID to the remotectrl_id array
+* In SET_SOFTDATA.js, add the desired Source ID (from the remote room) to the remoteSource_id array, and the remote room's Controller ID to the remoteCtrl_id array
 * Place two pathing/rally flags in the remote room: one for the Source, and one for the Controller
-* In SET_SOFTDATA.js, add these flags' names (format: Game.flags['NAME']) to the remoteflag and reserveflag arrays, respectively
+* In SET_SOFTDATA.js, add these flags' names (format: Game.flags['NAME']) to the remote_flag and reserve_flag arrays, respectively
 * In-game, set the orbitalAssimilator_MAX, orbitalDrone_MAX, and recalibrator_MAX arrays' nth element to 1, where n is the number of the room they shall spawn from
 
 ### Maintenance: ###

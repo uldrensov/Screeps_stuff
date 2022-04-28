@@ -2,14 +2,13 @@
 //yellow trail ("traveller")
 
 module.exports = {
-    run: function(unit, nexus_id, src_id, standby_flag, canister_id, flee_point){
+    run: function(unit, nexus_id, src_id, standby_flag, flee_point, std_interval){
         
         //proceed if there is no suicide order
         if (!unit.memory.killswitch){
             //proceed if the evacuation alarm is not raised
             if (Memory.evac_timer[unit.memory.home_index] == 0){
                 const src =         Game.getObjectById(src_id);
-                const canister =    Game.getObjectById(canister_id);
             
             
                 //remote canister maintenance FSM...
@@ -141,14 +140,34 @@ module.exports = {
                         //STAGE 3B END: proceed if room reservation is intact
                         if (!reservation_lost){
                             //STAGE 4. UNLOAD: containers (2-state)
-                            if (canister){
-                                //repairing
-                                if (unit.memory.repairmode && canister.hits < canister.hitsMax){
-                                    if (!unit.pos.isEqualTo(canister.pos))
-                                        unit.moveTo(canister);
-                                    else
-                                        unit.repair(canister);
+                            if (!Game.getObjectById(unit.memory.canister_ID) && (Game.time % std_interval == 0)){
+                                const canisters = unit.room.find(FIND_STRUCTURES, {
+                                    filter: structure => {
+                                        return structure.structureType == STRUCTURE_CONTAINER;
+                                    }
+                                });
+                    
+                                for (let i=0; i<canisters.length; i++){
+                                    if (canisters[i].my){
+                                        unit.memory.canister_ID = canisters[i].id;
+                                        break;
+                                    }
                                 }
+                            }
+
+
+                            if (Game.getObjectById(unit.memory.canister_ID)){
+                                //repairing
+                                if (unit.memory.repairmode
+                                    &&
+                                    (Game.getObjectById(unit.memory.canister_ID).hits < Game.getObjectById(unit.memory.canister_ID).hitsMax)){
+
+                                    if (!unit.pos.isEqualTo(Game.getObjectById(unit.memory.canister_ID).pos))
+                                        unit.moveTo(Game.getObjectById(unit.memory.canister_ID));
+                                    else
+                                        unit.repair(Game.getObjectById(unit.memory.canister_ID));
+                                }
+
                                 //fetching (with container)
                                 else if (unit.harvest(src) == ERR_NOT_IN_RANGE)
                                     //FETCH: sources

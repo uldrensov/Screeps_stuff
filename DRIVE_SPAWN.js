@@ -6,8 +6,9 @@ var SD = require('SET_SOFTDATA');
 module.exports = {
     run: function(){
         
-        const reserveDuration_max =     5000;
-        const claimUnit_TTL =           600; //units with a CLAIM body part have significantly reduced TTL than usual
+        const noMoreCleanup_threshold =     SD.cleanup_threshold / 4;
+        const reserveDuration_max =         5000;
+        const claimUnit_TTL =               600; //units with a CLAIM body part have significantly reduced TTL than usual
 
 
         let ctrl = [];
@@ -186,7 +187,7 @@ module.exports = {
                 filter: resource => {
                     return resource.resourceType == RESOURCE_ENERGY
                         &&
-                        resource.amount > SD.en_ignore_lim;
+                        resource.amount > SD.energyIgnore_threshold;
                 }
             });
 
@@ -195,9 +196,9 @@ module.exports = {
                 total_dropped_energy += Game.getObjectById(scraps[i].id).amount;
             }
 
-            if (total_dropped_energy > SD.cleanup_thresh)
+            if (total_dropped_energy > SD.cleanup_threshold)
                 Memory.retrieverDrone_MAX[k] = 1;
-            else if (total_dropped_energy < SD.cleanup_thresh/4)
+            else if (total_dropped_energy < noMoreCleanup_threshold)
                 Memory.retrieverDrone_MAX[k] = -1;
             
             
@@ -228,11 +229,11 @@ module.exports = {
                 &&
                 openNexus.room.energyAvailable < drone_price){
 
-                spawnResult = openNexus.spawnCreep(SD.edrone_body, 'EmergencyDrone[' + k + ']-' + Game.time % SD.time_offset,
+                spawnResult = openNexus.spawnCreep(SD.edrone_body, 'EmergencyDrone[' + k + ']-' + Game.time % SD.name_interval,
                     {memory: {role: 'emergencyDrone', home_index: k}});
                     
                 if (spawnResult == OK){
-                    console.log('DRIVE_SPAWN:: >>>>>> EmergencyDrone[' + k + ']-' + Game.time % SD.time_offset + ' spawning. (DRONE EXTINCTION) <<<<<<');
+                    console.log('DRIVE_SPAWN:: >>>>>> EmergencyDrone[' + k + ']-' + Game.time % SD.name_interval + ' spawning. (DRONE EXTINCTION) <<<<<<');
                     Game.notify('DRIVE_SPAWN:: >>>>>> Emergency drone deployed in room #' + k + ' (DRONE EXTINCTION) <<<<<<');
                 }
                 else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
@@ -248,11 +249,11 @@ module.exports = {
                     ||
                 droneAccessible_energy < acoly_price[k])){
 
-                spawnResult = openNexus.spawnCreep(SD.edrone_body, 'EmergencyDrone[' + k + ']-' + Game.time % SD.time_offset,
+                spawnResult = openNexus.spawnCreep(SD.edrone_body, 'EmergencyDrone[' + k + ']-' + Game.time % SD.name_interval,
                     {memory: {role: 'emergencyDrone', home_index: k}});
                     
                 if (spawnResult == OK){
-                    console.log('DRIVE_SPAWN:: >>>>>> EmergencyDrone[' + k + ']-' + Game.time % SD.time_offset + ' spawning. (TOTAL STARVATION) <<<<<<');
+                    console.log('DRIVE_SPAWN:: >>>>>> EmergencyDrone[' + k + ']-' + Game.time % SD.name_interval + ' spawning. (TOTAL STARVATION) <<<<<<');
                     Game.notify('DRIVE_SPAWN:: >>>>>> Emergency drone deployed in room #' + k + ' (TOTAL STARVATION) <<<<<<');
                 }
                 else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
@@ -264,11 +265,11 @@ module.exports = {
                 &&
                 assimilator_gang.length < Memory.assimilator_MAX[k]){
 
-                spawnResult = openNexus.spawnCreep(SD.assim_body[k], 'Assimilator[' + k + ']-' + Game.time % SD.time_offset,
+                spawnResult = openNexus.spawnCreep(SD.assim_body[k], 'Assimilator[' + k + ']-' + Game.time % SD.name_interval,
                     {memory: {role: 'assimilator', home_index: k}});
 
                 if (spawnResult == OK)
-                    console.log('DRIVE_SPAWN:: Assimilator[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                    console.log('DRIVE_SPAWN:: Assimilator[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                 else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                     console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (ASSIMILATOR): CODE ' + '[' + spawnResult + ']');
             }
@@ -281,135 +282,135 @@ module.exports = {
 
                     //without drones, extensions are starved, and virtually nothing else can spawn
                     case (drone_gang.length < Memory.drone_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.drone_body[k], 'Drone[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.drone_body[k], 'Drone[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'drone', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Drone[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Drone[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (DRONE): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //without assimilators, there is no energy income
                     case (assimilator_gang.length < Memory.assimilator_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.assim_body[k], 'Assimilator[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.assim_body[k], 'Assimilator[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'assimilator', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Assimilator[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Assimilator[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (ASSIMILATOR): CODE ' + '[' + spawnResult + ']');
                         break;
                     case (assimilator2_gang.length < Memory.assimilator2_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.assim_body[k], 'Assimilator_II[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.assim_body[k], 'Assimilator_II[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'assimilator2', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Assimilator_II[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Assimilator_II[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (ASSIMILATOR 2): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //without energisers, the room's defences are crippled
                     case (energiser_gang.length < Memory.energiser_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.energ_body[k], 'Energiser[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.energ_body[k], 'Energiser[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'energiser', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Energiser[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Energiser[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (ENERGISER): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //without retriever drones, dropped energy is wasted
                     case ((retrieverDrone_gang.length < Memory.retrieverDrone_MAX[k]) && openNexus.room.storage):
-                        spawnResult = openNexus.spawnCreep(SD.drone_body[k], 'RetrieverDrone[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.drone_body[k], 'RetrieverDrone[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'retrieverDrone', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: RetrieverDrone[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: RetrieverDrone[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (RETRIEVER DRONE): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //without sacrificers, the room will level down
                     case (sacrificer_gang.length < Memory.sacrificer_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.sacrif_body[k], 'Sacrificer[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.sacrif_body[k], 'Sacrificer[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'sacrificer', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Sacrificer[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Sacrificer[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (SACRIFICER): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //without acolytes, links cannot transmit
                     case (acolyte_gang.length < Memory.acolyte_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.acoly_body[k], 'Acolyte[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.acoly_body[k], 'Acolyte[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'acolyte', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Acolyte[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Acolyte[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (ACOLYTE): CODE ' + '[' + spawnResult + ']');
                         break;
                     case (acolyte2_gang.length < Memory.acolyte2_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.acoly_body[k], 'Acolyte_II[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.acoly_body[k], 'Acolyte_II[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'acolyte2', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Acolyte_II[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Acolyte_II[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (ACOLYTE 2): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //without adherents, links cannot be unloaded
                     case (adherent_gang.length < Memory.adherent_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.adher_body, 'Adherent[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.adher_body, 'Adherent[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'adherent', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Adherent[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Adherent[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (ADHERENT): CODE ' + '[' + spawnResult + ']');
                         break;
                     case (nullAdherent_gang.length < Memory.nullAdherent_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.adher_body, 'NullAdherent[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.adher_body, 'NullAdherent[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'nullAdherent', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: NullAdherent[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: NullAdherent[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (NULL ADHERENT): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //without supplicants, the room will level down (replaces sacrificers)
                     case (supplicant_gang.length < Memory.supplicant_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.suppl_body[k], 'Supplicant[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.suppl_body[k], 'Supplicant[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'supplicant', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Supplicant[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Supplicant[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (SUPPLICANT): CODE ' + '[' + spawnResult + ']');
                         break;
                     case (nullSupplicant_gang.length < Memory.nullSupplicant_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.suppl_body[k], 'NullSupplicant[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.suppl_body[k], 'NullSupplicant[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'nullSupplicant', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: NullSupplicant[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: NullSupplicant[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (NULL SUPPLICANT): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //without probes, structures are not maintained
                     case (probe_gang.length < Memory.probe_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.probe_body[k], 'Probe[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.probe_body[k], 'Probe[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'probe', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Probe[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Probe[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (PROBE): CODE ' + '[' + spawnResult + ']');
                         break;
@@ -420,11 +421,11 @@ module.exports = {
 
                     //orbital assimilators: if remote mining is viable
                     case (orbitalAssimilator_gang.length < Memory.orbitalAssimilator_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.oassim_body, 'OrbitalAssimilator[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.oassim_body, 'OrbitalAssimilator[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'orbitalAssimilator', rallied: false, home_index: k}});
                             
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: OrbitalAssimilator[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: OrbitalAssimilator[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (ORBITAL ASSIMILATOR): CODE ' + '[' + spawnResult + ']');
                         break;
@@ -433,30 +434,30 @@ module.exports = {
                     case (recalibrator_gang.length < Memory.recalibrator_MAX[k]):
                         //spawn criteria for recalibrator role requires visiblity of the remote mining room controller
                         //therefore, stall spawns for this role (and all other roles below) until the remote controller is visible (e.g. when an orbitalAssimilator occupies the remote room)
-                        if (!Game.getObjectById(SD.remotectrl_id[k]))
+                        if (!Game.getObjectById(SD.remoteCtrl_id[k]))
                             break;
                         
                         //if reservation is neutral
-                        else if (!Game.getObjectById(SD.remotectrl_id[k]).reservation){
-                            spawnResult = openNexus.spawnCreep(SD.recal_body[k], 'Recalibrator[' + k + ']-' + Game.time % SD.time_offset,
+                        else if (!Game.getObjectById(SD.remoteCtrl_id[k]).reservation){
+                            spawnResult = openNexus.spawnCreep(SD.recal_body[k], 'Recalibrator[' + k + ']-' + Game.time % SD.name_interval,
                                 {memory: {role: 'recalibrator', rallied: false, home_index: k}})
 
                             if (spawnResult == OK)
-                                console.log('DRIVE_SPAWN:: Recalibrator[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                                console.log('DRIVE_SPAWN:: Recalibrator[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                             else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                                 console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (RECALIBRATOR): CODE ' + '[' + spawnResult + ']');
                         }
 
                         //if reservation is mine, and falls sufficiently low
-                        else if (Game.getObjectById(SD.remotectrl_id[k]).reservation.username == ctrl[k].owner.username
+                        else if (Game.getObjectById(SD.remoteCtrl_id[k]).reservation.username == ctrl[k].owner.username
                             &&
-                            Game.getObjectById(SD.remotectrl_id[k]).reservation.ticksToEnd < (reserveDuration_max - (claim_strength-1)*claimUnit_TTL)){
+                            Game.getObjectById(SD.remoteCtrl_id[k]).reservation.ticksToEnd < (reserveDuration_max - (claim_strength-1)*claimUnit_TTL)){
 
-                            spawnResult = openNexus.spawnCreep(SD.recal_body[k], 'Recalibrator[' + k + ']-' + Game.time % SD.time_offset,
+                            spawnResult = openNexus.spawnCreep(SD.recal_body[k], 'Recalibrator[' + k + ']-' + Game.time % SD.name_interval,
                                 {memory: {role: 'recalibrator', rallied: false, home_index: k}})
 
                             if (spawnResult == OK)
-                                console.log('DRIVE_SPAWN:: Recalibrator[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                                console.log('DRIVE_SPAWN:: Recalibrator[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                             else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                                 console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (RECALIBRATOR): CODE ' + '[' + spawnResult + ']');
                         }
@@ -465,86 +466,86 @@ module.exports = {
 
                     //orbital drones: if remote mining is viable
                     case (orbitalDrone_gang.length < Memory.orbitalDrone_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.odrone_body[k], 'OrbitalDrone[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.odrone_body[k], 'OrbitalDrone[' + k + ']-' + Game.time % SD.name_interval,
                                         {memory: {role: 'orbitalDrone', rallied: false, home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: OrbitalDrone[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: OrbitalDrone[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (ORBITAL DRONE): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //blood hunters: if remote mining is being disrupted by invaders
                     case (bloodhunter_gang.length < Memory.bloodhunter_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.bloodh_body, 'Bloodhunter[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.bloodh_body, 'Bloodhunter[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'bloodhunter', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Bloodhunter[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Bloodhunter[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (BLOOD HUNTER): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //enforcers: if remote mining is being disrupted by invader cores
                     case (enforcer_gang.length < Memory.enforcer_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.enforc_body[k], 'Enforcer[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.enforc_body[k], 'Enforcer[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'enforcer', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Enforcer[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Enforcer[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (ENFORCER): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //purifiers: if an invader core's efforts must be undone
                     case (purifier_gang.length < Memory.purifier_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.purif_body[k], 'Purifier[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.purif_body[k], 'Purifier[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'purifier', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Purifier[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Purifier[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (PURIFIER): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //ancient drones: if minerals are available to mine
                     case (ancientDrone_gang.length < Memory.ancientDrone_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.androne_body, 'AncientDrone[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.androne_body, 'AncientDrone[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'ancientDrone', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: AncientDrone[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: AncientDrone[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (ANCIENT DRONE): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //ancient assimilators: if minerals are available to mine
                     case (ancientAssimilator_gang.length < Memory.ancientAssimilator_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.anassim_body, 'AncientAssimilator[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.anassim_body, 'AncientAssimilator[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'ancientAssimilator', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: AncientAssimilator[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: AncientAssimilator[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (ANCIENT ASSIMILATOR): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //architects: if there are construction projects to finish
                     case (architect_gang.length < Memory.architect_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.archit_body[k], 'Architect[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.archit_body[k], 'Architect[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'architect', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Architect[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Architect[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (ARCHITECT): CODE ' + '[' + spawnResult + ']');
                         break;
                     case (phaseArchitect_gang.length < Memory.phaseArchitect_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.phasarc_body[k], 'PhaseArchitect[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.phasarc_body[k], 'PhaseArchitect[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'phaseArchitect', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: PhaseArchitect[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: PhaseArchitect[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (PHASE ARCHITECT): CODE ' + '[' + spawnResult + ']');
                         break;
@@ -555,33 +556,33 @@ module.exports = {
 
                     //visionary: used in claiming up new rooms
                     case (visionary_gang.length < Memory.visionary_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.visio_body, 'Visionary[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.visio_body, 'Visionary[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'visionary', rallied: false, rallied2: false, home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Visionary[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Visionary[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (VISIONARY): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //specialist: used in setting up new rooms (assists architects)
                     case (specialist_gang.length < Memory.specialist_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.speci_body[k], 'Specialist[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.speci_body[k], 'Specialist[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'specialist', rallied: false, rallied2: false, home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Specialist[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Specialist[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (SPECIALIST): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //saviour: used in setting up new rooms (assists sacrificers)
                     case (saviour_gang.length < Memory.saviour_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.speci_body[k], 'Saviour[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.speci_body[k], 'Saviour[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'saviour', rallied: false, rallied2: false, home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Saviour[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Saviour[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (SAVIOUR): CODE ' + '[' + spawnResult + ']');
                             break;
@@ -593,55 +594,55 @@ module.exports = {
                     /*
                     //emissary: used situationally for scouting
                     case (emissary_gang.length < Memory.emissary_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.emiss_body, 'Emissary[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.emiss_body, 'Emissary[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'emissary', rallied: false, home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Emissary[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Emissary[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (EMISSARY): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //dark templar: used during battle
                     case (darktemplar_gang.length < Memory.darktemplar_MAX[k]):
-                        spawnResult = openNexus.spawnCreep(SD.dt_body[k], 'Darktemplar[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.dt_body[k], 'Darktemplar[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'darktemplar', rallied: false, home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Darktemplar[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Darktemplar[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (DARK TEMPLAR): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //hallucination: used during battle
                     case (hallucination_gang.length < Memory.hallucination_MAX):
-                        spawnResult = openNexus.spawnCreep(SD.halluc_body, 'Hallucination[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.halluc_body, 'Hallucination[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'hallucination', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Hallucination[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Hallucination[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (HALLUCINATION): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //shield battery: used during battle
                     case (shieldbattery_gang.length < Memory.shieldbattery_MAX):
-                        spawnResult = openNexus.spawnCreep(SD.ht_body, 'Shieldbattery[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.ht_body, 'Shieldbattery[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'shieldbattery', home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Shieldbattery[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Shieldbattery[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (SHIELD BATTERY): CODE ' + '[' + spawnResult + ']');
                         break;
 
                     //zealot: used during battle
                     case (zealot_gang.length < Memory.zealot_MAX):
-                        spawnResult = openNexus.spawnCreep(SD.zealot_body, 'Zealot[' + k + ']-' + Game.time % SD.time_offset,
+                        spawnResult = openNexus.spawnCreep(SD.zealot_body, 'Zealot[' + k + ']-' + Game.time % SD.name_interval,
                             {memory: {role: 'zealot', rallied: false, home_index: k}});
 
                         if (spawnResult == OK)
-                            console.log('DRIVE_SPAWN:: Zealot[' + k + ']-' + Game.time % SD.time_offset + ' spawning.');
+                            console.log('DRIVE_SPAWN:: Zealot[' + k + ']-' + Game.time % SD.name_interval + ' spawning.');
                         else if (spawnResult != ERR_BUSY && spawnResult != ERR_NOT_ENOUGH_ENERGY)
                             console.log('DRIVE_SPAWN:: SPAWN FAILURE IN ' + openNexus.name + ' (ZEALOT): CODE ' + '[' + spawnResult + ']');
                         break;

@@ -206,11 +206,11 @@ module.exports = {
                         turret.attack(Game.getObjectById(Memory.turretTarget_id[k]));
                         break;
                     case 'HEAL': //check first if turret energy can be spared
-                        if (turret.store[RESOURCE_ENERGY] > turret.store.getCapacity(RESOURCE_ENERGY) * SD.tower_reserve_ratio)
+                        if (turret.store[RESOURCE_ENERGY] > turret.store.getCapacity(RESOURCE_ENERGY) * SD.towerEnergy_boundary)
                             turret.heal(Game.getObjectById(Memory.turretTarget_id[k]));
                         break;
                     case 'REPAIR': //check first for construction mode FALSE, and if turret energy can be spared
-                        if (!Memory.construction_mode && turret.store[RESOURCE_ENERGY] > turret.store.getCapacity(RESOURCE_ENERGY) * SD.tower_reserve_ratio)
+                        if (!Memory.construction_mode && turret.store[RESOURCE_ENERGY] > turret.store.getCapacity(RESOURCE_ENERGY) * SD.towerEnergy_boundary)
                             turret.repair(Game.getObjectById(Memory.turretTarget_id[k]));
                         break;
                     case 'IDLE':

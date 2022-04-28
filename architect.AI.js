@@ -2,7 +2,7 @@
 //green trail ("builder")
 
 module.exports = {
-    run: function(unit, bias, reserve, std_interval){
+    run: function(unit, reserve, std_interval){
 
         const energyCanisters_max = 2;
 
@@ -67,7 +67,7 @@ module.exports = {
                     &&
                     Game.getObjectById(canisters[1].id).store.getUsedCapacity(RESOURCE_ENERGY)
                         >
-                    Game.getObjectById(canisters[0].id).store.getUsedCapacity(RESOURCE_ENERGY) + bias){
+                    Game.getObjectById(canisters[0].id).store.getUsedCapacity(RESOURCE_ENERGY)){
 
                     fullest_canister_ID = canisters[1].id;
                 }

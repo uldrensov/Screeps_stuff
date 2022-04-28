@@ -4,7 +4,7 @@ module.exports = {
     
     //numbers...
     //general-purpose time values
-    time_offset:            100000,     //used for unit naming
+    name_interval:          100000,     //used for unit naming
     std_interval:           15,         //tick interval for CPU-heavy actions
     detection_interval:     5,          //tick interval for remote mining units' enemy detection check
     nukeCheck_interval:     10000,      //tick interval for nuke detection
@@ -22,14 +22,13 @@ module.exports = {
     autosell_interval:      200,        //tick interval for automatic terminal sales (both resource sales and energy sales)
 
     //energy management
-    tower_reserve_ratio:    0.5,        //towers will reserve this percentage of their energy for attacking
+    towerEnergy_boundary:   0.5,        //towers will reserve this percentage of their energy for attacking
     vault_boundary:         100000,     //all units except (e)drones, energisers, and phase architects will avoid withdrawing from vaults containing less than this
 
     //unit role-specific values
-    fixation_override:      0.25,       //probes will break fixation upon spotting an absolute % gap this wide
-    canister_bias:          300,        //can force canister-fetching units to prefer one by default, until this wide of a disparity is detected
-    en_ignore_lim:          100,        //drones/sacrificers/probes will ignore containers/pickups containing less energy than this
-    cleanup_thresh:         2000,       //retriever drones arrive upon detecting this much uncollected energy on the ground, and stop at a quarter of this value
+    fixationOverride_amt:   0.25,       //probes will break fixation upon spotting an absolute % gap this wide
+    energyIgnore_threshold: 100,        //drones/sacrificers/probes will ignore containers/pickups containing less energy than this
+    cleanup_threshold:      2000,       //retriever drones arrive upon detecting this much uncollected energy on the ground, and stop at a quarter of this value
     
 
 
@@ -79,30 +78,26 @@ module.exports = {
                             '5e561baebcb7d67abec5f433',     '000000000000000000000000', '61306950cf7d7c11971d5810',
                             '5e8dc2604541e5ab90ab1bb3',     '6233b7be2213a13fc616a4e0', '6233c7cd5e25b47f7216013b'],    //for source2
 
-    mineralcanister_id:     ['5e3ca0a32f38f39b095da816',    '5e5c909be1a1395885e81156', '5e4f6a0761106b557aa66abe',
+    mineralCanister_id:     ['5e3ca0a32f38f39b095da816',    '5e5c909be1a1395885e81156', '5e4f6a0761106b557aa66abe',
                             '5e5b5b1c403d152c992428c4',     '000000000000000000000000', '613093f298a080471e5008dc',
                             '5e8f2204b9e23c1518b47557',     '623545e9a75d71823dc45a99', '6233dfbc689f74f5920da3b2'],
 
 
     //remote mining-related
-    reserveflag:            [Game.flags['Core0'],           'NULL',                     Game.flags['Core2'],
+    reserve_flag:           [Game.flags['Core0'],           'NULL',                     Game.flags['Core2'],
                             Game.flags['Core3'],            'NULL',                     'NULL',
                             Game.flags['Core6'],            'NULL',                     Game.flags['Core8']],           //rally point for remote room reservation
-    remoteflag:             [Game.flags['Terrazine'],       'NULL',                     Game.flags['Jorium'],
+    remote_flag:            [Game.flags['Terrazine'],       'NULL',                     Game.flags['Jorium'],
                             Game.flags['Protodermis'],      'NULL',                     'NULL',
                             Game.flags['Vespene'],          'NULL',                     Game.flags['Hydrazine']],       //rally point for remote mining
 
-    remotectrl_id:          ['5bbcae809099fc012e6392ef',    '000000000000000000000000', '5bbcaea69099fc012e63960d',
+    remoteCtrl_id:          ['5bbcae809099fc012e6392ef',    '000000000000000000000000', '5bbcaea69099fc012e63960d',
                             '5bbcae809099fc012e6392f2',     '000000000000000000000000', '000000000000000000000000',
                             '5bbcae989099fc012e639478',     '000000000000000000000000', '5bbcadfd9099fc012e638433'],
 
-    remotesource_id:        ['5bbcae809099fc012e6392ee',    '000000000000000000000000', '5bbcaea69099fc012e63960e',
+    remoteSource_id:        ['5bbcae809099fc012e6392ee',    '000000000000000000000000', '5bbcaea69099fc012e63960e',
                             '5bbcae809099fc012e6392f1',     '000000000000000000000000', '000000000000000000000000',
                             '5bbcae989099fc012e639479',     '000000000000000000000000', '5bbcadfd9099fc012e638432'],
-
-    remotecanister_id:      ['000000000000000000000000',    '000000000000000000000000', '000000000000000000000000',
-                            '000000000000000000000000',     '000000000000000000000000', '000000000000000000000000',
-                            '000000000000000000000000',     '000000000000000000000000', '000000000000000000000000'],    //drop-mining containers (o.assimilator)
 
 
     //specific towers
@@ -126,7 +121,7 @@ module.exports = {
                             ['000000000000000000000000',    '5e9e48317e29d56b7b6eca8a'],
                             ['5eb80e2ff96388fd8ad681dc']], //-->                                                        //tx link (acolyte)
 
-    adher_tile_id:          ['5e2ec350d41b0bd406dfd71b',    '5e5dab190fb27e9efd036585', '5e4a7ac80f2d8f5302547cc6',
+    adherTile_id:           ['5e2ec350d41b0bd406dfd71b',    '5e5dab190fb27e9efd036585', '5e4a7ac80f2d8f5302547cc6',
                             '5e55f3ea976d8d949fbe40ce',     '000000000000000000000000', '61306252353eb97acb79c953',
                             '5e926ffb3dfe155ca3cc501b',     '5e9e3113a8c647e32b811d14', '623bf5fe57f6fe80a5754360'],
 
