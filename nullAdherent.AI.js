@@ -20,6 +20,10 @@ module.exports = {
             console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A RX LINK');
             return;
         }
+        if (!unit.room.storage){
+            console.log('UNIT ERROR: ' + unit.name + ' REQUIRES A HOME VAULT');
+            return;
+        }
         
         
         //ensure correct position

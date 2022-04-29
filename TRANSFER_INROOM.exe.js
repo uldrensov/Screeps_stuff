@@ -83,11 +83,11 @@ module.exports = {
 
 
             //spawn the treasurer and initialise a command
-            let spawnResult = openNexus.spawnCreep(SD.treas_body, 'Treasurer[' + room_num + ']-' + Game.time % SD.time_offset,
+            let spawnResult = openNexus.spawnCreep(SD.treas_body, 'Treasurer[' + room_num + ']-' + Game.time % SD.name_interval,
                 {memory: {role: 'treasurer', order_type: o_type, order_amt: o_amt, dir: dir, spec_dest: spec, task_progress: 0, autokill: autokill, home_index: room_num}});
 
             if (spawnResult == OK)
-                console.log('TRANSFER_INROOM:: Treasurer[' + room_num + ']-' + Game.time % SD.time_offset + ' spawning.'); //emulate a spawn message, as seen in DRIVE_SPAWN.js
+                console.log('TRANSFER_INROOM:: Treasurer[' + room_num + ']-' + Game.time % SD.name_interval + ' spawning.'); //emulate a spawn message, as seen in DRIVE_SPAWN.js
             else
                 return 'TRANSFER_INROOM:: TREASURER SPAWN FAILED WITH NEXUS ERROR CODE ' + spawnResult;
         }

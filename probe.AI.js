@@ -133,7 +133,7 @@ module.exports = {
                     }
                 });
 
-                if (canisters.length || (unit.room.storage.store.energy <= reserve)){
+                if (canisters.length){
                     let fullest_canister = canisters[0];
 
                     if (canisters.length == energyCanisters_max

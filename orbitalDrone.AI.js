@@ -2,7 +2,7 @@
 //yellow trail ("traveller")
 
 module.exports = {
-    run: function(unit, nexus_id, canister_id, standby_flag, ignore_lim, flee_point){
+    run: function(unit, nexus_id, standby_flag, ignore_lim, flee_point, std_interval){
         
         if (!unit.memory.dropoff_id){
             if (Game.getObjectById(nexus_id).room.storage)
@@ -18,7 +18,6 @@ module.exports = {
         if (!unit.memory.killswitch){
             //proceed if the evacuation alarm is not raised
             if (Memory.evac_timer[unit.memory.home_index] == 0){
-                const canister =    Game.getObjectById(canister_id);
                 const dropoff =     Game.getObjectById(unit.memory.dropoff_id);
             
             
@@ -199,8 +198,26 @@ module.exports = {
 
 
                                     //FETCH: container
-                                    else if (unit.withdraw(canister, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                                        unit.moveTo(canister);
+                                    else{
+                                        if (!Game.getObjectById(unit.memory.canister_ID) && (Game.time % std_interval == 0)){
+                                            const canisters = unit.room.find(FIND_STRUCTURES, {
+                                                filter: structure => {
+                                                    return structure.structureType == STRUCTURE_CONTAINER;
+                                                }
+                                            });
+                                
+                                            for (let i=0; i<canisters.length; i++){
+                                                if (canisters[i].my){
+                                                    unit.memory.canister_ID = canisters[i].id;
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        if (Game.getObjectById(unit.memory.canister_ID))
+                                            if (unit.withdraw(Game.getObjectById(unit.memory.canister_ID), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                                                unit.moveTo(Game.getObjectById(unit.memory.canister_ID));
+                                    }
                                 }    
                             }
                         }

@@ -2,7 +2,7 @@
 //green trail ("builder")
 
 module.exports = {
-    run: function(unit, bias){
+    run: function(unit){
         
         const energyCanisters_max = 2;
 
@@ -70,7 +70,7 @@ module.exports = {
                             &&
                             canisters[1].store.getUsedCapacity(RESOURCE_ENERGY)
                                 >
-                            canisters[0].store.getUsedCapacity(RESOURCE_ENERGY) + bias){
+                            canisters[0].store.getUsedCapacity(RESOURCE_ENERGY)){
 
                             fullest_canister = canisters[1];
                         }
