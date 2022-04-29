@@ -77,7 +77,7 @@ module.exports = {
                 //if there is already a fixation, calculate difference between the current fixation's HP %, and the candidate structure's HP %
                 let HPpercent_diff = 0;
                 if (Game.getObjectById(unit.memory.fixation))
-                    HPpercent_diff = (Game.getObjectById(unit.memory.fixation).hits / unit.memory.fixation_max) - base_perc;
+                    HPpercent_diff = (Game.getObjectById(unit.memory.fixation).hits / unit.memory.fixation_max) - (weakest.hits / weakest_HPmax);
 
                 //set a new fixation if percent difference is wide enough, or if no fixation currently exists
                 if (!Game.getObjectById(unit.memory.fixation)
