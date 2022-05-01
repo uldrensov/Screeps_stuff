@@ -39,7 +39,7 @@ module.exports = {
 
             //FSM execution (UNLOADING):
             if (!unit.memory.fetching && hotspot){
-                //UNLOAD: construction hotspot (nearest)
+                //UNLOAD: construction hotspots (nearest)
                 if (unit.build(hotspot) == ERR_NOT_IN_RANGE)
                     unit.moveTo(hotspot);
             }

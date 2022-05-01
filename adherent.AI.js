@@ -31,7 +31,7 @@ module.exports = {
             if (unit.store.getFreeCapacity() > 0) //if unit is not fully loaded
                 unit.withdraw(warpRX, RESOURCE_ENERGY);
 
-            //UNLOAD: vault<energy>
+            //UNLOAD: vault
             else //only when unit is fully loaded
                 unit.transfer(unit.room.storage, RESOURCE_ENERGY)
         }

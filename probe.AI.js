@@ -20,7 +20,7 @@ module.exports = {
         
         //FSM execution (UNLOADING):
         if (!unit.memory.fetching){
-            //UNLOAD: structure (weakest %; fixation)
+            //UNLOAD: structures (weakest %; fixation)
             //find all damaged structures in the room
             const repairTargets = unit.room.find(FIND_STRUCTURES, {
                 filter: structure => {
@@ -150,7 +150,7 @@ module.exports = {
                 }
 
 
-                //FETCH: sources
+                //FETCH: sources (random)
                 else{
                     if (!unit.memory.src_ID)
                         unit.memory.src_ID = unit.room.find(FIND_SOURCES)[0].id;

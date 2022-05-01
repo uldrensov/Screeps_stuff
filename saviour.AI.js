@@ -40,7 +40,7 @@ module.exports = {
         
         //FSM execution (FETCHING):
         else{
-            //FETCH: sources
+            //FETCH: sources (random)
             if (!unit.memory.src_ID)
                 unit.memory.src_ID = unit.room.find(FIND_SOURCES)[0].id;
 

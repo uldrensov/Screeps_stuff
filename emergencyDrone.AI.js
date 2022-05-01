@@ -38,7 +38,7 @@ module.exports = {
 
             //FSM execution (UNLOADING): 
             if (!unit.memory.fetching){
-                //UNLOAD: extension
+                //UNLOAD: extensions (nearest)
                 const pylon = unit.pos.findClosestByPath(FIND_STRUCTURES, {
                     filter: structure => {
                         return structure.structureType == STRUCTURE_EXTENSION
@@ -53,7 +53,7 @@ module.exports = {
                 }
 
 
-                //UNLOAD: nexus
+                //UNLOAD: spawners (random)
                 else{
                     const local_nexi = unit.room.find(FIND_STRUCTURES, {
                         filter: structure => {
@@ -117,7 +117,7 @@ module.exports = {
                     }
 
 
-                    //FETCH: tombstones<energy> (fullest)
+                    //FETCH: tombstones (fullest)
                     else{
                         const tombs = unit.room.find(FIND_TOMBSTONES, {
                             filter: RoomObject => {
@@ -143,7 +143,7 @@ module.exports = {
                         //TODO: pickups
 
 
-                        //FETCH: pickups<energy> (fullest)
+                        //FETCH: pickups (fullest)
                         else{
                             const scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
                                 filter: resource => {
@@ -167,7 +167,7 @@ module.exports = {
                             }
 
 
-                            //FETCH: sources
+                            //FETCH: sources (random)
                             else{
                                 if (!unit.memory.src_ID)
                                     unit.memory.src_ID = unit.room.find(FIND_SOURCES)[0].id;

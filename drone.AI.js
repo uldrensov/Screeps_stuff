@@ -42,7 +42,7 @@ module.exports = {
                 unit.memory.fetch_type = RESOURCE_ENERGY;
 
 
-                //FETCH: ruins<non-energy>, ruins<energy> (fullest)
+                //FETCH: ruins<non-energy> (random), ruins<energy> (fullest)
                 //find ruins
                 const remains = unit.room.find(FIND_RUINS, {
                     filter: RoomObject => {
@@ -91,7 +91,7 @@ module.exports = {
 
                 //continue looking for a fetch target, if one is not found yet (choice #2)
                 if (!unit.memory.fetch_target_ID){
-                    //FETCH: tombstones<non-energy>, tombstones<energy> (fullest)
+                    //FETCH: tombstones<non-energy> (random), tombstones<energy> (fullest)
                     //find tombstones
                     const tombs = unit.room.find(FIND_TOMBSTONES, {
                         filter: RoomObject => {
@@ -141,7 +141,7 @@ module.exports = {
 
                 //continue looking for a fetch target, if one is not found yet (choice #3)
                 if (!unit.memory.fetch_target_ID){
-                    //FETCH: pickups<non-energy> (least TTL), pickups<energy> (fullest)
+                    //FETCH: pickups<non-energy> (shortest TTL), pickups<energy> (fullest)
                     //find pickups
                     const scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
                         filter: resource => {
@@ -218,7 +218,7 @@ module.exports = {
 
                 //continue looking for a fetch target, if one is not found yet (choice #5 - final)
                 if (!unit.memory.fetch_target_ID){
-                    //FETCH: vault<energy>
+                    //FETCH: vault<energy> (with custom restrictions)
                     //check spawners and extensions...
                     if (unit.room.storage){
                         const pylons = unit.room.find(FIND_STRUCTURES, {
@@ -311,7 +311,7 @@ module.exports = {
 
                 //continue looking for an unload target, if one is not found yet (choice #2)
                 if (!unit.memory.unload_target_ID){
-                    //UNLOAD: extension (nearest)
+                    //UNLOAD: extensions (nearest)
                     //find extension
                     const pylon = unit.pos.findClosestByPath(FIND_STRUCTURES, {
                         filter: structure => {
@@ -329,7 +329,7 @@ module.exports = {
 
                 //continue looking for an unload target, if one is not found yet (choice #3)
                 if (!unit.memory.unload_target_ID){
-                    //UNLOAD: spawners
+                    //UNLOAD: spawners (random)
                     //find spawners
                     const local_nexi = unit.room.find(FIND_STRUCTURES, {
                         filter: structure => {

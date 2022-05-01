@@ -28,12 +28,14 @@ module.exports = {
         
         //FSM execution (UNLOADING):
         if (!unit.memory.fetching){
+            //UNLOAD: vault
             if (unit.transfer(unit.room.storage, unit.memory.mineral_type) == ERR_NOT_IN_RANGE)
                 unit.moveTo(unit.room.storage);
         }
         
         //FSM execution (FETCHING):
         else if (unit.withdraw(canister, unit.memory.mineral_type) == ERR_NOT_IN_RANGE)
+            //FETCH: container
             unit.moveTo(canister);
     }
 };

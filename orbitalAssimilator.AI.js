@@ -11,19 +11,21 @@ module.exports = {
                 const src =         Game.getObjectById(src_id);
             
             
+
                 //remote canister maintenance FSM...
                 //init
                 if (unit.memory.repairmode == undefined)
                     unit.memory.repairmode = false;
                     
-                //if carried energy is over half, unit may repair
+                //if carried energy is over half, unit may REPAIR
                 if (unit.store[RESOURCE_ENERGY] > unit.store.getCapacity()/2)
                     unit.memory.repairmode = true;
-                //if carried energy depletes to 0, unit may cease repairs
+                //if carried energy depletes to 0, unit shall NOT REPAIR
                 else if (unit.store[RESOURCE_ENERGY] == 0)
                     unit.memory.repairmode = false;
 
             
+
                 //STAGE 1 START: rally to the flag location first
                 if (!unit.memory.rallied)                   unit.moveTo(standby_flag);
                 if (unit.pos.isEqualTo(standby_flag.pos))   unit.memory.rallied = true;
@@ -103,7 +105,7 @@ module.exports = {
                             }
                         });
 
-                        //STAGE 3A. watch for hostile cores
+                        //STAGE 3A: watch for hostile cores
                         if (invadercores.length && Memory.enforcer_MAX[unit.memory.home_index] < 0){
                             console.log(unit.name + ':: >>>>>> SIGNALLING ENFORCER TO SECTOR #' + unit.memory.home_index + '...CORE SIGHTED <<<<<<');
 
@@ -139,7 +141,7 @@ module.exports = {
 
                         //STAGE 3B END: proceed if room reservation is intact
                         if (!reservation_lost){
-                            //STAGE 4. UNLOAD: containers (2-state)
+                            //STAGE 4: fetch from source, and/or repair nearby container
                             if (!Game.getObjectById(unit.memory.canister_ID) && (Game.time % std_interval == 0)){
                                 const canisters = unit.room.find(FIND_STRUCTURES, {
                                     filter: structure => {
@@ -156,27 +158,29 @@ module.exports = {
                             }
 
 
+                            //working with the container...
                             if (Game.getObjectById(unit.memory.canister_ID)){
-                                //repairing
+                                //FSM execution (REPAIR)
                                 if (unit.memory.repairmode
                                     &&
                                     (Game.getObjectById(unit.memory.canister_ID).hits < Game.getObjectById(unit.memory.canister_ID).hitsMax)){
 
+                                    //UNLOAD: container
                                     if (!unit.pos.isEqualTo(Game.getObjectById(unit.memory.canister_ID).pos))
                                         unit.moveTo(Game.getObjectById(unit.memory.canister_ID));
                                     else
                                         unit.repair(Game.getObjectById(unit.memory.canister_ID));
                                 }
 
-                                //fetching (with container)
+                                //FSM execution (NOT REPAIR)
                                 else if (unit.harvest(src) == ERR_NOT_IN_RANGE)
-                                    //FETCH: sources
+                                    //FETCH: source
                                     unit.moveTo(src);
                             }
                             
-                            //fetching (without container)
+                            //working without the container...
                             else if (unit.harvest(src) == ERR_NOT_IN_RANGE)
-                                //FETCH: sources
+                                //FETCH: source
                                 unit.moveTo(src);
                         }
                     }

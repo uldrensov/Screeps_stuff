@@ -4,9 +4,9 @@
 module.exports = {
     run: function(unit, nexus_id, standby_flag, ignore_lim, flee_point, std_interval){
         
-        if (!unit.memory.dropoff_id){
+        if (!Game.getObjectById(unit.memory.vault_ID)){
             if (Game.getObjectById(nexus_id).room.storage)
-                unit.memory.dropoff_id = Game.getObjectById(nexus_id).room.storage.id;
+                unit.memory.vault_ID = Game.getObjectById(nexus_id).room.storage.id;
             else{
                 console.log('orbitalDroneAI:: UNIT ERROR: ' + unit.name + ' REQUIRES A HOME VAULT IN ROOM #' + unit.memory.home_index);
                 return;
@@ -18,8 +18,9 @@ module.exports = {
         if (!unit.memory.killswitch){
             //proceed if the evacuation alarm is not raised
             if (Memory.evac_timer[unit.memory.home_index] == 0){
-                const dropoff =     Game.getObjectById(unit.memory.dropoff_id);
+                const vault = Game.getObjectById(unit.memory.vault_ID);
             
+
             
                 //FETCH / UNLOAD FSM...
                 //if carry amt reaches full while FETCHING, switch to UNLOADING
@@ -31,26 +32,21 @@ module.exports = {
                 if (!unit.memory.fetching && unit.store.getUsedCapacity() == 0)
                     unit.memory.fetching = true;
 
+
                     
-                //performing actions at home room...
+                //FSM execution (UNLOADING):
                 if (!unit.memory.fetching){
                     //navigate to homeroom
                     if (unit.room.name != Game.getObjectById(nexus_id).room.name)
-                        unit.moveTo(dropoff);
+                        unit.moveTo(vault);
                         
-                    else{
-                        //UNLOAD: vault (if container/link is designated, but full)
-                        if (dropoff.store.getFreeCapacity(RESOURCE_ENERGY) == 0 && unit.room.storage)
-                            unit.moveTo(unit.room.storage);
-                            
-                        //UNLOAD: container/link/vault
-                        else if (unit.transfer(dropoff, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                            unit.moveTo(dropoff);
-                    }
+                    //UNLOAD: vault
+                    else if (unit.transfer(vault, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                        unit.moveTo(vault);
                 }
 
 
-                //performing actions at remote site...
+                //FSM execution (FETCHING):
                 else{
                     //STAGE 1 START: rally to the flag location first
                     if (!unit.memory.rallied)                   unit.moveTo(standby_flag);
@@ -131,7 +127,7 @@ module.exports = {
                                 }
                             });
 
-                            //STAGE 3A. watch for hostile cores
+                            //STAGE 3A: watch for hostile cores
                             if (invadercores.length && Memory.enforcer_MAX[unit.memory.home_index] < 0){
                                 console.log(unit.name + ':: >>>>>> SIGNALLING ENFORCER TO SECTOR #' + unit.memory.home_index + '...CORE SIGHTED <<<<<<');
 
@@ -167,7 +163,7 @@ module.exports = {
 
                             //STAGE 3B END: proceed if room reservation is intact
                             if (!reservation_lost){
-                                //STAGE 4. fetch from inputs
+                                //STAGE 4: fetch from inputs
                                 const scraps = unit.room.find(FIND_DROPPED_RESOURCES, {
                                     filter: resource => {
                                         return resource.resourceType == RESOURCE_ENERGY
@@ -176,14 +172,14 @@ module.exports = {
                                     }
                                 });
                 
-                                //FETCH: pickups<energy>
+                                //FETCH: pickups (random)
                                 if (scraps.length){
                                     if (unit.pickup(scraps[0]) == ERR_NOT_IN_RANGE)
                                         unit.moveTo(scraps[0]);
                                 }
 
 
-                                //FETCH: tombstones<energy>
+                                //FETCH: tombstones (random)
                                 else{
                                     const tombs = unit.room.find(FIND_TOMBSTONES, {
                                         filter: RoomObject => {

@@ -23,7 +23,7 @@ module.exports = {
     
         //FSM execution (UNLOADING):
         if (!unit.memory.fetching){
-            //UNLOAD: vault<energy>
+            //UNLOAD: vault
             if (unit.transfer(unit.room.storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                 unit.moveTo(unit.room.storage);
         }
@@ -31,7 +31,7 @@ module.exports = {
 
         //FSM execution (FETCHING):
         else{
-            //FETCH: pickups<energy> (fullest)
+            //FETCH: pickups (fullest)
             //find pickups
             if (!unit.memory.scraps || Game.time % std_interval == 0){
                 unit.memory.scraps = unit.room.find(FIND_DROPPED_RESOURCES, {

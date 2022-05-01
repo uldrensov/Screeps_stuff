@@ -38,7 +38,7 @@ module.exports = {
                 warpTX0.transferEnergy(warpRX0, warpTX0.store[RESOURCE_ENERGY]);
             
 
-            //FETCH: vault<energy> (respect limit)
+            //FETCH: vault (respect limit)
             if (unit.store.getFreeCapacity() > 0 && (unit.room.storage.store.energy > reserve)) //if unit is not fully loaded
                 unit.withdraw(unit.room.storage, RESOURCE_ENERGY);
 

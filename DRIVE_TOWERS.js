@@ -117,7 +117,7 @@ module.exports = {
                 }
 
                 
-                //UNLOAD: hostiles
+                //UNLOAD: designated hostile unit
                 if (highest_threat_val > 0){
                     //enemy locked on
                     Memory.turretCommand[k] = 'FIRE';
@@ -147,14 +147,14 @@ module.exports = {
                     }
                 });
                 
-                //UNLOAD: my units
+                //UNLOAD: my units (random)
                 if (injured_units.length){
                     Memory.turretCommand[k] = 'HEAL';
-                    Memory.turretTarget_id[k] = injured_units[0].id; //no specific priority given to any particular unit
+                    Memory.turretTarget_id[k] = injured_units[0].id;
                 }
 
                 
-                //UNLOAD: structures
+                //UNLOAD: structures (random; walls/ramparts have lower priority)
                 //treat walls and ramparts differently from everything else (hp max reasons)
                 else{
                     const repairStructs = ctrl[k].room.find(FIND_STRUCTURES, {
@@ -184,7 +184,6 @@ module.exports = {
                     if (repairStructs.length || repairWalls.length || repairRamparts.length){
                         Memory.turretCommand[k] = 'REPAIR';
 
-                        //no specific priority given to individual structures within each category
                         if      (repairStructs.length)  Memory.turretTarget_id[k] = repairStructs[0].id;
                         else if (repairWalls.length)    Memory.turretTarget_id[k] = repairWalls[0].id;
                         else if (repairRamparts.length) Memory.turretTarget_id[k] = repairRamparts[0].id;

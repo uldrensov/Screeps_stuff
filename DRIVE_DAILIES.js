@@ -52,6 +52,7 @@ module.exports = {
                 let month =                     d.getMonth() + 1; //month is 0-indexed
                 let year =                      d.getFullYear();
 
+                let yesterday =                 Memory.converted_timestamp;
                 Memory.converted_timestamp =    year + '/' + month.toString().padStart(2,'0') + '/' + day.toString().padStart(2,'0') + ' at ' +
                                                     hour.toString().padStart(2,'0') + ':' + minute.toString().padStart(2,'0');
 
@@ -59,6 +60,10 @@ module.exports = {
                 //clear the tick log, and reset the logging counter to 0
                 Memory.cpu_log =                [];
                 Memory.ticksLoggedToday =       0;
+
+
+                //daily notification header
+                Game.notify('DRIVE_DAILIES:: NOTIFICATION DIGEST: [' + yesterday + '] --> [' + Memory.converted_timestamp + ']');
 
 
                 //notify about vault energy changes, and reset counters

@@ -35,7 +35,7 @@ module.exports = {
 
         //FSM execution (UNLOADING):
         if (!unit.memory.fetching){
-            //UNLOAD: construction hotspot (nearest)
+            //UNLOAD: construction hotspots (nearest)
             const hotspot = unit.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
 
             if (hotspot)
@@ -46,7 +46,7 @@ module.exports = {
 
         //FSM execution (FETCHING):
         else if (unit.memory.fetching){
-            //FETCH: vault<energy> (respect limit)
+            //FETCH: vault (respect limit)
             let canFetch_storage = false;
 
             if (unit.room.storage)
@@ -77,7 +77,7 @@ module.exports = {
             }
 
             
-            //FETCH: sources
+            //FETCH: sources (random)
             else{
                 if (!unit.memory.src_ID)
                     unit.memory.src_ID = unit.room.find(FIND_SOURCES)[0].id;

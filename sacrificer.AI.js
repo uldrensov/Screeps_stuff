@@ -55,7 +55,7 @@ module.exports = {
             }
             
 
-            //FETCH: sources
+            //FETCH: sources (random)
             else{
                 if (!unit.memory.src_ID)
                     unit.memory.src_ID = unit.room.find(FIND_SOURCES)[0].id;

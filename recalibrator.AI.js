@@ -87,7 +87,7 @@ module.exports = {
                             }
                         });
 
-                        //STAGE 3A. watch for hostile cores
+                        //STAGE 3A: watch for hostile cores
                         if (invadercores.length && Memory.enforcer_MAX[unit.memory.home_index] < 0){
                             console.log(unit.name + ':: >>>>>> SIGNALLING ENFORCER TO SECTOR #' + unit.memory.home_index + '...CORE SIGHTED <<<<<<');
 
@@ -123,7 +123,7 @@ module.exports = {
 
                         //STAGE 3B END: proceed if room reservation is intact
                         if (!reservation_lost){
-                            //STAGE 4. reserve the controller
+                            //STAGE 4: reserve the controller
                             if (unit.reserveController(unit.room.controller) == ERR_NOT_IN_RANGE)
                                 unit.moveTo(unit.room.controller);
                         }
