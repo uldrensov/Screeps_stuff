@@ -71,7 +71,7 @@ Anyone is welcome to clone this repository and run it themselves for demonstrati
     2. If the Storage is far from the Controller, replace the Supplicant unit with a Null Supplicant unit, and pair this Null Supplicant with a Null Adherent unit.
 6. If using Acolytes, Adherents, Null Supplicants, or Null Adherents, it is required to construct Links. Links need to be placed in such a way that ensures no extraneous movement required on behalf of the units which attend to them.
     1. For example, a Null Supplicant can interact with a Controller up to 3 tiles away (7x7 range). The Null Supplicant should be able to stand somewhere within range of the Controller, while also being able to reach the Link without moving from that spot.
-7. Walls should be built far enough outward so that hostile ranged attackers cannot shoot anyhting of value from over the Wall (7x7 range). However, Walls should be situated close enough inward so that repair efforts are as efficient as possible.
+7. Walls should be built far enough outward so that hostile ranged attackers cannot shoot anything of value from over the Wall (7x7 range). However, Walls should be situated close enough inward so that repair efforts are as efficient as possible.
     1. On the inner side, there should be Road paths for Probe units to easily access and repair (7x7 range) every section of the Wall.
     2. Diagonal "stair" shaped walls are OK, as long as there are no corner-gaps.
 8. Ramparts should be deployed to protect important Structures, such as Spawners, Towers, and the Storage. Ramparts should also be used as "doors", so that friendly units may enter and exit the Wall perimeter.
