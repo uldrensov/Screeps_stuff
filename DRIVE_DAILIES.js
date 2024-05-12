@@ -82,10 +82,12 @@ module.exports = {
                 }
                 
 
-                //notify about credit/pixel revenue, and reset counters
+                //notify about energy/credit/pixel revenue, and reset counters
+                require('STATUSREPORT_G.exe').run(1);
                 Game.notify('DRIVE_DAILIES:: Gained ' + Memory.creditGainToday + ' credits today!');
                 Game.notify('DRIVE_DAILIES:: Gained ' + Memory.pixelGainToday + ' pixels today!');
 
+                Memory.energyGainsToday =       [];
                 Memory.creditGainToday =        0;
                 Memory.pixelGainToday =         0;
             }

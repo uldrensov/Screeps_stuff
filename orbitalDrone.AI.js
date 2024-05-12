@@ -41,8 +41,24 @@ module.exports = {
                         unit.moveTo(vault);
                         
                     //UNLOAD: vault
-                    else if (unit.transfer(vault, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                        unit.moveTo(vault);
+                    else{
+                        let unload_result = unit.transfer(vault, RESOURCE_ENERGY);
+
+                        if (unload_result == ERR_NOT_IN_RANGE)
+                            unit.moveTo(vault);
+
+                        //record vaultbound energy unloads to global memory
+                        else if (unload_result == OK){
+                            if (!Memory.energyGainsToday[unit.memory.home_index])
+                                Memory.energyGainsToday[unit.memory.home_index] = [];
+
+                            if (!Memory.energyGainsToday[unit.memory.home_index][1])
+                                Memory.energyGainsToday[unit.memory.home_index][1] = 0;
+
+                            Memory.energyGainsToday[unit.memory.home_index][1] +=
+                                Math.min(unit.store[RESOURCE_ENERGY], vault.store.getFreeCapacity());
+                        }
+                    }
                 }
 
 

@@ -374,9 +374,27 @@ module.exports = {
 
 
             //if a suitable unload target is registered, UNLOAD into it
-            if (Game.getObjectById(unit.memory.unload_target_ID))
-                if (unit.transfer(Game.getObjectById(unit.memory.unload_target_ID), unit.memory.unload_type) == ERR_NOT_IN_RANGE)
+            if (Game.getObjectById(unit.memory.unload_target_ID)){
+                let unload_result = unit.transfer(Game.getObjectById(unit.memory.unload_target_ID), unit.memory.unload_type);
+                
+                if (unload_result == ERR_NOT_IN_RANGE)
                     unit.moveTo(Game.getObjectById(unit.memory.unload_target_ID));
+
+                //record vaultbound energy unloads to global memory
+                else if (unload_result == OK
+                    &&
+                    unit.memory.unload_target_ID == unit.room.storage.id){
+
+                    if (!Memory.energyGainsToday[unit.memory.home_index])
+                        Memory.energyGainsToday[unit.memory.home_index] = [];
+
+                    if (!Memory.energyGainsToday[unit.memory.home_index][0])
+                        Memory.energyGainsToday[unit.memory.home_index][0] = 0;
+
+                    Memory.energyGainsToday[unit.memory.home_index][0] +=
+                        Math.min(unit.store[RESOURCE_ENERGY], Game.getObjectById(unit.memory.unload_target_ID).store.getFreeCapacity());
+                }
+            }
         }
     }
 };

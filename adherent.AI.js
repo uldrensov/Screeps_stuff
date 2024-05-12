@@ -32,8 +32,20 @@ module.exports = {
                 unit.withdraw(warpRX, RESOURCE_ENERGY);
 
             //UNLOAD: vault
-            else //only when unit is fully loaded
+            //only when unit is fully loaded
+            else{
                 unit.transfer(unit.room.storage, RESOURCE_ENERGY)
+
+                //record vaultbound energy unloads to global memory
+                if (!Memory.energyGainsToday[unit.memory.home_index])
+                    Memory.energyGainsToday[unit.memory.home_index] = [];
+
+                if (!Memory.energyGainsToday[unit.memory.home_index][0])
+                    Memory.energyGainsToday[unit.memory.home_index][0] = 0;
+
+                Memory.energyGainsToday[unit.memory.home_index][0] +=
+                    Math.min(unit.store[RESOURCE_ENERGY], unit.room.storage.store.getFreeCapacity());
+            }
         }
     }
 };

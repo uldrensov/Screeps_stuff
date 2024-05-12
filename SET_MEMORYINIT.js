@@ -130,6 +130,7 @@ module.exports = {
         if (Memory.construction_mode == undefined)              Memory.construction_mode =                 false;         //TODO: make this per-room
 
         //economy monitoring
+        if (Memory.energyGainsToday == undefined)               Memory.energyGainsToday =                  [];            //do not modify manually
         if (Memory.creditGainToday == undefined)                Memory.creditGainToday =                   0;             //do not modify manually
         if (Memory.pixelGainToday == undefined)                 Memory.pixelGainToday =                    0;             //do not modify manually
 
