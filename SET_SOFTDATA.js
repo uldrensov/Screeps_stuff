@@ -308,18 +308,26 @@ module.exports = {
                             //cost: 650
 
     enforc_body:            [[ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE],
+                            [],
                             [ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE],
                             [ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE],
+                            [],
+                            [],
                             [ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE],
+                            [],
                             [ATTACK,MOVE, ATTACK,MOVE, ATTACK,MOVE]],
-                            //cost: 780, 390, 390, 390, NULL
+                            //cost: 780, NULL, 390, 390, NULL, NULL, 390, NULL, 390
 
     purif_body:             [[CLAIM,CLAIM,CLAIM, MOVE,MOVE],
+                            [],
                             [CLAIM,CLAIM,CLAIM, MOVE,MOVE],
                             [CLAIM,CLAIM,CLAIM, MOVE,MOVE],
+                            [],
+                            [],
                             [CLAIM,CLAIM,CLAIM, MOVE,MOVE],
+                            [],
                             [CLAIM,CLAIM,CLAIM, MOVE,MOVE]],
-                            //cost: 2050, 2050, 2050, 2050, 2050
+                            //cost: 2050, NULL, 2050, 2050, NULL, NULL, 2050, NULL, 2050
 
     androne_body:           [CARRY,CARRY,CARRY,CARRY, MOVE, MOVE],
                             //cost: 300

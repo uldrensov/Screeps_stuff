@@ -1,4 +1,4 @@
-//executable script: creates a compressed summary about every room's remote mining operations
+//executable script: creates a compressed summary about every room's remote mining incident history
     //require('STATUSREPORT_R.exe').run()
 
 var SD = require('SET_SOFTDATA');
