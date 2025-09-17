@@ -6,7 +6,7 @@ An outpost is a room within your economic network that you've reserved, but have
 ### What if your outpost is attacked? ###
 Without the usual support of your home base infrastructure, your options are limited. Basically, you can either try to retaliate by sending in military units, or just cut your losses and run. My outpost defence strategy operates on a relatively simple FSM, whose operation is visually depicted in the accompanying file screeps_OutpostImmuneSystem.jpg, found in this directory.
 
-### Terminology: ##
+### Terminology: ###
 * Invader: Hostile NPC military unit, usually a lone threat but can sometimes appear in hordes (groups of ~5)
 * Invader core: Hostile NPC structure that reserves rooms for its own faction (can undo reservations made by the player)
 * Enforcer: Defence unit, attacks invader cores
